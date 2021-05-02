@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 
-Hi there! My name is Onur Keles [o'n??ur?? ke'le??]. I am a senior in the [Department of Foreign Language Education](https://fled.boun.edu.tr) at [Bogazici University](http://www.boun.edu.tr), Istanbul, Turkey. My main research interests include sign language linguistics, deaf education, language acquisition, sentential processing, and computational linguistics.
+Hi there! My name is Onur Keles. I am a senior in the [Department of Foreign Language Education](https://fled.boun.edu.tr) at [Bogazici University](http://www.boun.edu.tr), Istanbul, Turkey. My main research interests include sign language linguistics, deaf education, language acquisition, sentential processing, and computational linguistics.
 
 Research
 ------
