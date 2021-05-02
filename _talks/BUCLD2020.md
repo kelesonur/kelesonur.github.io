@@ -8,5 +8,5 @@ date: 2020-11-05
 location: "Boston, USA"
 ---
 
-[Access slides and poster](https://github.com/kelesonur/bounsignlab-verbalfluency/tree/main/BUCLD45%20Poster%20Presentation)
+[Access slides, poster, and video](https://github.com/kelesonur/bounsignlab-verbalfluency/tree/main/BUCLD45%20Poster%20Presentation)
 
