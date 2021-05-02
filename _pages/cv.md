@@ -11,7 +11,7 @@ redirect_from:
 
 Education
 ======
-* B.S. in Foreign Language Education, Bogaziçi University, 2021 (expected)
+* B.S. in Foreign Language Education, Bo&#287;azi&ccedil;i University, 2021 (expected)
 
 Research experience
 ======
@@ -21,18 +21,18 @@ Research experience
     * Preparing forms and surveys for the assessment of sign language vocabularyamong deaf children.
 
 * Spring 2021 - Present: Lab Member
-  * Bogaziçi University, Psycholinguistics Research Lab
+  * Bo&#287;azi&ccedil;i University, Psycholinguistics Research Lab
    * Working on a project that investigates how individuals on the autism spectrumprocess sentences
     * Supervisor: Dr. Nazik Deniz Din&ccedil;topal
   
 * Spring 2019 - Fall 2020: Undergraduate Research Assistant
-  * Bogaziçi University, Sign Language Lab
+  * Bo&#287;azi&ccedil;i University, Sign Language Lab
    * Lead two research projects in the Sign Language Lab, where I investigate age of acquisition effects on verbal fluency and narrative abilities of deaf adult signers in Turkish Sign Language.
    * Helped graduate students annotate linguistic data using ELAN
     * Supervisor: Dr. Kadir  G&ouml;kg&ouml;z
   
 * Spring 2020 - Spring 2020: Undergraduate Departmental Assistant
-  * Bogaziçi University, Dept. of Foreign Language Education
+  * Bo&#287;azi&ccedil;i University, Dept. of Foreign Language Education
    * Involved in the organization of the first BU Sociolinguistics Research GroupStudent Seminars.
     * Supervisor: Dr. Kadir  G&ouml;kg&ouml;z
   
@@ -62,7 +62,7 @@ Skills
   * Spanish (intermediate)
   
 * Technology
-  * R (experience with 'magrittr', 'tidyverse', and 'brms')
+  * R (experience with 'magrittr', 'tidyverse', 'brms', and 'lme4')
   * LaTeX (intermediary knowledge)
   * Python (rudimentary knowledge)
   * ELAN (sign language annotation)
