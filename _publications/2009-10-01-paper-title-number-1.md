@@ -1,15 +1,15 @@
 ---
-title: "Paper Title Number 1"
+title: "Information Structure"
 collection: publications
 permalink: /publication/2009-10-01-paper-title-number-1
-excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
-date: 2009-10-01
-venue: 'Journal 1'
+excerpt: 'In this paper, we examine various types of new information (Focus), and constituents that convey what the sentence is about (Topic) in Turkish Sign Language (T&#304;D)'
+date: 2020-01-01
+venue: 'A Grammar of Turkish Sign Language (T&#304;D) (SIGN-HUB Sign Language Grammar Series)'
 paperurl: 'http://academicpages.github.io/files/paper1.pdf'
-citation: 'Your Name, You. (2009). &quot;Paper Title Number 1.&quot; <i>Journal 1</i>. 1(1).'
+citation: 'G&ouml;kg&ouml;z, K. &amp; Kele&#351;, O. (2020). Pragmatics: 6.4. Information Structure. In Meltem Kelepir (ed.), <i>A Grammar of Turkish Sign Language (T&#304;D)</i>. 1st edn. (SIGN-HUB Sign Language Grammar Series).'
 ---
-This paper is about the number 1. The number 2 is left for future work.
+In this paper, we examine various types of new information (Focus), and constituents that convey what the sentence is about (Topic) in Turkish Sign Language (T&#304;D)
 
-[Download paper here](http://academicpages.github.io/files/paper1.pdf)
+[Download paper here](https://www.researchgate.net/publication/351267801_Information_Structure)
 
-Recommended citation: Your Name, You. (2009). "Paper Title Number 1." <i>Journal 1</i>. 1(1).
+Recommended citation: G&ouml;kg&ouml;z, K. &amp; Kele&#351;, O. (2020). Pragmatics: 6.4. Information Structure. In Meltem Kelepir (ed.), <i>A Grammar of Turkish Sign Language (T&#304;D)</i>. 1st edn. (SIGN-HUB Sign Language Grammar Series).
