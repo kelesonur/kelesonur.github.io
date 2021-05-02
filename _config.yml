@@ -82,7 +82,7 @@ analytics:
 author:
   name             : "Onur Keles (he/him)"
   avatar           : "photo_website_ok.png"
-  bio              : "I am a fourth year student of Foreign Language Education at Bogazici University. My main research interests include sign language linguistics, language acquisition, sentential processing, and computational linguistics."
+  bio              : "I am a fourth year student of Foreign Language Education at Bogazici University."
   location         : "Istanbul, Turkey"
   employer         :
   pubmed           : 
@@ -255,7 +255,7 @@ sass:
 permalink: /:categories/:title/
 # paginate: 5 # amount of posts to show
 # paginate_path: /page:num/
-timezone: America/Los_Angeles # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+timezone: Turkey # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 
 # Plugins
