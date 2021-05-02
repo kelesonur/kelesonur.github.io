@@ -10,13 +10,11 @@ redirect_from:
 
 Hi there, welcome to my personal website! My name is Onur Kele&#351 [o&#712;nur&#805; ke&#712;le&#643;]. I am a senior in the [Department of Foreign Language Education](https://fled.boun.edu.tr) at [Bogaziçi University](http://www.boun.edu.tr), Istanbul, Turkey. My main research interests include sign language linguistics, (atypical) language development, sentential processing, and computational linguistics.
 
-Research
+A data-driven personal website
 ======
-I am currently affiliated with the [Psycholinguistics Research Laboratory](http://denizlab.boun.edu.tr) led by Dr. Nazik Deniz Dinçtopal. In the lab, I am working on a project that examines how individuals on the autism spectrum process sentences and integrate real world knowledge. I am also volunteering for another project that investigates the processing of negative polarity items (NPIs) in Turkish. Previously I worked as undergraduate research assistant in the [Sign Language Lab](https://linguistics.boun.edu.tr/sign-language-lab) located at the [Department of Linguistics](https://linguistics.boun.edu.tr). Under the supervision of Dr. Kadir Gökgöz, I led two research projects where I explored the cognitive and linguistic effects of linguistic deprivation on the narrative abilities and verbal fluency of deaf individuals who use [Turkish Sign Language](https://en.wikipedia.org/wiki/Turkish_Sign_Language). My other academic interests cover cognitive modeling and computational analyses of natural languages. 
+Like many other Jekyll-based GitHub Pages templates, academicpages makes you separate the website's content from its form. The content & metadata of your website are in structured markdown files, while various other files constitute the theme, specifying how to transform that content & metadata into HTML pages. You keep these various markdown (.md), YAML (.yml), HTML, and CSS files in a public GitHub repository. Each time you commit and push an update to the repository, the [GitHub pages](https://pages.github.com/) service creates static HTML pages based on these files, which are hosted on GitHub's servers free of charge.
 
-Teaching
-======
-Professionally, I have been teaching English as a foreign language to both university-level and K12 learners in different institutions. I am currently a student teacher at [Robert College](https://www.robcol.k12.tr) where I plan and teach lessons to 9th grade students. I am also one of the co-founders of the educational platform [FluentKid](fluentkid.com). My teaching philosophy include the integration of Computer Assisted Language Learning (CALL) and Task Based Language Teaching (TBLT). Please view my educational portfolio [page](https://kelesonur.com/portfolio/) to see sample lesson plans and materials. On this [page](https://kelesonur.com/year-archive/), I share my personal reflections concerning meaningful learning and technology incorporated classrooms.
+Many of the features of dynamic content management systems (like Wordpress) can be achieved in this fashion, using a fraction of the computational resources and with far less vulnerability to hacking and DDoSing. You can also modify the theme to your heart's content without touching the content of your site. If you get to a point where you've broken something in Jekyll/HTML/CSS beyond repair, your markdown files describing your talks, publications, etc. are safe. You can rollback the changes or even delete the repository and start over -- just be sure to save the markdown files! Finally, you can also write scripts that process the structured data on the site, such as [this one](https://github.com/academicpages/academicpages.github.io/blob/master/talkmap.ipynb) that analyzes metadata in pages about talks to display [a map of every location you've given a talk](https://academicpages.github.io/talkmap.html).
 
 Getting started
 ======
@@ -50,3 +48,6 @@ Example: editing a markdown file for a talk
 For more info
 ------
 More info about configuring academicpages can be found in [the guide](https://academicpages.github.io/markdown/). The [guides for the Minimal Mistakes theme](https://mmistakes.github.io/minimal-mistakes/docs/configuration/) (which this theme was forked from) might also be helpful.
+
+history()
+
