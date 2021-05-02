@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 
-Hi there! My name is on??ur??
+Hi there! My name is [o&#712;nur&#805; ke&#712;le&#643;].
 
 A data-driven personal website
 ======
