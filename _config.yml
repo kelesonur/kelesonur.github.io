@@ -7,13 +7,13 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Onur Keles"
+title                    : "Your Name / Site Title"
 title_separator          : "-"
-name                     : &name "Onur Keles"
-description              : &description "I am a fourth year student of Foreign Language Education at Bogaziçi University, Istanbul, Turkey. My main research interests include with sign language linguistics, atypical language acquisition, sentential processing, and computational linguistics.  "
-url                      : https://onurkeles.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+name                     : &name "Your Name"
+description              : &description "personal description"
+url                      : https://academicpages.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
-repository               : "onurkeles.github.io"
+repository               : "academicpages/academicpages.github.io"
 teaser                   :  # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 breadcrumbs              : false # true, false (default)
 words_per_minute         : 160
@@ -80,10 +80,10 @@ analytics:
 
 # Site Author
 author:
-  name             : "Onur Keles (he/him)"
-  avatar           : "photo_website_ok.png"
-  bio              : "I am a fourth year student of Foreign Language Education at Bogaziçi University. My main research interests include with sign language linguistics, atypical language acquisition, sentential processing, and computational linguistics."
-  location         : "Istanbul, Turkey"
+  name             : "Your Sidebar Name"
+  avatar           : "profile.png"
+  bio              : "Your biography for the left-hand sidebar"
+  location         : "Location"
   employer         :
   pubmed           : "https://www.ncbi.nlm.nih.gov/pubmed/?term=john+snow"
   googlescholar    : "http://yourfullgooglescholarurl.com"
