@@ -85,29 +85,31 @@ author:
   bio              : "I am a fourth year student of Foreign Language Education at Bogaziçi University. My main research interests include with sign language linguistics, atypical language acquisition, sentential processing, and computational linguistics."
   location         : "Istanbul, Turkey"
   employer         :
-  email            :  "onurkeles.boun@gmail.com"
-  researchgate     :  # example: "https://www.researchgate.net/profile/Onur_Keles3"
+  pubmed           : "https://www.ncbi.nlm.nih.gov/pubmed/?term=john+snow"
+  googlescholar    : "http://yourfullgooglescholarurl.com"
+  email            :
+  researchgate     :  # example: "https://www.researchgate.net/profile/yourprofile"
   uri              :
   bitbucket        :
   codepen          :
   dribbble         :
   flickr           :
-  facebook         : "onur.keles.503"
+  facebook         :
   foursquare       :
-  github           : "kelesonur"
+  github           : "academicpages"
   google_plus      :
   keybase          :
-  instagram        :  "kls.onur"
-  impactstory      : 
+  instagram        :
+  impactstory      : #"https://profiles.impactstory.org/u/xxxx-xxxx-xxxx-xxxx"
   lastfm           :
-  linkedin         : "onur-keles-00b732147"
-  orcid            : "http://orcid.org/0000-0003-3157-822X"
+  linkedin         :
+  orcid            : "http://orcid.org/yourorcidurl"
   pinterest        :
   soundcloud       :
   stackoverflow    : # http://stackoverflow.com/users/123456/username
   steam            :
   tumblr           :
-  twitter          : "Onr_Kls"
+  twitter          : "replacethistwitterhandle"
   vine             :
   weibo            :
   xing             :
