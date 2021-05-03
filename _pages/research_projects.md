@@ -7,7 +7,7 @@ redirect_from:
   - /resume
 ---
 
-# Effect of Age of Acquisition and Category Size on Verbal Fluency (2019-Present)
+## Effect of Age of Acquisition and Category Size on Verbal Fluency (2019-Present)
 
 **Collaborators:** [Furkan Atmaca](http://orcid.org/0000-0003-4248-7059) and [Kadir G&ouml;kg&ouml;z](https://orcid.org/0000-0003-2777-7656)
 
@@ -15,13 +15,13 @@ redirect_from:
 
 Access our data and code [here](https://github.com/kelesonur/bounsignlab-verbalfluency).
 
-# Age of Acquisition Effects on Reference Tracking in Turkish Sign Language (2019-Present)
+## Age of Acquisition Effects on Reference Tracking in Turkish Sign Language (2019-Present)
 
 **Collaborators:** [Furkan Atmaca](http://orcid.org/0000-0003-4248-7059) and [Kadir G&ouml;kg&ouml;z](https://orcid.org/0000-0003-2777-7656)
 
 > We investigated how native and late adult deaf signers of Turkish Sign Language (TID) track reference in discourse within a story-telling paradigm. This study provided support for over-redundancy among late adult signers who employ less null marking and perspective mixing in their narratives compared to native signers.
 
-# Emotion Word Choice Dependent on Language Mode and Proficiency (2020-2021)
+## Emotion Word Choice Dependent on Language Mode and Proficiency (2020-2021)
 
 **Collaborators:** Selen Pekuzun
 
