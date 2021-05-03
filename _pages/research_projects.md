@@ -9,7 +9,7 @@ redirect_from:
 
 ## Use of Real World Knowledge in Processing Local Meaning among Individuals with Autism Spectrum Disorder (ASD)" (2021-Present)
 
-**Collaborators:** [Mehtap Güven Çoban](https://www.29mayis.edu.tr/tr/akademik-kadro/mehtap-guven-coban)
+**Collaborators:** [Mehtap G&uuml;ven &Ccedil;oban](https://www.29mayis.edu.tr/tr/akademik-kadro/mehtap-guven-coban)
 
 > This study aims to investigate the use of real world knowledge and detailed-focus processing among individuals with Autism Spectrum Disorder (ASD) compared to individuals with typical development (TD). 
 
