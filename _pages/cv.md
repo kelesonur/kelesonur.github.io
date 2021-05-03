@@ -24,7 +24,7 @@ Research experience
 * Spring 2021 - Present: Lab Member
 * Bo&#287;azi&ccedil;i University, Psycholinguistics Research Lab
   * Working on a project that investigates how individuals on the autism spectrum process sentences
-  * Supervisor: Dr. Nazik Deniz Din&ccedil;topal
+  * Supervisor: Dr. Nazik Din&ccedil;topal Deniz
   
 * Spring 2019 - Fall 2020: Undergraduate Research Assistant
 * Bo&#287;azi&ccedil;i University, Sign Language Lab

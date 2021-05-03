@@ -7,7 +7,7 @@ redirect_from:
   - /resume
 ---
 
-## Use of Real World Knowledge in Processing Local Meaning among Individuals with Autism Spectrum Disorder (ASD)" (2021-Present)
+## Use of Real World Knowledge in Processing Local Meaning among Individuals with Autism Spectrum Disorder (ASD) (2021-Present)
 
 **Collaborators:** [Mehtap G&uuml;ven &Ccedil;oban](https://www.29mayis.edu.tr/tr/akademik-kadro/mehtap-guven-coban)
 
