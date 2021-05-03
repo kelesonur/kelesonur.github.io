@@ -6,9 +6,10 @@ author_profile: true
 redirect_from:
   - /resume
 ---
+Please click [here](https://kelesonur.com/folder/academic_cv.pdf) to view my full academic CV.
 
 {% include base_path %}
-Please click [here](https://kelesonur.com/folder/academic_cv.pdf) to view my full academic CV.
+
 Education
 ======
 * B.A. in Foreign Language Education, Bo&#287;azi&ccedil;i University, 2021 (expected)
