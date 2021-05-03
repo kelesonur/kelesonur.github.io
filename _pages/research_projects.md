@@ -7,7 +7,15 @@ redirect_from:
   - /resume
 ---
 
-## Effect of Age of Acquisition and Category Size on Verbal Fluency (2019-Present)
+## Use of Real World Knowledge in Processing Local Meaning among Individuals with Autism Spectrum Disorder (ASD)" (2021-Present)
+
+**Collaborators:** [Mehtap Güven Çoban](https://www.29mayis.edu.tr/tr/akademik-kadro/mehtap-guven-coban)
+
+> This study aims to investigate the use of real world knowledge and detailed-focus processing among individuals with Autism Spectrum Disorder (ASD) compared to individuals with typical development (TD). 
+
+(in progress)
+
+## Effect of Age of Acquisition and Category Size on Verbal Fluency (2019-2021)
 
 **Collaborators:** [Furkan Atmaca](http://orcid.org/0000-0003-4248-7059) and [Kadir G&ouml;kg&ouml;z](https://orcid.org/0000-0003-2777-7656)
 
@@ -15,11 +23,13 @@ redirect_from:
 
 Access our data and code [here](https://github.com/kelesonur/bounsignlab-verbalfluency).
 
-## Age of Acquisition Effects on Reference Tracking in Turkish Sign Language (2019-Present)
+## Age of Acquisition Effects on Reference Tracking in Turkish Sign Language (2019-2021)
 
 **Collaborators:** [Furkan Atmaca](http://orcid.org/0000-0003-4248-7059) and [Kadir G&ouml;kg&ouml;z](https://orcid.org/0000-0003-2777-7656)
 
 > We investigated how native and late adult deaf signers of Turkish Sign Language (TID) track reference in discourse within a story-telling paradigm. This study provided support for over-redundancy among late adult signers who employ less null marking and perspective mixing in their narratives compared to native signers.
+
+(in progress)
 
 ## Emotion Word Choice Dependent on Language Mode and Proficiency (2020-2021)
 
