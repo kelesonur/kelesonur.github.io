@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 
-Hi there, welcome to my personal website! My name is Onur Kele&#351; [o&#712;nur&#805; ke&#712;le&#643;]. I am a senior in the Department of [Foreign Language Education](https://fled.boun.edu.tr) at [Bo&#287;azi&ccedil;i University](http://www.boun.edu.tr), Istanbul, Turkey. My main research interests include sign language linguistics, (atypical) language development, sentential processing, and computational linguistics.
+Hi there, welcome to my personal website! My name is Onur Kele&#351; [o&#712;nur&#805; k&#799;&#688;&#603;&#712;le&#643;]. I am a senior in the Department of [Foreign Language Education](https://fled.boun.edu.tr) at [Bo&#287;azi&ccedil;i University](http://www.boun.edu.tr), Istanbul, Turkey. My main research interests include sign language linguistics, (atypical) language development, sentential processing, and computational linguistics.
 
 Research
 ======
