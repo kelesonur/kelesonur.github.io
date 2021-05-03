@@ -8,49 +8,44 @@ redirect_from:
 ---
 
 {% include base_path %}
-
+Please click [here](https://kelesonur.com/folder/academic_cv.pdf) to view my full academic CV.
 Education
 ======
-* B.S. in Foreign Language Education, Bo&#287;azi&ccedil;i University, 2021 (expected)
+* B.A. in Foreign Language Education, Bo&#287;azi&ccedil;i University, 2021 (expected)
 
 Research experience
 ======
 * Spring 2021 - Present: Research Intern
-  * Codeswitch Software
-   * Writing reports on the acquisition of sign language structures.
-    * Preparing forms and surveys for the assessment of sign language vocabularyamong deaf children.
+* Codeswitch Software
+  * Writing reports on the acquisition of sign language structures.
+  * Preparing forms and surveys for the assessment of sign language vocabulary among deaf children.
 
 * Spring 2021 - Present: Lab Member
-  * Bo&#287;azi&ccedil;i University, Psycholinguistics Research Lab
-   * Working on a project that investigates how individuals on the autism spectrumprocess sentences
-    * Supervisor: Dr. Nazik Deniz Din&ccedil;topal
+* Bo&#287;azi&ccedil;i University, Psycholinguistics Research Lab
+  * Working on a project that investigates how individuals on the autism spectrum process sentences
+  * Supervisor: Dr. Nazik Deniz Din&ccedil;topal
   
 * Spring 2019 - Fall 2020: Undergraduate Research Assistant
-  * Bo&#287;azi&ccedil;i University, Sign Language Lab
-   * Lead two research projects in the Sign Language Lab, where I investigate age of acquisition effects on verbal fluency and narrative abilities of deaf adult signers in Turkish Sign Language.
-   * Helped graduate students annotate linguistic data using ELAN
-    * Supervisor: Dr. Kadir  G&ouml;kg&ouml;z
+* Bo&#287;azi&ccedil;i University, Sign Language Lab
+  * Lead two research projects in the Sign Language Lab, where I investigate age of acquisition effects on verbal fluency and narrative abilities of deaf adult signers in Turkish Sign Language.
+  * Helped graduate students annotate linguistic data using ELAN
+  * Supervisor: Dr. Kadir  G&ouml;kg&ouml;z
   
 * Spring 2020 - Spring 2020: Undergraduate Departmental Assistant
-  * Bo&#287;azi&ccedil;i University, Dept. of Foreign Language Education
-   * Involved in the organization of the first BU Sociolinguistics Research GroupStudent Seminars.
-    * Supervisor: Dr. Kadir  G&ouml;kg&ouml;z
+* Bo&#287;azi&ccedil;i University, Dept. of Foreign Language Education
+  * Involved in the organization of the first BU Sociolinguistics Research Group Student Seminars.
+  * Supervisor: Dr. Leyla Marti
   
-Teaching experience
+Teaching experience (selected)
 ======
 * March 2021 - Present: Co-production Facilitator
-  * ENACT Communities, Languages, and Activities App 
-   * Completed a 30-hour Virtual Learning, Teaching, and Training Activity organized by the ENACT project co-funded by the EU and hosted online by Universitat Autonoma de Barcelona.
-   * Facilitating language learning and intercultural interaction among individuals from different ethnic groups in co-production workshops in Istanbul.
-
-* Fall 2020 - Present: Co-founder and Head of Material Development
-  * FluentKid
-   * One of the co-founders of Fluentkid, an online English learning platform, where we offer one on one ESL lessons.
-    * Heading the material development team where I prepare ESL materials for different age groups.
+* ENACT Communities, Languages, and Activities App 
+  * Completed a 30-hour Virtual Learning, Teaching, and Training Activity organized by the ENACT project co-funded by the EU and hosted online by Universitat Autonoma de Barcelona.
+  * Facilitating language learning and intercultural interaction among individuals from different ethnic groups in co-production workshops in Istanbul.
   
 * Fall 2020 - Present: Practice Teacher
-  * Robert College
-    * Observing and student teaching 9thgrade English classes three hours a week.
+* Robert College
+  * Observing and student teaching 9th grade English classes three hours a week.
   
   
 Skills
@@ -62,7 +57,7 @@ Skills
   * Spanish (intermediate)
   
 * Technology
-  * R (experience with 'magrittr', 'tidyverse', 'brms', and 'lme4')
+  * R (experience with `magrittr`, `tidyverse`, `brms`, and `lme4`)
   * LaTeX (intermediary knowledge)
   * Python (rudimentary knowledge)
   * ELAN (sign language annotation)
@@ -83,5 +78,5 @@ Talks
 Volunteer Work
 ======
 * Sep 2020 - Present: Director of the Science Department
-  * Dil At&ouml;lyesi Y&#305;ld&#305;z Technical University
-   * Organizing research methodology workshops(teaching R, LATEX, and bibliography managers) for undergraduate and graduatestudents in Istanbul.
+* Dil At&ouml;lyesi Y&#305;ld&#305;z Technical University
+  * Organizing research methodology workshops(teaching R, LaTeX, and bibliography managers) for undergraduate and graduate students in Istanbul.
