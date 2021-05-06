@@ -16,4 +16,4 @@ I am currently affiliated with the [Psycholinguistics Research Laboratory](http:
 
 Teaching
 ======
-Professionally, I have been teaching English as a foreign language to both university-level and K12 learners in different institutions. I am currently a student teacher at [Robert College](https://www.robcol.k12.tr) where I plan and teach lessons to 9th grade students. I am also one of the co-founders of the educational platform [FluentKid](fluentkid.com). Please contact me if you would like to see sample lesson plans and materials.
+Professionally, I have been teaching English as a foreign language to both university-level and K12 learners in different institutions. I am currently a student teacher at [Robert College](https://www.robcol.k12.tr) where I plan and teach lessons to 9th grade students. I am also one of the co-founders of the educational platform [FluentKid](https://fluentkid.com). Please contact me if you would like to see sample lesson plans and materials.
