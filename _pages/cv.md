@@ -6,13 +6,14 @@ author_profile: true
 redirect_from:
   - /resume
 ---
-Please click [here](https://kelesonur.com/folder/academic_cv.pdf) to view my full academic CV.
+Please click [here](https://kelesonur.com/folder/academic_cv_ok.pdf) to view my full academic CV.
 
 {% include base_path %}
 
 Education
 ======
-* B.A. in Foreign Language Education, Bo&#287;azi&ccedil;i University, 2021 (expected)
+* M.A. in Linguistics, Bo&#287;azi&ccedil;i University, 2024 (expected)
+* B.A. in Foreign Language Education, Bo&#287;azi&ccedil;i University, 2021, GPA: 4.00/4.00
 
 Research experience
 ======
@@ -39,7 +40,11 @@ Research experience
   
 Teaching experience (selected)
 ======
-* March 2021 - Present: Co-production Facilitator
+* September 2021 - Present: English Instructor
+* Istanbul 29 Mayis University
+  * Teaching reading, writing, speaking and listening skills in the School of Foreign Languages.
+  
+* March 2021 - June 2021: Co-production Facilitator
 * ENACT Communities, Languages, and Activities App 
   * Completed a 30-hour Virtual Learning, Teaching, and Training Activity organized by the ENACT project co-funded by the EU and hosted online by Universitat Autonoma de Barcelona.
   * Facilitating language learning and intercultural interaction among individuals from different ethnic groups in co-production workshops in Istanbul.
@@ -47,7 +52,6 @@ Teaching experience (selected)
 * Fall 2020 - Present: Practice Teacher
 * Robert College
   * Observing and student teaching 9th grade English classes three hours a week.
-  
   
 Skills
 ======
