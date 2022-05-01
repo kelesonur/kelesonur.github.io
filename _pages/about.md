@@ -1,11 +1,11 @@
 ---
 permalink: /
-title: "About me"
-excerpt: "About me"
+title: "Home"
+excerpt: "Home"
 author_profile: true
 redirect_from: 
-  - /about/
-  - /about.html
+  - /home/
+  - /home.html
 ---
 
 Hi there, welcome to my personal website! My name is Onur Kele&#351; [o&#712;nur&#805; k&#799;&#688;&#603;&#712;le&#643;]. I am a first-year M.A. student in the Department of [Linguistics](https://ling.boun.edu.tr) at [Bo&#287;azi&ccedil;i University](http://www.boun.edu.tr), Istanbul, Turkey. I graduated from the Department of [Foreign Language Education](https://fled.boun.edu.tr) in July 2021. My main research interests include sign language linguistics, (atypical) language development, sentential processing, and computational linguistics. I am currently working as an English Instructor at the School of Foreign Languages at [Istanbul 29 Mayis University](https://yadyok.29mayis.edu.tr/en/ihb).
