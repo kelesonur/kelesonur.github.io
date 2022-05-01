@@ -10,6 +10,6 @@ citation:
 ---
 In this paper, we examine various types of new information (Focus), and constituents that convey what the sentence is about (Topic) in Turkish Sign Language (T&#304;D)
 
-[Download paper here](https://kelesonur.com/folder/informationstructure.pdf)
+[Download paper here](https://kelesonur.github.io/folder/informationstructure.pdf)
 
 Recommended citation: G&ouml;kg&ouml;z, K. &amp; Kele&#351;, O. (2020). Pragmatics: 6.4. Information Structure. In Meltem Kelepir (ed.), <i>A Grammar of Turkish Sign Language (T&#304;D)</i>. 1st edn. (SIGN-HUB Sign Language Grammar Series).
