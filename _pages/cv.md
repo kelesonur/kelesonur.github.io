@@ -6,7 +6,7 @@ author_profile: true
 redirect_from:
   - /resume
 ---
-Please click [here](https://kelesonur.com/folder/academic_cv_ok.pdf) to view my full academic CV.
+Please click [here](https://kelesonur.github.io/folder/academic_cv_ok.pdf) to view my full academic CV.
 
 {% include base_path %}
 
