@@ -11,9 +11,9 @@ title                    : "Onur Keles"
 title_separator          : "-"
 name                     : &name "Onur Keles"
 description              : &description "I am a first-year M.A. student of Linguistics at Bogazici University"
-url                      : https://kelesonur.com # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : https://kelesonur.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
-repository               : "https://kelesonur.github.io/onurkeles"
+repository               : "https://github.com/kelesonur/kelesonur.github.io"
 teaser                   :  # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 breadcrumbs              : false # true, false (default)
 words_per_minute         : 160
