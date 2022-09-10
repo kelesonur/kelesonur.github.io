@@ -1,5 +1,5 @@
 ---
-title: "Age of Acquisition Effects onVerbal Fluency in Turkish Sign Language"
+title: "Age of Acquisition Effects on Verbal Fluency in Turkish Sign Language"
 collection: talks
 type: "Poster"
 permalink: /talks/BUCLD-2020
