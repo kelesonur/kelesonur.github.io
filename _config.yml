@@ -7,9 +7,9 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Onur Keles"
+title                    : "Onur Keleş"
 title_separator          : "-"
-name                     : &name "Onur Keles"
+name                     : &name "Onur Keleş"
 description              : &description "I am a first-year M.A. student of Linguistics at Bogazici University"
 url                      : https://kelesonur.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
@@ -29,7 +29,7 @@ comments:
   facebook:
     appid                :
     num_posts            : # 5 (default)
-    colorscheme          : # "light" (default), "dark"
+    colorscheme          : "dark"
 staticman:
   allowedFields          : ['name', 'email', 'url', 'message']
   branch                 : "gh-pages" # "master", "gh-pages"
