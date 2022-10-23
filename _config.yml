@@ -50,7 +50,7 @@ atom_feed:
   path                   : # blank (default) uses feed.xml
 
 # SEO Related
-google_site_verification : 
+google_site_verification : "H0kaZLLLbtn5qyt_iauZbM-N6omxH9IK4hwqR2i4fVY"
 bing_site_verification   :
 alexa_site_verification  :
 yandex_site_verification :
@@ -82,7 +82,7 @@ analytics:
 author:
   name             : "Onur Keles (he/him)"
   avatar           : "pp_onur.jpeg"
-  bio              : "I am a first-year M.A. student of Linguistics at Bogazici University."
+  bio              : "I am a second-year M.A. student of Linguistics at Bogazici University."
   location         : "Istanbul, Turkey"
   employer         :
   pubmed           : 
