@@ -2,7 +2,7 @@
 title: "Expression of Aboutness Subject Topic Constructions in Turkish Sign Language (TİD) Narratives"
 collection: publications
 permalink: /publication/aboutnesstopics
-excerpt: 'Using a free-recall paradigm, we explored the effects of age of acquisition and category size on verbal fluency in Turkish Sign Language (T&#304;D)'
+excerpt: 'We examined data from six adult native signers of T&#304;D and found that T&#304;D signers mainly used nominals for reintroduced aboutness subject topics.'
 date: 2022-09-01
 venue: 'Hrvatska revija za rehabilitacijska istraživanja'
 paperurl: 'https://kelesonur.github.io/folder/aboutnesstopics.pdf'
