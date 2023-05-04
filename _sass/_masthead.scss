@@ -11,8 +11,6 @@
           animation-delay: 0.15s;
   z-index: 20;
 
-background: #DF9E1D;
-
   &__inner-wrap {
     @include container;
     @include clearfix;
