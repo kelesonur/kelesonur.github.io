@@ -19,6 +19,7 @@
     padding: 1em 1em 1em;
     font-family: $sans-serif;
     font-weight: bold;
+    font-size: $type-size-13;
 
 
     @include breakpoint($x-large) {
