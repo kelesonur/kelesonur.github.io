@@ -11,13 +11,11 @@
           animation-delay: 0.15s;
   z-index: 20;
 
-  background: $lighter-gray;
-
   &__inner-wrap {
     @include container;
     @include clearfix;
     padding: 1em 1em 1em;
-    font-family: $sans-serif;
+    font-family: $sans-serif-narrow;
 
     @include breakpoint($x-large) {
       max-width: $x-large;

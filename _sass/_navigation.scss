@@ -175,7 +175,7 @@
 .greedy-nav {
   position: relative;
   min-width: 250px;
-  background: $lighter-gray;
+  background: $background-color;
 
   a {
     display: block;
@@ -348,7 +348,7 @@
 .nav__title {
   margin: 0;
   padding: 0.5rem 1rem;
-  font-family: $sans-serif;
+  font-family: $sans-serif-narrow;
   font-size: $type-size-5;
   font-weight: bold;
 }
@@ -357,7 +357,7 @@
   display: block;
   margin: 0.5rem 0;
   padding: 0.5rem 0;
-  font-family: $sans-serif;
+  font-family: $sans-serif-narrow;
   font-size: $type-size-6;
   font-weight: bold;
   text-transform: uppercase;
@@ -370,7 +370,7 @@
    ========================================================================== */
 
 .toc {
-  font-family: $sans-serif;
+  font-family: $sans-serif-narrow;
   color: $gray;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -418,7 +418,7 @@
 
   li ul > li a {
     padding-left: 2rem;
-    font-weight: bold;
+    font-weight: normal;
   }
 
   /* hide sub sub links on small screens*/
