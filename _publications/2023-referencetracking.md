@@ -1,7 +1,7 @@
 ---
 title: "Reference Tracking Strategies of Deaf Adult Signers in Turkish Sign Language"
 collection: publications
-permalink: /publication/referencetracking
+permalink: /publication/reference_tracking
 excerpt: 'We investigated the reference tracking strategies among deaf adults with signing deaf parents (DoD) and adult deaf signers with non-signing hearing parents or caregivers (DoH) who had late exposure to Turkish Sign Language.'
 date: 2023-01-01
 venue: 'Journal of Pragmatics'
