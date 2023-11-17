@@ -440,7 +440,7 @@ e\. Question: Kim ısırdı? e'. Question: Kim ısırıldı?
 
 Each condition is followed by a question asking for either the agent of the predicate as in (e), or the patient as in (e'). There are 24 sentences each in the four experimental and two question conditions above, totaling the number of conditions to eight. The experimental sentences are distributed to eight lists controlling for syntax (active, passive), semantic plausibility (plausible, implausible) and question type (agent, patient). This way each participant sees only one version or for each item. In addition to the 24 experimental item sets there are two other types of sentence sets. The experimental set (Set 1) includes sentences as in (a-d) which are highly biased towards one interpretation (e.g., the dog will do the action of biting). The other sets serve as controls for attention to semantic plausability. Set 2 involves sentences in which the patient is inanimate and thus, reversing the arguments result in a semantic anomaly (cf., the chef wore the apron versus the apron wore the chef). Set 3 includes symmetrical sentences in which the two arguments are equally likely to be the agents (cf., the boy kissed the girl versus the girl kissed the boy).
 
-Here are more items:
+Here are more items. You can see the whole list of items [here](http://kelesonur.github.io/ling411/items.csv).
 
 ```{r, echo = FALSE, warning=FALSE,message=FALSE}
 items <- read.csv("items.csv")
