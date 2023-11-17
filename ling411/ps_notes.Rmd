@@ -1,0 +1,517 @@
+---
+title: "LING 411 Fall 2023 PS Notes & Assignments"
+author: "Onur Keleş"
+date: "Last updated on `r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+---
+
+# PS 1 (Oct 20, 2023)
+
+## Using R as a calculator
+
+```{r}
+# Addition
+2 + 2
+
+# Subtraction
+3 - 2
+
+# Multiplication
+3 * 2
+
+# Division
+3 / 2
+
+# Exponentiation
+2 ^ 5
+
+# Order of operations
+2 + 3 * 4
+(2 + 3) * 4
+```
+
+## Functions in R
+
+In R, instead of using mathematical operators like this, we will primarily use "functions" that allow us to perform various tasks. Each function takes specific arguments. Arguments are the inputs to the function, i.e., the objects on which the function operates. Some of these arguments may be required to be explicitly specified. If a function requires multiple arguments, the arguments are separated by commas.
+
+Functions are a way to package up and reuse code.
+
+The function below is called "add_two" and it adds two to any number you give it.
+
+```{r}
+add_two <- function(x) {
+  x + 2
+}
+```
+
+Now we can use the function we just created.
+
+```{r}
+add_two(3)
+```
+
+Other functions are built into R. For example, the "log" function computes the natural logarithm.
+
+```{r}
+log(10)
+sqrt(4)
+abs(-2)
+```
+
+You can also use functions inside other functions.
+
+```{r}
+log(sqrt(4))
+```
+
+## Variables in R
+
+A variable in a computer's memory can be any object that is defined. We can give it any name and value we want. The computer stores the values we assign to variables in memory, and later, we can access the values within that variable.
+
+In R, we assign variables using the \<- operator.
+
+```{r}
+# this code will not produce any output but will assign the value 100 to the variable 'chomsky'
+chomsky <- (2*5)^2
+
+# if we want to see the value of the variable, we can just type the name of the variable or print it to the console
+chomsky
+print(chomsky)
+```
+
+### Operations with variables
+
+```{r}
+# we can use variables in operations
+chomsky + 1
+
+burhan <- sqrt(16)
+
+burhan + chomsky
+
+burhan * chomsky
+```
+
+### Logical operators
+
+Using the \<, \>, \<=, \>=, ==, !=, \|, and & operators, we can perform comparisons between two variables. As a result, these operators will give us either TRUE, meaning the comparison is true, or FALSE, meaning the comparison is false.
+
+```{r}
+chomsky < 105 # smaller than
+ 
+chomsky > 1 # bigger than
+
+chomsky <= 8 # smaller than or equal to
+
+chomsky >= 8 # bigger than or equal to
+
+chomsky == 8 # equal to
+
+chomsky != 6 # not equal to
+
+chomsky == 4 | 8 # either 4 or 8
+
+chomsky == 4 & 8 # both 4 and 8
+```
+
+Note: You can always get help about a specific function or operator by using the help() command.
+
+```{r}
+help(log)
+
+help("+")
+```
+
+## Data types in R
+
+In R, values can have different types. The main data types include integer, double (for real numbers), character, and logical. You can use the typeof() function to determine the data type of a variable.
+
+Here's an example:
+
+```{r}
+var <- as.integer(2)
+var2 <- 2.2
+var3 <- "hey learning R is cool"
+var4 <- TRUE
+
+typeof(var)
+typeof(var2)
+typeof(var3)
+typeof(var4)
+```
+
+### Vectors
+
+#### Numeric vectors
+
+A vector is a collection of values of the same type. We can create a vector using the c() function. The c() function takes any number of arguments and combines them into a vector.
+
+```{r}
+# create a vector of numbers
+numbers <- c(1, 2, 3, 4, 5)
+
+print(numbers)
+
+# use length() to get the length of a vector
+length(numbers)
+
+# consecutive numbers can be created using the : operator
+5:90
+
+# or use seq() to create a sequence of numbers
+seq(5, 90, by = 2)
+
+# use rep() and seq() to create a vector of repeated numbers
+rep(seq(1,10,3),5)
+```
+
+Some functions that you can use with numeric vectors:
+
+```{r}
+# sum() adds up all the numbers in a vector
+sum(numbers)
+
+# mean() computes the mean of all the numbers in a vector
+mean(numbers)
+
+# max() and min() return the maximum and minimum values in a vector
+max(numbers)
+min(numbers)
+
+# sort() sorts the numbers in a vector in ascending order
+sort(numbers)
+
+# you can also sort in descending order
+sort(numbers, decreasing = TRUE)
+
+# sd() computes the standard deviation of the numbers in a vector
+sd(numbers)
+
+# median() computes the median of the numbers in a vector
+median(numbers)
+```
+
+#### Operations with vectors:
+
+```{r}
+# you can add two vectors together
+numbers + c(1, 2, 3, 4, 5)
+
+# you can multiply two vectors together
+numbers * c(1, 2, 3, 4, 5)
+```
+
+#### Indexing vectors:
+
+```{r}
+# you can access the elements of a vector using the [] operator
+new_vector <- 7:21
+
+new_vector[1]
+new_vector[2:7]
+new_vector[c(1, 3, 5, 7)]
+new_vector[-1]
+new_vector[-(1:3)]
+```
+
+#### Logical vectors
+
+Logical vectors are vectors that contain TRUE and FALSE values. You can create logical vectors using the c() function.
+
+```{r}
+# create a logical vector
+logical_vector <- c(TRUE, FALSE, TRUE, FALSE, TRUE)
+
+# operators like <, >, <=, >=, ==, !=, |, and & can be used to create logical vectors
+new_vector <- 1:8
+
+new_vector < 3
+
+new_vector == 7
+
+new_vector != 0
+```
+
+#### Filtering vectors:
+
+```{r}
+# you can use logical vectors to filter other vectors
+
+new_vector[new_vector < 3] # returns all values in new_vector that are smaller than 3
+
+new_vector[new_vector == 7] # returns all values in new_vector that are equal to 7
+
+```
+
+#### Character vectors
+
+Character vectors are vectors that contain strings. You can create character vectors using the c() function.
+
+```{r}
+# create a character vector
+character_vector <- c("hello", "learning", "R", "is", "cool")
+print(character_vector)
+
+# you can use the nchar() function to get the number of characters in each string
+nchar(character_vector)
+
+# you can use the paste() function to concatenate strings
+paste("hello", "learning", "R", "is", "cool")
+
+# you can use the strsplit() function to split a string into a vector of substrings
+strsplit("hello learning R is cool", " ")
+```
+
+### Data frames
+
+Data frames are used to store tabular data. You can create a data frame using the data.frame() function.
+
+```{r}
+# create a data frame
+df <- data.frame(
+  name = c("Burhan", "Chomsky", "Kant", "Hume", "İrem"),
+  age = c(55, 95, 67, 89, 24),
+  height = c(1.78, 1.65, 1.90, 1.45, 1.67)
+)
+
+print(df)
+
+# you can use the str() function to get information about the structure of a data frame
+str(df)
+
+# you can use the summary() function to get summary statistics about a data frame
+summary(df)
+
+# you can use the $ operator to access a column in a data frame
+df$name
+
+# you can use the [] operator to access a column in a data frame
+df["name"]
+```
+
+## Quick visualization:
+
+```{r}
+# you can use the plot() function to create a scatter plot
+plot(df$age, df$height)
+
+# you can use the hist() function to create a histogram
+hist(df$age)
+
+# you can use the boxplot() function to create a boxplot
+boxplot(df$age)
+
+# you can use the barplot() function to create a barplot
+barplot(df$age)
+```
+
+We will learn later how to create more advanced visualizations using the ggplot2 package.
+
+## Exercises
+
+### Exercise 1
+
+Today is Monday. What day of the week will it be 9, 54, 306, and 8999 days from now?
+
+Note: Create a character vector containing the days of the week and repeat this vector 9000 times. Then, use indexing to find the desired day. Hint: Write the days of the week in the character vector starting from Tuesday.
+
+```{r}
+days <- c("Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Monday")
+
+# you complete...
+
+
+
+
+
+```
+
+### Exercise 2
+
+Create a vector containing the numbers 1 to 100. Then, find the sum of the numbers that are divisible by 3 or 5.
+
+Tip: Use the %% operator to find the remainder of a division.
+
+```{r}
+# answer:
+numbers <- 1:100
+
+# you complete...
+```
+
+### Exercise 3
+
+You are taking measurements every 5 days throughout the year. Create a number sequence that shows on which days you take measurements and assign it to a variable named "measurement_days" The result should look like this: 5, 10, 15, 20... 365.
+
+```{r}
+# answer:
+
+
+# you complete...
+
+```
+
+# PS 2 (Nov 10, 2023)
+
+Here are some exercise questions we covered in this PS. Answers to the bonus questions will be shared in a few days:
+
+1.  Save the ready-made "starwars" data in a data frame named "df". Remove the rows with NA values. View the data frame using the View() function. Learn about data using different functions.
+
+```{r, warning=FALSE,message=FALSE}
+library(tidyverse)
+df <- starwars
+df <- na.omit(df)
+#str(df)
+#summary(df)
+#View(df)
+```
+
+2.  Create a new column named "BMI" (body mass index) and enter the BMI values you calculated from the existing mass and height information. Tip: You can learn the formula to calculate BMI from Google.
+
+```{r}
+df <- df %>% mutate(height = height / 100)
+df <- df %>% mutate(BMI = mass / height^2)
+head(df)
+```
+
+3.  Get the average height of people using tidyverse. Comment below how many you found.
+
+```{r}
+humans <- df %>% filter(species == "Human")
+mean(humans$height)
+```
+
+4.  Using group_by and summarize() functions, look at the relationship between species and BMI (body mass index). Save this result in a vector named summary1. Which species is the tallest?
+
+```{r}
+summary1 <- df %>% 
+  group_by(species) %>% 
+  summarize(bmi = mean(BMI))
+
+head(summary1)
+```
+
+5.  Create a bar plot with ggplot2. Use summary1 as the dataframe. Plot species on the x-axis, BMI on the y-axis. Give axis name and main title. Save the chart as a .png file.
+
+```{r}
+p1 <- summary1 %>% 
+  ggplot(aes(x=species, y=bmi, fill=species)) +
+  geom_bar(stat="identity") +
+  coord_flip() +
+  ggtitle("Relationship bw Species and BMI")
+  #ggsave("myfirstplot.png",p1)
+p1
+```
+
+6.  Create geom_text() plot with ggplot2. Do not use dots or lines. Enter height on the x-axis and mass on the y-axis. Color-code gender and character names as text (label). Give axis name and main title.
+
+```{r,warning=FALSE,message=FALSE}
+#install.packages("ggrepel")
+library(ggrepel)
+df %>% ggplot(aes(height,mass,label=name, color=sex)) +
+geom_text_repel() 
+```
+
+Bonus 1. How many Star Wars movies are there? How many movies has Luke Skywalker appeared in? Are there more Droids or more humans in the movies?
+
+Bonus 2. Is there a correlation between blond hair and number of movie occurence of a character? Find out and visualize this?
+
+# PS 3 (Nov 17 2023)
+
+In this PS, we will work with some real data, yay! We'll analyze the data from a demo experiment I carried out with Mehtap Güven Çoban and Nazik Dinçtopal Deniz last summer. Here is the details you need to know about the experiment:
+
+This experiment tests the predictions of good-enough parsing (Ferreira et al., 2007) for individuals with ASD. There will also be typically developing controls. This approach to language processing highlights the tendency to rely on real world knowledge and semantic cues (e.g., thematic roles such as agent and patient) rather than syntactic detail and to form (potentially inacurrate) superficial representations.
+
+**Materials:** For this experiment, we translated and adapted the experimental task materials in Ferreira's (2003) study into Turkish. The experimental sentences manipulate syntax (i.e., sentence structure) as active voice as in (a,c) or passive voice as in (b,d) and semantic plausibility as plausible as in (a,b) or implausible as in (c,d).
+
+a\. Active, plausible: Köpekler adamı ısırdı.
+
+b\. Passive, plausible: Adamlar köpek tarafından ısırıldı.
+
+c\. Active, implausible: Adamlar köpeği ısırdı.
+
+d\. Passive, implausible: Köpekler adam tarafından ısırıldı.
+
+e\. Question: Kim ısırdı? e'. Question: Kim ısırıldı?
+
+Each condition is followed by a question asking for either the agent of the predicate as in (e), or the patient as in (e'). There are 24 sentences each in the four experimental and two question conditions above, totaling the number of conditions to eight. The experimental sentences are distributed to eight lists controlling for syntax (active, passive), semantic plausibility (plausible, implausible) and question type (agent, patient). This way each participant sees only one version or for each item. In addition to the 24 experimental item sets there are two other types of sentence sets. The experimental set (Set 1) includes sentences as in (a-d) which are highly biased towards one interpretation (e.g., the dog will do the action of biting). The other sets serve as controls for attention to semantic plausability. Set 2 involves sentences in which the patient is inanimate and thus, reversing the arguments result in a semantic anomaly (cf., the chef wore the apron versus the apron wore the chef). Set 3 includes symmetrical sentences in which the two arguments are equally likely to be the agents (cf., the boy kissed the girl versus the girl kissed the boy).
+
+Here are more items:
+
+```{r, echo = FALSE, warning=FALSE,message=FALSE}
+items <- read.csv("items.csv")
+library(kableExtra)
+items <- head(items,20)
+items %>%
+  kbl() %>%
+  kable_styling()
+```
+
+To this end, we had a pilot study only with Turkish speakers. In total, 16 native Turkish speakers completed the pilot experiment. We expected that participants would have higher accuracy rates when items are not reversed but accuracy rates will drop when arguments are reversed (when syntax and semantics clash like in (c and d), participants will do good-enough processing and make an error due to their real-world knowledge). In addition to implausability, noncanonical sentence structure along with implausability can decrease accuracy.
+
+We look at accuracy and reaction time.
+
+Here is what our results look like after some preprocessing:
+
+```{r, echo=FALSE, warning=FALSE,message=FALSE}
+results <- read.csv("results_nov17_ps.csv")
+library(kableExtra)
+library(magrittr)
+results %<>% select(-ParticipantNo) 
+results <- head(results)
+results %>%
+  kbl() %>%
+  kable_styling()
+```
+
+Our task now is to analyze data. Create a summary table with accuracies and interpret the results. Also visualize the data. You're totally free on how to do all that.
+
+You can access the csv results by clicking [here](http://kelesonur.github.io/ling411/results_nov17_ps).
+
+# R Assignment 1
+
+Please consider this assignment a type of translation task. Translate each of the statements below from English to R. Each instruction should correspond to 1-3 lines of code (usually one line). Please note that there may be multiple, equally valid solutions to each instruction.
+
+Create a new .r file and write your answers there. After you finish the assignment, please click on "Session"-\>"Restart R" in your R Studio and run the code again, to make sure it executes properly in *exactly* the order in which you have written it. (The most common error is that people don't load packages later than they should be loaded, or leave install.packages() calls in this R code.)
+
+***Q1:*** Using the `c()` function, the `:` operator, and the `seq()` function, create a vector of numbers [11, 12, 13, 14, 15, 16, 17, 18, 19, 20] in three different ways and assign it to a variable ***(1 point).***
+
+***Q2:*** Create a vector containing 50 random numbers with a normal (Gaussian) distribution, mean 20 and standard deviation 2. You can do this with the `rnorm()` function. Then assigns the numbers to a variable and use that variable as an argument to the `sample()` function to randomly select 10 samples from that vector. Run `?rnorm()` `?sample()` to see how the functions work and what arguments they take. ***(2 points).***
+
+***Q3:*** Download and load "LearnBayes" package and take a look at the first few columns of the data set called "studentdata". ***(3 points).***
+
+***Answer the following questions:***
+
+3.1. Remove rows that include NA observations.
+
+3.2. Get the number of female students.
+
+3.3. Number of students who are taller than 180 cm (tip: the height is given in inches. please first turn them to cm by multiplying the observations with 2.54)
+
+3.4. Plot the relationship between height and sex in a line graph.
+
+***Q4:*** Download and load "languageR" package and take a look at the first few columns of the data set called "lexdec". ***(4 points).***
+
+***Here is the definition of the columns:***
+
+![](Screenshot%202023-11-14%20at%2013.59.38.png){width="650"}
+
+***Answer the following questions:***
+
+4.1. Use the function `help()` to look up the documentation.
+
+4.2. How many unique participants are there?
+
+4.3. What is the mean, min, and max reaction time?
+
+4.4. Load the package dplyr, and compute the average value of the column RT (reaction time) and percentage of correct answers (from "Correct"), by participants' native language (look up the actual name of the columns in the dataset documentation).
+
+4.5. Load the package ggplot2 and create a line graph with `geom_smooth()` with RT in the y-axis, frequency in the x-axis and color-code participants' native languages to visualize the relationship between reaction time, frequency and native language.
+
+*GOOD LUCK! c:*
+
+# 
