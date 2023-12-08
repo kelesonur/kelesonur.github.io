@@ -1,0 +1,2277 @@
+Subject;Nativeness;Narrative;Reference;Accessibility_Rating;Referent_Name;Discourse;RE
+2;1;1;1;0;Wood;Introduction;SASS - Tracing
+2;1;1;2;0;Tom;Introduction;Body part CL
+2;1;1;3;4;Tom;Maintenance;Constructed action
+2;1;1;4;-2;Jerry;Introduction;Bare noun
+2;1;1;5;4;Jerry;Maintenance;Whole entity CL
+2;1;1;6;2;Tom;Re-introduction;Whole entity CL
+2;1;1;7;4;Tom;Maintenance;Whole entity CL
+2;1;1;8;4;Tom;Maintenance;Whole entity CL
+2;1;1;9;5;Tom;Maintenance;Constructed action
+2;1;1;10;5;Tom;Maintenance;Plain verb
+2;1;1;11;5;Tom;Maintenance;Constructed action
+2;1;1;12;5;Tom;Maintenance;Plain verb
+2;1;1;13;5;Tom;Maintenance;Constructed action
+2;1;1;14;1;Jerry;Re-introduction;Bare noun
+2;1;1;15;3;Tom;Re-introduction;Bare noun
+2;1;1;16;5;Tom;Maintenance;Body part CL
+2;1;1;17;5;Tom;Maintenance;Plain verb
+2;1;1;18;5;Tom;Maintenance;Body part CL
+2;1;10;1;1;Jerry;Introduction;Bare noun
+2;1;10;2;0;Tom;Introduction;Bare noun
+2;1;10;3;4;Tom;Maintenance;Bare noun
+2;1;10;4;4;Tom;Maintenance;Bare noun
+2;1;10;5;5;Tom;Maintenance;Constructed action
+2;1;10;6;1;Jerry;Re-introduction;Bare noun
+2;1;10;7;3;Tom;Re-introduction;Constructed action
+2;1;10;8;2;Jerry;Re-introduction;Bare noun
+2;1;10;9;4;Jerry;Maintenance;Plain verb
+2;1;10;10;2;Tom;Re-introduction;Constructed action
+2;1;10;11;4;Tom;Maintenance;Constructed action
+2;1;10;12;4;Tom;Maintenance;Person agreement verb
+2;1;10;13;5;Tom;Maintenance;Constructed action
+2;1;10;14;5;Tom;Maintenance;Person agreement verb
+2;1;5;1;1;Tom;Introduction;Bare noun
+2;1;5;2;4;Tom;Maintenance;Constructed action
+2;1;5;3;4;Tom;Maintenance;Body part CL
+2;1;5;4;5;Tom;Maintenance;Constructed action
+2;1;5;5;-1;Couch;Introduction;Bare noun
+2;1;5;6;-2;Rope;Introduction;Bare noun
+2;1;5;7;2;Tom;Maintenance;Constructed action
+2;1;5;8;4;Tom;Maintenance;Constructed action
+2;1;5;9;-1;Jerry;Introduction;Bare noun
+2;1;5;10;2;Tom;Re-introduction;Constructed action
+2;1;5;11;2;Jerry;Re-introduction;Bare noun
+2;1;5;12;4;Jerry;Maintenance;Constructed action
+2;1;5;13;1;Rope;Re-introduction;Bare noun
+2;1;5;14;2;Jerry;Re-introduction;Whole entity CL
+2;1;5;15;0;Tom;Re-introduction;Bare noun
+2;1;5;16;4;Tom;Maintenance;Body part CL
+2;1;6;17;-1;Trap;Introduction;Bare noun
+2;1;6;19;4;Trap;Maintenance;Person agreement verb
+2;1;6;20;2;Tom;Re-introduction;Plain verb
+2;1;6;1;1;Jerry;Introduction;Bare noun
+2;1;6;2;4;Jerry;Maintenance;Plain verb
+2;1;6;3;1;Tom;Introduction;Bare noun
+2;1;6;4;4;Tom;Maintenance;Constructed action
+2;1;6;5;2;Jerry;Re-introduction;Plain verb
+2;1;6;6;2;Tom;Re-introduction;Constructed action
+2;1;6;7;5;Tom;Maintenance;Constructed action
+2;1;6;8;5;Tom;Maintenance;Plain verb
+2;1;6;9;5;Tom;Maintenance;Plain verb
+2;1;6;10;-1;Cabinet;Introduction;Bare noun
+2;1;6;11;3;Tom;Re-introduction;Constructed action
+2;1;6;12;-2;Window;Introduction;Bare noun
+2;1;6;13;2;Tom;Re-introduction;Bare noun
+2;1;6;14;4;Tom;Maintenance;Person agreement verb
+2;1;6;15;1;Jerry;Re-introduction;Noun CL
+2;1;6;16;4;Jerry;Maintenance;Person agreement verb
+2;1;2;1;0;White cat;Introduction;Bare noun
+2;1;2;2;0;Tom;Introduction;Bare noun
+2;1;2;3;4;Tom;Maintenance;Constructed action
+2;1;2;4;4;Tom;Maintenance;Constructed action
+2;1;2;5;5;Tom;Maintenance;Plain verb
+2;1;2;6;-1;Fish;Introduction;Bare noun
+2;1;2;7;-2;Aquarium;Introduction;Bare noun
+2;1;2;8;2;Tom;Maintenance;Constructed action
+2;1;2;9;0;White cat;Re-introduction;Bare noun
+2;1;2;10;2;Tom;Re-introduction;Whole entity CL
+2;1;2;11;-2;Bird;Introduction;Bare noun
+2;1;2;12;2;Tom;Re-introduction;Constructed action
+2;1;2;13;1;White cat;Re-introduction;Bare noun
+2;1;2;14;2;Tom;Re-introduction;Constructed action
+2;1;2;15;4;Tom;Maintenance;Body part CL
+2;1;2;16;5;Tom;Maintenance;Constructed action
+2;1;3;1;0;Stairs;Introduction;Bare noun
+2;1;3;2;0;Jerry;Introduction;Bare noun
+2;1;3;3;0;Tom;Introduction;Bare noun
+2;1;3;4;4;Tom;Maintenance;Whole entity CL
+2;1;3;5;2;Jerry;Re-introduction;Bare noun
+2;1;3;6;2;Tom;Re-introduction;Bare noun
+2;1;3;7;-2;Piano;Introduction;Noun CL
+2;1;3;8;1;Jerry;Re-introduction;Bare noun
+2;1;3;9;4;Jerry;Maintenance;Plain verb
+2;1;3;10;2;Tom;Re-introduction;Bare noun
+2;1;3;11;1;Piano;Re-introduction;Whole entity CL
+2;1;3;12;2;Tom;Re-introduction;Bare noun
+2;1;3;13;4;Tom;Maintenance;Constructed action
+2;1;3;14;2;Piano;Re-introduction;Noun CL
+2;1;3;15;2;Tom;Re-introduction;Whole entity CL
+2;1;3;16;5;Tom;Maintenance;SASS - Static
+2;1;4;1;0;Toy house;Introduction;Bare noun
+2;1;4;2;-1;Toy girl;Introduction;Bare noun
+2;1;4;3;-1;Jerry;Introduction;Noun CL
+2;1;4;4;2;Toy girl;Re-introduction;Bare noun
+2;1;4;5;-2;Tom;Introduction;CL noun
+2;1;4;6;2;Toy girl;Re-introduction;Bare noun
+2;1;4;7;4;Toy girl;Maintenance;Noun CL
+2;1;4;8;2;Tom;Re-introduction;Body part CL
+2;1;4;9;2;Toy girl;Re-introduction;Bare noun
+2;1;4;10;5;Toy girl;Maintenance;Plain verb
+2;1;4;11;5;Toy girl;Maintenance;Person agreement verb
+2;1;4;12;2;Tom;Re-introduction;Body part CL
+2;1;4;13;4;Tom;Maintenance;Constructed action
+2;1;4;14;4;Tom;Maintenance;Plain verb
+2;1;4;15;5;Tom;Maintenance;Constructed action
+2;1;4;16;5;Tom;Maintenance;Plain verb
+2;1;8;1;1;Tom;Introduction;Bare noun
+2;1;8;2;4;Tom;Maintenance;Plain verb
+2;1;8;3;4;Tom;Maintenance;Constructed action
+2;1;8;4;-1;Jerry;Introduction;Bare noun
+2;1;8;5;4;Jerry;Maintenance;Person agreement verb
+2;1;8;6;4;Jerry;Maintenance;Constructed action
+2;1;8;7;5;Jerry;Maintenance;Bare noun
+2;1;8;8;1;Tom;Re-introduction;Bare noun
+2;1;8;9;3;Jerry;Re-introduction;Bare noun
+2;1;8;10;5;Jerry;Maintenance;Person agreement verb
+2;1;8;11;5;Jerry;Maintenance;Bare noun
+2;1;8;12;-1;Thermometer;Introduction;Bare noun
+2;1;9;1;1;Tom;Introduction;Bare noun
+2;1;9;2;0;Jerry;Introduction;Bare noun
+2;1;9;3;2;Tom;Re-introduction;Constructed action
+2;1;9;4;2;Jerry;Re-introduction;Bare noun
+2;1;9;5;4;Jerry;Maintenance;Plain verb
+2;1;9;6;5;Jerry;Maintenance;Constructed action
+2;1;9;7;-1;Hat;Introduction;Bare noun
+2;1;9;8;-2;Needle;Introduction;Bare noun
+2;1;9;9;1;Jerry;Re-introduction;Bare noun
+2;1;9;10;4;Jerry;Maintenance;Constructed action
+2;1;9;11;1;Tom;Re-introduction;Bare noun
+2;1;9;12;4;Tom;Maintenance;Plain verb
+2;1;9;13;2;Jerry;Re-introduction;Bare noun
+2;1;9;14;4;Jerry;Maintenance;Bare noun
+2;1;9;15;2;Tom;Re-introduction;Constructed action
+2;1;7;1;0;White cat;Introduction;Bare noun
+2;1;7;2;-1;Black cat;Introduction;Bare noun
+2;1;7;3;0;Tom;Introduction;Bare noun
+2;1;7;4;4;Tom;Maintenance;Plain verb
+2;1;7;5;4;Tom;Maintenance;Body part CL
+2;1;7;6;2;Black cat;Re-introduction;Bare noun
+2;1;7;7;3;Tom;Re-introduction;Bare noun
+2;1;7;8;5;Tom;Maintenance;Person agreement verb
+2;1;7;9;5;Tom;Maintenance;Person agreement verb
+2;1;7;10;5;Tom;Maintenance;Body part CL
+2;1;7;11;5;Tom;Maintenance;Person agreement verb
+2;1;7;12;5;Tom;Maintenance;Body part CL
+2;1;7;13;1;Black cat;Re-introduction;Constructed action
+2;1;7;14;4;Black cat;Maintenance;Constructed action
+2;1;7;15;4;Black cat;Maintenance;Constructed action
+2;1;7;16;2;Tom;Re-introduction;Constructed action
+2;1;7;17;4;Tom;Maintenance;Plain verb
+2;1;7;18;4;Tom;Maintenance;Plain verb
+2;1;7;19;5;Tom;Maintenance;Plain verb
+3;1;1;1;0;Tom;Introduction;Bare noun
+3;1;1;2;-1;Jerry;Introduction;Bare noun
+3;1;1;3;2;Tom;Re-introduction;Bare noun
+3;1;1;4;-2;Wood;Introduction;Bare noun
+3;1;1;5;3;Tom;Maintenance;Constructed action
+3;1;1;6;1;Jerry;Re-introduction;Point noun
+3;1;1;7;-2;Tunnel;Introduction;SASS - Tracing
+3;1;1;8;3;Jerry;Maintenance;Whole entity CL
+3;1;1;9;1;Tom;Re-introduction;Bare noun
+3;1;1;10;4;Tom;Maintenance;Constructed action
+3;1;1;11;2;Jerry;Re-introduction;Bare noun
+3;1;1;12;2;Tom;Re-introduction;Bare noun
+3;1;1;13;1;Tunnel;Maintenance;Whole entity CL
+3;1;1;14;3;Tom;Maintenance;Bare noun
+3;1;1;15;1;Jerry;Re-introduction;Bare noun
+3;1;1;16;4;Jerry;Maintenance;Plain verb
+3;1;1;17;2;Tom;Re-introduction;Point noun
+3;1;1;18;4;Tom;Maintenance;Constructed action
+3;1;1;19;4;Tom;Maintenance;SASS - Tracing
+3;1;10;1;1;Jerry;Introduction;Bare noun
+3;1;10;2;4;Jerry;Maintenance;Bare noun
+3;1;10;3;2;Tom;Re-introduction;Bare noun
+3;1;10;4;4;Tom;Maintenance;Bare noun
+3;1;10;5;4;Tom;Maintenance;Constructed action
+3;1;10;6;2;Jerry;Re-introduction;Bare noun
+3;1;10;7;3;Tom;Re-introduction;Bare noun
+3;1;10;8;5;Tom;Maintenance;Constructed action
+3;1;10;9;-1;Gun;Introduction;Noun CL
+3;1;10;10;2;Tom;Re-introduction;Constructed action
+3;1;10;11;0;Jerry;Re-introduction;Bare noun
+3;1;10;12;2;Tom;Re-introduction;Bare noun
+3;1;10;13;4;Tom;Maintenance;Person agreement verb
+3;1;10;14;5;Tom;Maintenance;Person agreement verb
+3;1;10;15;5;Tom;Maintenance;Constructed action
+3;1;10;16;5;Tom;Maintenance;Bare noun
+3;1;5;1;1;Tom;Introduction;Point noun
+3;1;5;2;-1;Carpet;Introduction;Bare noun
+3;1;5;3;3;Tom;Maintenance;Constructed action
+3;1;5;4;-2;Couch;Introduction;Bare noun
+3;1;5;5;-2;Jerry;Introduction;Bare noun
+3;1;5;6;1;Tom;Re-introduction;Bare noun
+3;1;5;7;1;Couch;Re-introduction;Noun CL
+3;1;5;8;-2;Rope;Introduction;Bare noun
+3;1;5;9;1;Tom;Re-introduction;Bare noun
+3;1;5;10;0;Jerry;Re-introduction;Bare noun
+3;1;5;11;-2;Soap;Introduction;Noun CL
+3;1;5;12;1;Tom;Re-introduction;Bare noun
+3;1;5;13;4;Tom;Maintenance;Bare noun
+3;1;5;14;4;Tom;Maintenance;Constructed action
+3;1;5;15;1;Jerry;Re-introduction;Point noun
+3;1;5;16;3;Tom;Re-introduction;Point noun
+3;1;5;17;5;Tom;Maintenance;Constructed action
+3;1;5;18;5;Tom;Maintenance;Plain verb
+3;1;5;19;5;Tom;Maintenance;Bare noun
+3;1;5;20;5;Tom;Maintenance;Noun point
+3;1;5;21;1;Jerry;Re-introduction;Bare noun
+3;1;5;22;4;Jerry;Maintenance;Plain verb
+3;1;5;23;4;Jerry;Maintenance;Bare noun
+3;1;5;24;-1;Trap;Introduction;Noun CL
+3;1;5;25;0;Tom;Re-introduction;Bare noun
+3;1;5;26;4;Tom;Maintenance;Constructed action
+3;1;5;27;4;Tom;Maintenance;Person agreement verb
+3;1;6;28;0;Tom;Maintenance;Plain verb
+3;1;6;1;1;Jerry;Introduction;Bare noun
+3;1;6;2;4;Jerry;Maintenance;Constructed action
+3;1;6;3;1;Tom;Introduction;Bare noun
+3;1;6;4;2;Jerry;Re-introduction;Bare noun
+3;1;6;5;2;Tom;Re-introduction;Bare noun
+3;1;6;6;2;Jerry;Re-introduction;Bare noun
+3;1;6;7;4;Jerry;Maintenance;Constructed action
+3;1;6;8;2;Tom;Re-introduction;Bare noun
+3;1;6;9;2;Jerry;Re-introduction;Constructed action
+3;1;6;10;2;Tom;Re-introduction;Constructed action
+3;1;6;11;2;Jerry;Re-introduction;Person agreement verb
+3;1;6;12;2;Tom;Re-introduction;Bare noun
+3;1;6;13;4;Tom;Maintenance;Constructed action
+3;1;6;14;5;Tom;Maintenance;Constructed action
+3;1;6;15;2;Jerry;Re-introduction;Bare noun
+3;1;6;16;4;Jerry;Maintenance;Constructed action
+3;1;6;17;2;Tom;Re-introduction;Point noun
+3;1;6;18;2;Jerry;Re-introduction;Constructed action
+3;1;6;19;5;Jerry;Maintenance;Whole entity CL
+3;1;6;20;5;Jerry;Maintenance;Body part CL
+3;1;2;1;0;White cat;Introduction;Bare noun
+3;1;2;2;0;Couch;Introduction;Bare noun
+3;1;2;3;-1;Tom;Introduction;Bare noun
+3;1;2;4;4;Tom;Maintenance;Person agreement verb
+3;1;2;5;4;Tom;Maintenance;Constructed action
+3;1;2;6;5;Tom;Maintenance;Constructed action
+3;1;2;7;1;White cat;Re-introduction;Point noun
+3;1;2;8;3;Tom;Re-introduction;Constructed action
+3;1;2;9;-2;Fish;Introduction;Bare noun
+3;1;2;10;3;Tom;Maintenance;Constructed action
+3;1;2;11;1;White cat;Re-introduction;Bare noun
+3;1;2;12;-2;Bird;Introduction;Bare noun
+3;1;2;13;1;Tom;Re-introduction;Constructed action
+3;1;2;14;1;White cat;Re-introduction;Point noun
+3;1;2;15;2;Tom;Re-introduction;Constructed action
+3;1;3;1;0;Stairs;Introduction;Noun CL
+3;1;3;2;0;Jerry;Introduction;Noun CL
+3;1;3;3;-2;Carpet;Introduction;Bare noun
+3;1;3;4;-1;Tom;Introduction;Bare noun
+3;1;3;5;1;Jerry;Re-introduction;Bare noun
+3;1;3;6;0;Stairs;Re-introduction;Bare noun
+3;1;3;7;2;Jerry;Re-introduction;Bare noun
+3;1;3;8;1;Tom;Re-introduction;Bare noun
+3;1;3;9;2;Jerry;Re-introduction;Bare noun
+3;1;3;10;-2;Piano;Introduction;Point noun
+3;1;3;11;4;Piano;Maintenance;Bare noun
+3;1;3;12;2;Tom;Re-introduction;Constructed action
+3;1;3;13;2;Piano;Re-introduction;Point noun
+3;1;3;14;0;Jerry;Re-introduction;Bare noun
+3;1;3;15;4;Jerry;Maintenance;Whole entity CL
+3;1;3;16;2;Piano;Re-introduction;Point noun
+3;1;3;17;0;Tom;Re-introduction;Bare noun
+3;1;3;18;4;Tom;Maintenance;Constructed action
+3;1;3;19;2;Piano;Re-introduction;Noun CL
+3;1;3;20;4;Piano;Maintenance;Whole entity CL
+3;1;3;21;2;Tom;Re-introduction;Bare noun
+3;1;3;22;4;Tom;Maintenance;Whole entity CL
+3;1;3;23;4;Tom;Maintenance;SASS - Static
+3;1;4;1;1;Tom;Introduction;Point noun
+3;1;4;2;-1;Toy house;Introduction;Bare noun
+3;1;4;3;-1;Jerry;Introduction;Bare noun
+3;1;4;4;1;Tom;Re-introduction;Bare noun
+3;1;4;5;4;Tom;Maintenance;Constructed action
+3;1;4;6;-1;Toy girl;Introduction;Bare noun
+3;1;4;7;4;Toy girl;Maintenance;Body part CL
+3;1;4;8;1;Jerry;Re-introduction;Constructed action
+3;1;4;9;2;Toy girl;Re-introduction;Noun CL
+3;1;4;10;2;Jerry;Re-introduction;Constructed action
+3;1;4;11;2;Toy girl;Re-introduction;Bare noun
+3;1;4;12;0;Tom;Re-introduction;Bare noun
+3;1;4;13;1;Jerry;Re-introduction;Constructed action
+3;1;4;14;2;Tom;Re-introduction;Bare noun
+3;1;4;15;1;Toy girl;Re-introduction;Bare noun
+3;1;4;16;4;Toy girl;Maintenance;Plain verb
+3;1;4;17;4;Toy girl;Maintenance;Plain verb
+3;1;4;18;5;Toy girl;Maintenance;Whole entity CL
+3;1;4;19;1;Tom;Re-introduction;Bare noun
+3;1;4;20;4;Tom;Maintenance;Constructed action
+3;1;4;21;4;Tom;Maintenance;Plain verb
+3;1;4;22;5;Tom;Maintenance;Plain verb
+3;1;8;1;1;Tom;Introduction;Bare noun
+3;1;8;2;4;Tom;Maintenance;Constructed action
+3;1;8;3;4;Tom;Maintenance;Constructed action
+3;1;8;4;-1;Jerry;Introduction;Bare noun
+3;1;8;5;4;Jerry;Maintenance;Whole entity CL
+3;1;8;6;2;Tom;Re-introduction;Bare noun
+3;1;8;7;2;Jerry;Re-introduction;Bare noun
+3;1;8;8;-2;Hammer;Introduction;Bare noun
+3;1;8;9;4;Hammer;Maintenance;Constructed action
+3;1;8;10;2;Tom;Re-introduction;Constructed action
+3;1;8;11;1;Jerry;Re-introduction;Point noun
+3;1;8;12;-2;Thermometer;Introduction;Bare noun
+3;1;8;13;4;Thermometer;Maintenance;Person agreement verb
+3;1;8;14;2;Jerry;Re-introduction;Bare noun
+3;1;8;15;4;Jerry;Maintenance;Plain verb
+3;1;8;16;4;Jerry;Maintenance;Plain verb
+3;1;9;1;1;Tom;Introduction;Bare noun
+3;1;9;2;0;Jerry;Introduction;Bare noun
+3;1;9;3;4;Jerry;Maintenance;Constructed action
+3;1;9;4;4;Jerry;Maintenance;Plain verb
+3;1;9;5;5;Jerry;Maintenance;Constructed action
+3;1;9;6;-1;Hat;Introduction;Noun CL
+3;1;9;7;-2;Needle;Introduction;Bare noun
+3;1;9;8;1;Jerry;Re-introduction;Bare noun
+3;1;9;9;0;Tom;Re-introduction;Bare noun
+3;1;9;10;4;Tom;Maintenance;Constructed action
+3;1;9;11;4;Tom;Maintenance;Bare noun
+3;1;9;12;2;Jerry;Re-introduction;Bare noun
+3;1;9;13;4;Jerry;Maintenance;Constructed action
+3;1;9;14;4;Jerry;Maintenance;Constructed action
+3;1;9;15;2;Tom;Re-introduction;Bare noun
+3;1;9;16;4;Tom;Maintenance;Whole entity CL
+3;1;7;1;0;White cat;Introduction;Point noun
+3;1;7;2;0;Tom;Introduction;Bare noun
+3;1;7;3;-1;Black cat;Introduction;Bare noun
+3;1;7;4;4;Black cat;Maintenance;Whole entity CL
+3;1;7;5;2;Tom;Re-introduction;Bare noun
+3;1;7;6;0;White cat;Re-introduction;Bare noun
+3;1;7;7;2;Tom;Re-introduction;Whole entity CL
+3;1;7;8;4;Tom;Maintenance;Constructed action
+3;1;7;9;5;Tom;Maintenance;Person agreement verb
+3;1;7;10;2;White cat;Re-introduction;Bare noun
+3;1;7;10;3;Tom;Re-introduction;Bare noun
+3;1;7;11;5;Tom;Maintenance;Body part CL
+3;1;7;12;5;Tom;Maintenance;Person agreement verb
+3;1;7;13;2;White cat;Re-introduction;Bare noun
+3;1;7;14;3;Tom;Re-introduction;Bare noun
+3;1;7;15;0;Black cat;Re-introduction;Pronoun
+3;1;7;16;4;Black cat;Maintenance;Constructed action
+3;1;7;17;2;Tom;Re-introduction;Bare noun
+3;1;7;18;2;Black cat;Re-introduction;Bare noun
+3;1;7;19;0;White cat;Re-introduction;Bare noun
+3;1;7;20;1;Tom;Re-introduction;Fingerspelled noun
+3;1;7;21;4;Tom;Maintenance;Bare noun
+3;1;7;22;4;Tom;Maintenance;Plain verb
+12;0;1;1;0;Wood;Introduction;SASS - Static
+12;0;1;2;-1;Jerry;Introduction;Bare noun
+12;0;1;3;-1;Tom;Introduction;Bare noun
+12;0;1;4;-2;Tunnel;Introduction;Bare noun
+12;0;1;5;2;Tom;Re-introduction;Whole entity CL
+12;0;1;6;4;Tom;Maintenance;SASS - Static
+12;0;1;7;5;Tom;Maintenance;SASS - Tracing
+12;0;10;1;0;Nest;Introduction;Bare noun
+12;0;10;2;0;Jerry;Introduction;Bare noun
+12;0;10;3;0;Tom;Introduction;Bare noun
+12;0;10;4;2;Jerry;Re-introduction;Bare noun
+12;0;10;5;2;Tom;Re-introduction;Bare noun
+12;0;10;6;4;Tom;Maintenance;Constructed action
+12;0;10;7;5;Tom;Maintenance;Person agreement verb
+12;0;10;8;5;Tom;Maintenance;Plain verb
+12;0;10;9;5;Tom;Maintenance;Person agreement verb
+12;0;10;10;5;Tom;Maintenance;Plain verb
+12;0;5;1;1;Tom;Introduction;Bare noun
+12;0;5;2;4;Tom;Maintenance;Body part CL
+12;0;5;3;4;Tom;Maintenance;Constructed action
+12;0;5;4;-1;Couch;Introduction;Bare noun
+12;0;5;5;-2;Rope;Introduction;Bare noun
+12;0;5;6;2;Tom;Maintenance;Constructed action
+12;0;5;7;-2;Soap;Introduction;Bare noun
+12;0;5;8;-2;Jerry;Introduction;Bare noun
+12;0;5;9;4;Jerry;Maintenance;Plain verb
+12;0;5;10;4;Jerry;Maintenance;Plain verb
+12;0;5;11;1;Tom;Re-introduction;Bare noun
+12;0;5;12;4;Tom;Maintenance;Person agreement verb
+12;0;5;13;-1;Trap;Introduction;Fingerspelled noun
+12;0;5;14;3;Tom;Maintenance;Person agreement verb
+12;0;5;15;0;Jerry;Re-introduction;Bare noun
+12;0;5;16;4;Jerry;Maintenance;Plain verb
+12;0;6;1;1;Tom;Introduction;Bare noun
+12;0;6;2;-1;Sword;Introduction;Bare noun
+12;0;6;3;3;Tom;Maintenance;Constructed action
+12;0;6;4;-1;Jerry;Introduction;Bare noun
+12;0;6;5;4;Jerry;Maintenance;Plain verb
+12;0;6;6;2;Tom;Re-introduction;Bare noun
+12;0;6;7;2;Jerry;Re-introduction;Constructed action
+12;0;6;8;2;Tom;Re-introduction;Constructed action
+12;0;6;9;4;Tom;Maintenance;Body part CL
+12;0;6;10;5;Tom;Maintenance;Constructed action
+12;0;6;11;-1;Cabinet;Introduction;SASS - Tracing
+12;0;6;12;4;Tom;Maintenance;Constructed action
+12;0;6;13;0;Jerry;Re-introduction;Bare noun
+12;0;2;1;0;White cat;Introduction;Bare noun
+12;0;2;2;0;Tom;Introduction;Bare noun
+12;0;2;3;2;White cat;Re-introduction;Bare noun
+12;0;2;4;2;Tom;Re-introduction;Bare noun
+12;0;2;5;-2;Fish;Introduction;Bare noun
+12;0;2;6;3;Tom;Maintenance;Constructed action
+12;0;2;7;1;White cat;Re-introduction;Bare noun
+12;0;2;8;2;Tom;Re-introduction;Whole entity CL
+12;0;2;9;-2;Bird;Introduction;Bare noun
+12;0;2;10;3;Tom;Maintenance;Constructed action
+12;0;2;11;1;White cat;Re-introduction;Bare noun
+12;0;2;12;2;Tom;Re-introduction;Constructed action
+12;0;3;1;0;House;Introduction;Bare noun
+12;0;3;2;-1;Stairs;Introduction;Bare noun
+12;0;3;3;-2;Carpet;Introduction;Fingerspelled noun
+12;0;3;4;-2;Jerry;Introduction;Bare noun
+12;0;3;5;-2;Tom;Introduction;Bare noun
+12;0;3;6;4;Tom;Maintenance;Constructed action
+12;0;3;7;2;Jerry;Re-introduction;Bare noun
+12;0;3;8;2;Tom;Re-introduction;Bare noun
+12;0;3;9;2;Jerry;Re-introduction;Bare noun
+12;0;3;10;2;Tom;Re-introduction;Constructed action
+12;0;3;11;-2;Piano;Introduction;Noun CL
+12;0;3;12;2;Tom;Re-introduction;Constructed action
+12;0;3;13;2;Piano;Re-introduction;Whole entity CL
+12;0;3;14;0;Jerry;Re-introduction;Bare noun
+12;0;3;15;4;Jerry;Maintenance;Body part CL
+12;0;3;16;2;Piano;Re-introduction;Body part CL
+12;0;3;17;0;Tom;Re-introduction;Bare noun
+12;0;3;18;4;Tom;Maintenance;Plain verb
+12;0;3;19;-1;Wall;Introduction;Point noun
+12;0;3;20;3;Tom;Maintenance;Whole entity CL
+12;0;3;21;5;Tom;Maintenance;Whole entity CL
+12;0;4;1;1;Jerry;Introduction;Bare noun
+12;0;4;2;0;Nest;Introduction;SASS - Tracing
+12;0;4;3;0;Tom;Introduction;Bare noun
+12;0;4;4;4;Tom;Maintenance;Plain verb
+12;0;4;5;-1;Toy girl;Introduction;Noun CL
+12;0;4;6;4;Toy girl;Maintenance;Noun CL
+12;0;4;7;1;Jerry;Re-introduction;Bare noun
+12;0;4;8;2;Toy girl;Re-introduction;Body part CL
+12;0;4;9;5;Toy girl;Maintenance;Whole entity CL
+12;0;4;10;1;Tom;Re-introduction;Constructed action
+12;0;4;11;1;Jerry;Re-introduction;Bare noun
+12;0;4;12;2;Tom;Re-introduction;Bare noun
+12;0;4;13;-2;Mirror;Introduction;Bare noun
+12;0;4;14;3;Tom;Maintenance;Constructed action
+12;0;8;1;1;Tom;Introduction;Point noun
+12;0;8;2;0;Jerry;Introduction;Bare noun
+12;0;8;3;2;Tom;Re-introduction;Whole entity CL
+12;0;8;4;2;Jerry;Re-introduction;Pronoun
+12;0;8;5;2;Tom;Re-introduction;Constructed action
+12;0;8;6;-2;Thermometer;Introduction;Bare noun
+12;0;8;7;4;Thermometer;Maintenance;Person agreement verb
+12;0;8;8;2;Tom;Re-introduction;Pronoun
+12;0;8;9;0;Jerry;Re-introduction;Constructed action
+12;0;8;10;4;Jerry;Maintenance;Plain verb
+12;0;9;1;1;Tom;Introduction;Bare noun
+12;0;9;2;0;Jerry;Introduction;Bare noun
+12;0;9;3;4;Jerry;Maintenance;Bare noun
+12;0;9;4;4;Jerry;Maintenance;Constructed action
+12;0;9;5;-1;Hat;Introduction;Bare noun
+12;0;9;6;3;Jerry;Re-introduction;Constructed action
+12;0;9;7;5;Jerry;Maintenance;Constructed action
+12;0;9;8;1;Tom;Re-introduction;Bare noun
+12;0;9;9;4;Tom;Maintenance;Body part CL
+12;0;9;10;2;Jerry;Re-introduction;Bare noun
+12;0;9;11;2;Tom;Re-introduction;Noun CL
+12;0;7;1;0;White cat;Introduction;Bare noun
+12;0;7;2;4;White cat;Maintenance;Bare noun
+12;0;7;3;1;Tom;Introduction;Point noun
+12;0;7;4;-2;Black cat;Introduction;Bare noun
+12;0;7;5;4;Black cat;Maintenance;Whole entity CL
+12;0;7;6;2;White cat;Re-introduction;Bare noun
+12;0;7;7;1;Tom;Re-introduction;Bare noun
+12;0;7;8;4;Tom;Maintenance;Person agreement verb
+12;0;7;9;2;Black cat;Re-introduction;Whole entity CL
+12;0;7;10;2;Tom;Re-introduction;Person agreement verb
+12;0;7;11;2;Black cat;Re-introduction;Bare noun
+12;0;7;12;4;Black cat;Maintenance;Body part CL
+12;0;7;13;5;Black cat;Maintenance;Body part CL
+15;0;1;1;0;Tom;Introduction;Point noun
+15;0;1;2;-1;Wood;Introduction;Bare noun
+15;0;1;3;-2;Jerry;Introduction;Bare noun
+15;0;1;4;4;Jerry;Maintenance;Whole entity CL
+15;0;1;5;-1;Tunnel;Introduction;Bare noun
+15;0;1;6;3;Jerry;Maintenance;Whole entity CL
+15;0;1;7;0;Tom;Re-introduction;Bare noun
+15;0;1;8;4;Tom;Maintenance;Whole entity CL
+15;0;1;9;4;Tom;Maintenance;Whole entity CL
+15;0;1;10;2;Jerry;Re-introduction;Bare noun
+15;0;10;1;1;Tom;Introduction;Bare noun
+15;0;10;2;0;Jerry;Introduction;Bare noun
+15;0;10;3;2;Tom;Re-introduction;Bare noun
+15;0;10;4;2;Jerry;Re-introduction;Bare noun
+15;0;10;5;4;Jerry;Maintenance;Constructed action
+15;0;10;6;2;Tom;Re-introduction;Bare noun
+15;0;10;7;4;Tom;Maintenance;Constructed action
+15;0;10;8;2;Jerry;Re-introduction;Bare noun
+15;0;10;9;-2;Nest;Introduction;Bare noun
+15;0;10;10;3;Jerry;Maintenance;Whole entity CL
+15;0;10;11;1;Tom;Re-introduction;Bare noun
+15;0;10;12;4;Tom;Maintenance;Person agreement verb
+15;0;10;13;2;Jerry;Re-introduction;Constructed action
+15;0;10;14;4;Jerry;Maintenance;Plain verb
+15;0;5;1;1;Tom;Introduction;Bare noun
+15;0;5;2;4;Tom;Maintenance;Constructed action
+15;0;5;3;4;Tom;Maintenance;Bare noun
+15;0;5;4;-1;Couch;Introduction;Bare noun
+15;0;5;5;-2;Jerry;Introduction;Bare noun
+15;0;5;6;-2;Rope;Introduction;Bare noun
+15;0;5;7;1;Tom;Re-introduction;Point noun
+15;0;5;8;4;Tom;Maintenance;Whole entity CL
+15;0;5;9;2;Jerry;Re-introduction;Bare noun
+15;0;5;10;2;Tom;Re-introduction;Bare noun
+15;0;5;11;5;Tom;Maintenance;Constructed action
+15;0;5;12;2;Jerry;Re-introduction;Point noun
+15;0;5;13;2;Tom;Re-introduction;Bare noun
+15;0;5;14;2;Jerry;Re-introduction;Point noun
+15;0;5;15;2;Tom;Re-introduction;Constructed action
+15;0;5;16;-2;Rope;Introduction;Noun CL
+15;0;5;17;3;Tom;Maintenance;Constructed action
+15;0;5;18;1;Jerry;Re-introduction;Bare noun
+15;0;5;19;-2;Trap;Introduction;Bare noun
+15;0;5;20;4;Trap;Maintenance;Person agreement verb
+15;0;5;21;2;Tom;Re-introduction;Constructed action
+15;0;5;22;4;Tom;Maintenance;Plain verb
+15;0;6;1;1;Tom;Introduction;Bare noun
+15;0;6;2;0;Jerry;Introduction;Bare noun
+15;0;6;3;4;Jerry;Re-introduction;Bare noun
+15;0;6;4;2;Tom;Re-introduction;Bare noun
+15;0;6;5;2;Jerry;Re-introduction;Bare noun
+15;0;6;6;5;Jerry;Maintenance;Constructed action
+15;0;6;7;2;Tom;Re-introduction;Bare noun
+15;0;6;8;4;Tom;Maintenance;Constructed action
+15;0;6;9;4;Tom;Maintenance;Constructed action
+15;0;6;10;5;Tom;Maintenance;Constructed action
+15;0;6;11;5;Tom;Maintenance;Constructed action
+15;0;6;12;-1;Window;Introduction;SASS - Tracing
+15;0;6;13;4;Tom;Maintenance;Bare noun
+15;0;6;14;0;Jerry;Re-introduction;Bare noun
+15;0;2;1;0;White cat;Introduction;Bare noun
+15;0;2;2;0;Tom;Introduction;Bare noun
+15;0;2;3;4;Tom;Maintenance;Constructed action
+15;0;2;4;2;White cat;Re-introduction;Bare noun
+15;0;2;5;2;Tom;Re-introduction;Bare noun
+15;0;2;6;-2;Fish;Introduction;Bare noun
+15;0;2;7;2;Tom;Re-introduction;Person agreement verb
+15;0;2;8;4;Tom;Maintenance;Constructed action
+15;0;2;9;1;White cat;Re-introduction;Point noun
+15;0;2;10;2;Tom;Re-introduction;Constructed action
+15;0;2;11;-2;Bird;Introduction;Bare noun
+15;0;2;12;3;Tom;Maintenance;Constructed action
+15;0;2;13;1;White cat;Re-introduction;Point noun
+15;0;2;14;2;Tom;Re-introduction;Body part CL
+15;0;2;15;4;Tom;Maintenance;Constructed action
+15;0;3;1;0;Stairs;Introduction;Bare noun
+15;0;3;2;-1;Carpet;Introduction;Bare noun
+15;0;3;3;-1;Jerry;Introduction;Bare noun
+15;0;3;4;-1;Tom;Introduction;Bare noun
+15;0;3;5;2;Jerry;Re-introduction;Bare noun
+15;0;3;6;2;Tom;Re-introduction;Constructed action
+15;0;3;7;2;Jerry;Re-introduction;Constructed action
+15;0;3;8;4;Jerry;Maintenance;Body part CL
+15;0;3;9;2;Tom;Re-introduction;Constructed action
+15;0;3;10;2;Jerry;Re-introduction;Body part CL
+15;0;3;11;-2;Piano;Introduction;Noun CL
+15;0;3;12;1;Tom;Re-introduction;Bare noun
+15;0;3;13;1;Jerry;Re-introduction;Bare noun
+15;0;3;14;4;Jerry;Maintenance;Person agreement verb
+15;0;3;15;4;Jerry;Maintenance;Body part CL
+15;0;3;16;2;Tom;Re-introduction;Bare noun
+15;0;3;17;4;Tom;Maintenance;Constructed action
+15;0;3;18;-1;Wall;Introduction;Bare noun
+15;0;3;19;3;Tom;Maintenance;Constructed action
+15;0;3;20;0;Piano;Re-introduction;Bare noun
+15;0;3;21;2;Tom;Re-introduction;Bare noun
+15;0;3;22;4;Tom;Maintenance;SASS - Static
+15;0;4;1;1;Tom;Introduction;Bare noun
+15;0;4;2;-1;Toy house;Introduction;SASS - Tracing
+15;0;4;3;-2;Door;Introduction;Bare noun
+15;0;4;4;-2;Jerry;Introduction;Point noun
+15;0;4;5;-2;Toy girl;Introduction;Bare noun
+15;0;4;6;4;Toy girl;Maintenance;Whole entity CL
+15;0;4;7;2;Jerry;Re-introduction;Bare noun
+15;0;4;8;2;Toy girl;Re-introduction;Bare noun
+15;0;4;9;2;Jerry;Re-introduction;Bare noun
+15;0;4;10;2;Toy girl;Re-introduction;Noun CL
+15;0;4;11;2;Jerry;Re-introduction;Bare noun
+15;0;4;12;2;Toy girl;Re-introduction;Body part CL
+15;0;4;13;0;Tom;Re-introduction;Bare noun
+15;0;4;14;2;Toy girl;Re-introduction;Bare noun
+15;0;4;15;1;Jerry;Re-introduction;Bare noun
+15;0;4;16;1;Tom;Re-introduction;Point noun
+15;0;4;17;4;Tom;Maintenance;Constructed action
+15;0;4;18;4;Tom;Maintenance;Constructed action
+15;0;8;1;1;Tom;Introduction;Bare noun
+15;0;8;2;0;Jerry;Introduction;Bare noun
+15;0;8;3;4;Jerry;Maintenance;Constructed action
+15;0;8;4;2;Tom;Re-introduction;Noun CL
+15;0;8;5;-2;Hammer;Introduction;Point noun
+15;0;8;6;1;Jerry;Re-introduction;Constructed action
+15;0;8;7;1;Tom;Re-introduction;Constructed action
+15;0;8;8;2;Jerry;Re-introduction;Point noun
+15;0;8;9;-2;Thermometer;Introduction;SASS - Tracing
+15;0;8;10;1;Tom;Re-introduction;Bare noun
+15;0;8;11;1;Jerry;Re-introduction;Pronoun
+15;0;8;12;2;Tom;Re-introduction;Point noun
+15;0;8;13;4;Tom;Maintenance;Plain verb
+15;0;9;1;1;Tom;Introduction;Bare noun
+15;0;9;2;0;Jerry;Introduction;Noun CL
+15;0;9;3;4;Jerry;Re-introduction;Bare noun
+15;0;9;4;4;Jerry;Maintenance;Person agreement verb
+15;0;9;5;-1;Hat;Introduction;Bare noun
+15;0;9;6;-2;Needle;Introduction;Bare noun
+15;0;9;7;2;Jerry;Maintenance;Constructed action
+15;0;9;8;4;Jerry;Maintenance;Constructed action
+15;0;9;9;1;Tom;Re-introduction;Point noun
+15;0;9;10;4;Tom;Maintenance;Constructed action
+15;0;9;11;2;Jerry;Re-introduction;Constructed action
+15;0;9;12;2;Tom;Re-introduction;Constructed action
+15;0;7;1;0;White cat;Introduction;Bare noun
+15;0;7;2;0;Black cat;Introduction;Bare noun
+15;0;7;3;0;Tom;Introduction;Bare noun
+15;0;7;4;4;Tom;Maintenance;Whole entity CL
+15;0;7;5;4;Tom;Maintenance;Constructed action
+15;0;7;6;5;Tom;Maintenance;Constructed action
+15;0;7;7;1;Black cat;Re-introduction;Point noun
+15;0;7;8;3;Tom;Re-introduction;Constructed action
+15;0;7;9;2;Black cat;Re-introduction;Whole entity CL
+15;0;7;10;2;Tom;Re-introduction;Constructed action
+15;0;7;11;2;Black cat;Re-introduction;Whole entity CL
+15;0;7;12;2;Tom;Re-introduction;Constructed action
+15;0;7;13;2;Black cat;Re-introduction;Whole entity CL
+15;0;7;14;0;White cat;Re-introduction;Bare noun
+15;0;7;15;2;Black cat;Re-introduction;Bare noun
+15;0;7;16;1;Tom;Re-introduction;Constructed action
+15;0;7;17;2;Black cat;Re-introduction;Bare noun
+15;0;7;18;2;Tom;Re-introduction;Bare noun
+15;0;7;19;0;White cat;Re-introduction;Bare noun
+16;0;1;1;0;Tom;Introduction;Bare noun
+16;0;1;2;-1;Wood;Introduction;Bare noun
+16;0;1;3;-2;Jerry;Introduction;Noun point
+16;0;1;4;-2;Tunnel;Introduction;Bare noun
+16;0;1;5;2;Jerry;Re-introduction;Noun CL
+16;0;1;6;0;Tom;Re-introduction;Whole entity CL
+16;0;1;7;0;Wood;Re-introduction;Bare noun
+16;0;1;8;2;Tom;Re-introduction;Whole entity CL
+16;0;1;9;4;Tom;Maintenance;SASS - Static
+16;0;1;10;5;Tom;Maintenance;SASS - Tracing
+16;0;1;11;5;Tom;Maintenance;SASS - Tracing
+16;0;1;12;5;Tom;Maintenance;Body part CL
+16;0;10;1;1;Tom;Introduction;Bare noun
+16;0;10;2;0;Jerry;Introduction;Bare noun
+16;0;10;3;4;Jerry;Re-introduction;Bare noun
+16;0;10;4;2;Tom;Re-introduction;Bare noun
+16;0;10;5;4;Tom;Maintenance;Constructed action
+16;0;10;6;2;Jerry;Re-introduction;Bare noun
+16;0;10;7;2;Tom;Re-introduction;Constructed action
+16;0;10;8;5;Tom;Maintenance;Plain verb
+16;0;10;9;5;Tom;Maintenance;Constructed action
+16;0;10;10;5;Tom;Maintenance;Person agreement verb
+16;0;10;11;5;Tom;Maintenance;Constructed action
+16;0;10;12;5;Tom;Maintenance;Plain verb
+16;0;5;1;1;Tom;Introduction;Bare noun
+16;0;5;2;4;Tom;Maintenance;Person agreement verb
+16;0;5;3;0;Rope;Introduction;Bare noun
+16;0;5;4;-2;Couch;Introduction;Point noun
+16;0;5;5;3;Rope;Maintenance;Whole entity CL
+16;0;5;6;1;Tom;Re-introduction;Bare noun
+16;0;5;7;4;Tom;Maintenance;Constructed action
+16;0;5;8;-1;Jerry;Introduction;Bare noun
+16;0;5;9;-2;Soap;Introduction;Bare noun
+16;0;5;10;2;Jerry;Re-introduction;Person agreement verb
+16;0;5;11;1;Tom;Re-introduction;Constructed action
+16;0;5;12;2;Jerry;Re-introduction;Bare noun
+16;0;5;13;0;Rope;Re-introduction;Noun CL
+16;0;5;14;1;Tom;Re-introduction;Bare noun
+16;0;5;15;-2;Trap;Introduction;Noun CL
+16;0;5;16;4;Trap;Maintenance;Person agreement verb
+16;0;6;1;1;Jerry;Introduction;Bare noun
+16;0;6;2;0;Tom;Introduction;Bare noun
+16;0;6;3;4;Tom;Maintenance;Constructed action
+16;0;6;4;2;Jerry;Re-introduction;Whole entity CL
+16;0;6;5;4;Jerry;Maintenance;Plain verb
+16;0;6;6;2;Tom;Re-introduction;Constructed action
+16;0;6;7;4;Tom;Maintenance;Constructed action
+16;0;6;8;4;Tom;Maintenance;Plain verb
+16;0;6;9;5;Tom;Maintenance;Constructed action
+16;0;2;1;0;White cat;Introduction;Bare noun
+16;0;2;2;0;Tom;Introduction;Bare noun
+16;0;2;3;4;Tom;Maintenance;Constructed action
+16;0;2;4;-1;Fish;Introduction;Bare noun
+16;0;2;5;3;Tom;Maintenance;Constructed action
+16;0;2;6;0;White cat;Re-introduction;Bare noun
+16;0;2;7;-2;Bird;Introduction;Bare noun
+16;0;2;8;1;Tom;Re-introduction;Constructed action
+16;0;2;9;4;Tom;Maintenance;Constructed action
+16;0;3;1;1;Tom;Introduction;Bare noun
+16;0;3;2;0;Jerry;Introduction;Bare noun
+16;0;3;3;-2;Stairs;Introduction;Bare noun
+16;0;3;4;-2;Carpet;Introduction;Fingerspelled noun
+16;0;3;5;1;Tom;Re-introduction;Constructed action
+16;0;3;6;1;Jerry;Re-introduction;Body part CL
+16;0;3;7;2;Tom;Re-introduction;Bare noun
+16;0;3;8;-2;Piano;Introduction;Bare noun
+16;0;3;9;4;Piano;Maintenance;Person agreement verb
+16;0;3;10;2;Tom;Re-introduction;Constructed action
+16;0;3;11;4;Tom;Maintenance;Plain verb
+16;0;3;12;-1;Wall;Introduction;Bare noun
+16;0;3;13;2;Tom;Re-introduction;Person agreement verb
+16;0;3;14;5;Tom;Maintenance;Whole entity CL
+16;0;3;15;5;Tom;Maintenance;SASS - Static
+16;0;4;1;1;Tom;Introduction;Bare noun
+16;0;4;2;-1;Toy house;Introduction;Bare noun
+16;0;4;3;-1;Jerry;Introduction;Noun CL
+16;0;4;4;4;Jerry;Maintenance;Constructed action
+16;0;4;5;-1;Toy girl;Introduction;Bare noun
+16;0;4;6;4;Toy girl;Maintenance;Constructed action
+16;0;4;7;2;Jerry;Re-introduction;Constructed action
+16;0;4;8;2;Toy girl;Re-introduction;Bare noun
+16;0;4;9;0;Tom;Re-introduction;Bare noun
+16;0;4;10;4;Tom;Maintenance;Plain verb
+16;0;8;1;1;Tom;Introduction;Bare noun
+16;0;8;2;0;Jerry;Introduction;Bare noun
+16;0;8;3;-1;Hammer;Introduction;Bare noun
+16;0;8;4;3;Jerry;Maintenance;Constructed action
+16;0;8;5;1;Tom;Re-introduction;Body part CL
+16;0;8;6;4;Tom;Maintenance;Plain verb
+16;0;8;7;-1;Thermometer;Introduction;Bare noun
+16;0;8;8;2;Tom;Re-introduction;Person agreement verb
+16;0;8;9;-2;Lighter;Introduction;Bare noun
+16;0;8;10;3;Tom;Maintenance;Constructed action
+16;0;8;11;1;Thermometer;Re-introduction;Whole entity CL
+16;0;8;12;4;Thermometer;Maintenance;Plain verb
+16;0;9;1;1;Tom;Introduction;Bare noun
+16;0;9;2;0;Jerry;Introduction;Bare noun
+16;0;9;3;3;Tom;Maintenance;Plain verb
+16;0;9;4;2;Jerry;Re-introduction;Bare noun
+16;0;9;5;-2;Needle;Introduction;Bare noun
+16;0;9;6;-2;Hat;Introduction;Bare noun
+16;0;9;7;2;Jerry;Maintenance;Person agreement verb
+16;0;9;8;4;Jerry;Maintenance;Constructed action
+16;0;9;9;1;Tom;Re-introduction;Bare noun
+16;0;9;10;4;Tom;Maintenance;Body part CL
+16;0;9;11;2;Jerry;Re-introduction;Bare noun
+16;0;9;12;4;Jerry;Maintenance;Plain verb
+16;0;9;13;2;Tom;Re-introduction;Constructed action
+16;0;7;1;0;White cat;Introduction;Bare noun
+16;0;7;2;0;Black cat;Introduction;Bare noun
+16;0;7;3;0;Tom;Introduction;Bare noun
+16;0;7;4;4;Tom;Maintenance;Whole entity CL
+16;0;7;5;2;White cat;Re-introduction;Bare noun
+16;0;7;6;2;Tom;Re-introduction;Person agreement verb
+16;0;7;7;5;Tom;Maintenance;Person agreement verb
+16;0;7;8;1;Black cat;Re-introduction;Whole entity CL
+16;0;7;9;4;Black cat;Maintenance;Constructed action
+16;0;7;10;2;Tom;Re-introduction;Person agreement verb
+16;0;7;11;2;Black cat;Re-introduction;Bare noun
+18;1;1;1;0;Jerry;Introduction;Bare noun
+18;1;1;2;-1;Tom;Introduction;Bare noun
+18;1;1;3;-2;Wood;Introduction;Noun CL
+18;1;1;4;3;Tom;Maintenance;Constructed action
+18;1;1;5;1;Jerry;Re-introduction;Bare noun
+18;1;1;6;2;Tom;Re-introduction;Bare noun
+18;1;1;7;4;Tom;Maintenance;Body part CL
+18;1;1;8;5;Tom;Maintenance;Plain verb
+18;1;1;9;2;Jerry;Re-introduction;Bare noun
+18;1;1;10;3;Tom;Re-introduction;Bare noun
+18;1;1;11;5;Tom;Maintenance;SASS - Tracing
+18;1;1;12;5;Tom;Maintenance;Constructed action
+18;1;1;13;5;Tom;Maintenance;Plain verb
+18;1;10;1;1;Jerry;Introduction;Bare noun
+18;1;10;2;0;Tom;Introduction;Bare noun
+18;1;10;3;4;Tom;Maintenance;Person agreement verb
+18;1;10;4;4;Tom;Maintenance;Person agreement verb
+18;1;10;5;2;Jerry;Re-introduction;Bare noun
+18;1;10;6;3;Tom;Re-introduction;Plain verb
+18;1;10;7;2;Jerry;Re-introduction;Plain verb
+18;1;10;8;2;Tom;Re-introduction;Constructed action
+18;1;10;9;4;Tom;Maintenance;Person agreement verb
+18;1;10;10;5;Tom;Maintenance;Plain verb
+18;1;5;1;1;Tom;Introduction;Bare noun
+18;1;5;2;0;Jerry;Introduction;Bare noun
+18;1;5;3;4;Jerry;Maintenance;Whole entity CL
+18;1;5;4;2;Tom;Re-introduction;Plain verb
+18;1;5;5;2;Jerry;Re-introduction;Bare noun
+18;1;5;6;2;Tom;Re-introduction;Constructed action
+18;1;5;7;2;Jerry;Re-introduction;Plain verb
+18;1;5;8;4;Jerry;Maintenance;Constructed action
+18;1;5;9;5;Jerry;Maintenance;Whole entity CL
+18;1;5;10;5;Jerry;Maintenance;Whole entity CL
+18;1;5;11;-1;Rope;Introduction;Bare noun
+18;1;5;12;0;Tom;Re-introduction;Constructed action
+18;1;5;13;-2;Trap;Introduction;Noun point
+18;1;5;14;2;Tom;Re-introduction;Plain verb
+18;1;6;1;1;Tom;Introduction;Bare noun
+18;1;6;2;0;Jerry;Introduction;Bare noun
+18;1;6;3;-1;Sword;Introduction;Bare noun
+18;1;6;4;2;Jerry;Re-introduction;Pronoun
+18;1;6;5;4;Jerry;Maintenance;Plain verb
+18;1;6;6;1;Tom;Re-introduction;Constructed action
+18;1;6;7;2;Jerry;Re-introduction;Pronoun
+18;1;6;8;2;Tom;Re-introduction;Bare noun
+18;1;6;9;4;Tom;Maintenance;Constructed action
+18;1;6;10;5;Tom;Maintenance;Constructed action
+18;1;6;11;5;Tom;Maintenance;Plain verb
+18;1;6;12;5;Tom;Maintenance;Constructed action
+18;1;6;13;5;Tom;Maintenance;Plain verb
+18;1;2;1;0;White cat;Introduction;Bare noun
+18;1;2;2;0;Tom;Introduction;Bare noun
+18;1;2;3;4;Tom;Maintenance;Whole entity CL
+18;1;2;4;2;White cat;Re-introduction;Constructed action
+18;1;2;5;2;Tom;Re-introduction;Constructed action
+18;1;2;6;2;White cat;Re-introduction;Constructed action
+18;1;2;7;2;Tom;Re-introduction;Constructed action
+18;1;2;8;2;White cat;Re-introduction;Constructed action
+18;1;2;9;2;Tom;Re-introduction;Plain verb
+18;1;2;10;4;Tom;Maintenance;Constructed action
+18;1;3;1;1;Tom;Introduction;Point noun
+18;1;3;2;0;Jerry;Introduction;Bare noun
+18;1;3;3;2;Tom;Re-introduction;Bare noun
+18;1;3;4;2;Jerry;Re-introduction;Body part CL
+18;1;3;5;4;Jerry;Maintenance;Body part CL
+18;1;3;6;2;Tom;Re-introduction;Constructed action
+18;1;3;7;-2;Piano;Introduction;Bare noun
+18;1;3;8;2;Tom;Re-introduction;Bare noun
+18;1;3;9;4;Tom;Maintenance;Whole entity CL
+18;1;3;10;5;Tom;Maintenance;Whole entity CL
+18;1;4;1;1;Jerry;Introduction;Point noun
+18;1;4;2;-1;Toy girl;Introduction;Point noun
+18;1;4;3;4;Toy girl;Maintenance;Body part CL
+18;1;4;4;2;Jerry;Re-introduction;Constructed action
+18;1;4;5;2;Toy girl;Re-introduction;Body part CL
+18;1;4;6;5;Toy girl;Maintenance;Whole entity CL
+18;1;4;7;-1;Tom;Introduction;Bare noun
+18;1;4;8;4;Tom;Maintenance;Constructed action
+18;1;4;9;2;Toy girl;Re-introduction;Whole entity CL
+18;1;4;10;4;Toy girl;Maintenance;Person agreement verb
+18;1;4;11;2;Tom;Re-introduction;Whole entity CL
+18;1;4;12;4;Tom;Maintenance;Plain verb
+18;1;4;13;4;Tom;Maintenance;Constructed action
+18;1;4;14;5;Tom;Maintenance;Plain verb
+18;1;8;1;1;Tom;Introduction;Point noun
+18;1;8;2;4;Tom;Maintenance;Plain verb
+18;1;8;3;0;Jerry;Introduction;Bare noun
+18;1;8;4;4;Jerry;Maintenance;Constructed action
+18;1;8;5;2;Tom;Re-introduction;Plain verb
+18;1;8;6;4;Tom;Maintenance;Plain verb
+18;1;8;7;2;Jerry;Re-introduction;Bare noun
+18;1;8;8;4;Jerry;Maintenance;Plain verb
+18;1;8;9;4;Jerry;Maintenance;Constructed action
+18;1;8;10;2;Tom;Re-introduction;Plain verb
+18;1;8;11;4;Tom;Maintenance;Plain verb
+18;1;9;1;1;Tom;Introduction;Bare noun
+18;1;9;2;0;Jerry;Introduction;Bare noun
+18;1;9;3;4;Jerry;Maintenance;Bare noun
+18;1;9;4;4;Jerry;Maintenance;Person agreement verb
+18;1;9;5;5;Jerry;Maintenance;Constructed action
+18;1;9;6;5;Jerry;Maintenance;Constructed action
+18;1;9;7;1;Tom;Re-introduction;Body part CL
+18;1;9;8;3;Jerry;Re-introduction;Bare noun
+18;1;9;9;2;Tom;Re-introduction;Whole entity CL
+18;1;9;10;2;Jerry;Re-introduction;Bare noun
+18;1;7;1;1;Black cat;Introduction;Bare noun
+18;1;7;2;0;Tom;Introduction;Bare noun
+18;1;7;3;4;Tom;Maintenance;Person agreement verb
+18;1;7;4;4;Tom;Maintenance;Plain verb
+18;1;7;5;-1;White cat;Introduction;Bare noun
+18;1;7;6;3;Tom;Re-introduction;Person agreement verb
+18;1;7;7;5;Tom;Maintenance;Whole entity CL
+18;1;7;8;5;Tom;Maintenance;Person agreement verb
+18;1;7;9;5;Tom;Maintenance;Whole entity CL
+18;1;7;10;1;Black cat;Re-introduction;Point noun
+18;1;7;11;4;Black cat;Maintenance;Body part CL
+18;1;7;12;2;Tom;Re-introduction;Bare noun
+18;1;7;13;4;Tom;Maintenance;Person agreement verb
+18;1;7;14;4;Tom;Maintenance;Plain verb
+19;0;1;1;0;Tom;Introduction;Point noun
+19;0;1;2;-1;Jerry;Introduction;Bare noun
+19;0;1;3;4;Jerry;Maintenance;Body part CL
+19;0;1;4;2;Tom;Re-introduction;Bare noun
+19;0;1;5;4;Tom;Maintenance;Whole entity CL
+19;0;1;6;2;Jerry;Re-introduction;Bare noun
+19;0;1;7;-2;Tunnel;Introduction;SASS - Tracing
+19;0;1;8;3;Jerry;Maintenance;Whole entity CL
+19;0;1;9;1;Tom;Re-introduction;Bare noun
+19;0;1;10;4;Tom;Maintenance;SASS - Tracing
+19;0;1;11;2;Jerry;Re-introduction;Bare noun
+19;0;1;12;2;Tom;Re-introduction;Bare noun
+19;0;1;13;5;Tom;Maintenance;Constructed action
+19;0;10;1;1;Jerry;Introduction;Bare noun
+19;0;10;2;0;Nest;Introduction;Bare noun
+19;0;10;3;0;Tom;Introduction;Bare noun
+19;0;10;4;-2;Stethoscope;Introduction;Bare noun
+19;0;10;5;3;Tom;Maintenance;Constructed action
+19;0;10;6;0;Jerry;Re-introduction;Bare noun
+19;0;10;7;2;Tom;Re-introduction;Point noun
+19;0;10;8;4;Tom;Maintenance;Constructed action
+19;0;10;9;2;Jerry;Re-introduction;Bare noun
+19;0;10;10;4;Jerry;Maintenance;Whole entity CL
+19;0;10;11;4;Jerry;Maintenance;Whole entity CL
+19;0;10;12;2;Tom;Re-introduction;Point noun
+19;0;10;13;4;Tom;Maintenance;Constructed action
+19;0;10;14;4;Tom;Maintenance;Person agreement verb
+19;0;10;15;5;Tom;Maintenance;Constructed action
+19;0;10;16;5;Tom;Maintenance;Plain verb
+19;0;5;1;1;Tom;Introduction;Bare noun
+19;0;5;2;4;Tom;Maintenance;Constructed action
+19;0;5;3;0;Rope;Introduction;Bare noun
+19;0;5;4;-2;Couch;Introduction;Bare noun
+19;0;5;5;2;Tom;Maintenance;Whole entity CL
+19;0;5;6;4;Tom;Maintenance;Constructed action
+19;0;5;7;-1;Jerry;Introduction;Bare noun
+19;0;5;8;-2;Soap;Introduction;Bare noun
+19;0;5;9;3;Jerry;Maintenance;Bare noun
+19;0;5;10;1;Tom;Re-introduction;Constructed action
+19;0;5;11;2;Jerry;Re-introduction;Point noun
+19;0;5;12;0;Rope;Re-introduction;Bare noun
+19;0;5;13;1;Tom;Re-introduction;Bare noun
+19;0;5;14;4;Tom;Maintenance;Constructed action
+19;0;5;15;-1;Trap;Introduction;Bare noun
+19;0;5;16;2;Tom;Re-introduction;Constructed action
+19;0;6;1;1;Jerry;Introduction;Bare noun
+19;0;6;2;4;Jerry;Maintenance;Plain verb
+19;0;6;3;1;Tom;Introduction;Point noun
+19;0;6;4;4;Tom;Maintenance;Constructed action
+19;0;6;5;2;Jerry;Re-introduction;Pronoun
+19;0;6;6;2;Tom;Re-introduction;Bare noun
+19;0;6;7;5;Tom;Maintenance;Constructed action
+19;0;6;8;5;Tom;Maintenance;Constructed action
+19;0;6;9;5;Tom;Maintenance;Plain verb
+19;0;6;10;-1;Toilet;Introduction;Bare noun
+19;0;6;11;4;Tom;Maintenance;Whole entity CL
+19;0;6;12;5;Tom;Maintenance;Constructed action
+19;0;6;13;5;Tom;Maintenance;Constructed action
+19;0;6;14;-1;Window;Introduction;Bare noun
+19;0;6;15;4;Tom;Maintenance;Constructed action
+19;0;6;16;5;Tom;Maintenance;Bare noun
+19;0;6;17;1;Jerry;Re-introduction;Bare noun
+19;0;2;1;0;White cat;Introduction;Point noun
+19;0;2;2;4;White cat;Maintenance;Bare noun
+19;0;2;3;1;Tom;Introduction;Bare noun
+19;0;2;4;4;Tom;Maintenance;Constructed action
+19;0;2;5;-1;Fish;Introduction;Bare noun
+19;0;2;6;3;Tom;Maintenance;Constructed action
+19;0;2;7;0;White cat;Re-introduction;Bare noun
+19;0;2;8;2;Tom;Re-introduction;Constructed action
+19;0;2;9;-2;Bird;Introduction;Bare noun
+19;0;2;10;3;Tom;Maintenance;Constructed action
+19;0;2;11;1;White cat;Re-introduction;Point noun
+19;0;2;12;2;Tom;Re-introduction;Bare noun
+19;0;3;1;0;Stairs;Introduction;Point noun
+19;0;3;2;0;Jerry;Introduction;Bare noun
+19;0;3;3;4;Jerry;Maintenance;Plain verb
+19;0;3;4;0;Tom;Introduction;Bare noun
+19;0;3;5;-2;Carpet;Introduction;Bare noun
+19;0;3;6;3;Tom;Maintenance;Constructed action
+19;0;3;7;-2;Piano;Introduction;Point noun
+19;0;3;8;3;Tom;Maintenance;Bare noun
+19;0;3;9;0;Jerry;Re-introduction;Bare noun
+19;0;3;10;4;Jerry;Maintenance;Whole entity CL
+19;0;3;11;2;Piano;Re-introduction;SASS - Static
+19;0;3;12;1;Tom;Re-introduction;Bare noun
+19;0;3;13;4;Tom;Maintenance;Person agreement verb
+19;0;3;14;4;Tom;Maintenance;Constructed action
+19;0;3;15;5;Tom;Maintenance;Bare noun
+19;0;4;1;1;Jerry;Introduction;Point noun
+19;0;4;2;-1;Toy girl;Introduction;Point noun
+19;0;4;3;2;Jerry;Re-introduction;Noun CL
+19;0;4;4;4;Jerry;Maintenance;Whole entity CL
+19;0;4;5;2;Toy girl;Re-introduction;Bare noun
+19;0;4;6;4;Toy girl;Maintenance;Plain verb
+19;0;4;7;-1;Tom;Introduction;Point noun
+19;0;4;8;4;Tom;Maintenance;Constructed action
+19;0;4;9;4;Tom;Maintenance;Constructed action
+19;0;8;1;1;Tom;Introduction;Point noun
+19;0;8;2;0;Jerry;Introduction;Point noun
+19;0;8;3;4;Jerry;Maintenance;Constructed action
+19;0;8;4;-1;Hammer;Introduction;Bare noun
+19;0;8;5;3;Jerry;Maintenance;Constructed action
+19;0;8;6;0;Tom;Re-introduction;Body part CL
+19;0;8;7;4;Tom;Maintenance;Body part CL
+19;0;8;8;2;Jerry;Re-introduction;Pronoun
+19;0;8;9;-2;Thermometer;Introduction;Bare noun
+19;0;8;10;2;Jerry;Re-introduction;Bare noun
+19;0;8;11;2;Thermometer;Re-introduction;Whole entity CL
+19;0;9;1;1;Jerry;Introduction;Point noun
+19;0;9;2;0;Tom;Introduction;Noun CL
+19;0;9;3;3;Jerry;Maintenance;Constructed action
+19;0;9;4;4;Jerry;Maintenance;Constructed action
+19;0;9;5;-1;Hat;Introduction;Bare noun
+19;0;9;6;-2;Needle;Introduction;Bare noun
+19;0;9;7;2;Jerry;Maintenance;Constructed action
+19;0;9;8;4;Jerry;Maintenance;Constructed action
+19;0;9;9;1;Tom;Re-introduction;Bare noun
+19;0;9;10;4;Tom;Maintenance;Body part CL
+19;0;9;11;2;Jerry;Re-introduction;Point noun
+19;0;9;12;2;Tom;Re-introduction;Constructed action
+19;0;7;1;0;White cat;Introduction;Bare noun
+19;0;7;2;4;White cat;Maintenance;Bare noun
+19;0;7;3;0;Black cat;Introduction;Noun CL
+19;0;7;4;-1;Tom;Introduction;Noun CL
+19;0;7;5;4;Tom;Maintenance;Whole entity CL
+19;0;7;6;2;White cat;Re-introduction;Point noun
+19;0;7;7;1;Black cat;Re-introduction;Whole entity CL
+19;0;7;8;1;Tom;Re-introduction;Body part CL
+19;0;7;9;2;Black cat;Re-introduction;Whole entity CL
+19;0;7;10;2;Tom;Re-introduction;Bare noun
+19;0;7;11;0;White cat;Re-introduction;Bare noun
+19;0;7;12;4;White cat;Maintenance;Constructed action
+19;0;7;13;4;White cat;Re-introduction;Constructed action
+19;0;7;14;1;Black cat;Re-introduction;Bare noun
+19;0;7;15;4;Black cat;Maintenance;Constructed action
+21;0;1;1;0;Tunnel;Introduction;Noun CL
+21;0;1;2;-1;Jerry;Introduction;Bare noun
+21;0;1;3;4;Jerry;Maintenance;Whole entity CL
+21;0;1;4;-1;Tom;Introduction;Bare noun
+21;0;1;5;4;Tom;Maintenance;SASS - Tracing
+21;0;1;6;2;Jerry;Re-introduction;Bare noun
+21;0;1;7;2;Tom;Re-introduction;Bare noun
+21;0;1;8;5;Tom;Maintenance;Whole entity CL
+21;0;1;9;5;Tom;Maintenance;Bare noun
+21;0;10;1;1;Jerry;Introduction;Bare noun
+21;0;10;2;0;Nest;Introduction;Bare noun
+21;0;10;3;-1;Wall;Introduction;Bare noun
+21;0;10;4;-1;Tom;Introduction;Point noun
+21;0;10;5;4;Tom;Maintenance;Constructed action
+21;0;10;6;1;Jerry;Re-introduction;Bare noun
+21;0;10;7;2;Tom;Re-introduction;Constructed action
+21;0;10;8;5;Tom;Maintenance;Point noun
+21;0;10;9;2;Jerry;Re-introduction;Constructed action
+21;0;10;10;4;Jerry;Maintenance;Plain verb
+21;0;10;11;4;Jerry;Maintenance;Plain verb
+21;0;10;12;2;Tom;Re-introduction;Bare noun
+21;0;10;13;4;Tom;Maintenance;Constructed action
+21;0;10;14;4;Tom;Maintenance;Person agreement verb
+21;0;10;15;5;Tom;Maintenance;Person agreement verb
+21;0;10;16;5;Tom;Maintenance;Plain verb
+21;0;5;1;1;Tom;Introduction;Bare noun
+21;0;5;2;0;Jerry;Introduction;Bare noun
+21;0;5;3;-1;Couch;Introduction;Bare noun
+21;0;5;4;1;Tom;Re-introduction;Bare noun
+21;0;5;5;1;Jerry;Re-introduction;Bare noun
+21;0;5;6;-2;Soap;Introduction;Bare noun
+21;0;5;7;3;Jerry;Maintenance;Constructed action
+21;0;5;8;1;Tom;Re-introduction;Bare noun
+21;0;5;9;4;Tom;Maintenance;Constructed action
+21;0;5;10;-1;Trap;Introduction;Noun CL
+21;0;5;11;3;Tom;Maintenance;Person agreement verb
+21;0;6;1;1;Jerry;Introduction;Bare noun
+21;0;6;2;0;Tom;Introduction;Bare noun
+21;0;6;3;2;Jerry;Re-introduction;Constructed action
+21;0;6;4;2;Tom;Re-introduction;Bare noun
+21;0;6;5;-2;Toilet;Introduction;Bare noun
+21;0;6;6;3;Tom;Maintenance;Plain verb
+21;0;6;7;4;Tom;Maintenance;Constructed action
+21;0;6;8;5;Tom;Maintenance;Bare noun
+21;0;6;9;1;Jerry;Re-introduction;Bare noun
+21;0;6;10;4;Jerry;Maintenance;Plain verb
+21;0;2;1;0;White cat;Introduction;Bare noun
+21;0;2;2;4;White cat;Maintenance;Constructed action
+21;0;2;3;0;Tom;Introduction;Bare noun
+21;0;2;4;4;Tom;Maintenance;Constructed action
+21;0;2;5;-1;Fish;Introduction;Bare noun
+21;0;2;6;2;Tom;Re-introduction;Constructed action
+21;0;2;7;0;White cat;Re-introduction;Bare noun
+21;0;2;8;-2;Bird;Introduction;Bare noun
+21;0;2;9;1;Tom;Re-introduction;Constructed action
+21;0;2;10;1;White cat;Re-introduction;Constructed action
+21;0;2;11;2;Tom;Re-introduction;Constructed action
+21;0;3;1;0;Stairs;Introduction;Bare noun
+21;0;3;2;0;House;Introduction;Bare noun
+21;0;3;3;-2;Carpet;Introduction;Bare noun
+21;0;3;4;-1;Tom;Introduction;Bare noun
+21;0;3;5;-2;Jerry;Introduction;Bare noun
+21;0;3;6;3;Tom;Maintenance;Constructed action
+21;0;3;7;4;Tom;Maintenance;Constructed action
+21;0;3;8;2;Jerry;Re-introduction;Bare noun
+21;0;3;9;-2;Piano;Introduction;Point noun
+21;0;3;10;4;Piano;Maintenance;Whole entity CL
+21;0;3;11;2;Jerry;Re-introduction;Bare noun
+21;0;3;12;0;Tom;Re-introduction;Bare noun
+21;0;3;13;-2;Wall;Introduction;Bare noun
+21;0;3;14;2;Tom;Re-introduction;Person agreement verb
+21;0;3;15;4;Tom;Maintenance;Plain verb
+21;0;4;1;1;Jerry;Introduction;Bare noun
+21;0;4;2;-1;Toy girl;Introduction;Bare noun
+21;0;4;3;4;Toy girl;Maintenance;Plain verb
+21;0;4;4;-1;Toy house;Introduction;Bare noun
+21;0;4;5;3;Toy girl;Maintenance;Body part CL
+21;0;4;6;5;Toy girl;Maintenance;Body part CL
+21;0;4;7;1;Jerry;Re-introduction;Constructed action
+21;0;4;8;2;Toy girl;Re-introduction;Whole entity CL
+21;0;4;9;-2;Tom;Introduction;Bare noun
+21;0;4;10;4;Tom;Maintenance;Constructed action
+21;0;4;11;4;Tom;Maintenance;Constructed action
+21;0;4;12;5;Tom;Maintenance;Plain verb
+21;0;8;1;1;Tom;Introduction;Bare noun
+21;0;8;2;4;Tom;Maintenance;Body part CL
+21;0;8;3;0;Jerry;Introduction;Bare noun
+21;0;8;4;4;Jerry;Maintenance;Constructed action
+21;0;8;5;4;Jerry;Maintenance;Constructed action
+21;0;8;6;2;Tom;Re-introduction;Whole entity CL
+21;0;8;7;-2;Thermometer;Introduction;Bare noun
+21;0;8;8;4;Thermometer;Maintenance;Person agreement verb
+21;0;8;9;2;Jerry;Re-introduction;Bare noun
+21;0;8;10;2;Thermometer;Re-introduction;Plain verb
+21;0;9;1;1;Tom;Introduction;Bare noun
+21;0;9;2;0;Jerry;Introduction;Bare noun
+21;0;9;3;4;Jerry;Maintenance;Bare noun
+21;0;9;4;-1;Hat;Introduction;Bare noun
+21;0;9;5;-2;Needle;Introduction;Bare noun
+21;0;9;6;2;Jerry;Maintenance;Constructed action
+21;0;9;7;0;Tom;Re-introduction;Bare noun
+21;0;9;8;2;Jerry;Re-introduction;Bare noun
+21;0;9;9;4;Jerry;Maintenance;Constructed action
+21;0;9;10;2;Tom;Re-introduction;Bare noun
+21;0;7;1;0;White cat;Introduction;Bare noun
+21;0;7;2;0;Black cat;Introduction;Bare noun
+21;0;7;3;0;Tom;Introduction;Bare noun
+21;0;7;4;2;Black cat;Re-introduction;Bare noun
+21;0;7;5;1;White cat;Re-introduction;Bare noun
+21;0;7;6;1;Tom;Re-introduction;Bare noun
+21;0;7;7;1;Black cat;Re-introduction;Whole entity CL
+21;0;7;8;2;Tom;Re-introduction;Person agreement verb
+21;0;7;9;2;Black cat;Re-introduction;Whole entity CL
+21;0;7;10;2;Tom;Re-introduction;Bare noun
+21;0;7;11;4;Tom;Maintenance;Constructed action
+21;0;7;12;2;Black cat;Re-introduction;Bare noun
+22;1;1;1;0;Jerry;Introduction;Bare noun
+22;1;1;2;-1;Tom;Introduction;Bare noun
+22;1;1;3;-2;Wood;Introduction;Bare noun
+22;1;1;4;3;Tom;Maintenance;Whole entity CL
+22;1;1;5;-2;Tunnel;Introduction;SASS - Tracing
+22;1;1;6;3;Tom;Maintenance;Whole entity CL
+22;1;1;7;1;Wood;Re-introduction;Bare noun
+22;1;1;8;2;Tom;Re-introduction;Body part CL
+22;1;1;9;1;Tunnel;Re-introduction;Plain verb
+22;1;1;10;2;Tom;Re-introduction;Bare noun
+22;1;1;11;4;Tom;Maintenance;Body part CL
+22;1;10;1;1;Tom;Introduction;Bare noun
+22;1;10;2;0;Jerry;Introduction;Bare noun
+22;1;10;3;3;Tom;Maintenance;Person agreement verb
+22;1;10;4;4;Tom;Maintenance;Bare noun
+22;1;10;5;5;Tom;Maintenance;Constructed action
+22;1;10;6;2;Jerry;Re-introduction;Bare noun
+22;1;10;7;3;Tom;Re-introduction;Bare noun
+22;1;10;8;2;Jerry;Re-introduction;Bare noun
+22;1;10;9;4;Jerry;Maintenance;Whole entity CL
+22;1;10;10;5;Jerry;Maintenance;Whole entity CL
+22;1;10;11;2;Tom;Re-introduction;Bare noun
+22;1;10;12;4;Tom;Maintenance;Constructed action
+22;1;10;13;4;Tom;Maintenance;Person agreement verb
+22;1;10;14;5;Tom;Maintenance;Constructed action
+22;1;10;15;5;Tom;Maintenance;Person agreement verb
+22;1;5;1;1;Tom;Introduction;Bare noun
+22;1;5;2;4;Tom;Maintenance;Plain verb
+22;1;5;3;4;Tom;Maintenance;Body part CL
+22;1;5;4;5;Tom;Maintenance;Whole entity CL
+22;1;5;5;5;Tom;Maintenance;Person agreement verb
+22;1;5;6;-1;Jerry;Introduction;Bare noun
+22;1;5;7;-2;Soap;Introduction;Bare noun
+22;1;5;8;3;Jerry;Maintenance;Person agreement verb
+22;1;5;9;4;Jerry;Maintenance;Plain verb
+22;1;5;10;1;Tom;Re-introduction;Bare noun
+22;1;5;11;-2;Rope;Introduction;Bare noun
+22;1;5;12;2;Tom;Re-introduction;Constructed action
+22;1;5;13;-2;Trap;Introduction;Bare noun
+22;1;6;1;1;Tom;Introduction;Bare noun
+22;1;6;2;0;Jerry;Introduction;Bare noun
+22;1;6;3;3;Tom;Maintenance;Person agreement verb
+22;1;6;4;4;Tom;Maintenance;Constructed action
+22;1;6;5;2;Jerry;Re-introduction;Bare noun
+22;1;6;6;4;Jerry;Maintenance;Plain verb
+22;1;6;7;4;Jerry;Maintenance;Plain verb
+22;1;6;8;2;Tom;Re-introduction;Bare noun
+22;1;6;9;4;Tom;Maintenance;Constructed action
+22;1;6;10;4;Tom;Maintenance;Constructed action
+22;1;6;11;5;Tom;Maintenance;Person agreement verb
+22;1;6;12;5;Tom;Maintenance;Constructed action
+22;1;6;13;5;Tom;Maintenance;Plain verb
+22;1;6;14;5;Tom;Maintenance;Bare noun
+22;1;2;1;1;Tom;Introduction;Bare noun
+22;1;2;2;4;Tom;Maintenance;Constructed action
+22;1;2;3;0;White cat;Introduction;Bare noun
+22;1;2;4;4;White cat;Maintenance;Constructed action
+22;1;2;5;4;White cat;Maintenance;Plain verb
+22;1;2;6;-1;Fish;Introduction;Bare noun
+22;1;2;7;0;Tom;Re-introduction;Constructed action
+22;1;2;8;1;White cat;Re-introduction;Constructed action
+22;1;2;9;-2;Bird;Introduction;Bare noun
+22;1;2;10;1;Tom;Re-introduction;Constructed action
+22;1;2;11;1;White cat;Re-introduction;Constructed action
+22;1;2;12;2;Tom;Re-introduction;Plain verb
+22;1;3;1;0;Stairs;Introduction;Bare noun
+22;1;3;2;-1;Carpet;Introduction;Bare noun
+22;1;3;3;-1;Jerry;Introduction;Bare noun
+22;1;3;4;-1;Tom;Introduction;Bare noun
+22;1;3;5;4;Tom;Maintenance;Constructed action
+22;1;3;6;2;Jerry;Re-introduction;Body part CL
+22;1;3;7;-2;Piano;Introduction;Bare noun
+22;1;3;8;2;Jerry;Re-introduction;Bare noun
+22;1;3;9;4;Jerry;Maintenance;Body part CL
+22;1;3;10;1;Tom;Re-introduction;Bare noun
+22;1;3;11;4;Tom;Maintenance;Constructed action
+22;1;3;12;4;Tom;Maintenance;Whole entity CL
+22;1;3;13;5;Tom;Maintenance;SASS - Tracing
+22;1;4;1;1;Jerry;Introduction;Bare noun
+22;1;4;2;-1;Toy girl;Introduction;Point noun
+22;1;4;3;4;Toy girl;Maintenance;Whole entity CL
+22;1;4;4;4;Toy girl;Maintenance;Whole entity CL
+22;1;4;5;-1;Tom;Introduction;Bare noun
+22;1;4;6;0;Jerry;Re-introduction;Bare noun
+22;1;4;7;2;Tom;Re-introduction;Point noun
+22;1;4;8;4;Tom;Maintenance;Constructed action
+22;1;4;9;5;Tom;Maintenance;Plain verb
+22;1;8;1;1;Tom;Introduction;Point noun
+22;1;8;2;0;Jerry;Introduction;Bare noun
+22;1;8;3;2;Tom;Re-introduction;Whole entity CL
+22;1;8;4;2;Jerry;Re-introduction;Person agreement verb
+22;1;8;5;2;Tom;Re-introduction;Plain verb
+22;1;8;6;-2;Thermometer;Introduction;Bare noun
+22;1;8;7;4;Thermometer;Maintenance;Person agreement verb
+22;1;8;8;2;Jerry;Re-introduction;Bare noun
+22;1;8;9;2;Thermometer;Re-introduction;Plain verb
+22;1;8;10;5;Thermometer;Maintenance;Plain verb
+22;1;9;1;1;Jerry;Introduction;Bare noun
+22;1;9;2;0;Tom;Introduction;Bare noun
+22;1;9;3;4;Tom;Re-introduction;Whole entity CL
+22;1;9;4;2;Jerry;Re-introduction;Bare noun
+22;1;9;5;4;Jerry;Maintenance;Person agreement verb
+22;1;9;6;-1;Hat;Introduction;SASS - Static
+22;1;9;7;-2;Needle;Introduction;Bare noun
+22;1;9;8;1;Jerry;Re-introduction;Constructed action
+22;1;9;9;4;Jerry;Maintenance;Constructed action
+22;1;9;10;1;Tom;Re-introduction;Bare noun
+22;1;9;11;4;Tom;Maintenance;Body part CL
+22;1;9;12;2;Jerry;Re-introduction;Bare noun
+22;1;9;13;-2;Couch;Introduction;Bare noun
+22;1;9;14;3;Jerry;Maintenance;Whole entity CL
+22;1;9;15;1;Tom;Re-introduction;Body part CL
+22;1;7;1;1;Tom;Introduction;Bare noun
+22;1;7;2;0;Black cat;Introduction;Bare noun
+22;1;7;3;-1;White cat;Introduction;Bare noun
+22;1;7;4;1;Tom;Re-introduction;Bare noun
+22;1;7;5;4;Tom;Maintenance;Plain verb
+22;1;7;6;4;Tom;Maintenance;Person agreement verb
+22;1;7;7;5;Tom;Maintenance;Plain verb
+22;1;7;8;1;Black cat;Re-introduction;Bare noun
+22;1;7;9;4;Black cat;Maintenance;Constructed action
+22;1;7;10;4;Black cat;Maintenance;Plain verb
+22;1;7;11;2;Tom;Re-introduction;CL noun
+24;1;1;1;0;Jerry;Introduction;Bare noun
+24;1;1;2;-1;Tom;Introduction;Bare noun
+24;1;1;3;-2;Wood;Introduction;Bare noun
+24;1;1;4;2;Tom;Re-introduction;Constructed action
+24;1;1;5;-2;Tunnel;Introduction;SASS - Tracing
+24;1;1;6;0;Jerry;Re-introduction;Bare noun
+24;1;1;7;1;Tom;Re-introduction;Point noun
+24;1;1;8;4;Tom;Maintenance;Body part CL
+24;1;1;9;4;Tom;Maintenance;Body part CL
+24;1;1;10;2;Jerry;Re-introduction;Bare noun
+24;1;1;11;3;Tom;Re-introduction;Bare noun
+24;1;1;12;5;Tom;Maintenance;Body part CL
+24;1;1;13;5;Tom;Maintenance;Bare noun
+24;1;1;14;5;Tom;Maintenance;Constructed action
+24;1;1;15;5;Tom;Maintenance;Constructed action
+24;1;1;16;5;Tom;Maintenance;Constructed action
+24;1;1;17;1;Jerry;Re-introduction;Point noun
+24;1;1;18;3;Tom;Re-introduction;Bare noun
+24;1;1;19;5;Tom;Maintenance;Plain verb
+24;1;1;20;5;Tom;Maintenance;SASS - Tracing
+24;1;10;1;1;Tom;Introduction;Bare noun
+24;1;10;2;0;Nest;Introduction;SASS - Tracing
+24;1;10;3;-1;Jerry;Introduction;Bare noun
+24;1;10;4;1;Tom;Re-introduction;Bare noun
+24;1;10;5;4;Tom;Maintenance;Constructed action
+24;1;10;6;2;Jerry;Re-introduction;Bare noun
+24;1;10;7;4;Jerry;Maintenance;Constructed action
+24;1;10;8;2;Tom;Re-introduction;Bare noun
+24;1;10;9;2;Jerry;Re-introduction;Bare noun
+24;1;10;10;5;Jerry;Maintenance;Whole entity CL
+24;1;10;11;5;Jerry;Maintenance;Constructed action
+24;1;10;12;2;Tom;Re-introduction;Bare noun
+24;1;10;13;-2;Gun;Introduction;Bare noun
+24;1;10;14;3;Tom;Maintenance;Constructed action
+24;1;10;15;4;Tom;Maintenance;Person agreement verb
+24;1;10;16;5;Tom;Maintenance;Bare noun
+24;1;10;17;5;Tom;Maintenance;Person agreement verb
+24;1;10;18;5;Tom;Maintenance;Plain verb
+24;1;10;19;5;Tom;Maintenance;Bare noun
+24;1;5;1;1;Tom;Introduction;Bare noun
+24;1;5;2;4;Tom;Maintenance;Constructed action
+24;1;5;3;0;Couch;Introduction;Noun CL
+24;1;5;4;-2;Rope;Introduction;Bare noun
+24;1;5;5;1;Tom;Re-introduction;Bare noun
+24;1;5;6;-2;Jerry;Introduction;Bare noun
+24;1;5;7;-2;Soap;Introduction;Bare noun
+24;1;5;8;3;Jerry;Maintenance;Constructed action
+24;1;5;9;1;Tom;Re-introduction;Constructed action
+24;1;5;10;2;Jerry;Re-introduction;Bare noun
+24;1;5;11;4;Jerry;Maintenance;Constructed action
+24;1;5;12;1;Rope;Re-introduction;Bare noun
+24;1;5;13;1;Tom;Re-introduction;Point noun
+24;1;5;14;4;Tom;Maintenance;Whole entity CL
+24;1;5;15;2;Jerry;Re-introduction;Whole entity CL
+24;1;5;16;2;Tom;Re-introduction;Bare noun
+24;1;5;17;-2;Trap;Introduction;Bare noun
+24;1;5;18;2;Tom;Re-introduction;Bare noun
+24;1;5;19;4;Tom;Maintenance;Constructed action
+24;1;5;20;5;Tom;Maintenance;Constructed action
+24;1;5;21;5;Tom;Maintenance;Constructed action
+24;1;6;1;1;Tom;Introduction;Bare noun
+24;1;6;2;0;Sword;Introduction;Bare noun
+24;1;6;3;-1;Jerry;Introduction;Bare noun
+24;1;6;4;4;Jerry;Maintenance;Plain verb
+24;1;6;5;2;Tom;Re-introduction;Bare noun
+24;1;6;6;4;Tom;Maintenance;Person agreement verb
+24;1;6;7;2;Jerry;Re-introduction;Bare noun
+24;1;6;8;4;Jerry;Maintenance;Plain verb
+24;1;6;9;2;Tom;Re-introduction;Bare noun
+24;1;6;10;4;Tom;Maintenance;Constructed action
+24;1;6;11;4;Tom;Maintenance;Constructed action
+24;1;6;12;5;Tom;Maintenance;Constructed action
+24;1;6;13;5;Tom;Maintenance;Constructed action
+24;1;6;14;5;Tom;Maintenance;Constructed action
+24;1;6;15;-1;Window;Introduction;SASS - Tracing
+24;1;6;16;3;Tom;Re-introduction;Point noun
+24;1;6;17;5;Tom;Maintenance;Plain verb
+24;1;6;18;5;Tom;Maintenance;Constructed action
+24;1;6;19;1;Jerry;Re-introduction;Bare noun
+24;1;6;20;4;Jerry;Maintenance;Plain verb
+24;1;2;1;0;White cat;Introduction;Bare noun
+24;1;2;2;4;White cat;Maintenance;Constructed action
+24;1;2;3;0;Tom;Introduction;Bare noun
+24;1;2;4;4;Tom;Maintenance;Constructed action
+24;1;2;5;-1;Couch;Introduction;SASS - Tracing
+24;1;2;6;3;Tom;Maintenance;Constructed action
+24;1;2;7;0;White cat;Re-introduction;Bare noun
+24;1;2;8;2;Tom;Re-introduction;Bare noun
+24;1;2;9;-2;Fish;Introduction;Bare noun
+24;1;2;10;2;Tom;Re-introduction;Bare noun
+24;1;2;11;1;White cat;Re-introduction;Bare noun
+24;1;2;12;2;Tom;Re-introduction;Bare noun
+24;1;2;13;2;White cat;Re-introduction;Bare noun
+24;1;2;14;2;Tom;Re-introduction;Bare noun
+24;1;2;15;-2;Bird;Introduction;Noun CL
+24;1;2;16;3;Tom;Maintenance;Constructed action
+24;1;2;17;1;White cat;Re-introduction;Constructed action
+24;1;2;18;2;Tom;Re-introduction;Bare noun
+24;1;2;19;2;White cat;Re-introduction;Bare noun
+24;1;2;20;3;Tom;Maintenance;Constructed action
+24;1;2;21;4;Tom;Re-introduction;Bare noun
+24;1;3;1;0;Carpet;Introduction;Bare noun
+24;1;3;2;-1;Stairs;Introduction;Bare noun
+24;1;3;3;0;Tom;Introduction;Point noun
+24;1;3;4;-2;Jerry;Introduction;Point noun
+24;1;3;5;2;Tom;Re-introduction;Constructed action
+24;1;3;6;2;Jerry;Re-introduction;Bare noun
+24;1;3;7;2;Tom;Re-introduction;Constructed action
+24;1;3;8;-2;Piano;Introduction;Bare noun
+24;1;3;9;2;Tom;Re-introduction;Point noun
+24;1;3;10;1;Jerry;Re-introduction;Point noun
+24;1;3;11;4;Jerry;Maintenance;Plain verb
+24;1;3;12;2;Piano;Re-introduction;Point noun
+24;1;3;13;1;Tom;Re-introduction;Bare noun
+24;1;3;14;4;Tom;Maintenance;Constructed action
+24;1;3;15;4;Tom;Maintenance;Whole entity CL
+24;1;3;16;-1;Wall;Introduction;Bare noun
+24;1;3;17;4;Tom;Maintenance;Bare noun
+24;1;3;18;5;Tom;Maintenance;Whole entity CL
+24;1;3;19;5;Tom;Maintenance;CL noun
+24;1;3;20;5;Tom;Maintenance;Bare noun
+24;1;4;1;0;Toy house;Introduction;SASS - Tracing
+24;1;4;2;0;Tom;Introduction;Bare noun
+24;1;4;3;4;Tom;Maintenance;Constructed action
+24;1;4;4;4;Tom;Maintenance;Constructed action
+24;1;4;5;-1;Jerry;Introduction;Bare noun
+24;1;4;6;-2;Toy girl;Introduction;Bare noun
+24;1;4;7;4;Toy girl;Maintenance;SASS - Static
+24;1;4;8;2;Jerry;Re-introduction;Bare noun
+24;1;4;9;2;Toy girl;Re-introduction;Noun CL
+24;1;4;10;2;Jerry;Re-introduction;Bare noun
+24;1;4;11;4;Jerry;Maintenance;Body part CL
+24;1;4;12;2;Toy girl;Re-introduction;Noun CL
+24;1;4;13;2;Jerry;Re-introduction;Bare noun
+24;1;4;14;0;Tom;Re-introduction;Point noun
+24;1;4;15;4;Tom;Maintenance;Constructed action
+24;1;4;16;2;Toy girl;Re-introduction;Bare noun
+24;1;4;17;1;Jerry;Re-introduction;Bare noun
+24;1;4;18;1;Tom;Re-introduction;Point noun
+24;1;4;19;4;Tom;Maintenance;Constructed action
+24;1;8;1;1;Tom;Introduction;Bare noun
+24;1;8;2;4;Tom;Maintenance;Bare noun
+24;1;8;3;0;Jerry;Introduction;Bare noun
+24;1;8;4;4;Jerry;Maintenance;Constructed action
+24;1;8;5;2;Tom;Re-introduction;Bare noun
+24;1;8;6;2;Jerry;Re-introduction;Bare noun
+24;1;8;7;-2;Hammer;Introduction;Bare noun
+24;1;8;8;3;Jerry;Maintenance;Constructed action
+24;1;8;9;1;Tom;Re-introduction;Constructed action
+24;1;8;10;4;Tom;Maintenance;Constructed action
+24;1;8;11;2;Jerry;Re-introduction;Bare noun
+24;1;8;12;-2;Thermometer;Introduction;SASS - Tracing
+24;1;8;13;4;Thermometer;Maintenance;Person agreement verb
+24;1;8;14;2;Tom;Re-introduction;Constructed action
+24;1;8;15;1;Jerry;Re-introduction;Bare noun
+24;1;8;16;4;Jerry;Maintenance;Plain verb
+24;1;8;17;4;Jerry;Maintenance;Plain verb
+24;1;8;18;2;Tom;Re-introduction;Point noun
+24;1;9;1;1;Tom;Introduction;Bare noun
+24;1;9;2;0;Jerry;Introduction;Bare noun
+24;1;9;3;2;Tom;Re-introduction;Bare noun
+24;1;9;4;4;Tom;Maintenance;Constructed action
+24;1;9;5;-1;Hat;Introduction;SASS - Static
+24;1;9;6;3;Tom;Maintenance;Whole entity CL
+24;1;9;7;0;Jerry;Re-introduction;Bare noun
+24;1;9;8;-2;Needle;Introduction;Bare noun
+24;1;9;9;2;Jerry;Re-introduction;Constructed action
+24;1;9;10;1;Tom;Re-introduction;Bare noun
+24;1;9;11;2;Jerry;Re-introduction;Bare noun
+24;1;9;12;2;Tom;Re-introduction;Noun CL
+24;1;7;1;0;White cat;Introduction;Bare noun
+24;1;7;2;4;White cat;Maintenance;Constructed action
+24;1;7;3;1;Tom;Introduction;Bare noun
+24;1;7;4;-2;Black cat;Introduction;Bare noun
+24;1;7;5;4;Black cat;Maintenance;Whole entity CL
+24;1;7;6;4;Black cat;Maintenance;Bare noun
+24;1;7;7;2;Tom;Re-introduction;Bare noun
+24;1;7;8;0;White cat;Re-introduction;Bare noun
+24;1;7;9;1;Black cat;Re-introduction;Bare noun
+24;1;7;10;1;Tom;Re-introduction;Bare noun
+24;1;7;11;4;Tom;Maintenance;Constructed action
+24;1;7;12;2;Black cat;Re-introduction;Bare noun
+24;1;7;13;2;Tom;Re-introduction;Bare noun
+24;1;7;14;5;Tom;Maintenance;Person agreement verb
+24;1;7;15;2;Black cat;Re-introduction;Bare noun
+24;1;7;16;2;Tom;Re-introduction;Bare noun
+24;1;7;17;2;Black cat;Re-introduction;Bare noun
+24;1;7;18;4;Black cat;Maintenance;Constructed action
+24;1;7;19;5;Black cat;Maintenance;Constructed action
+24;1;7;20;2;Tom;Re-introduction;Bare noun
+24;1;7;21;3;Black cat;Re-introduction;Bare noun
+24;1;7;22;0;White cat;Re-introduction;Bare noun
+24;1;7;23;2;Black cat;Re-introduction;Constructed action
+24;1;7;24;4;Black cat;Maintenance;Constructed action
+25;0;1;1;0;Jerry;Introduction;Bare noun
+25;0;1;2;-1;Tom;Introduction;Bare noun
+25;0;1;3;-2;Boat;Introduction;Bare noun
+25;0;1;4;-2;Tunnel;Introduction;SASS - Tracing
+25;0;1;5;1;Jerry;Re-introduction;Bare noun
+25;0;1;6;4;Jerry;Maintenance;Whole entity CL
+25;0;1;7;1;Tom;Re-introduction;Bare noun
+25;0;1;8;4;Tom;Maintenance;Whole entity CL
+25;0;1;9;4;Tom;Maintenance;SASS - Tracing
+25;0;1;10;5;Tom;Maintenance;Plain verb
+25;0;1;11;1;Jerry;Re-introduction;Bare noun
+25;0;1;12;3;Tom;Re-introduction;Bare noun
+25;0;1;13;5;Tom;Maintenance;Bare noun
+25;0;10;1;1;Jerry;Introduction;Bare noun
+25;0;10;2;0;Tom;Introduction;Bare noun
+25;0;10;3;4;Tom;Maintenance;Constructed action
+25;0;10;4;-1;Stethoscope;Introduction;Bare noun
+25;0;10;5;1;Jerry;Re-introduction;Bare noun
+25;0;10;6;1;Tom;Re-introduction;Point noun
+25;0;10;7;4;Tom;Maintenance;Plain verb
+25;0;10;8;4;Tom;Maintenance;Plain verb
+25;0;10;9;2;Jerry;Re-introduction;Bare noun
+25;0;10;10;-2;Gun;Introduction;Point noun
+25;0;10;11;1;Tom;Re-introduction;Bare noun
+25;0;10;12;-2;Nest;Introduction;SASS - Tracing
+25;0;10;13;3;Tom;Maintenance;Person agreement verb
+25;0;10;14;4;Tom;Maintenance;Constructed action
+25;0;10;15;5;Tom;Maintenance;Person agreement verb
+25;0;5;1;1;Tom;Introduction;Bare noun
+25;0;5;2;0;Jerry;Introduction;Bare noun
+25;0;5;3;-1;Couch;Introduction;Bare noun
+25;0;5;4;3;Jerry;Maintenance;Whole entity CL
+25;0;5;5;1;Tom;Re-introduction;Pronoun
+25;0;5;6;2;Jerry;Re-introduction;Bare noun
+25;0;5;7;-2;Rope;Introduction;Bare noun
+25;0;5;8;1;Tom;Re-introduction;Constructed action
+25;0;5;9;4;Tom;Maintenance;Constructed action
+25;0;5;10;-1;Soap;Introduction;Bare noun
+25;0;5;11;0;Jerry;Re-introduction;Person agreement verb
+25;0;5;12;1;Tom;Re-introduction;Constructed action
+25;0;5;13;2;Jerry;Re-introduction;Bare noun
+25;0;5;14;4;Jerry;Maintenance;Plain verb
+25;0;5;15;5;Jerry;Maintenance;Constructed action
+25;0;5;16;2;Tom;Re-introduction;Bare noun
+25;0;5;17;4;Tom;Maintenance;Person agreement verb
+25;0;5;18;-1;Trap;Introduction;Noun CL
+25;0;5;19;3;Tom;Maintenance;Person agreement verb
+25;0;6;1;1;Jerry;Introduction;Bare noun
+25;0;6;2;4;Jerry;Maintenance;Plain verb
+25;0;6;3;4;Jerry;Maintenance;Constructed action
+25;0;6;4;0;Tom;Introduction;Bare noun
+25;0;6;5;-2;Sword;Introduction;Bare noun
+25;0;6;6;1;Jerry;Re-introduction;Bare noun
+25;0;6;7;1;Tom;Re-introduction;Bare noun
+25;0;6;8;1;Sword;Re-introduction;Bare noun
+25;0;6;9;3;Tom;Maintenance;Person agreement verb
+25;0;6;10;4;Tom;Maintenance;Constructed action
+25;0;6;11;-1;Toilet;Introduction;Bare noun
+25;0;6;12;3;Tom;Maintenance;Plain verb
+25;0;6;13;5;Tom;Maintenance;Constructed action
+25;0;6;14;5;Tom;Maintenance;Constructed action
+25;0;6;15;5;Tom;Maintenance;Bare noun
+25;0;6;16;1;Jerry;Re-introduction;Bare noun
+25;0;2;1;0;White cat;Introduction;Bare noun
+25;0;2;2;4;White cat;Maintenance;Bare noun
+25;0;2;3;1;Tom;Introduction;Bare noun
+25;0;2;4;2;White cat;Re-introduction;Bare noun
+25;0;2;5;2;Tom;Re-introduction;Pronoun
+25;0;2;6;-2;Fish;Introduction;Bare noun
+25;0;2;7;1;White cat;Re-introduction;Bare noun
+25;0;2;8;-2;Bird;Introduction;Bare noun
+25;0;2;9;1;Tom;Re-introduction;Constructed action
+25;0;2;10;1;White cat;Re-introduction;Bare noun
+25;0;2;11;2;Tom;Re-introduction;Bare noun
+25;0;3;1;0;Stairs;Introduction;Bare noun
+25;0;3;2;-1;Carpet;Introduction;Bare noun
+25;0;3;3;4;Carpet;Maintenance;Whole entity CL
+25;0;3;4;-1;Jerry;Introduction;Bare noun
+25;0;3;5;-2;Tom;Introduction;Bare noun
+25;0;3;6;4;Tom;Maintenance;Constructed action
+25;0;3;7;-1;Piano;Introduction;Noun CL
+25;0;3;8;2;Tom;Re-introduction;Constructed action
+25;0;3;9;0;Jerry;Re-introduction;Bare noun
+25;0;3;10;4;Jerry;Maintenance;Body part CL
+25;0;3;11;2;Tom;Re-introduction;Bare noun
+25;0;3;12;0;Piano;Re-introduction;Person agreement verb
+25;0;3;13;3;Tom;Maintenance;Whole entity CL
+25;0;3;14;4;Tom;Maintenance;Plain verb
+25;0;3;15;5;Tom;Maintenance;Whole entity CL
+25;0;4;1;1;Jerry;Introduction;Noun point
+25;0;4;2;-1;Toy girl;Introduction;Noun point
+25;0;4;3;2;Jerry;Re-introduction;Bare noun
+25;0;4;4;-2;Toy house;Introduction;Bare noun
+25;0;4;5;3;Jerry;Maintenance;Constructed action
+25;0;4;6;1;Toy girl;Re-introduction;Whole entity CL
+25;0;4;7;2;Jerry;Re-introduction;Constructed action
+25;0;4;8;-2;Tom;Introduction;Bare noun
+25;0;4;9;4;Tom;Maintenance;Constructed action
+25;0;4;10;4;Tom;Maintenance;Whole entity CL
+25;0;4;11;5;Tom;Maintenance;Bare noun
+25;0;8;1;1;Tom;Introduction;Bare noun
+25;0;8;2;0;Jerry;Introduction;Bare noun
+25;0;8;3;2;Tom;Re-introduction;Bare noun
+25;0;8;4;2;Jerry;Re-introduction;Constructed action
+25;0;8;5;-2;Hammer;Introduction;Bare noun
+25;0;8;6;1;Tom;Re-introduction;Plain verb
+25;0;8;7;4;Tom;Maintenance;Person agreement verb
+25;0;8;8;2;Jerry;Re-introduction;Constructed action
+25;0;8;9;-2;Thermometer;Introduction;Bare noun
+25;0;8;10;2;Jerry;Re-introduction;Person agreement verb
+25;0;8;11;4;Jerry;Maintenance;Point noun
+25;0;8;12;-1;Lighter;Introduction;Bare noun
+25;0;8;13;3;Jerry;Maintenance;Plain verb
+25;0;9;1;1;Tom;Introduction;Bare noun
+25;0;9;2;0;Jerry;Introduction;Bare noun
+25;0;9;3;4;Jerry;Maintenance;Body part CL
+25;0;9;4;2;Tom;Re-introduction;Bare noun
+25;0;9;5;-2;Hat;Introduction;SASS - Static
+25;0;9;6;1;Jerry;Re-introduction;Bare noun
+25;0;9;7;4;Jerry;Maintenance;Constructed action
+25;0;9;8;-1;Needle;Introduction;Bare noun
+25;0;9;9;2;Jerry;Re-introduction;Constructed action
+25;0;9;10;0;Tom;Re-introduction;Bare noun
+25;0;9;11;2;Jerry;Re-introduction;Constructed action
+25;0;9;12;2;Tom;Re-introduction;Bare noun
+25;0;9;13;2;Jerry;Re-introduction;Bare noun
+25;0;9;14;4;Jerry;Maintenance;Constructed action
+25;0;9;15;2;Tom;Re-introduction;Constructed action
+25;0;7;1;0;White cat;Introduction;Bare noun
+25;0;7;2;0;Black cat;Introduction;Bare noun
+25;0;7;3;0;Tom;Introduction;Bare noun
+25;0;7;4;4;Tom;Maintenance;Constructed action
+25;0;7;5;4;Tom;Maintenance;Constructed action
+25;0;7;6;2;Black cat;Re-introduction;Whole entity CL
+25;0;7;7;3;Tom;Re-introduction;Person agreement verb
+25;0;7;8;2;Black cat;Re-introduction;Whole entity CL
+25;0;7;9;2;Tom;Re-introduction;Body part CL
+25;0;7;10;2;Black cat;Re-introduction;Constructed action
+25;0;7;11;4;Black cat;Maintenance;Body part CL
+25;0;7;12;1;White cat;Re-introduction;Bare noun
+25;0;7;13;4;White cat;Maintenance;Body part CL
+27;1;1;1;0;Tom;Introduction;Fingerspelled noun
+27;1;1;2;-1;Jerry;Introduction;Fingerspelled noun
+27;1;1;3;4;Jerry;Maintenance;Whole entity CL
+27;1;1;4;4;Jerry;Maintenance;Bare noun
+27;1;1;5;2;Tom;Re-introduction;Bare noun
+27;1;1;6;3;Jerry;Re-introduction;Bare noun
+27;1;1;7;2;Tom;Re-introduction;Point noun
+27;1;1;8;4;Tom;Maintenance;Plain verb
+27;1;1;9;5;Tom;Maintenance;Constructed action
+27;1;1;10;5;Tom;Maintenance;Plain verb
+27;1;1;11;5;Tom;Maintenance;Plain verb
+27;1;1;12;1;Jerry;Re-introduction;Bare noun
+27;1;1;13;4;Jerry;Maintenance;Plain verb
+27;1;1;14;2;Tom;Re-introduction;Bare noun
+27;1;1;15;4;Tom;Maintenance;Constructed action
+27;1;1;16;4;Tom;Maintenance;Body part CL
+27;1;10;1;1;Tom;Introduction;Fingerspelled noun
+27;1;10;2;0;Jerry;Introduction;Fingerspelled noun
+27;1;10;3;-1;Nest;Introduction;Bare noun
+27;1;10;4;1;Tom;Re-introduction;Bare noun
+27;1;10;5;4;Tom;Maintenance;Constructed action
+27;1;10;6;4;Tom;Maintenance;Constructed action
+27;1;10;7;5;Tom;Maintenance;Constructed action
+27;1;10;8;1;Jerry;Re-introduction;Bare noun
+27;1;10;9;3;Tom;Re-introduction;Bare noun
+27;1;10;10;5;Tom;Maintenance;Plain verb
+27;1;10;11;2;Jerry;Re-introduction;Bare noun
+27;1;10;12;2;Tom;Re-introduction;Bare noun
+27;1;10;13;5;Tom;Maintenance;Constructed action
+27;1;10;14;5;Tom;Maintenance;Person agreement verb
+27;1;10;15;5;Tom;Maintenance;Constructed action
+27;1;5;1;1;Tom;Introduction;Fingerspelled noun
+27;1;5;2;4;Tom;Maintenance;Plain verb
+27;1;5;3;4;Tom;Maintenance;Constructed action
+27;1;5;4;5;Tom;Maintenance;Constructed action
+27;1;5;5;-1;Soap;Introduction;Bare noun
+27;1;5;6;3;Tom;Re-introduction;Bare noun
+27;1;5;7;5;Tom;Maintenance;Plain verb
+27;1;5;8;-1;Jerry;Introduction;Bare noun
+27;1;5;9;4;Jerry;Maintenance;Plain verb
+27;1;5;10;4;Jerry;Maintenance;Whole entity CL
+27;1;5;11;-1;Rope;Introduction;Bare noun
+27;1;5;12;0;Tom;Re-introduction;Fingerspelled noun
+27;1;5;13;4;Tom;Maintenance;Constructed action
+27;1;5;14;4;Tom;Maintenance;Constructed action
+27;1;5;15;-1;Trap;Introduction;Noun CL
+27;1;5;16;4;Tom;Maintenance;Person agreement verb
+27;1;6;1;1;Jerry;Introduction;Fingerspelled noun
+27;1;6;2;0;Tom;Introduction;Bare noun
+27;1;6;3;4;Tom;Maintenance;Constructed action
+27;1;6;4;4;Tom;Maintenance;Constructed action
+27;1;6;5;2;Jerry;Re-introduction;Bare noun
+27;1;6;6;4;Jerry;Maintenance;Person agreement verb
+27;1;6;7;2;Tom;Re-introduction;Bare noun
+27;1;6;8;4;Tom;Maintenance;Plain verb
+27;1;6;9;4;Tom;Maintenance;Constructed action
+27;1;6;10;5;Tom;Maintenance;Constructed action
+27;1;6;11;5;Tom;Maintenance;Plain verb
+27;1;6;12;5;Tom;Maintenance;Plain verb
+27;1;2;1;0;White cat;Introduction;Bare noun
+27;1;2;2;0;Tom;Introduction;Fingerspelled noun
+27;1;2;3;4;Tom;Maintenance;Constructed action
+27;1;2;4;2;White cat;Re-introduction;Bare noun
+27;1;2;5;-2;Fish;Introduction;Bare noun
+27;1;2;6;1;Tom;Re-introduction;Bare noun
+27;1;2;7;1;White cat;Re-introduction;Bare noun
+27;1;2;8;-2;Bird;Introduction;Bare noun
+27;1;2;9;1;Tom;Re-introduction;Constructed action
+27;1;2;10;1;White cat;Re-introduction;Bare noun
+27;1;2;11;2;Tom;Re-introduction;Bare noun
+27;1;2;12;4;Tom;Maintenance;Constructed action
+27;1;2;13;5;Tom;Maintenance;Body part CL
+27;1;3;1;0;Stairs;Introduction;Bare noun
+27;1;3;2;-1;Carpet;Introduction;Bare noun
+27;1;3;3;0;Tom;Introduction;Fingerspelled noun
+27;1;3;4;-2;Jerry;Introduction;Fingerspelled noun
+27;1;3;5;2;Tom;Re-introduction;Constructed action
+27;1;3;6;-2;Piano;Introduction;Noun CL
+27;1;3;7;1;Jerry;Re-introduction;Bare noun
+27;1;3;8;4;Jerry;Maintenance;Body part CL
+27;1;3;9;2;Piano;Re-introduction;Point noun
+27;1;3;10;0;Tom;Re-introduction;Bare noun
+27;1;3;11;4;Tom;Maintenance;Constructed action
+27;1;3;12;-1;Wall;Introduction;Bare noun
+27;1;3;13;2;Tom;Re-introduction;Bare noun
+27;1;3;14;5;Tom;Maintenance;Whole entity CL
+27;1;4;1;1;Jerry;Introduction;Fingerspelled noun
+27;1;4;2;-1;Toy girl;Introduction;Bare noun
+27;1;4;3;4;Toy girl;Maintenance;Whole entity CL
+27;1;4;4;4;Toy girl;Maintenance;Plain verb
+27;1;4;5;5;Toy girl;Maintenance;Whole entity CL
+27;1;4;6;1;Jerry;Re-introduction;Bare noun
+27;1;4;7;3;Toy girl;Re-introduction;Bare noun
+27;1;4;8;-2;Tom;Introduction;Fingerspelled noun
+27;1;4;9;4;Tom;Maintenance;Constructed action
+27;1;4;10;-1;Mirror;Introduction;Bare noun
+27;1;4;11;3;Tom;Maintenance;Constructed action
+27;1;8;1;1;Tom;Introduction;Fingerspelled noun
+27;1;8;2;0;Jerry;Introduction;Fingerspelled noun
+27;1;8;3;-1;Hammer;Introduction;Fingerspelled noun
+27;1;8;4;3;Jerry;Maintenance;Constructed action
+27;1;8;5;1;Tom;Re-introduction;Constructed action
+27;1;8;6;2;Jerry;Re-introduction;Bare noun
+27;1;8;7;-2;Thermometer;Introduction;Bare noun
+27;1;8;8;3;Jerry;Maintenance;Person agreement verb
+27;1;8;9;4;Jerry;Maintenance;Constructed action
+27;1;8;10;5;Jerry;Maintenance;Plain verb
+27;1;8;11;1;Tom;Re-introduction;Bare noun
+27;1;9;1;1;Tom;Introduction;Fingerspelled noun
+27;1;9;2;0;Jerry;Introduction;Fingerspelled noun
+27;1;9;3;4;Jerry;Maintenance;Constructed action
+27;1;9;4;2;Tom;Re-introduction;Bare noun
+27;1;9;5;2;Jerry;Re-introduction;Bare noun
+27;1;9;6;5;Jerry;Maintenance;Plain verb
+27;1;9;7;-1;Hat;Introduction;Bare noun
+27;1;9;8;-2;Needle;Introduction;Bare noun
+27;1;9;9;1;Jerry;Re-introduction;Constructed action
+27;1;9;10;4;Jerry;Maintenance;Constructed action
+27;1;9;11;1;Tom;Re-introduction;Bare noun
+27;1;9;12;-2;Couch;Introduction;Bare noun
+27;1;9;13;1;Jerry;Re-introduction;Constructed action
+27;1;9;14;1;Tom;Re-introduction;Bare noun
+27;1;7;1;0;White cat;Introduction;Bare noun
+27;1;7;2;0;Tom;Introduction;Bare noun
+27;1;7;3;-1;Black cat;Introduction;Bare noun
+27;1;7;4;2;Tom;Re-introduction;Bare noun
+27;1;7;5;4;Tom;Maintenance;Person agreement verb
+27;1;7;6;2;Black cat;Re-introduction;Bare noun
+27;1;7;7;2;Tom;Re-introduction;Bare noun
+27;1;7;8;5;Tom;Maintenance;Person agreement verb
+27;1;7;9;2;Black cat;Re-introduction;Bare noun
+27;1;7;10;4;Black cat;Maintenance;Plain verb
+27;1;7;11;2;Tom;Re-introduction;Bare noun
+27;1;7;12;4;Tom;Maintenance;Constructed action
+27;1;7;13;4;Tom;Maintenance;Plain verb
+30;1;1;1;0;Jerry;Introduction;Bare noun
+30;1;1;2;-1;Tom;Introduction;Bare noun
+30;1;1;3;-2;Tunnel;Introduction;Bare noun
+30;1;1;4;3;Tom;Maintenance;Constructed action
+30;1;1;5;4;Tom;Maintenance;Whole entity CL
+30;1;1;6;5;Tom;Maintenance;Whole entity CL
+30;1;1;7;5;Tom;Maintenance;SASS - Tracing
+30;1;1;8;5;Tom;Maintenance;Constructed action
+30;1;10;1;1;Jerry;Introduction;Bare noun
+30;1;10;2;0;Tom;Introduction;Noun CL
+30;1;10;3;4;Tom;Re-introduction;Pronoun
+30;1;10;4;4;Tom;Maintenance;Constructed action
+30;1;10;5;2;Jerry;Re-introduction;Pronoun
+30;1;10;6;3;Tom;Re-introduction;Bare noun
+30;1;10;7;2;Jerry;Re-introduction;Constructed action
+30;1;10;8;2;Tom;Re-introduction;Constructed action
+30;1;10;9;4;Tom;Maintenance;Person agreement verb
+30;1;10;10;5;Tom;Maintenance;Person agreement verb
+30;1;10;11;5;Tom;Maintenance;Plain verb
+30;1;5;1;1;Rope;Introduction;SASS - Tracing
+30;1;5;2;0;Jerry;Introduction;Bare noun
+30;1;5;3;0;Tom;Introduction;Point noun
+30;1;5;4;4;Tom;Maintenance;Constructed action
+30;1;5;5;-1;Soap;Introduction;Bare noun
+30;1;5;6;1;Jerry;Re-introduction;Person agreement verb
+30;1;5;7;1;Tom;Re-introduction;Bare noun
+30;1;5;8;2;Jerry;Re-introduction;Pronoun
+30;1;5;9;2;Tom;Re-introduction;Bare noun
+30;1;5;10;4;Tom;Maintenance;Whole entity CL
+30;1;5;11;5;Tom;Maintenance;Constructed action
+30;1;5;12;-1;Trap;Introduction;Bare noun
+30;1;5;13;4;Tom;Maintenance;Constructed action
+30;1;6;1;1;Jerry;Introduction;Bare noun
+30;1;6;2;0;Tom;Introduction;Noun CL
+30;1;6;3;-1;Sword;Introduction;Bare noun
+30;1;6;4;3;Tom;Maintenance;Constructed action
+30;1;6;5;4;Tom;Maintenance;Constructed action
+30;1;6;6;1;Jerry;Re-introduction;Bare noun
+30;1;6;7;2;Tom;Re-introduction;Bare noun
+30;1;6;8;2;Jerry;Re-introduction;Constructed action
+30;1;6;9;2;Tom;Re-introduction;Bare noun
+30;1;6;10;4;Tom;Maintenance;Constructed action
+30;1;6;11;5;Tom;Maintenance;Constructed action
+30;1;6;12;5;Tom;Maintenance;Constructed action
+30;1;6;13;5;Tom;Maintenance;Body part CL
+30;1;6;14;5;Tom;Maintenance;Plain verb
+30;1;2;1;0;White cat;Introduction;Bare noun
+30;1;2;2;4;White cat;Maintenance;Constructed action
+30;1;2;3;1;Tom;Introduction;Point noun
+30;1;2;4;4;Tom;Maintenance;Constructed action
+30;1;2;5;4;Tom;Maintenance;Constructed action
+30;1;2;6;2;White cat;Re-introduction;Point noun
+30;1;2;7;-2;Fish;Introduction;Bare noun
+30;1;2;8;1;Tom;Re-introduction;Constructed action
+30;1;2;9;1;White cat;Re-introduction;Bare noun
+30;1;2;10;-2;Bird;Introduction;Bare noun
+30;1;2;11;1;Tom;Re-introduction;Constructed action
+30;1;2;12;1;White cat;Re-introduction;Bare noun
+30;1;2;13;2;Tom;Re-introduction;Bare noun
+30;1;2;14;4;Tom;Maintenance;Constructed action
+30;1;3;1;0;Stairs;Introduction;Bare noun
+30;1;3;2;0;Tom;Introduction;Point noun
+30;1;3;3;-1;Jerry;Introduction;Bare noun
+30;1;3;4;-2;Carpet;Introduction;Bare noun
+30;1;3;5;2;Tom;Maintenance;Constructed action
+30;1;3;6;1;Jerry;Re-introduction;Bare noun
+30;1;3;7;3;Tom;Maintenance;Constructed action
+30;1;3;8;-2;Piano;Introduction;Bare noun
+30;1;3;9;1;Jerry;Re-introduction;Point noun
+30;1;3;10;4;Jerry;Maintenance;Constructed action
+30;1;3;11;2;Tom;Re-introduction;Point noun
+30;1;3;12;4;Tom;Maintenance;Constructed action
+30;1;3;13;4;Tom;Maintenance;Whole entity CL
+30;1;3;14;5;Tom;Maintenance;Plain verb
+30;1;3;16;5;Tom;Maintenance;Plain verb
+30;1;3;17;5;Tom;Maintenance;SASS - Tracing
+30;1;4;1;1;Jerry;Introduction;Point noun
+30;1;4;2;-1;Toy girl;Introduction;Bare noun
+30;1;4;3;4;Toy girl;Maintenance;Plain verb
+30;1;4;4;4;Toy girl;Maintenance;Whole entity CL
+30;1;4;5;2;Jerry;Re-introduction;Point noun
+30;1;4;6;3;Toy girl;Re-introduction;Noun CL
+30;1;4;7;-2;Toy house;Introduction;Bare noun
+30;1;4;8;-2;Tom;Introduction;Point noun
+30;1;4;9;4;Tom;Maintenance;Constructed action
+30;1;4;10;4;Tom;Maintenance;Plain verb
+30;1;4;11;1;Toy girl;Re-introduction;Bare noun
+30;1;4;12;3;Tom;Re-introduction;Point noun
+30;1;4;13;5;Tom;Maintenance;Constructed action
+30;1;4;14;5;Tom;Maintenance;Plain verb
+30;1;4;15;5;Tom;Maintenance;Constructed action
+30;1;4;16;-1;Mirror;Introduction;Bare noun
+30;1;4;17;4;Tom;Maintenance;Constructed action
+30;1;4;18;5;Tom;Maintenance;Constructed action
+30;1;8;1;1;Tom;Introduction;Noun point
+30;1;8;2;0;Jerry;Introduction;Point noun
+30;1;8;3;4;Jerry;Maintenance;Constructed action
+30;1;8;4;4;Jerry;Maintenance;Constructed action
+30;1;8;5;-1;Hammer;Introduction;Bare noun
+30;1;8;6;4;Jerry;Maintenance;Constructed action
+30;1;8;7;0;Tom;Re-introduction;Bare noun
+30;1;8;8;-2;Thermometer;Introduction;Point noun
+30;1;8;9;4;Thermometer;Maintenance;Person agreement verb
+30;1;8;10;2;Jerry;Re-introduction;Point noun
+30;1;8;11;4;Jerry;Maintenance;Plain verb
+30;1;8;12;4;Jerry;Maintenance;Plain verb
+30;1;8;13;5;Jerry;Maintenance;Plain verb
+30;1;9;1;1;Jerry;Introduction;Bare noun
+30;1;9;2;0;Tom;Introduction;Bare noun
+30;1;9;3;2;Jerry;Re-introduction;Bare noun
+30;1;9;4;2;Tom;Re-introduction;Point noun
+30;1;9;5;2;Jerry;Re-introduction;Bare noun
+30;1;9;6;4;Jerry;Maintenance;Constructed action
+30;1;9;7;-1;Hat;Introduction;SASS - Static
+30;1;9;8;-2;Needle;Introduction;Bare noun
+30;1;9;9;2;Jerry;Maintenance;Constructed action
+30;1;9;10;4;Jerry;Maintenance;Constructed action
+30;1;9;11;1;Tom;Re-introduction;Bare noun
+30;1;9;12;4;Tom;Maintenance;Body part CL
+30;1;9;13;2;Jerry;Re-introduction;Bare noun
+30;1;9;14;4;Jerry;Maintenance;Constructed action
+30;1;9;15;2;Tom;Re-introduction;Constructed action
+30;1;7;1;0;White cat;Introduction;Bare noun
+30;1;7;2;4;White cat;Maintenance;Constructed action
+30;1;7;3;1;Tom;Introduction;Bare noun
+30;1;7;4;-2;Black cat;Introduction;Bare noun
+30;1;7;5;4;Black cat;Maintenance;Whole entity CL
+30;1;7;6;4;Black cat;Maintenance;Whole entity CL
+30;1;7;7;2;Tom;Re-introduction;Bare noun
+30;1;7;8;3;Black cat;Re-introduction;Bare noun
+30;1;7;9;0;White cat;Re-introduction;Bare noun
+30;1;7;10;1;Tom;Re-introduction;Body part CL
+30;1;7;11;4;Tom;Maintenance;Person agreement verb
+30;1;7;12;4;Tom;Maintenance;Body part CL
+30;1;7;13;5;Tom;Maintenance;Person agreement verb
+30;1;7;14;1;Black cat;Re-introduction;Bare noun
+30;1;7;15;4;Black cat;Maintenance;Plain verb
+30;1;7;16;4;Black cat;Maintenance;Constructed action
+30;1;7;17;2;Tom;Re-introduction;Bare noun
+30;1;7;18;4;Tom;Maintenance;Person agreement verb
+30;1;7;19;4;Tom;Maintenance;Constructed action
+30;1;7;20;5;Tom;Maintenance;Plain verb
+31;0;1;1;0;Tom;Introduction;Point noun
+31;0;1;2;-1;Jerry;Introduction;Bare noun
+31;0;1;3;2;Tom;Re-introduction;Bare noun
+31;0;1;4;-2;Tunnel;Introduction;SASS - Tracing
+31;0;1;5;2;Tom;Re-introduction;Whole entity CL
+31;0;1;6;4;Tom;Maintenance;Whole entity CL
+31;0;1;7;5;Tom;Maintenance;Whole entity CL
+31;0;1;8;5;Tom;Maintenance;Whole entity CL
+31;0;10;1;1;Tom;Introduction;Bare noun
+31;0;10;2;0;Jerry;Introduction;Pronoun
+31;0;10;3;2;Tom;Re-introduction;Pronoun
+31;0;10;4;4;Tom;Maintenance;Constructed action
+31;0;10;5;2;Jerry;Re-introduction;Constructed action
+31;0;10;6;2;Tom;Re-introduction;Constructed action
+31;0;10;7;5;Tom;Maintenance;Person agreement verb
+31;0;10;8;5;Tom;Maintenance;Plain verb
+31;0;5;1;1;Tom;Introduction;Body part CL
+31;0;5;2;0;Jerry;Introduction;Bare noun
+31;0;5;3;2;Tom;Re-introduction;Constructed action
+31;0;5;4;4;Tom;Maintenance;Constructed action
+31;0;5;5;-1;Soap;Introduction;Bare noun
+31;0;5;6;2;Tom;Re-introduction;Plain verb
+31;0;5;7;5;Tom;Maintenance;Constructed action
+31;0;5;8;-1;Rope;Introduction;Bare noun
+31;0;5;9;3;Tom;Maintenance;Constructed action
+31;0;5;10;5;Tom;Maintenance;Person agreement verb
+31;0;6;1;1;Tom;Introduction;Constructed action
+31;0;6;2;0;Jerry;Introduction;Whole entity CL
+31;0;6;3;3;Tom;Maintenance;Constructed action
+31;0;6;4;2;Jerry;Re-introduction;Pronoun
+31;0;6;5;2;Tom;Re-introduction;Constructed action
+31;0;6;6;4;Tom;Maintenance;Constructed action
+31;0;6;7;5;Tom;Maintenance;Constructed action
+31;0;6;8;5;Tom;Maintenance;Plain verb
+31;0;2;1;0;White cat;Introduction;Bare noun
+31;0;2;2;0;Tom;Introduction;Point noun
+31;0;2;3;4;Tom;Maintenance;Person agreement verb
+31;0;2;4;-1;Fish;Introduction;Bare noun
+31;0;2;5;3;Tom;Maintenance;Constructed action
+31;0;2;6;0;White cat;Re-introduction;Pronoun
+31;0;2;7;-2;Bird;Introduction;Bare noun
+31;0;2;8;1;Tom;Re-introduction;Constructed action
+31;0;2;9;1;White cat;Re-introduction;Pronoun
+31;0;2;10;2;Tom;Re-introduction;Constructed action
+31;0;2;11;2;White cat;Re-introduction;Bare noun
+31;0;3;1;1;Tom;Introduction;Pronoun
+31;0;3;2;0;Jerry;Introduction;Bare noun
+31;0;3;3;3;Tom;Maintenance;Constructed action
+31;0;3;4;4;Tom;Maintenance;Constructed action
+31;0;3;5;5;Tom;Maintenance;Bare noun
+31;0;3;6;-1;Piano;Introduction;Bare noun
+31;0;3;7;4;Tom;Maintenance;Body part CL
+31;0;3;8;2;Piano;Re-introduction;Whole entity CL
+31;0;3;9;4;Piano;Re-introduction;Whole entity CL
+31;0;3;1;1;Tom;Introduction;Noun point
+31;0;3;2;4;Tom;Maintenance;Plain verb
+31;0;4;3;-1;Toy girl;Introduction;Bare noun
+31;0;4;4;-2;Jerry;Introduction;Bare noun
+31;0;4;5;2;Toy girl;Re-introduction;Whole entity CL
+31;0;4;6;2;Jerry;Re-introduction;Pronoun
+31;0;4;7;2;Toy girl;Re-introduction;Whole entity CL
+31;0;4;8;0;Tom;Re-introduction;Bare noun
+31;0;4;9;2;Toy girl;Re-introduction;Plain verb
+31;0;4;10;4;Toy girl;Maintenance;Plain verb
+31;0;4;1;1;Tom;Introduction;Plain verb
+31;0;4;2;4;Tom;Maintenance;Body part CL
+31;0;8;3;0;Jerry;Introduction;Bare noun
+31;0;8;4;4;Jerry;Maintenance;Constructed action
+31;0;8;5;-1;Thermometer;Introduction;SASS - Tracing
+31;0;8;6;3;Jerry;Maintenance;Person agreement verb
+31;0;8;7;-2;Lighter;Introduction;Bare noun
+31;0;8;8;3;Jerry;Maintenance;Person agreement verb
+31;0;8;9;4;Jerry;Maintenance;Constructed action
+31;0;8;10;1;Tom;Re-introduction;Whole entity CL
+31;0;9;1;1;Tom;Introduction;Point noun
+31;0;9;2;0;Jerry;Introduction;Bare noun
+31;0;9;3;2;Tom;Re-introduction;Bare noun
+31;0;9;4;4;Tom;Maintenance;Constructed action
+31;0;9;5;5;Tom;Maintenance;Constructed action
+31;0;9;6;2;Jerry;Re-introduction;Bare noun
+31;0;9;7;3;Tom;Re-introduction;Bare noun
+31;0;9;8;2;Jerry;Re-introduction;Body part CL
+31;0;7;1;0;White cat;Introduction;Bare noun
+31;0;7;2;0;Tom;Introduction;Bare noun
+31;0;7;3;-1;Black cat;Introduction;Bare noun
+31;0;7;4;4;Black cat;Maintenance;Whole entity CL
+31;0;7;5;2;White cat;Re-introduction;Bare noun
+31;0;7;6;4;White cat;Maintenance;Bare noun
+31;0;7;7;1;Tom;Re-introduction;Bare noun
+31;0;7;8;4;Tom;Maintenance;Person agreement verb
+31;0;7;9;1;Black cat;Re-introduction;Bare noun
+31;0;7;10;2;Tom;Re-introduction;Bare noun
+31;0;7;11;2;Black cat;Re-introduction;Bare noun
+31;0;7;12;4;Black cat;Maintenance;Constructed action
+31;0;7;13;2;Tom;Re-introduction;Bare noun
+31;0;7;14;4;Tom;Maintenance;Plain verb
+35;0;1;1;0;Jerry;Introduction;Bare noun
+35;0;1;2;4;Jerry;Maintenance;Plain verb
+35;0;1;3;0;Tom;Introduction;Bare noun
+35;0;1;4;4;Tom;Maintenance;Plain verb
+35;0;1;5;4;Tom;Maintenance;Bare noun
+35;0;1;6;-1;Wood;Introduction;SASS - Tracing
+35;0;1;7;4;Tom;Maintenance;Constructed action
+35;0;1;8;5;Tom;Maintenance;Constructed action
+35;0;1;9;-1;Tunnel;Introduction;SASS - Tracing
+35;0;1;10;0;Jerry;Re-introduction;Bare noun
+35;0;1;11;1;Tom;Re-introduction;Bare noun
+35;0;1;12;4;Tom;Maintenance;Plain verb
+35;0;1;13;4;Tom;Maintenance;Whole entity CL
+35;0;1;14;2;Jerry;Re-introduction;Bare noun
+35;0;1;15;4;Jerry;Maintenance;Whole entity CL
+35;0;1;16;2;Tom;Re-introduction;Bare noun
+35;0;1;17;4;Tom;Maintenance;Whole entity CL
+35;0;1;18;4;Tom;Maintenance;Pronoun
+35;0;1;19;5;Tom;Maintenance;Bare noun
+35;0;1;20;5;Tom;Maintenance;Constructed action
+35;0;1;21;5;Tom;Maintenance;Constructed action
+35;0;1;22;5;Tom;Maintenance;SASS - Tracing
+35;0;1;23;5;Tom;Maintenance;Bare noun
+35;0;1;24;5;Tom;Maintenance;SASS - Tracing
+35;0;1;25;5;Tom;Maintenance;Constructed action
+35;0;1;26;5;Tom;Maintenance;Constructed action
+35;0;10;1;1;Jerry;Introduction;Bare noun
+35;0;10;2;0;Tom;Introduction;Bare noun
+35;0;10;3;4;Tom;Maintenance;Plain verb
+35;0;10;4;4;Tom;Maintenance;Bare noun
+35;0;10;5;2;Jerry;Re-introduction;Bare noun
+35;0;10;6;3;Tom;Re-introduction;Bare noun
+35;0;10;7;5;Tom;Maintenance;Plain verb
+35;0;10;8;5;Tom;Maintenance;Constructed action
+35;0;10;9;-1;Gun;Introduction;Bare noun
+35;0;10;10;-2;Wall;Introduction;Fingerspelled noun
+35;0;10;11;2;Tom;Maintenance;Constructed action
+35;0;10;12;4;Tom;Maintenance;Person agreement verb
+35;0;10;13;1;Jerry;Re-introduction;Bare noun
+35;0;10;14;2;Tom;Re-introduction;Person agreement verb
+35;0;10;15;2;Jerry;Re-introduction;Constructed action
+35;0;10;16;2;Tom;Re-introduction;Person agreement verb
+35;0;10;17;2;Jerry;Re-introduction;Bare noun
+35;0;5;1;1;Tom;Introduction;Point noun
+35;0;5;2;4;Tom;Maintenance;Constructed action
+35;0;5;3;4;Tom;Maintenance;Constructed action
+35;0;5;4;0;Jerry;Introduction;Bare noun
+35;0;5;5;4;Jerry;Maintenance;Person agreement verb
+35;0;5;6;2;Tom;Re-introduction;Bare noun
+35;0;5;7;-2;Couch;Introduction;Bare noun
+35;0;5;8;-2;Rope;Introduction;Bare noun
+35;0;5;9;2;Tom;Maintenance;Bare noun
+35;0;5;10;0;Jerry;Re-introduction;Bare noun
+35;0;5;11;4;Jerry;Maintenance;Constructed action
+35;0;5;12;4;Jerry;Maintenance;Whole entity CL
+35;0;5;13;2;Tom;Re-introduction;Bare noun
+35;0;5;14;3;Jerry;Re-introduction;Bare noun
+35;0;5;15;-2;Soup;Introduction;Point noun
+35;0;5;16;2;Jerry;Re-introduction;Bare noun
+35;0;5;17;1;Tom;Re-introduction;Bare noun
+35;0;5;18;4;Tom;Maintenance;Constructed action
+35;0;5;19;4;Tom;Maintenance;Constructed action
+35;0;5;20;5;Tom;Maintenance;Pronoun
+35;0;5;21;5;Tom;Maintenance;Constructed action
+35;0;5;22;5;Tom;Maintenance;Constructed action
+35;0;5;23;1;Jerry;Re-introduction;Point noun
+35;0;5;24;-2;Trap;Introduction;Bare noun
+35;0;5;25;1;Tom;Re-introduction;Bare noun
+35;0;5;26;1;Jerry;Re-introduction;Noun point
+35;0;5;27;4;Jerry;Maintenance;Person agreement verb
+35;0;5;28;2;Tom;Re-introduction;Constructed action
+35;0;5;29;4;Tom;Maintenance;Constructed action
+35;0;5;30;4;Tom;Maintenance;Plain verb
+35;0;5;31;5;Tom;Maintenance;Plain verb
+35;0;6;1;1;Tom;Introduction;Bare noun
+35;0;6;2;0;Sword;Introduction;Bare noun
+35;0;6;3;-1;Jerry;Introduction;Bare noun
+35;0;6;4;1;Tom;Re-introduction;Constructed action
+35;0;6;5;2;Jerry;Re-introduction;Bare noun
+35;0;6;6;4;Jerry;Maintenance;Constructed action
+35;0;6;7;2;Tom;Re-introduction;Bare noun
+35;0;6;8;4;Tom;Maintenance;Constructed action
+35;0;6;9;2;Jerry;Re-introduction;Bare noun
+35;0;6;10;2;Tom;Re-introduction;Bare noun
+35;0;6;11;-2;Toilet;Introduction;Bare noun
+35;0;6;12;3;Tom;Maintenance;Plain verb
+35;0;6;13;4;Tom;Maintenance;Constructed action
+35;0;6;14;5;Tom;Maintenance;Constructed action
+35;0;6;15;-1;Cabinet;Introduction;Point noun
+35;0;6;16;3;Tom;Re-introduction;Bare noun
+35;0;6;17;5;Tom;Maintenance;Constructed action
+35;0;6;18;5;Tom;Maintenance;Bare noun
+35;0;6;19;5;Tom;Maintenance;Constructed action
+35;0;6;20;1;Jerry;Re-introduction;Bare noun
+35;0;6;21;4;Jerry;Maintenance;Constructed action
+35;0;6;22;4;Jerry;Maintenance;Constructed action
+35;0;2;1;0;White cat;Introduction;Bare noun
+35;0;2;2;4;White cat;Maintenance;Constructed action
+35;0;2;3;0;Tom;Introduction;Bare noun
+35;0;2;4;2;White cat;Re-introduction;Bare noun
+35;0;2;5;2;Tom;Re-introduction;Bare noun
+35;0;2;6;4;Tom;Maintenance;Whole entity CL
+35;0;2;7;-1;Fish;Introduction;Noun CL
+35;0;2;8;2;Tom;Re-introduction;Bare noun
+35;0;2;9;0;White cat;Re-introduction;Bare noun
+35;0;2;10;2;Tom;Re-introduction;Bare noun
+35;0;2;11;4;Tom;Maintenance;Plain verb
+35;0;2;12;-1;Bird;Introduction;Noun CL
+35;0;2;13;3;Tom;Maintenance;Constructed action
+35;0;2;14;0;White cat;Re-introduction;Bare noun
+35;0;2;15;2;Tom;Re-introduction;Bare noun
+35;0;2;16;2;White cat;Re-introduction;Bare noun
+35;0;2;17;2;Tom;Re-introduction;Bare noun
+35;0;2;18;2;White cat;Re-introduction;Bare noun
+35;0;3;1;0;Stairs;Introduction;Bare noun
+35;0;3;2;0;Tom;Introduction;Bare noun
+35;0;3;3;-1;Jerry;Introduction;Bare noun
+35;0;3;4;-2;Carpet;Introduction;Bare noun
+35;0;3;5;2;Jerry;Re-introduction;Bare noun
+35;0;3;6;1;Tom;Re-introduction;Bare noun
+35;0;3;7;-2;Piano;Introduction;Point noun
+35;0;3;8;3;Tom;Maintenance;Body part CL
+35;0;3;9;4;Tom;Maintenance;Noun CL
+35;0;3;10;1;Jerry;Re-introduction;Bare noun
+35;0;3;11;4;Jerry;Maintenance;Plain verb
+35;0;3;12;2;Tom;Re-introduction;Bare noun
+35;0;3;13;4;Tom;Maintenance;Constructed action
+35;0;3;14;4;Tom;Maintenance;Plain verb
+35;0;3;15;-1;Wall;Introduction;Bare noun
+35;0;3;16;3;Tom;Re-introduction;Bare noun
+35;0;3;17;0;Piano;Re-introduction;Bare noun
+35;0;3;18;2;Tom;Re-introduction;Bare noun
+35;0;3;19;4;Tom;Maintenance;Constructed action
+35;0;4;1;1;Tom;Introduction;Bare noun
+35;0;4;2;-1;Toy girl;Introduction;SASS - Tracing
+35;0;4;3;-1;Door;Introduction;Bare noun
+35;0;4;4;-2;Jerry;Introduction;Bare noun
+35;0;4;5;-1;Toy girl;Introduction;Noun CL
+35;0;4;6;2;Jerry;Re-introduction;Constructed action
+35;0;4;7;2;Toy girl;Re-introduction;Whole entity CL
+35;0;4;8;4;Toy girl;Maintenance;Whole entity CL
+35;0;4;9;2;Jerry;Re-introduction;Bare noun
+35;0;4;10;2;Toy girl;Re-introduction;Bare noun
+35;0;4;11;5;Toy girl;Maintenance;Whole entity CL
+35;0;4;12;1;Tom;Re-introduction;Bare noun
+35;0;4;13;4;Tom;Maintenance;Constructed action
+35;0;4;14;2;Toy girl;Re-introduction;Bare noun
+35;0;4;15;2;Tom;Re-introduction;Bare noun
+35;0;4;16;5;Tom;Maintenance;Plain verb
+35;0;4;17;5;Tom;Maintenance;Constructed action
+35;0;4;18;5;Tom;Maintenance;Plain verb
+35;0;8;1;1;Tom;Introduction;Bare noun
+35;0;8;2;4;Tom;Maintenance;Constructed action
+35;0;8;3;0;Jerry;Introduction;Bare noun
+35;0;8;4;3;Tom;Re-introduction;Bare noun
+35;0;8;5;5;Tom;Maintenance;Constructed action
+35;0;8;6;2;Jerry;Re-introduction;Bare noun
+35;0;8;7;4;Jerry;Maintenance;Constructed action
+35;0;8;8;2;Tom;Re-introduction;Bare noun
+35;0;8;9;4;Tom;Maintenance;Body part CL
+35;0;8;10;2;Jerry;Re-introduction;Bare noun
+35;0;8;11;-2;Thermometer;Introduction;Noun CL
+35;0;8;12;4;Thermometer;Maintenance;Person agreement verb
+35;0;8;13;2;Tom;Re-introduction;Bare noun
+35;0;8;14;4;Tom;Maintenance;Constructed action
+35;0;8;15;-1;Lighter;Introduction;Bare noun
+35;0;8;16;0;Jerry;Re-introduction;Constructed action
+35;0;8;17;0;Thermometer;Re-introduction;Bare noun
+35;0;8;18;4;Thermometer;Maintenance;Plain verb
+35;0;8;19;1;Tom;Re-introduction;Bare noun
+35;0;9;1;1;Tom;Introduction;Bare noun
+35;0;9;2;0;Jerry;Introduction;Bare noun
+35;0;9;3;3;Tom;Maintenance;Constructed action
+35;0;9;4;4;Tom;Maintenance;Constructed action
+35;0;9;5;2;Jerry;Re-introduction;Bare noun
+35;0;9;6;4;Jerry;Maintenance;Constructed action
+35;0;9;7;4;Jerry;Maintenance;Constructed action
+35;0;9;8;5;Jerry;Maintenance;Constructed action
+35;0;9;9;-1;Hat;Introduction;SASS - Static
+35;0;9;10;-2;Needle;Introduction;Point noun
+35;0;9;11;1;Jerry;Re-introduction;Constructed action
+35;0;9;12;2;Needle;Re-introduction;Bare noun
+35;0;9;13;2;Jerry;Re-introduction;Constructed action
+35;0;9;14;0;Tom;Re-introduction;Bare noun
+35;0;9;15;4;Tom;Maintenance;Constructed action
+35;0;9;16;2;Jerry;Re-introduction;Bare noun
+35;0;9;17;4;Jerry;Maintenance;Constructed action
+35;0;9;18;4;Jerry;Maintenance;Constructed action
+35;0;9;19;2;Tom;Re-introduction;Bare noun
+35;0;9;20;4;Tom;Maintenance;Constructed action
+35;0;7;1;1;Couch;Introduction;Bare noun
+35;0;7;2;0;White cat;Introduction;Bare noun
+35;0;7;3;4;White cat;Maintenance;Constructed action
+35;0;7;4;4;White cat;Maintenance;Constructed action
+35;0;7;5;-1;Tom;Introduction;Bare noun
+35;0;7;6;3;White cat;Re-introduction;Bare noun
+35;0;7;7;-2;Black cat;Introduction;Noun point
+35;0;7;8;4;Black cat;Maintenance;Whole entity CL
+35;0;7;9;2;Tom;Re-introduction;Bare noun
+35;0;7;10;4;Tom;Maintenance;Constructed action
+35;0;7;11;2;Black cat;Re-introduction;Bare noun
+35;0;7;12;2;Tom;Re-introduction;Bare noun
+35;0;7;13;5;Tom;Maintenance;Constructed action
+35;0;7;14;5;Tom;Maintenance;Plain verb
+35;0;7;15;2;Black cat;Re-introduction;Bare noun
+35;0;7;16;0;White cat;Re-introduction;Bare noun
+35;0;7;17;2;Black cat;Re-introduction;Bare noun
+35;0;7;18;4;Black cat;Maintenance;Constructed action
+35;0;7;19;1;Tom;Re-introduction;Bare noun
+35;0;7;20;4;Tom;Maintenance;Plain verb
+35;0;7;21;4;Tom;Maintenance;Constructed action
+35;0;7;22;5;Tom;Maintenance;Bare noun
+35;0;7;23;5;Tom;Maintenance;Constructed action
+35;0;7;24;5;Tom;Maintenance;Plain verb
+35;0;7;25;1;Black cat;Re-introduction;Bare noun
+38;1;1;1;0;Jerry;Introduction;Bare noun
+38;1;1;2;-1;Tom;Introduction;Bare noun
+38;1;1;3;2;Jerry;Re-introduction;Bare noun
+38;1;1;4;2;Tom;Re-introduction;Bare noun
+38;1;1;5;4;Tom;Maintenance;SASS - Tracing
+38;1;1;6;2;Jerry;Re-introduction;Bare noun
+38;1;1;7;2;Tom;Re-introduction;Bare noun
+38;1;10;1;1;Jerry;Introduction;Bare noun
+38;1;10;2;0;Tom;Introduction;Bare noun
+38;1;10;3;2;Jerry;Re-introduction;Bare noun
+38;1;10;4;2;Tom;Re-introduction;Bare noun
+38;1;10;5;4;Tom;Maintenance;Constructed action
+38;1;10;6;5;Tom;Maintenance;Constructed action
+38;1;10;7;5;Tom;Maintenance;Constructed action
+38;1;10;8;1;Jerry;Re-introduction;Plain verb
+38;1;10;9;3;Tom;Re-introduction;Bare noun
+38;1;10;10;5;Tom;Maintenance;Constructed action
+38;1;10;11;5;Tom;Maintenance;Person agreement verb
+38;1;5;1;1;Tom;Introduction;Bare noun
+38;1;5;2;4;Tom;Maintenance;Constructed action
+38;1;5;3;4;Tom;Maintenance;Constructed action
+38;1;5;4;-1;Jerry;Introduction;Bare noun
+38;1;5;5;3;Tom;Re-introduction;Constructed action
+38;1;5;6;2;Jerry;Re-introduction;Bare noun
+38;1;5;7;4;Jerry;Maintenance;Whole entity CL
+38;1;5;8;2;Tom;Re-introduction;Bare noun
+38;1;5;9;4;Tom;Maintenance;Constructed action
+38;1;5;10;4;Tom;Maintenance;Constructed action
+38;1;6;1;1;Jerry;Introduction;Bare noun
+38;1;6;2;0;Tom;Introduction;Bare noun
+38;1;6;3;4;Tom;Maintenance;Constructed action
+38;1;6;4;4;Tom;Maintenance;Constructed action
+38;1;6;5;5;Tom;Maintenance;Constructed action
+38;1;6;6;5;Tom;Maintenance;Constructed action
+38;1;6;7;5;Tom;Maintenance;Constructed action
+38;1;6;8;5;Tom;Maintenance;Constructed action
+38;1;2;1;0;White cat;Introduction;Bare noun
+38;1;2;2;0;Tom;Introduction;Bare noun
+38;1;2;3;4;Tom;Maintenance;Constructed action
+38;1;2;4;4;Tom;Maintenance;Constructed action
+38;1;2;5;2;White cat;Re-introduction;Bare noun
+38;1;2;6;3;Tom;Re-introduction;Constructed action
+38;1;2;7;2;White cat;Re-introduction;Bare noun
+38;1;2;8;2;Tom;Re-introduction;Constructed action
+38;1;2;9;4;Tom;Maintenance;Constructed action
+38;1;3;1;1;Jerry;Introduction;Bare noun
+38;1;3;2;0;Tom;Introduction;Bare noun
+38;1;3;3;2;Jerry;Re-introduction;Bare noun
+38;1;3;4;2;Tom;Re-introduction;Constructed action
+38;1;3;5;2;Jerry;Re-introduction;Bare noun
+38;1;3;6;2;Tom;Re-introduction;Constructed action
+38;1;3;7;4;Tom;Maintenance;Constructed action
+38;1;3;8;5;Tom;Maintenance;Constructed action
+38;1;3;9;5;Tom;Maintenance;Constructed action
+38;1;4;1;1;Tom;Introduction;Bare noun
+38;1;4;2;0;Jerry;Introduction;Bare noun
+38;1;4;3;-2;Toy girl;Introduction;Bare noun
+38;1;4;4;2;Jerry;Re-introduction;Bare noun
+38;1;4;5;2;Toy girl;Re-introduction;Bare noun
+38;1;4;6;2;Jerry;Re-introduction;Bare noun
+38;1;4;7;2;Toy girl;Re-introduction;Bare noun
+38;1;4;8;0;Tom;Re-introduction;Bare noun
+38;1;4;9;4;Tom;Maintenance;Constructed action
+38;1;4;10;4;Tom;Maintenance;Constructed action
+38;1;8;1;1;Tom;Introduction;Bare noun
+38;1;8;2;0;Jerry;Introduction;Bare noun
+38;1;8;3;4;Jerry;Maintenance;Constructed action
+38;1;8;4;2;Tom;Re-introduction;Constructed action
+38;1;8;5;2;Jerry;Re-introduction;Bare noun
+38;1;8;6;5;Jerry;Maintenance;Person agreement verb
+38;1;8;7;5;Jerry;Maintenance;Constructed action
+38;1;8;8;2;Tom;Re-introduction;Constructed action
+38;1;9;1;1;Tom;Introduction;Bare noun
+38;1;9;2;0;Jerry;Introduction;Bare noun
+38;1;9;3;4;Jerry;Maintenance;Constructed action
+38;1;9;4;4;Jerry;Maintenance;Constructed action
+38;1;9;5;5;Jerry;Maintenance;Constructed action
+38;1;9;6;5;Jerry;Maintenance;Constructed action
+38;1;9;7;1;Tom;Re-introduction;Constructed action
+38;1;9;8;4;Tom;Maintenance;Constructed action
+38;1;9;9;2;Jerry;Re-introduction;Bare noun
+38;1;9;10;2;Tom;Re-introduction;Bare noun
+38;1;7;1;0;White cat;Introduction;Bare noun
+38;1;7;2;0;Tom;Introduction;Bare noun
+38;1;7;3;-1;Black cat;Introduction;Bare noun
+38;1;7;4;4;Black cat;Maintenance;Whole entity CL
+38;1;7;5;4;Black cat;Maintenance;Constructed action
+38;1;7;6;1;White cat;Re-introduction;Bare noun
+38;1;7;7;0;Tom;Re-introduction;Point noun
+38;1;7;8;2;White cat;Re-introduction;Bare noun
+38;1;7;9;1;Black cat;Re-introduction;Whole entity CL
+38;1;7;10;1;Tom;Re-introduction;Person agreement verb
+38;1;7;11;2;Black cat;Re-introduction;Whole entity CL
+38;1;7;12;4;Black cat;Maintenance;Constructed action
+38;1;7;13;2;Tom;Re-introduction;Bare noun
