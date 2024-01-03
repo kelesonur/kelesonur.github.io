@@ -48,6 +48,8 @@ staticman:
         format           : "iso8601" # "iso8601" (default), "timestamp-seconds", "timestamp-milliseconds"
 atom_feed:
   path                   : # blank (default) uses feed.xml
+github:
+  default_mime_type: video/mp4
 
 # SEO Related
 google_site_verification : "H0kaZLLLbtn5qyt_iauZbM-N6omxH9IK4hwqR2i4fVY"
