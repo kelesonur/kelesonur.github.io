@@ -6,14 +6,7 @@ author_profile: true
 redirect_from:
   - /resume
 ---
-
-## Use of Real World Knowledge in Processing Local Meaning among Individuals with Autism Spectrum Disorder (ASD) (2021-Present)
-
-**Collaborators:** [Mehtap G&uuml;ven &Ccedil;oban](https://www.29mayis.edu.tr/tr/akademik-kadro/mehtap-guven-coban)
-
-> This study aims to investigate the use of real world knowledge and detailed-focus processing among individuals with Autism Spectrum Disorder (ASD) compared to individuals with typical development (TD). 
-
-(in progress)
+## 
 
 ## Effect of Age of Acquisition and Category Size on Verbal Fluency (2019-2021)
 
