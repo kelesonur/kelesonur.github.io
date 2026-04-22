@@ -6,9 +6,6 @@ main:
   - title: "Talks"
     url: /talks/    
 
-  - title: "Research Projects"
-    url: /research_projects/    
-    
   - title: "CV"
     url: /cv/
     
