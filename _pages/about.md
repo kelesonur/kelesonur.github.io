@@ -19,7 +19,7 @@ Hi there! I'm **Onur Keleş** [o&#712;nur&#805; &#712;k&#799;&#688;&#603;le&#643
   <span class="interest-tag">Endangered Languages</span>
 </div>
 
-My research sits at the intersection of cognitive science and NLP, investigating how visual-spatial modality shapes language in deaf signers, hearing gesture users, and vision–language models. I work with [Dr. Kadir Gökgöz](https://linguistics.bogazici.edu.tr/kadir-gokgoz) and [Dr. Nazik Dinçtopal Deniz](https://web.bogazici.edu.tr/nazik.dinctopal/) at Boğaziçi, and collaborate with [Dr. Asli Özyürek](https://www.mpi.nl/people/ozyurek-asli) and [Dr. Ehsan Ghaleb](https://esamghaleb.github.io/) at MPI.
+My research sits at the intersection of cognitive science and NLP, investigating how visual-spatial modality shapes language in deaf signers, hearing gesture users, and vision–language models. I work with [Dr. Kadir Gökgöz](https://linguistics.bogazici.edu.tr/kadir-gokgoz) and [Dr. Nazik Dinçtopal Deniz](https://web.bogazici.edu.tr/nazik.dinctopal/) at Boğaziçi, and collaborate with [Dr. Asli Özyürek](https://www.mpi.nl/people/ozyurek-asli) and [Dr. Esam Ghaleb](https://esamghaleb.github.io/) at MPI.
 
 ---
 
