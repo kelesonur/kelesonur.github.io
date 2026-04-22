@@ -19,20 +19,20 @@ Hi there! I'm **Onur Keleş** [o&#712;nur&#805; &#712;k&#799;&#688;&#603;le&#643
   <span class="interest-tag">Endangered Languages</span>
 </div>
 
-My research sits at the intersection of cognitive science and NLP, investigating how visual-spatial modality shapes language in deaf signers, hearing gesture users, and vision–language models. I work with [Dr. Kadir Gökgöz](https://linguistics.bogazici.edu.tr/kadir-gokgoz) and [Dr. Nazik Dinçtopal Deniz](https://web.bogazici.edu.tr/nazik.dinctopal/) at Boğaziçi, and collaborate with [Dr. Asli Özyürek](https://www.mpi.nl/people/ozyurek-asli) and [Dr. Esam Ghaleb](https://esamghaleb.github.io/) at MPI.
+My research sits at the intersection of cognitive science and NLP, investigating how visual-spatial modality shapes language in deaf signers, hearing gesture users, and vision–language models. I work with [Dr. Kadir Gökgöz](https://linguistics.bogazici.edu.tr/kadir-gokgoz) and [Dr. Nazik Dinçtopal Deniz](https://web.bogazici.edu.tr/nazik.dinctopal/) at Boğaziçi, and collaborate with [Dr. Aslı Özyürek](https://www.mpi.nl/people/ozyurek-asli) and [Dr. Esam Ghaleb](https://esamghaleb.github.io/) at MPI.
 
 ---
 
 <div class="home-news">
 <h2>News</h2>
 <ul class="news-list">
-  <li><span class="news-date">Mar 2026</span><span class="news-dot"></span><span>Two poster presentations at <strong>HSP 2026</strong> (Boston, US): agentive iconicity in VLMs &amp; NPI processing in L2 Turkish. <a href="https://hsp2026.org/abstracts/submission_381.pdf">[Abstract]</a></span></li>
   <li><span class="news-date">Apr 2026</span><span class="news-dot"></span><span>Paper accepted at <strong>ACL 2026 (Main)</strong>: <em>The Visual Iconicity Challenge</em> — evaluating VLMs on sign language form–meaning mapping. <a href="https://arxiv.org/abs/2510.08482">[arXiv]</a></span></li>
+  <li><span class="news-date">Mar 2026</span><span class="news-dot"></span><span>Two poster presentations at <strong>HSP 2026</strong> (Boston, US): agentive iconicity in VLMs &amp; NPI processing in L2 Turkish. <a href="https://hsp2026.org/abstracts/submission_381.pdf">[Abstract]</a></span></li>
   <li><span class="news-date">Sep 2025</span><span class="news-dot"></span><span>Invited talk at <strong>Max Planck Institute for Psycholinguistics</strong>: <em>Iconicity in visual communication: From silent gestures and signs to vision–language models</em>. <a href="https://kelesonur.github.io/folder/mpi_onur2025.pdf">[Slides]</a></span></li>
   <li><span class="news-date">Sep 2025</span><span class="news-dot"></span><span>Two poster presentations at <strong>AMLaP 2025</strong> (Prague): L2 thematic role processing &amp; task effects in good-enough parsing.</span></li>
   <li><span class="news-date">May 2025</span><span class="news-dot"></span><span>Two papers at <strong>NAACL 2025</strong> workshops: good-enough parsing with LLMs (CMCL) and Hamshentsnag NLP (LM4UC).</span></li>
   <li><span class="news-date">Mar 2025</span><span class="news-dot"></span><span>Poster presentation at <strong>HSP 2025</strong> (Maryland, US): pragmatics predicts phonetic reduction in TİD narratives. <a href="https://kelesonur.github.io/folder/HSP_2025.pdf">[Poster]</a></span></li>
-  <li><span class="news-date">Jan 2025</span><span class="news-dot"></span><span>Book chapter published in <em>Empirical Insights into Language and Cognition</em> (Nobel Akademik Yayıncılık). <a href="https://kelesonur.github.io/folder/Empirical%20Insights%20into%20Language%20and%20Cognition.pdf">[PDF]</a></span></li>
+  <li><span class="news-date">Oct 2025</span><span class="news-dot"></span><span>Book chapter published in <em>Empirical Insights into Language and Cognition</em> (Nobel Akademik Yayıncılık). <a href="https://kelesonur.github.io/folder/Empirical%20Insights%20into%20Language%20and%20Cognition.pdf">[PDF]</a></span></li>
 </ul>
 </div>
 
