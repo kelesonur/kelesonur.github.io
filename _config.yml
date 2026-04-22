@@ -10,7 +10,7 @@ locale                   : "en-US"
 title                    : "Onur Keleş"
 title_separator          : "-"
 name                     : &name "Onur Keleş"
-description              : &description "I am a second-year M.A. student at the Department of Linguistics at Bogazici University"
+description              : &description "PhD researcher in linguistics at Boğaziçi University and IMPRS Affiliate at Max Planck Institute for Psycholinguistics"
 url                      : https://kelesonur.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "https://github.com/kelesonur/kelesonur.github.io"
@@ -84,12 +84,12 @@ analytics:
 author:
   name             : "Onur Keleş"
   avatar           : "pp_onur2.jpg"
-  bio              : "I am a second-year MA student and RA/TA at the Department of Linguistics at Bogazici University."
+  bio              : "PhD researcher at Boğaziçi University and IMPRS Affiliate at Max Planck Institute for Psycholinguistics, working on multimodality, iconicity, sign languages, and computational linguistics."
   location         : "Istanbul, Turkey"
   employer         :
   pubmed           : 
   googlescholar    : "https://scholar.google.com/citations?user=swDRz4wAAAAJ&hl=tr&oi=sra"
-  email            : "onurkeles.boun@gmail.com"
+  email            : "onur.keles1@bogazici.edu.tr"
   researchgate     :  "https://www.researchgate.net/profile/Onur_Keles3"
   uri              :
   bitbucket        :
