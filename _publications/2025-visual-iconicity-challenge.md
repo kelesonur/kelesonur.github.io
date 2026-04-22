@@ -3,7 +3,7 @@ title: "The Visual Iconicity Challenge: Evaluating Vision–Language Models on S
 collection: publications
 permalink: /publication/visual-iconicity-challenge
 excerpt: 'We introduce the Visual Iconicity Challenge, a benchmark for evaluating whether vision–language models can map iconic form–meaning relationships in sign languages, revealing significant limitations in current VLMs.'
-date: 2025-07-01
+date: 2026-07-01
 venue: 'Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (ACL 2026, Main)'
 paperurl: 'https://arxiv.org/abs/2510.08482'
 citation:
