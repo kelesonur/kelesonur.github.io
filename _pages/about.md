@@ -8,19 +8,108 @@ redirect_from:
   - /home.html
 ---
 
-Hi there, welcome to my personal website! My name is Onur Keleş [o&#712;nur&#805; &#712;k&#799;&#688;&#603;le&#643;]. I am a PhD student in the Department of [Linguistics](https://ling.boun.edu.tr) at [Boğaziçi University](http://www.boun.edu.tr), Istanbul, Turkey, and an affiliate of the [International Max Planck Research School (IMPRS)](https://www.mpi.nl/department/imprs/13) at the [Max Planck Institute for Psycholinguistics](https://www.mpi.nl), Nijmegen, Netherlands (since December 2025). I hold an M.A. in Linguistics (GPA: 4.0) and a B.A. in Foreign Language Education (GPA: 4.0, Summa Cum Laude), both from Boğaziçi University.
+Hi there! I'm **Onur Keleş** [o&#712;nur&#805; &#712;k&#799;&#688;&#603;le&#643;], a PhD student in the [Department of Linguistics](https://ling.boun.edu.tr) at [Boğaziçi University](http://www.boun.edu.tr), Istanbul, and an [IMPRS](https://www.mpi.nl/department/imprs/13) affiliate at the [Max Planck Institute for Psycholinguistics](https://www.mpi.nl), Nijmegen (since Dec 2025). I hold an M.A. (GPA: 4.0) and B.A. Summa Cum Laude (GPA: 4.0) from Boğaziçi University.
 
-My research sits at the intersection of **computational linguistics** and **cognitive science**, with a focus on multimodality, iconicity, and spatial language across deaf signers, hearing non-signers, and vision–language models. I am also interested in psycholinguistic sentence processing and the computational documentation of endangered languages. I currently work as a Research & Teaching Assistant in the Department of [Linguistics](https://ling.boun.edu.tr) at Boğaziçi University.
+<div class="interest-tags">
+  <span class="interest-tag">Sign Language Linguistics</span>
+  <span class="interest-tag">Multimodality &amp; Iconicity</span>
+  <span class="interest-tag">Spatial Language</span>
+  <span class="interest-tag">Psycholinguistics</span>
+  <span class="interest-tag">Computational Linguistics</span>
+  <span class="interest-tag">Endangered Languages</span>
+</div>
 
-Research
-======
-I am affiliated with the [Sign Language Lab](https://linguistics.boun.edu.tr/sign-language-lab) under the supervision of [Dr. Kadir Gökgöz](https://orcid.org/0000-0003-2777-7656), and with the [Psycholinguistics Research Laboratory](http://denizlab.boun.edu.tr) led by [Dr. Nazik Dinçtopal Deniz](https://ling.boun.edu.tr/en/members/academic/nazik-dinctopal-deniz). I also collaborate with [Dr. Asli Özyürek](https://www.mpi.nl/people/ozyurek-asli), [Dr. Gerardo Ortega](https://www.mpi.nl/people/ortega-gerardo), and [Dr. Ehsan Ghaleb](https://scholar.google.com/citations?user=7qxdL_cAAAAJ) at MPI.
+My research sits at the intersection of cognitive science and NLP, investigating how visual-spatial modality shapes language in deaf signers, hearing gesture users, and vision–language models. I work with [Dr. Kadir Gökgöz](https://orcid.org/0000-0003-2777-7656) and [Dr. Nazik Dinçtopal Deniz](https://ling.boun.edu.tr/en/members/academic/nazik-dinctopal-deniz) at Boğaziçi, and collaborate with [Dr. Asli Özyürek](https://www.mpi.nl/people/ozyurek-asli), [Dr. Gerardo Ortega](https://www.mpi.nl/people/ortega-gerardo), and [Dr. Ehsan Ghaleb](https://esamghaleb.github.io) at MPI.
 
-My current projects include:
+---
 
-- **The Visual Iconicity Challenge**: Evaluating vision–language models on sign language form–meaning mapping. Our paper is accepted at ACL 2025 (Main conference). [[arXiv]](https://arxiv.org/abs/2510.08482)
-- **Pragmatics and phonetics in signed narratives**: Investigating how pragmatic factors such as givenness and topicality predict phonetic reduction in Turkish Sign Language (TİD).
-- **Good-enough processing in Turkish**: Examining how humans and large language models process thematic role reversals, with a focus on task effects and L2 comprehension.
-- **Computational documentation of endangered languages**: Transfer learning approaches for Hamshentsnag, a low-resource Armenian dialect.
+<div class="home-news">
+<h2>News</h2>
+<ul class="news-list">
+  <li><span class="news-date">Apr 2025</span><span class="news-dot"></span><span>Paper accepted at <strong>ACL 2025 (Main)</strong>: <em>The Visual Iconicity Challenge</em> — evaluating VLMs on sign language form–meaning mapping. <a href="https://arxiv.org/abs/2510.08482">[arXiv]</a></span></li>
+  <li><span class="news-date">Mar 2025</span><span class="news-dot"></span><span>Two poster presentations at <strong>HSP 2025</strong> (Maryland, US): phonetic reduction in TİD narratives &amp; good-enough parsing in Turkish.</span></li>
+  <li><span class="news-date">May 2025</span><span class="news-dot"></span><span>Two papers at <strong>NAACL 2025</strong> workshops: good-enough parsing with LLMs (CMCL) and Hamshentsnag NLP (LM4UC).</span></li>
+  <li><span class="news-date">Dec 2024</span><span class="news-dot"></span><span>Became an <strong>IMPRS affiliate</strong> at Max Planck Institute for Psycholinguistics, Nijmegen.</span></li>
+  <li><span class="news-date">Sep 2024</span><span class="news-dot"></span><span>Two posters at <strong>AMLaP 2025</strong> (Prague): L2 thematic role processing &amp; task effects in good-enough parsing.</span></li>
+  <li><span class="news-date">Jan 2025</span><span class="news-dot"></span><span>Started <strong>PhD in Linguistics</strong> at Boğaziçi University.</span></li>
+  <li><span class="news-date">Jan 2025</span><span class="news-dot"></span><span>Book chapter published in <em>Empirical Insights into Language and Cognition</em> (Nobel Akademik Yayıncılık). <a href="https://kelesonur.github.io/folder/Empirical%20Insights%20into%20Language%20and%20Cognition.pdf">[PDF]</a></span></li>
+</ul>
+</div>
 
-Previously, I studied the effects of age of acquisition on verbal fluency and reference tracking in TİD, and conducted psycholinguistic experiments on negative polarity item processing in Turkish.
+---
+
+<div class="home-papers">
+<h2>Selected Publications</h2>
+
+<div class="paper-card">
+  <div class="paper-card-body">
+    <p class="paper-title"><a href="https://arxiv.org/abs/2510.08482">The Visual Iconicity Challenge: Evaluating Vision–Language Models on Sign Language Form–Meaning Mapping</a></p>
+    <p class="paper-authors"><strong>Keleş, O.</strong>, Özyürek, A., Ortega, G., Gökgöz, K., &amp; Ghaleb, E.</p>
+    <div class="paper-venue-row">
+      <span class="badge badge-acl">ACL 2025 (Main)</span>
+      <span class="badge badge-arxiv">arXiv:2510.08482</span>
+    </div>
+    <div class="paper-links">
+      <a href="https://arxiv.org/abs/2510.08482">arXiv</a>
+    </div>
+  </div>
+</div>
+
+<div class="paper-card">
+  <div class="paper-card-body">
+    <p class="paper-title"><a href="https://aclanthology.org/2025.cmcl-1.26/">When Men Bite Dogs: Testing Good-Enough Parsing in Turkish with Humans and LLMs</a></p>
+    <p class="paper-authors"><strong>Keleş, O.</strong> &amp; Deniz, N. D.</p>
+    <div class="paper-venue-row">
+      <span class="badge badge-naacl">CMCL @ NAACL 2025</span>
+    </div>
+    <div class="paper-links">
+      <a href="https://aclanthology.org/2025.cmcl-1.26/">ACL Anthology</a>
+    </div>
+  </div>
+</div>
+
+<div class="paper-card">
+  <div class="paper-card-body">
+    <p class="paper-title"><a href="https://aclanthology.org/2025.lm4uc-1.9/">Cognate and Contact-Induced Transfer Learning for Hamshentsnag: A Low-Resource and Endangered Language</a></p>
+    <p class="paper-authors"><strong>Keleş, O.</strong>, Günay, B., &amp; Doğan, B.</p>
+    <div class="paper-venue-row">
+      <span class="badge badge-naacl">LM4UC @ NAACL 2025</span>
+    </div>
+    <div class="paper-links">
+      <a href="https://aclanthology.org/2025.lm4uc-1.9/">ACL Anthology</a>
+    </div>
+  </div>
+</div>
+
+<div class="paper-card">
+  <div class="paper-card-body">
+    <p class="paper-title"><a href="https://kelesonur.github.io/folder/reference_tracking.pdf">Reference Tracking Strategies of Deaf Adult Signers in Turkish Sign Language</a></p>
+    <p class="paper-authors"><strong>Keleş, O.</strong>, Atmaca, F., &amp; Gökgöz, K.</p>
+    <div class="paper-venue-row">
+      <span class="badge badge-journal">Journal of Pragmatics, 2023</span>
+    </div>
+    <div class="paper-links">
+      <a href="https://kelesonur.github.io/folder/reference_tracking.pdf">PDF</a>
+      <a href="https://github.com/kelesonur/reference_tracking_revision">Code</a>
+    </div>
+  </div>
+</div>
+
+<div class="paper-card">
+  <div class="paper-card-body">
+    <p class="paper-title"><a href="https://kelesonur.github.io/folder/aoa-verbalfluency.pdf">Effects of Age of Acquisition and Category Size on Signed Verbal Fluency</a></p>
+    <p class="paper-authors"><strong>Keleş, O.</strong>, Atmaca, F., &amp; Gökgöz, K.</p>
+    <div class="paper-venue-row">
+      <span class="badge badge-journal">Language Acquisition, 2022</span>
+      <span class="badge badge-award">🏆 Best Article Prize</span>
+    </div>
+    <div class="paper-links">
+      <a href="https://kelesonur.github.io/folder/aoa-verbalfluency.pdf">PDF</a>
+      <a href="https://doi.org/10.1080/10489223.2021.2023814">DOI</a>
+      <a href="https://osf.io/k3x7a/">OSF</a>
+    </div>
+  </div>
+</div>
+
+<p style="font-size:.88em; margin-top:.8em;"><a href="/publications/">→ See all publications</a></p>
+</div>
