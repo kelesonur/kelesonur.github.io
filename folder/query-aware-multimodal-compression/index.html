@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exploring Query-Aware Multimodal Context Compression</title>
+  <style>
+    @page {
+      margin: 0.5in;
+    }
+
+    :root {
+      color-scheme: light;
+      --ink: #171717;
+      --muted: #555;
+      --rule: #d8d8d8;
+      --paper: #fff;
+      --accent: #315f72;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 15px;
+      line-height: 1.38;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 26px 30px 34px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 2px;
+      font-size: 30px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    h2 {
+      margin: 14px 0 5px;
+      font-size: 19px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 7px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+
+    figure {
+      margin: 13px 0 14px;
+      text-align: center;
+      break-inside: avoid;
+    }
+
+    figure img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 0 auto;
+      border: 1px solid var(--rule);
+    }
+
+    figcaption {
+      max-width: 860px;
+      margin: 5px auto 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.28;
+    }
+
+    .task-gif img {
+      width: min(840px, 100%);
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      align-items: start;
+      margin-top: 4px;
+    }
+
+    .panel-label {
+      display: block;
+      margin-top: 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .pipeline {
+      margin: 9px 0 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .references {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--rule);
+      font-size: 12.5px;
+      line-height: 1.28;
+    }
+
+    .references ol {
+      margin: 4px 0 0 18px;
+      padding: 0;
+    }
+
+    .references li {
+      margin: 0 0 3px;
+    }
+
+    @media (max-width: 720px) {
+      main {
+        padding: 20px 16px 28px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        font-size: 10pt;
+        line-height: 1.28;
+      }
+
+      main {
+        max-width: none;
+        padding: 0;
+      }
+
+      h1 {
+        font-size: 19pt;
+      }
+
+      h2 {
+        font-size: 13pt;
+        margin-top: 8pt;
+      }
+
+      p {
+        margin-bottom: 3pt;
+      }
+
+      figure {
+        margin: 7pt 0 8pt;
+      }
+
+      figcaption,
+      .panel-label,
+      .subtitle,
+      .pipeline {
+        font-size: 8.5pt;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Exploring Query-Aware Multimodal Context Compression</h1>
+    </header>
+
+<section>
+  <h2>Motivation and Prior Work</h2>
+
+  <p>Following our conversation about query-aware compression for multimodal documents, I ran a small set of visual-token experiments over the weekend. The preliminary results suggest that multimodal compression may be better framed as an information-allocation problem: not only deciding what visual evidence to retain, but also how to distribute a limited visual budget across time, space, and resolution. Long-context systems increasingly ingest PDFs, screenshots, images, and video alongside text. This improves coverage but makes the visual context expensive: dense image grids and repeated video frames create many tokens whose relevance depends on the downstream query. Text compression already treats this as an information-selection problem. LLMLingua-2, for example, and (probably) the latte models by Compresr distill supervision from a strong LLM and train a small encoder to classify which text tokens should be retained, reducing context while preserving task performance [1].</p>
+
+  <p>Visual compression is apparently an active area as well. Recent methods prune redundant visual tokens, use language guidance to retain query-relevant evidence, or adapt the pruning budget by instance and layer [2, 4]. For video, PruneVid removes spatial/temporal redundancy and query-irrelevant tokens [3], while Vista-LLM explicitly introduces query-guided dynamic budgeting and temporal allocation before inference [5]. These results establish that visual inputs are highly compressible, and recent work already demonstrates query-guided and adaptive visual-token selection. The direction I find particularly interesting is broader than token pruning itself: a model-agnostic, input-space controller that operates before a downstream VLM API and jointly decides which pages, images, regions, or frames to send and at what fidelity. Such a system could work with both open and proprietary models without requiring access to internal attention states or visual embeddings. Modern APIs already expose useful control surfaces; for example, Gemini 3 allows per-media resolution settings that directly trade visual tokens for detail [6].</p>
+</section>
+
+<section>
+  <h2>Preliminary Experiment: Visual Budget vs. Task Accuracy</h2>
+
+  <p>I tested whether visual-token allocation can be reduced without losing the information needed for a concrete multimodal task. The benchmark contains 138 visually iconic sign videos that our team at the Max Planck Institute collected with our Deaf colleague, together with a 10-choice meaning-identification task (chance = .10). The prompt and candidate meanings were held fixed; only the visual evidence was compressed. I evaluated Qwen3-VL-32B-Instruct and Gemini 3.6 Flash with thinking disabled.</p>
+
+  <figure class="task-gif">
+    <img src="task_figure.gif" alt="Animated task illustration for the 10-choice meaning-identification experiment">
+    <figcaption><strong>Figure 1.</strong> Task illustration for the 10-choice meaning-identification experiment.</figcaption>
+  </figure>
+
+  <p>Since this is a video-understanding task, compression was manipulated along two independent axes: <strong>temporal coverage</strong> (8, 4, or 2 sampled frames) and <strong>spatial fidelity / token budget</strong>. For Qwen, I varied spatial resolution to create progressively smaller total visual-token budgets while keeping the sampled frames fixed. For Gemini, the API's media-resolution setting controlled the per-frame visual allocation. Thus, matched total budgets can be spent on many low-detail frames or fewer high-detail frames.</p>
+
+  <p><strong>Qwen: large redundancy without measurable loss.</strong> Native 8-frame input used 3,520 visual tokens and achieved .210 accuracy. Note that this is a difficult task for current open-source VLMs because it requires inferring an abstract meaning from visual form rather than simply recognizing visible objects. At only 264 tokens, accuracy remained .210—a 13.3&times; reduction with no observed loss. Crucially, no-video (.087) and mismatched-video (.080) controls were significantly below native performance, showing that the model was extracting useful information from the video despite its low absolute accuracy. This is best interpreted as evidence of substantial visual redundancy rather than as a claim that extreme compression is universally optimal.</p>
+
+  <p><strong>Gemini: lower visual allocation improved accuracy in this setting.</strong> With 8 frames, reducing observed image tokens from 8,800 (HIGH) to 2,112 (LOW) reduced visual input by approximately 76% while accuracy increased from .616 to .710 (+9.4 percentage points; paired McNemar p = .011). More importantly, token count alone did not determine performance. At approximately the same 2.1–2.2k-token budget, 8f/LOW achieved .710 accuracy, compared with .659 for 4f/MEDIUM and .638 for 2f/HIGH. This suggests that how a visual budget is allocated can matter as much as its total size. For this task, broader temporal coverage appears more useful than maximizing per-frame spatial detail.</p>
+
+  <figure>
+    <div class="result-grid">
+      <div>
+        <img src="qwen_compression.png" alt="Qwen3-VL-32B-Instruct compression results">
+        <span class="panel-label">(a) Qwen3-VL-32B-Instruct</span>
+      </div>
+
+      <div>
+        <img src="gemini_compression.png" alt="Gemini 3.6 Flash compression results">
+        <span class="panel-label">(b) Gemini 3.6 Flash</span>
+      </div>
+    </div>
+
+    <figcaption><strong>Figure 2.</strong> Initial visual-context compression results. Qwen preserves accuracy under substantial compression; Gemini improves as visual allocation is reduced. Exact realized/observed token counts are annotated; no error bars are shown.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Toward Query-Aware Multimodal Allocation</h2>
+
+  <p>These preliminary results suggest a more useful objective than simply pruning as many visual tokens as possible. Visual context compression can instead be treated as information allocation: given a query, preserve the cheapest representation that retains the evidence required for the downstream task.</p>
+
+  <p class="pipeline">query + multimodal context -&gt; lightweight controller -&gt; compressed context -&gt; VLM</p>
+
+  <p>The controller's action space can include: (i) KEEP/DROP pages, images, regions, or frames; (ii) LOW/MEDIUM/HIGH fidelity; (iii) query-relevant crops or regions of interest; (iv) OCR/text-only substitution when pixels add little; and (v) dynamic allocation between temporal coverage and spatial detail. This keeps the system deployable with proprietary APIs because it modifies the <em>input</em>, rather than requiring access to internal visual embeddings.</p>
+
+  <p>The Gemini result does not imply that low resolution should always be used. Tasks involving OCR, fine-grained diagrams, small objects, or spatial localization may require substantially more visual detail. The central hypothesis is therefore that the optimal compression policy is query-dependent rather than globally low-resolution.</p>
+
+  <p><strong>Learning signal.</strong> For each training example, generate candidate compressed views under different actions and budgets, evaluate them with a strong teacher or downstream VLM, and select the cheapest representation that preserves the target answer or score. A compact encoder/controller can then learn this policy from the query together with inexpensive visual features. Conceptually, the objective is simple: find the cheapest representation that preserves downstream quality. One implementation could optimize <strong>L = L<sub>task</sub> + &lambda;L<sub>distill</sub> + &beta;L<sub>budget</sub></strong>, where the budget term rewards lower visual-input cost while the task and distillation terms discourage destructive compression.</p>
+
+  <p><strong>Next validation.</strong> The key test is whether the optimal allocation changes with the information need. On the same visual inputs, compare meaning recognition with handshape, location, movement/path, fine-detail or OCR, and document-style questions. Then benchmark a learned policy against fixed LOW resolution, uniform resizing, random or uniform frame sampling, and simple saliency-based selection. Success should be reported as a Pareto frontier of <strong>task quality vs. billed visual tokens, latency, and cost</strong>. The strongest practical test would be cross-model transfer across both open and proprietary VLMs: a single query-aware input layer that reduces multimodal inference cost without being tied to one model architecture.</p>
+</section>
+
+<section class="references">
+  <strong>References</strong>
+  <ol>
+    <li>Z. Pan et al. <em>LLMLingua-2: Data Distillation for Efficient and Faithful Task-Agnostic Prompt Compression</em>. Findings of ACL, 2024.</li>
+    <li>X. Ye et al. <em>ATP-LLaVA: Adaptive Token Pruning for Large Vision Language Models</em>. CVPR, 2025.</li>
+    <li>X. Huang, H. Zhou, and K. Han. <em>PruneVid: Visual Token Pruning for Efficient Video Large Language Models</em>. Findings of ACL, 2025.</li>
+    <li>H. Zhang et al. <em>TrimTokenator: Towards Adaptive Visual Token Pruning for Large Multimodal Models</em>. Findings of ACL, 2026.</li>
+    <li>Z. Li et al. <em>Vista-LLM: Decoupled Query-Guided Visual Token Pruning for Efficient Long-Video Large Language Models</em>. ACL, 2026.</li>
+    <li>Google. <em>Gemini API: Media resolution</em>. Documentation, updated July 2026.</li>
+  </ol>
+</section>
+
+  </main>
+</body>
+</html>
