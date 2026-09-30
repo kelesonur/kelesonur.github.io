@@ -430,8 +430,17 @@ function initEmailJS(){
 function studentDisplayName(b){return b.kind==='group'?b.members:b.name;}
 async function sendStudentDecision(b,kind,reason){
  if(!initEmailJS())return {ok:false,text:'EmailJS failed to load.'};
+ const studentEmail=(b.email||'').trim();
+ if(!validEmail(studentEmail))return {ok:false,text:'Booking has no valid student email.'};
  const {day,slotStart}=bookingWhen(b);
- const params={to_email:b.email,name:studentDisplayName(b),day,time:slotStart};
+ // Templates use {{email}} in To Email (EmailJS contact-form convention); also pass to_email.
+ const params={
+  to_email:studentEmail,
+  email:studentEmail,
+  name:studentDisplayName(b),
+  day,
+  time:slotStart
+ };
  if(kind==='reject')params.reason=reason;
  const templateId=kind==='approve'?EMAILJS_APPROVE_TEMPLATE:EMAILJS_REJECT_TEMPLATE;
  try{
@@ -439,7 +448,7 @@ async function sendStudentDecision(b,kind,reason){
   return {ok:true,status:res?.status,text:res?.text||'OK'};
  }catch(e){
   const text=e?.text||e?.message||String(e);
-  return {ok:false,text};
+  return {ok:false,status:e?.status,text};
  }
 }
 
@@ -509,8 +518,8 @@ function officeScreen(){
    const b=ohBookings.find(x=>x.id===btn.dataset.approve);if(!b||b.status!=='pending')return;
    const statusEl=$('ohDecisionStatus');
    btn.disabled=true;
-   ohDecisionMsg='';
-   if(statusEl)statusEl.textContent='Emailing student…';
+   ohDecisionMsg='Emailing student…';
+   if(statusEl)statusEl.textContent=ohDecisionMsg;
    const result=await sendStudentDecision(b,'approve');
    if(result.ok){
     b.status='approved';
@@ -518,25 +527,25 @@ function officeScreen(){
     ohDecisionMsg='Approved. The student was emailed.';
     render();
    }else{
-    ohDecisionMsg='';
-    if(statusEl)statusEl.textContent=`Email was not sent${result.text?`: ${result.text}`:'.'} Status left pending.`;
+    ohDecisionMsg=`Email was not sent${result.text?`: ${result.text}`:'.'}${result.status?` (${result.status})`:''} Status left pending.`;
+    if(statusEl)statusEl.textContent=ohDecisionMsg;
     btn.disabled=false;
    }
   });
   document.querySelectorAll('[data-decline]').forEach(btn=>btn.onclick=async()=>{
    const b=ohBookings.find(x=>x.id===btn.dataset.decline);if(!b||b.status!=='pending')return;
-   const reasonEl=document.querySelector(`[data-reject-reason="${b.id}"]`);
+   const reasonEl=document.querySelector(`[data-reject-reason="${CSS.escape?CSS.escape(b.id):b.id}"]`)||document.getElementById(`reject-${b.id}`);
    const reason=(reasonEl?.value||'').trim();
    const statusEl=$('ohDecisionStatus');
    if(!reason){
-    ohDecisionMsg='';
-    if(statusEl)statusEl.textContent='Enter a short reject reason.';
+    ohDecisionMsg='Enter a short reject reason.';
+    if(statusEl)statusEl.textContent=ohDecisionMsg;
     reasonEl?.focus();
     return;
    }
    btn.disabled=true;
-   ohDecisionMsg='';
-   if(statusEl)statusEl.textContent='Emailing student…';
+   ohDecisionMsg='Emailing student…';
+   if(statusEl)statusEl.textContent=ohDecisionMsg;
    const result=await sendStudentDecision(b,'reject',reason);
    if(result.ok){
     b.status='declined';
@@ -545,8 +554,8 @@ function officeScreen(){
     ohDecisionMsg='Rejected. The student was emailed.';
     render();
    }else{
-    ohDecisionMsg='';
-    if(statusEl)statusEl.textContent=`Email was not sent${result.text?`: ${result.text}`:'.'} Status left pending.`;
+    ohDecisionMsg=`Email was not sent${result.text?`: ${result.text}`:'.'}${result.status?` (${result.status})`:''} Status left pending.`;
+    if(statusEl)statusEl.textContent=ohDecisionMsg;
     btn.disabled=false;
    }
   });
