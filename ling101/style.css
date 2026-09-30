@@ -32,7 +32,9 @@ header a{color:var(--text);text-decoration:none;font-family:'Times New Roman',Ti
 .brand-text{display:flex;flex-direction:column;gap:2px;min-width:0}
 .brand-line{display:block;line-height:1.2;letter-spacing:.2px}
 .brand-course{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
-a.brand-ta{display:inline-block;font-size:12px;font-weight:600;color:var(--bosphorus);text-decoration:none;align-self:flex-end;margin-left:2px}
+.brand-people{display:flex;flex-direction:column;align-items:flex-start;gap:2px;align-self:flex-end;margin-left:2px}
+.brand-instructor{display:block;font-size:12px;font-weight:600;color:var(--muted);font-family:'Times New Roman',Times,serif;line-height:1.25}
+a.brand-ta{display:inline-block;font-size:12px;font-weight:600;color:var(--bosphorus);text-decoration:none}
 a.brand-ta:hover{text-decoration:underline}
 header small{display:block;font:11px/1.45 'Times New Roman',Times,serif;color:var(--muted);letter-spacing:.4px;text-transform:none;max-width:280px;white-space:normal}
 .header-nav{display:flex;gap:6px;flex-wrap:wrap}
@@ -212,7 +214,8 @@ dialog form p{font-size:15px;color:#d5e4f4}
 .site-title .title-line{display:block;font-size:clamp(22px,3.4vw,34px);font-weight:700;letter-spacing:0;color:var(--muted)}
 .site-title .title-course{font-size:clamp(20px,4.1vw,52px);font-weight:700;color:var(--text);letter-spacing:0;white-space:nowrap;max-width:100%}
 .site-title .course-keep,.site-title .course-tail{white-space:nowrap}
-.site-title .title-ta{font-size:clamp(18px,2.6vw,28px);font-weight:600;color:var(--bosphorus);margin-top:.15em}
+.site-title .title-instructor{font-size:clamp(18px,2.6vw,28px);font-weight:600;color:var(--muted);margin-top:.2em}
+.site-title .title-ta{font-size:clamp(18px,2.6vw,28px);font-weight:600;color:var(--bosphorus);margin-top:.08em}
 .site-title .title-ta a{color:var(--bosphorus);text-decoration:none;font:inherit}
 .site-title .title-ta a:hover{text-decoration:underline}
 .office-place{display:block;margin-top:.45em;color:var(--muted);font-size:clamp(16px,2vw,20px);font-weight:400;line-height:1.45;letter-spacing:0}
