@@ -140,7 +140,7 @@ function optionHTML(options,selected,group,locked){
 function playScreen(){
  const c=CASES[state.index];
  if(!c){$('app').innerHTML='<p>Problem missing. Reload.</p>';return;}
- const room=Math.floor(state.index/4),n=state.index%4,locked=state.answers[state.index],d=locked||draft;
+ const room=Math.floor(state.index/4),n=state.index%4,locked=state.answers.length>state.index?state.answers[state.index]:null,d=locked||draft;
  const actions=!locked
   ?`<div class="action-group"><button class="quiet" type="button" id="hintBtn" ${d.hint?'disabled':''}>Hint (−20)</button>${admin?`<button class="quiet" type="button" id="skipBtn">Skip</button><button class="quiet" type="button" id="editHere">Edit</button>`:''}</div><button class="primary" type="button" id="submitBtn">Submit</button>`
   :`<span class="muted">${locked.skipped?'Skipped.':'Recorded.'}</span><button class="primary" type="button" id="nextBtn">${n===3?'Finish round':'Next'}</button>`;
@@ -165,21 +165,26 @@ function grade(c,d){
  else fraction=d.answer[0]===c.answer?1:0;
  return {solution:Math.round(60*fraction),reasonPoints:d.reason===c.r?40:0,points:Math.max(0,Math.round(60*fraction)+(d.reason===c.r?40:0)-(d.hint?20:0))};
 }
+function padAnswers(){
+ const blank={skipped:true,points:0,solution:0,reasonPoints:0,hint:false,answer:[],fields:[],reason:null};
+ while(state.answers.length<state.index)state.answers.push({...blank});
+}
 function submit(){
  const c=CASES[state.index];
- if(state.answers[state.index])return;
+ if(state.answers.length>state.index&&state.answers[state.index])return;
  if(draft.reason===null||(c.type==='fields'?c.fields.some((_,i)=>!Number.isInteger(draft.fields[i])):!draft.answer.length)){
   $('validation').textContent='Complete answer and justification.';
   return;
  }
- state.answers.push({...draft,...grade(c,draft)});
+ padAnswers();
+ state.answers[state.index]={...draft,...grade(c,draft)};
  save();render();
  $('app').querySelector('.feedback')?.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function skipQuestion(){
- if(!admin||state.answers[state.index])return;
- while(state.answers.length<state.index)state.answers.push({skipped:true,points:0,solution:0,reasonPoints:0,hint:false,answer:[],fields:[],reason:null});
- state.answers.push({skipped:true,points:0,solution:0,reasonPoints:0,hint:false,answer:[],fields:[],reason:null});
+ if(!admin||(state.answers.length>state.index&&state.answers[state.index]))return;
+ padAnswers();
+ state.answers[state.index]={skipped:true,points:0,solution:0,reasonPoints:0,hint:false,answer:[],fields:[],reason:null};
  save();render();
 }
 function answerText(c){
