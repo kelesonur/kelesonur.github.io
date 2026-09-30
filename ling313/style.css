@@ -237,3 +237,5 @@ dialog form p{font-size:15px;color:#d5e4f4}
  .site-title .course-keep{display:inline}
  .site-title .course-tail{display:inline-block}
 }
+.week-line{font-size:15px;color:var(--muted);margin:0 0 14px}
+.day-tabs button{font-size:13px;line-height:1.25;padding:10px 6px}
