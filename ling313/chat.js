@@ -97,6 +97,7 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        course: "ling313",
         message: message,
         history: history,
       }),
@@ -156,10 +157,6 @@
     const header = el("div", { className: "ling313-chat-header" }, [
       el("div", { className: "ling313-chat-header-text" }, [
         el("h2", { id: "ling313ChatTitle", text: "LING 313 course assistant" }),
-        el("p", {
-          className: "ling313-chat-note",
-          text: "Answers logistics only — not homework or course content.",
-        }),
       ]),
       el("button", {
         type: "button",
