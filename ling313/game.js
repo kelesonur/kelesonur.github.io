@@ -25,13 +25,13 @@ const BASE_CASES=[
 ];
 
 const WEEKS=[
-{id:'1–2',topic:'Sound inventory'},
-{id:'3–4',topic:'Length & phonotactics'},
-{id:'4–5',topic:'Alternations & processes'},
-{id:'6–7',topic:'Stress & morphology'},
-{id:'8–9',topic:'Word formation'},
-{id:'10–11',topic:'Verbal inflection'},
-{id:'12',topic:'Nominalization'}
+{id:'1–2',topic:'Sound inventory',meetings:[{iso:'2026-09-21',time:'16:00–17:00',room:'M1170'},{iso:'2026-09-22',time:'15:00–17:00',room:'TB360'},{iso:'2026-09-23',time:'16:00–17:00',room:'NH304'},{iso:'2026-09-28',time:'16:00–17:00',room:'M1170'},{iso:'2026-09-29',time:'15:00–17:00',room:'TB360'},{iso:'2026-09-30',time:'16:00–17:00',room:'NH304'}]},
+{id:'3–4',topic:'Length & phonotactics',meetings:[{iso:'2026-10-05',time:'16:00–17:00',room:'M1170'},{iso:'2026-10-06',time:'15:00–17:00',room:'TB360'},{iso:'2026-10-07',time:'16:00–17:00',room:'NH304'},{iso:'2026-10-12',time:'16:00–17:00',room:'M1170'},{iso:'2026-10-13',time:'15:00–17:00',room:'TB360'},{iso:'2026-10-14',time:'16:00–17:00',room:'NH304'}]},
+{id:'4–5',topic:'Alternations & processes',meetings:[{iso:'2026-10-12',time:'16:00–17:00',room:'M1170'},{iso:'2026-10-13',time:'15:00–17:00',room:'TB360'},{iso:'2026-10-14',time:'16:00–17:00',room:'NH304'},{iso:'2026-10-19',time:'16:00–17:00',room:'M1170'},{iso:'2026-10-20',time:'15:00–17:00',room:'TB360'},{iso:'2026-10-21',time:'16:00–17:00',room:'NH304'}]},
+{id:'6–7',topic:'Stress & morphology',meetings:[{iso:'2026-10-26',time:'16:00–17:00',room:'M1170'},{iso:'2026-10-27',time:'15:00–17:00',room:'TB360'},{iso:'2026-10-28',time:'16:00–17:00',room:'NH304'},{iso:'2026-11-02',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-03',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-04',time:'16:00–17:00',room:'NH304'}]},
+{id:'8–9',topic:'Word formation',meetings:[{iso:'2026-11-09',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-10',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-11',time:'16:00–17:00',room:'NH304'},{iso:'2026-11-16',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-17',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-18',time:'16:00–17:00',room:'NH304'}]},
+{id:'10–11',topic:'Verbal inflection',meetings:[{iso:'2026-11-23',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-24',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-25',time:'16:00–17:00',room:'NH304'},{iso:'2026-11-30',time:'16:00–17:00',room:'M1170'},{iso:'2026-12-01',time:'15:00–17:00',room:'TB360'},{iso:'2026-12-02',time:'16:00–17:00',room:'NH304'}]},
+{id:'12',topic:'Nominalization',meetings:[{iso:'2026-12-07',time:'16:00–17:00',room:'M1170'},{iso:'2026-12-08',time:'15:00–17:00',room:'TB360'},{iso:'2026-12-09',time:'16:00–17:00',room:'NH304'}]}
 ];
 const SCREENS=['home','start','play','break','results','library','edit','office'];
 const KEY='ling313-phonology-en-v1';
@@ -183,7 +183,7 @@ function bindSectionNav(){
  if($('navPs'))$('navPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
 function homeScreen(){
- $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING313 Fall 2026</span><span class="title-line title-course"><span class="course-keep">Phonology and Morphology</span> <span class="course-tail">of Turkish</span></span><span class="title-line title-ta"><a href="https://kelesonur.github.io/" target="_blank" rel="noopener noreferrer">TA: Onur Keleş</a></span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
+ $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING313 Fall 2026</span><span class="title-line title-course"><span class="course-keep">Phonology and Morphology</span> <span class="course-tail">of Turkish</span></span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
  $('goBook').onclick=()=>{state.screen='office';save();render();focusMain();};
  $('goPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
@@ -200,6 +200,19 @@ function render(){
 }
 function focusMain(){window.scrollTo({top:0,behavior:'instant'});const h=$('app').querySelector('h1,h2');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
 
+const DOW_SHORT=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function formatClassMeeting(m){
+ const [y,mo,d]=String(m.iso||'').split('-').map(Number);
+ const dt=new Date(y,mo-1,d);
+ const head=`${DOW_SHORT[dt.getDay()]} ${dt.getDate()} ${MONTH_SHORT[dt.getMonth()]}`;
+ if(m.note)return `${head} · ${m.note}`;
+ if(m.time&&m.room)return `${head} · ${m.time} · ${m.room}`;
+ return head;
+}
+function classMeetingsHtml(meetings){
+ if(!meetings||!meetings.length)return '';
+ return `<ul class="class-meetings">${meetings.map(m=>`<li>${esc(formatClassMeeting(m))}</li>`).join('')}</ul>`;
+}
 function weekPicker(){
  return `<section class="week-picker" aria-label="Choose weeks"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>`<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${state.weeks===w.id?'selected':''}">${weekLabel(w.id)}<small>${w.id==='1–2'?'Ready':'To be added'}</small></button>`).join('')}</div></section>`;
 }
@@ -218,12 +231,12 @@ function startScreen(){
  if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1–2';
  const meta=weekMeta(state.weeks);
  if(state.weeks!=='1–2'){
-  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1><p>${esc(meta.topic)}</p><p class="muted">To be added.</p>${admin?`<div class="wide-actions"><button type="button" id="openLibrary">All questions</button></div>`:''}</section>`;
+  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p>${esc(meta.topic)}</p><p class="muted">To be added.</p>${admin?`<div class="wide-actions"><button type="button" id="openLibrary">All questions</button></div>`:''}</section>`;
   bindSectionNav();bindWeekPicker();
   if(admin)$('openLibrary').onclick=()=>{state.screen='library';render();focusMain();};
   return;
  }
- $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro"><div><span class="eyebrow">LING313 · PS</span><h1>Phonology and Morphology <span class="accent">of Turkish</span></h1><p class="muted">${esc(meta.topic)}</p></div><section class="setup" aria-label="Session setup"><h2>Format</h2><div class="mode-buttons"><button type="button" id="teamMode" class="${state.mode==='team'?'selected':''}" aria-pressed="${state.mode==='team'}">Team<small>One device</small></button><button type="button" id="classMode" class="${state.mode==='class'?'selected':''}" aria-pressed="${state.mode==='class'}">Projector<small>Whole class</small></button></div><label for="teamName">${state.mode==='class'?'Class name':'Team name'}</label><input id="teamName" maxlength="35" placeholder="Optional" value="${esc(state.team)}" autocomplete="off"><button class="primary" type="button" id="startBtn">${state.answers.length?'Resume':'Start'}</button>${admin?`<button type="button" id="openLibrary" style="width:100%;margin-top:10px">All questions</button><button type="button" id="resetPractice" class="danger" style="width:100%;margin-top:10px">Reset session</button>`:''}${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section></section><section class="rooms" aria-label="Four rounds">${ROOMS.map((r,i)=>`<div class="room-card"><span class="room-number">0${i+1}</span><h3>${r.name}</h3></div>`).join('')}</section>`;
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro"><div><span class="eyebrow">LING313 · PS</span><h1>Phonology and Morphology <span class="accent">of Turkish</span></h1>${classMeetingsHtml(meta.meetings)}<p class="muted">${esc(meta.topic)}</p></div><section class="setup" aria-label="Session setup"><h2>Format</h2><div class="mode-buttons"><button type="button" id="teamMode" class="${state.mode==='team'?'selected':''}" aria-pressed="${state.mode==='team'}">Team<small>One device</small></button><button type="button" id="classMode" class="${state.mode==='class'?'selected':''}" aria-pressed="${state.mode==='class'}">Projector<small>Whole class</small></button></div><label for="teamName">${state.mode==='class'?'Class name':'Team name'}</label><input id="teamName" maxlength="35" placeholder="Optional" value="${esc(state.team)}" autocomplete="off"><button class="primary" type="button" id="startBtn">${state.answers.length?'Resume':'Start'}</button>${admin?`<button type="button" id="openLibrary" style="width:100%;margin-top:10px">All questions</button><button type="button" id="resetPractice" class="danger" style="width:100%;margin-top:10px">Reset session</button>`:''}${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section></section><section class="rooms" aria-label="Four rounds">${ROOMS.map((r,i)=>`<div class="room-card"><span class="room-number">0${i+1}</span><h3>${r.name}</h3></div>`).join('')}</section>`;
  bindSectionNav();bindWeekPicker();
  $('teamMode').onclick=()=>{state.team=$('teamName').value;state.mode='team';save();render();};
  $('classMode').onclick=()=>{state.team=$('teamName').value;state.mode='class';save();render();};

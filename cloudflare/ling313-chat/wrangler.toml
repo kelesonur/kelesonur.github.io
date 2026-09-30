@@ -1,0 +1,11 @@
+name = "ling313-chat"
+main = "src/index.js"
+compatibility_date = "2026-09-30"
+workers_dev = true
+preview_urls = false
+
+# Create with: npx wrangler kv namespace create CHAT_USAGE
+# then paste the id below.
+[[kv_namespaces]]
+binding = "CHAT_USAGE"
+id = "c0506ce517c64c39a03f8416660121ed"
