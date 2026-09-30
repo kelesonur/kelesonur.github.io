@@ -136,7 +136,7 @@ function bindSectionNav(){
  if($('navPs'))$('navPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
 function homeScreen(){
- $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING313 Fall 2026</span><span class="title-line title-course"><span class="course-keep">Phonology and Morphology</span> <span class="course-tail">of Turkish</span></span><span class="title-line title-instructor">Instructor: Ceyda Arslan-Kechriotis</span><span class="title-line title-ta"><a href="https://kelesonur.github.io/" target="_blank" rel="noopener noreferrer">TA: Onur Keleş</a></span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
+ $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING313 Fall 2026</span><span class="title-line title-course"><span class="course-keep">Phonology and Morphology</span> <span class="course-tail">of Turkish</span></span><span class="title-line title-ta"><a href="https://kelesonur.github.io/" target="_blank" rel="noopener noreferrer">TA: Onur Keleş</a></span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
  $('goBook').onclick=()=>{state.screen='office';save();render();focusMain();};
  $('goPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
