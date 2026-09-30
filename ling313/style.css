@@ -252,6 +252,15 @@ dialog form p{font-size:15px;color:#d5e4f4}
 .class-meetings li{margin:0 0 4px}
 .week-empty .class-meetings{text-align:left;max-width:520px;margin-left:auto;margin-right:auto}
 .intro .class-meetings{margin-top:4px}
+.material-picker .material-choices{display:grid;grid-template-columns:1fr;gap:12px}
+.material-picker .material-choices button{min-height:72px;text-align:left;padding:18px 20px;font-size:20px;font-weight:700}
+.material-view{max-width:1100px;margin:0 auto}
+.material-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.material-head h1{margin:0;font-size:clamp(24px,3vw,36px)}
+.embed-toolbar{display:flex;gap:10px;margin-bottom:12px}
+.embed-toolbar a.primary{display:inline-block;width:auto;text-decoration:none}
+.material-frame{width:100%;border:1px solid var(--line);border-radius:12px;background:#0b1830}
+.pdf-frame{min-height:min(78vh,820px);height:78vh}
 
 /* Course assistant chat (floating; does not restyle home/header) */
 .ling313-chat{position:fixed;right:18px;bottom:18px;z-index:40;font-family:'Times New Roman',Times,serif}
