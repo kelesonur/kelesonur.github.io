@@ -33,10 +33,16 @@ header a{color:var(--text);text-decoration:none;font-family:'Times New Roman',Ti
 .brand-text{display:flex;flex-direction:column;gap:2px;min-width:0}
 .brand-line{display:block;line-height:1.2;letter-spacing:.2px}
 .brand-course{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
-.brand-people{display:flex;flex-direction:column;align-items:flex-start;gap:2px;align-self:flex-end;margin-left:2px}
-.brand-instructor{display:block;font-size:12px;font-weight:600;color:var(--muted);font-family:'Times New Roman',Times,serif;line-height:1.25}
-a.brand-ta{display:inline-block;font-size:12px;font-weight:600;color:var(--bosphorus);text-decoration:none}
+.brand-people{display:flex;flex-direction:column;align-items:flex-start;gap:4px;align-self:center;margin-left:2px;max-width:min(440px,72vw)}
+.brand-instructor{display:block;font-size:12px;font-weight:600;color:var(--muted);font-family:'Times New Roman',Times,serif;line-height:1.35}
+.brand-instructor a{color:var(--muted);text-decoration:none;font:inherit;font-weight:600}
+.brand-instructor a:hover{color:var(--bosphorus);text-decoration:underline}
+.brand-ta-block{display:flex;flex-direction:column;gap:1px;font-size:12px;font-weight:600;font-family:'Times New Roman',Times,serif;line-height:1.35;color:var(--muted)}
+.brand-ta-label{color:var(--muted)}
+a.brand-ta{display:inline;color:var(--bosphorus);text-decoration:none;font:inherit;font-weight:600}
 a.brand-ta:hover{text-decoration:underline}
+a.brand-mail{color:var(--bosphorus);text-decoration:none;font:inherit;font-weight:600;word-break:break-all}
+a.brand-mail:hover{text-decoration:underline}
 header small{display:block;font:11px/1.45 'Times New Roman',Times,serif;color:var(--muted);letter-spacing:.4px;text-transform:none;max-width:280px;white-space:normal}
 .header-nav{display:flex;gap:6px;flex-wrap:wrap}
 .nav-tab[aria-pressed="true"]{border-color:var(--bosphorus);background:#1a3d66;color:var(--bosphorus)}
@@ -255,3 +261,9 @@ dialog form p{font-size:15px;color:#d5e4f4}
 .week-empty .muted{margin-top:18px;font-size:18px}
 .week-line{font-size:15px;color:var(--muted);margin:0 0 14px}
 .day-tabs button{font-size:13px;line-height:1.25;padding:10px 6px}
+@media(max-width:620px){.brand-people{max-width:100%;width:100%}}
+
+.class-meetings{list-style:none;margin:0 0 14px;padding:0;color:var(--bosphorus);font-weight:700;font-size:15px;line-height:1.55}
+.class-meetings li{margin:0 0 4px}
+.week-empty .class-meetings{text-align:left;max-width:520px;margin-left:auto;margin-right:auto}
+.intro .class-meetings{margin-top:4px}

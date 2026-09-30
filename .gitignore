@@ -1,2 +1,6 @@
 _site/
 
+
+# Local-only DeepSeek key for LING313 course assistant proxy (never commit)
+ling313/.chat-secret
+.chat-secret

@@ -1,18 +1,18 @@
 'use strict';
 const COURSE_ID='411';
 const WEEKS=[
-{id:'1',dates:'Sep 23–24',topic:'Ethics in linguistic research; Constructing and supporting a linguistic analysis',readings:'P&S Ch. 2 (Eckert). P&S Ch. 18 (Beavers and Sells).',ready:true},
-{id:'2',dates:'Sep 30–Oct 1',topic:'Preparing for data collection, sampling; Data collection methods',readings:'P&S Ch. 5 (Buchstaller and Khattab). P&S Ch. 3 (Schütze and Sprouse, Judgment data). Optional: P&S Ch. 6 (Surveys and interviews).',ready:false},
-{id:'3',dates:'Oct 7–8',topic:'Designing experiments and data collection methods',readings:'',ready:false},
-{id:'4',dates:'Oct 14–15',topic:'Working with data: intro to statistics, descriptive statistics, probability and sample means',readings:'P&S Ch. 7 (Abbuhl, Gass, and Mackey). P&S Ch. 8 (Kaiser). G&W Chs. 1–4 and 6. J Ch. 1.',ready:false},
-{id:'5',dates:'Oct 21–22',topic:'Inferential statistics: hypothesis testing, intro to the t-statistic',readings:'G&W Chs. 5, 7–9. J Ch. 2, §2.3.',ready:false},
-{id:'6',dates:'Oct 28–29',topic:'Oct 28, 12–1 pm: practicum on R. Oct 29: holiday',readings:'',ready:false},
-{id:'7',dates:'Nov 4–5',topic:'Two samples: independent samples t-test, related samples t-test. First exam',readings:'G&W Chs. 10–11. J Ch. 3, §3.1.',ready:false},
-{id:'8',dates:'Nov 11–12',topic:'Multiple samples: ANOVA (GLM 1). Optional factorial ANOVA',readings:'G&W Ch. 12 and Ch. 14. J Ch. 4, §§4.1–4.2.',ready:false},
-{id:'9',dates:'Nov 18–19',topic:'Repeated measures designs (GLM 4)',readings:'G&W Ch. 13. J Ch. 4, §4.3.',ready:false},
-{id:'10',dates:'Nov 25–26',topic:'Correlation',readings:'G&W Ch. 15. J Ch. 2, §2.4.',ready:false},
-{id:'11',dates:'Dec 2–3',topic:'Linear regression and multiple regression',readings:'G&W Ch. 16. J Ch. 2 §2.4. J Ch. 3 §3.2.',ready:false},
-{id:'12',dates:'Dec 9–10',topic:'Logistic regression. Second exam',readings:'Lecture slides. J Ch. 5 §5.4.',ready:false,extra:'If time: Chi-square; mixed-effects modelling. G&W Ch. 17. J Ch. 7 §7.3.'}
+{id:'1',dates:'Sep 23–24',topic:'Ethics in linguistic research; Constructing and supporting a linguistic analysis',readings:'P&S Ch. 2 (Eckert). P&S Ch. 18 (Beavers and Sells).',ready:true,meetings:[{iso:'2026-09-23',time:'12:00–14:00',room:'M1200'},{iso:'2026-09-24',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'2',dates:'Sep 30–Oct 1',topic:'Preparing for data collection, sampling; Data collection methods',readings:'P&S Ch. 5 (Buchstaller and Khattab). P&S Ch. 3 (Schütze and Sprouse, Judgment data). Optional: P&S Ch. 6 (Surveys and interviews).',ready:false,meetings:[{iso:'2026-09-30',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-01',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'3',dates:'Oct 7–8',topic:'Designing experiments and data collection methods',readings:'',ready:false,meetings:[{iso:'2026-10-07',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-08',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'4',dates:'Oct 14–15',topic:'Working with data: intro to statistics, descriptive statistics, probability and sample means',readings:'P&S Ch. 7 (Abbuhl, Gass, and Mackey). P&S Ch. 8 (Kaiser). G&W Chs. 1–4 and 6. J Ch. 1.',ready:false,meetings:[{iso:'2026-10-14',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-15',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'5',dates:'Oct 21–22',topic:'Inferential statistics: hypothesis testing, intro to the t-statistic',readings:'G&W Chs. 5, 7–9. J Ch. 2, §2.3.',ready:false,meetings:[{iso:'2026-10-21',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-22',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'6',dates:'Oct 28–29',topic:'Oct 28, 12–1 pm: practicum on R. Oct 29: holiday',readings:'',ready:false,meetings:[{iso:'2026-10-28',time:'12:00–13:00',room:'M1200'},{iso:'2026-10-29',note:'holiday'}]},
+{id:'7',dates:'Nov 4–5',topic:'Two samples: independent samples t-test, related samples t-test. First exam',readings:'G&W Chs. 10–11. J Ch. 3, §3.1.',ready:false,meetings:[{iso:'2026-11-04',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-05',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'8',dates:'Nov 11–12',topic:'Multiple samples: ANOVA (GLM 1). Optional factorial ANOVA',readings:'G&W Ch. 12 and Ch. 14. J Ch. 4, §§4.1–4.2.',ready:false,meetings:[{iso:'2026-11-11',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-12',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'9',dates:'Nov 18–19',topic:'Repeated measures designs (GLM 4)',readings:'G&W Ch. 13. J Ch. 4, §4.3.',ready:false,meetings:[{iso:'2026-11-18',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-19',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'10',dates:'Nov 25–26',topic:'Correlation',readings:'G&W Ch. 15. J Ch. 2, §2.4.',ready:false,meetings:[{iso:'2026-11-25',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-26',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'11',dates:'Dec 2–3',topic:'Linear regression and multiple regression',readings:'G&W Ch. 16. J Ch. 2 §2.4. J Ch. 3 §3.2.',ready:false,meetings:[{iso:'2026-12-02',time:'12:00–14:00',room:'M1200'},{iso:'2026-12-03',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'12',dates:'Dec 9–10',topic:'Logistic regression. Second exam',readings:'Lecture slides. J Ch. 5 §5.4.',ready:false,extra:'If time: Chi-square; mixed-effects modelling. G&W Ch. 17. J Ch. 7 §7.3.',meetings:[{iso:'2026-12-09',time:'12:00–14:00',room:'M1200'},{iso:'2026-12-10',time:'12:00–14:00',room:'HHZ08'}]}
 ];
 const WEEK1_ITEMS=[
 {id:'handout',title:'Handout',file:'materials/week1/handout.pdf'},
@@ -159,8 +159,21 @@ function bindWeekPicker(){
   };
  });
 }
+const DOW_SHORT=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function formatClassMeeting(m){
+ const [y,mo,d]=String(m.iso||'').split('-').map(Number);
+ const dt=new Date(y,mo-1,d);
+ const head=`${DOW_SHORT[dt.getDay()]} ${dt.getDate()} ${MONTH_SHORT[dt.getMonth()]}`;
+ if(m.note)return `${head} · ${m.note}`;
+ if(m.time&&m.room)return `${head} · ${m.time} · ${m.room}`;
+ return head;
+}
+function classMeetingsHtml(meetings){
+ if(!meetings||!meetings.length)return '';
+ return `<ul class="class-meetings">${meetings.map(m=>`<li>${esc(formatClassMeeting(m))}</li>`).join('')}</ul>`;
+}
 function weekDetails(meta){
- return `<div class="week-meta"><p class="week-dates">${esc(meta.dates)}</p><p class="week-topic">${esc(meta.topic)}</p>${meta.readings?`<p class="week-readings">${esc(meta.readings)}</p>`:''}</div>`;
+ return `<div class="week-meta">${classMeetingsHtml(meta.meetings)}<p class="week-topic">${esc(meta.topic)}</p>${meta.readings?`<p class="week-readings">${esc(meta.readings)}</p>`:''}</div>`;
 }
 
 function startScreen(){
