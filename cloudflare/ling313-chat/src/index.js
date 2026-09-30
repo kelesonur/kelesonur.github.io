@@ -919,16 +919,23 @@ async function classifyQuestion(env, course, message) {
   if (!env.AI) return null;
   const courseLabel = COURSE_LABEL[course];
   const prompt =
-    `For ${courseLabel}, output exactly one label: LOGISTICS, CONTENT, or OTHER.\n` +
-    `LOGISTICS=times/rooms/syllabus/schedule/week/reading/attendance/grading/quizzes/exams logistics/instructor/TA/office hours/Moodle.\n` +
-    `CONTENT=explaining linguistics/homework/analysis/vowel harmony/stress/morphology/syntax.\n` +
-    `OTHER=unrelated to this course (e.g. weather or another course like ling411 on LING 101).\n` +
-    `If unsure, output LOGISTICS.\n` +
-    `Question: ${message}`;
+    `Classify one student question for ${courseLabel}. Reply with one word: LOGISTICS, CONTENT, or OTHER.\n` +
+    `LOGISTICS: where or when class meets, including classroom, room, building, day, or time. Also syllabus, week, reading, grade, quiz, exam, attendance, instructor, TA, office hour, Moodle.\n` +
+    `Casual wording is still LOGISTICS. "what classroom are we at on wednesdays" is LOGISTICS.\n` +
+    `CONTENT: asks how a linguistic idea works, or asks for homework or analysis help.\n` +
+    `OTHER: not about this course, such as weather, sports, or a different course.\n` +
+    `If it could be about class place, time, or syllabus, choose LOGISTICS.\n` +
+    `Examples:\n` +
+    `what classroom are we at on wednesdays -> LOGISTICS\n` +
+    `What room is Monday class in? -> LOGISTICS\n` +
+    `How does vowel harmony work? -> CONTENT\n` +
+    `What's the weather tomorrow? -> OTHER\n` +
+    `Question: ${message}\n` +
+    `Label:`;
 
   const result = await env.AI.run(CLASSIFIER_MODEL, {
     messages: [{ role: "user", content: prompt }],
-    max_tokens: 8,
+    max_tokens: 16,
   });
 
   const text =
