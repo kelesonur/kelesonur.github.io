@@ -9,3 +9,6 @@ preview_urls = false
 [[kv_namespaces]]
 binding = "CHAT_USAGE"
 id = "c0506ce517c64c39a03f8416660121ed"
+
+[ai]
+binding = "AI"

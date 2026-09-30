@@ -22,6 +22,21 @@ const LIMIT_MSG = {
     "You've reached today's LING 101 chatbot limit. For additional questions, please contact the TA at onur.keles1@bogazici.edu.tr.",
 };
 
+const COURSE_LABEL = {
+  ling313: "LING 313",
+  ling101: "LING 101",
+};
+
+const CONTENT_MSG =
+  "That's a course-content question. Please contact the TA, Onur Keleş, at onur.keles1@bogazici.edu.tr.";
+
+const OTHER_MSG = {
+  ling313: "That question is outside the scope of the LING 313 course assistant.",
+  ling101: "That question is outside the scope of the LING 101 course assistant.",
+};
+
+const CLASSIFIER_MODEL = "@cf/meta/llama-3.2-1b-instruct";
+
 const SYSTEM_PROMPTS = {
   ling313: `You are the official course assistant chatbot for LING 313.02:
 Phonology and Morphology of Modern Turkish, Fall 2026.
@@ -892,6 +907,42 @@ async function checkAndBumpUsage(env, course, ip) {
   return { allowed: true, count: next };
 }
 
+function parseClassifierLabel(text) {
+  if (typeof text !== "string") return null;
+  const upper = text.toUpperCase();
+  // Prefer the first matching whole-word label.
+  const match = upper.match(/\b(LOGISTICS|CONTENT|OTHER)\b/);
+  return match ? match[1] : null;
+}
+
+async function classifyQuestion(env, course, message) {
+  if (!env.AI) return null;
+  const courseLabel = COURSE_LABEL[course];
+  const prompt =
+    `For ${courseLabel}, output exactly one label: LOGISTICS, CONTENT, or OTHER.\n` +
+    `LOGISTICS=times/rooms/syllabus/schedule/week/reading/attendance/grading/quizzes/exams logistics/instructor/TA/office hours/Moodle.\n` +
+    `CONTENT=explaining linguistics/homework/analysis/vowel harmony/stress/morphology/syntax.\n` +
+    `OTHER=unrelated to this course (e.g. weather or another course like ling411 on LING 101).\n` +
+    `If unsure, output LOGISTICS.\n` +
+    `Question: ${message}`;
+
+  const result = await env.AI.run(CLASSIFIER_MODEL, {
+    messages: [{ role: "user", content: prompt }],
+    max_tokens: 8,
+  });
+
+  const text =
+    typeof result === "string"
+      ? result
+      : typeof result?.response === "string"
+        ? result.response
+        : typeof result?.result?.response === "string"
+          ? result.result.response
+          : null;
+
+  return parseClassifierLabel(text);
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -911,14 +962,6 @@ export default {
       return jsonResponse({ error: "origin_not_allowed" }, 403, origin);
     }
 
-    if (!env.DEEPSEEK_API_KEY) {
-      return jsonResponse(
-        { error: "not_connected", reply: "The course assistant is not connected yet." },
-        503,
-        origin
-      );
-    }
-
     let data;
     try {
       data = await request.json();
@@ -934,6 +977,39 @@ export default {
       typeof data?.message === "string" ? data.message.trim() : "";
     if (!message || message.length > MAX_MESSAGE_LEN) {
       return jsonResponse({ error: "bad_request", reply: ERROR_MSG }, 400, origin);
+    }
+
+    // Free Workers AI gate: only LOGISTICS (or classifier failure) reaches DeepSeek.
+    let label = null;
+    try {
+      label = await classifyQuestion(env, course, message);
+    } catch (err) {
+      console.log("classifier_error", String(err?.message || err));
+      label = null;
+    }
+
+    if (label === "CONTENT") {
+      console.log("classifier", course, "CONTENT", "skip_deepseek");
+      return jsonResponse({ reply: CONTENT_MSG }, 200, origin);
+    }
+    if (label === "OTHER") {
+      console.log("classifier", course, "OTHER", "skip_deepseek");
+      return jsonResponse({ reply: OTHER_MSG[course] }, 200, origin);
+    }
+
+    console.log(
+      "classifier",
+      course,
+      label || "FALLTHROUGH",
+      "to_deepseek"
+    );
+
+    if (!env.DEEPSEEK_API_KEY) {
+      return jsonResponse(
+        { error: "not_connected", reply: "The course assistant is not connected yet." },
+        503,
+        origin
+      );
     }
 
     const ip = clientIp(request);
