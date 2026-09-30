@@ -42,6 +42,10 @@ const TA_EMAIL='onur.keles1@bogazici.edu.tr';
 // Web3Forms access key is public by design (alias for the TA inbox).
 const WEB3FORMS_ACCESS_KEY='c5e63062-8265-4af1-8e73-ee93d3dc6c8d';
 const WEB3FORMS_ENDPOINT='https://api.web3forms.com/submit';
+const EMAILJS_PUBLIC_KEY='3lYZ3IywfytlgVe3I';
+const EMAILJS_SERVICE_ID='service_qqvyxba';
+const EMAILJS_APPROVE_TEMPLATE='template_itvkdgj';
+const EMAILJS_REJECT_TEMPLATE='template_zkcw19t';
 const DAY_IDS=['mon','tue','wed','thu','fri'];
 const DAY_LABEL={mon:'Monday',tue:'Tuesday',wed:'Wednesday',thu:'Thursday',fri:'Friday'};
 const DEFAULT_AVAIL={
@@ -84,7 +88,7 @@ function buildCases(edits){
 }
 
 let edits={},storageOK=true,admin=false,editIndex=0,CASES=buildCases();
-let ohAvail=clone(DEFAULT_AVAIL),ohBookings=[],ohDraft={kind:'individual',day:'mon',slot:null,name:'',group:'',members:'',email:'',why:''};
+let ohAvail=clone(DEFAULT_AVAIL),ohBookings=[],ohDraft={kind:'individual',day:'mon',slot:null,name:'',group:'',members:'',email:'',why:''},ohDecisionMsg='';
 try{edits=JSON.parse(localStorage.getItem(EDIT_KEY))||{};if(typeof edits!=='object'||Array.isArray(edits))edits={};}catch(e){edits={};storageOK=false;}
 CASES=buildCases(edits);
 try{
@@ -415,6 +419,30 @@ async function sendBookingNotice(b){
  return {ok:success,status:res.status,data,text};
 }
 
+function initEmailJS(){
+ if(typeof emailjs==='undefined'||!emailjs?.init||!emailjs?.send)return false;
+ if(!initEmailJS.ready){
+  emailjs.init({publicKey:EMAILJS_PUBLIC_KEY});
+  initEmailJS.ready=true;
+ }
+ return true;
+}
+function studentDisplayName(b){return b.kind==='group'?b.members:b.name;}
+async function sendStudentDecision(b,kind,reason){
+ if(!initEmailJS())return {ok:false,text:'EmailJS failed to load.'};
+ const {day,slotStart}=bookingWhen(b);
+ const params={to_email:b.email,name:studentDisplayName(b),day,time:slotStart};
+ if(kind==='reject')params.reason=reason;
+ const templateId=kind==='approve'?EMAILJS_APPROVE_TEMPLATE:EMAILJS_REJECT_TEMPLATE;
+ try{
+  const res=await emailjs.send(EMAILJS_SERVICE_ID,templateId,params);
+  return {ok:true,status:res?.status,text:res?.text||'OK'};
+ }catch(e){
+  const text=e?.text||e?.message||String(e);
+  return {ok:false,text};
+ }
+}
+
 function officeScreen(){
  if(!DAY_IDS.includes(ohDraft.day)||!ohAvail[ohDraft.day]?.on)ohDraft.day=DAY_IDS.find(d=>ohAvail[d].on)||'mon';
  const slots=slotsForDay(ohDraft.day);
@@ -452,11 +480,11 @@ function officeScreen(){
  <div class="edit-actions"><button class="primary" type="button" id="ohSaveAvail">Save hours</button><button type="button" id="ohResetAvail">Reset defaults</button></div>
  <p id="ohAvailStatus" class="mailto-note" role="status"></p>
  <h2 style="margin-top:28px">Requests</h2>
- <p class="mailto-note">Approve / Decline only updates status here. Reply to the Web3Forms booking email to notify the student.</p>
- <div class="booking-list">${ohBookings.length?ohBookings.slice().reverse().map(b=>`<div class="booking-item"><div class="status ${esc(b.status)}">${esc(b.status)}</div><p>${esc(bookingLabel(b))}</p><p class="muted">${esc(b.email)}</p>${b.why?`<p>${esc(b.why)}</p>`:''}<div class="edit-actions">
- ${b.status==='pending'?`<button type="button" class="primary" data-approve="${esc(b.id)}">Approve</button><button type="button" data-decline="${esc(b.id)}">Decline</button>`:''}
- <button type="button" class="danger" data-clear="${esc(b.id)}">Clear</button>
- </div></div>`).join(''):'<p class="muted">No requests yet.</p>'}</div>
+ <p class="mailto-note">Approve and Reject email the student via EmailJS. Status updates only after the email sends.</p>
+ <p id="ohDecisionStatus" class="book-status" role="status">${esc(ohDecisionMsg)}</p>
+ <div class="booking-list">${ohBookings.length?ohBookings.slice().reverse().map(b=>`<div class="booking-item" data-booking-id="${esc(b.id)}"><div class="status ${esc(b.status)}">${esc(b.status)}</div><p>${esc(bookingLabel(b))}</p><p class="muted">${esc(b.email)}</p>${b.why?`<p>${esc(b.why)}</p>`:''}${b.rejectReason?`<p class="muted">Reject reason: ${esc(b.rejectReason)}</p>`:''}${b.status==='pending'?`<div class="book-field reject-field"><label for="reject-${esc(b.id)}">Reject reason</label><input id="reject-${esc(b.id)}" data-reject-reason="${esc(b.id)}" maxlength="200" placeholder="Required to reject"></div><div class="edit-actions"><button type="button" class="primary" data-approve="${esc(b.id)}">Approve</button><button type="button" data-decline="${esc(b.id)}">Reject</button></div>`:''}
+ <div class="edit-actions"><button type="button" class="danger" data-clear="${esc(b.id)}">Clear</button></div>
+ </div>`).join(''):'<p class="muted">No requests yet.</p>'}</div>
  </section>`:'';
 
  $('app').innerHTML=sectionNav()+`<section class="office"><h1>Book appointment with TA</h1><p class="office-place">JF311, John Freely Hall, South Campus, inside the Department of Linguistics</p><div class="office-layout">${studentForm}${adminPanel}</div></section>`;
@@ -477,13 +505,50 @@ function officeScreen(){
    saveOffice();$('ohAvailStatus').textContent='Hours saved in this browser.';
   };
   $('ohResetAvail').onclick=()=>{ohAvail=clone(DEFAULT_AVAIL);saveOffice();render();};
-  document.querySelectorAll('[data-approve]').forEach(btn=>btn.onclick=()=>{
-   const b=ohBookings.find(x=>x.id===btn.dataset.approve);if(!b)return;
-   b.status='approved';saveOffice();render();
+  document.querySelectorAll('[data-approve]').forEach(btn=>btn.onclick=async()=>{
+   const b=ohBookings.find(x=>x.id===btn.dataset.approve);if(!b||b.status!=='pending')return;
+   const statusEl=$('ohDecisionStatus');
+   btn.disabled=true;
+   ohDecisionMsg='';
+   if(statusEl)statusEl.textContent='Emailing student…';
+   const result=await sendStudentDecision(b,'approve');
+   if(result.ok){
+    b.status='approved';
+    saveOffice();
+    ohDecisionMsg='Approved. The student was emailed.';
+    render();
+   }else{
+    ohDecisionMsg='';
+    if(statusEl)statusEl.textContent=`Email was not sent${result.text?`: ${result.text}`:'.'} Status left pending.`;
+    btn.disabled=false;
+   }
   });
-  document.querySelectorAll('[data-decline]').forEach(btn=>btn.onclick=()=>{
-   const b=ohBookings.find(x=>x.id===btn.dataset.decline);if(!b)return;
-   b.status='declined';saveOffice();render();
+  document.querySelectorAll('[data-decline]').forEach(btn=>btn.onclick=async()=>{
+   const b=ohBookings.find(x=>x.id===btn.dataset.decline);if(!b||b.status!=='pending')return;
+   const reasonEl=document.querySelector(`[data-reject-reason="${b.id}"]`);
+   const reason=(reasonEl?.value||'').trim();
+   const statusEl=$('ohDecisionStatus');
+   if(!reason){
+    ohDecisionMsg='';
+    if(statusEl)statusEl.textContent='Enter a short reject reason.';
+    reasonEl?.focus();
+    return;
+   }
+   btn.disabled=true;
+   ohDecisionMsg='';
+   if(statusEl)statusEl.textContent='Emailing student…';
+   const result=await sendStudentDecision(b,'reject',reason);
+   if(result.ok){
+    b.status='declined';
+    b.rejectReason=reason;
+    saveOffice();
+    ohDecisionMsg='Rejected. The student was emailed.';
+    render();
+   }else{
+    ohDecisionMsg='';
+    if(statusEl)statusEl.textContent=`Email was not sent${result.text?`: ${result.text}`:'.'} Status left pending.`;
+    btn.disabled=false;
+   }
   });
   document.querySelectorAll('[data-clear]').forEach(btn=>btn.onclick=()=>{
    ohBookings=ohBookings.filter(x=>x.id!==btn.dataset.clear);saveOffice();render();

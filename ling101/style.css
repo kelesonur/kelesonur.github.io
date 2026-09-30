@@ -201,6 +201,8 @@ dialog form p{font-size:15px;color:#d5e4f4}
 .avail-row{display:grid;grid-template-columns:90px 70px 1fr 1fr;gap:8px;align-items:center;margin-bottom:10px}
 .avail-row input[type="time"]{padding:8px}
 .mailto-note{font-size:14px;color:var(--muted);margin-top:10px}
+.reject-field{margin:12px 0 4px}
+.reject-field input{background:#0b1830;color:var(--text);border:1px solid #3d5f8f;border-radius:8px;padding:12px;width:100%;color-scheme:dark}
 @media(max-width:900px){.office-layout:has(.admin-panel){grid-template-columns:1fr}.avail-row{grid-template-columns:1fr 1fr}.header-nav{width:100%}}
 @media(max-width:620px){
  .book-row{grid-template-columns:1fr}
