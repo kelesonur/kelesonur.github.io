@@ -1,4 +1,5 @@
 'use strict';
+const COURSE_ID='313';
 const ROOMS=[
 {name:'Articulatory description',short:'Articulation',symbol:'[ ]',intro:'Identify the properties of consonants and vowels.',debrief:'Does changing one articulatory property always produce a different word?'},
 {name:'Evidence for contrast',short:'Contrast',symbol:'/ /',intro:'Evaluate minimal pairs and the conclusions they support.',debrief:'What does a minimal pair establish? What does failing to find one leave unresolved?'},
@@ -36,8 +37,8 @@ const SCREENS=['home','start','play','break','results','library','edit','office'
 const KEY='ling313-phonology-en-v1';
 const EDIT_KEY='ling313-case-edits-v1';
 const ADMIN_KEY='ling313-admin-code-v1';
-const OH_AVAIL_KEY='ling313-oh-avail-v1';
-const OH_BOOK_KEY='ling313-oh-book-v1';
+const OH_AVAIL_KEY='ling-ta-office-avail-v1';
+const OH_BOOK_KEY='ling-ta-office-bookings-v1';
 const TA_EMAIL='onur.keles1@bogazici.edu.tr';
 // Web3Forms access key is public by design (alias for the TA inbox).
 const WEB3FORMS_ACCESS_KEY='c5e63062-8265-4af1-8e73-ee93d3dc6c8d';
@@ -55,6 +56,51 @@ const DEFAULT_AVAIL={
  thu:{on:true,start:'09:00',end:'12:00'},
  fri:{on:true,start:'09:00',end:'16:00'}
 };
+
+const MONTH_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAY_OFFSET={mon:0,tue:1,wed:2,thu:3,fri:4};
+const DAY_SHORT={mon:'Mon',tue:'Tue',wed:'Wed',thu:'Thu',fri:'Fri'};
+function mondayOf(d=new Date()){
+ const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+ const dow=(x.getDay()+6)%7;
+ x.setDate(x.getDate()-dow);
+ return x;
+}
+function isoDate(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function currentWeekStart(){return isoDate(mondayOf());}
+function dateForDayId(dayId,weekStartIso=currentWeekStart()){
+ const [y,m,dd]=weekStartIso.split('-').map(Number);
+ return new Date(y,m-1,dd+(DAY_OFFSET[dayId]||0));
+}
+function formatDayDate(dayId,weekStartIso=currentWeekStart()){
+ const dt=dateForDayId(dayId,weekStartIso);
+ return `${DAY_LABEL[dayId]} ${dt.getDate()} ${MONTH_SHORT[dt.getMonth()]}`;
+}
+function formatDayBtn(dayId,weekStartIso=currentWeekStart()){
+ const dt=dateForDayId(dayId,weekStartIso);
+ return `${DAY_SHORT[dayId]} ${dt.getDate()} ${MONTH_SHORT[dt.getMonth()]}`;
+}
+function formatWeekOf(weekStartIso=currentWeekStart()){
+ const [y,m,dd]=weekStartIso.split('-').map(Number);
+ const dt=new Date(y,m-1,dd);
+ return `Week of ${dt.getDate()} ${MONTH_SHORT[dt.getMonth()]}`;
+}
+function slotStartDate(dayId,slot,weekStartIso=currentWeekStart()){
+ const dt=dateForDayId(dayId,weekStartIso);
+ const [h,mi]=String(slot||'0:0').split(':').map(Number);
+ dt.setHours(h||0,mi||0,0,0);
+ return dt;
+}
+function slotTooSoon(dayId,slot,weekStartIso=currentWeekStart(),now=new Date()){
+ return slotStartDate(dayId,slot,weekStartIso).getTime()-now.getTime()<60*60*1000;
+}
+function slotUnavailable(dayId,slot,exceptId){
+ return slotTaken(dayId,slot,exceptId)||slotTooSoon(dayId,slot);
+}
+function thisWeekBookings(){
+ const week=currentWeekStart();
+ return ohBookings.filter(b=>(b.weekStart||'')===week);
+}
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clone=v=>JSON.parse(JSON.stringify(v));
@@ -120,6 +166,7 @@ function save(){
  try{localStorage.setItem(KEY,JSON.stringify({weeks:state.weeks,screen:persistScreen,mode:state.mode,team:state.team,index:state.index,answers:state.answers}));}catch(e){storageOK=false;}
 }
 function saveEdits(){try{localStorage.setItem(EDIT_KEY,JSON.stringify(edits));}catch(e){storageOK=false;}}
+function loadOffice(){try{const rawA=JSON.parse(localStorage.getItem(OH_AVAIL_KEY));if(rawA&&typeof rawA==='object'){DAY_IDS.forEach(d=>{const row=rawA[d];if(row&&typeof row==='object')ohAvail[d]={on:!!row.on,start:typeof row.start==='string'?row.start:DEFAULT_AVAIL[d].start,end:typeof row.end==='string'?row.end:DEFAULT_AVAIL[d].end};});}}catch(e){storageOK=false;}try{const rawB=JSON.parse(localStorage.getItem(OH_BOOK_KEY));if(Array.isArray(rawB))ohBookings=rawB.filter(b=>b&&typeof b==='object'&&typeof b.id==='string');}catch(e){storageOK=false;}}
 function saveOffice(){try{localStorage.setItem(OH_AVAIL_KEY,JSON.stringify(ohAvail));localStorage.setItem(OH_BOOK_KEY,JSON.stringify(ohBookings));}catch(e){storageOK=false;}}
 function score(){return state.answers.reduce((s,a)=>s+(a?.points||0),0);}
 function roomScore(i){return state.answers.slice(i*4,i*4+4).reduce((s,a)=>s+(a?.points||0),0);}
@@ -369,16 +416,20 @@ function slotsForDay(day){
  return out;
 }
 function slotTaken(day,slot,exceptId){
- return ohBookings.some(b=>b.day===day&&b.slot===slot&&b.status!=='declined'&&b.id!==exceptId);
+ const week=currentWeekStart();
+ return ohBookings.some(b=>b.day===day&&b.slot===slot&&b.status!=='declined'&&(b.weekStart||'')===week&&b.id!==exceptId);
 }
 function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
 function bookingLabel(b){
- const when=`${DAY_LABEL[b.day]||b.day} ${b.slot}–${fromMinutes(toMinutes(b.slot)+30)}`;
- if(b.kind==='group')return `${when} · ${b.members}`;
- return `${when} · ${b.name}`;
+ const day=formatDayDate(b.day,b.weekStart||currentWeekStart());
+ const when=`${day} ${b.slot}–${fromMinutes(toMinutes(b.slot)+30)}`;
+ const course=b.course?`LING${b.course}`:'';
+ const who=b.kind==='group'?b.members:b.name;
+ return `${course?course+' · ':''}${when} · ${who}`;
 }
 function bookingWhen(b){
- const day=DAY_LABEL[b.day]||b.day;
+ const week=b.weekStart||currentWeekStart();
+ const day=formatDayDate(b.day,week);
  const time=`${b.slot}–${fromMinutes(toMinutes(b.slot)+30)}`;
  return {day,time,slotStart:b.slot};
 }
@@ -388,6 +439,7 @@ function notifyMessage(b){
  return [
   'LING313 office hour request',
   '',
+  `Course: LING313`,
   `Type: ${b.kind}`,
   who,
   `Day: ${day}`,
@@ -453,14 +505,16 @@ async function sendStudentDecision(b,kind,reason){
 }
 
 function officeScreen(){
+ loadOffice();
  if(!DAY_IDS.includes(ohDraft.day)||!ohAvail[ohDraft.day]?.on)ohDraft.day=DAY_IDS.find(d=>ohAvail[d].on)||'mon';
  const slots=slotsForDay(ohDraft.day);
- if(ohDraft.slot&&(slotTaken(ohDraft.day,ohDraft.slot)||!slots.includes(ohDraft.slot)))ohDraft.slot=null;
- const dayShort={mon:'Mon',tue:'Tue',wed:'Wed',thu:'Thu',fri:'Fri'};
+ const week=currentWeekStart();
+ if(ohDraft.slot&&(slotUnavailable(ohDraft.day,ohDraft.slot)||!slots.includes(ohDraft.slot)))ohDraft.slot=null;
  const nameField=ohDraft.kind==='individual'
   ?`<div class="book-field"><label for="ohName">Name</label><input id="ohName" maxlength="80" required value="${esc(ohDraft.name)}" autocomplete="name"></div>`
   :`<div class="book-field book-members"><label for="ohMembers">Members</label><textarea id="ohMembers" maxlength="400" rows="2" required placeholder="Comma-separated names">${esc(ohDraft.members)}</textarea></div>`;
  const studentForm=`<section class="book-panel">
+ <p class="week-line">${esc(formatWeekOf(week))}</p>
  <div class="book-kind" role="group" aria-label="Booking type">
   <button type="button" id="ohInd" aria-pressed="${ohDraft.kind==='individual'}" class="${ohDraft.kind==='individual'?'selected':''}">Individual</button>
   <button type="button" id="ohGroup" aria-pressed="${ohDraft.kind==='group'}" class="${ohDraft.kind==='group'?'selected':''}">Group</button>
@@ -470,12 +524,12 @@ function officeScreen(){
  <div class="book-block"><span class="book-label">Day</span><div class="day-tabs" role="group" aria-label="Day">${DAY_IDS.map(d=>{
   const on=!!ohAvail[d]?.on;
   const sel=ohDraft.day===d;
-  return `<button type="button" data-oh-day="${d}" class="${sel?'selected':''}" ${on?'':'disabled'} aria-pressed="${sel}">${dayShort[d]}</button>`;
+  return `<button type="button" data-oh-day="${d}" class="${sel?'selected':''}" ${on?'':'disabled'} aria-pressed="${sel}">${esc(formatDayBtn(d,week))}</button>`;
  }).join('')}</div></div>
  <div class="book-block"><span class="book-label">Time</span><div class="slot-grid" role="group" aria-label="Time">${slots.length?slots.map(s=>{
-  const taken=slotTaken(ohDraft.day,s);
+  const blocked=slotUnavailable(ohDraft.day,s);
   const sel=ohDraft.slot===s;
-  return `<button type="button" data-oh-slot="${s}" class="${sel?'selected':''}${taken?' taken':''}" ${taken?'disabled':''} aria-pressed="${sel}">${s}</button>`;
+  return `<button type="button" data-oh-slot="${s}" class="${sel?'selected':''}${blocked?' taken':''}" ${blocked?'disabled':''} aria-pressed="${sel}">${s}</button>`;
  }).join(''):'<span class="muted">No open slots.</span>'}</div></div>
  <button class="primary book-submit" type="button" id="ohBook">Request this time</button>
  <p id="ohStatus" class="book-status" role="status"></p>
@@ -488,8 +542,8 @@ function officeScreen(){
  }).join('')}
  <div class="edit-actions"><button class="primary" type="button" id="ohSaveAvail">Save hours</button><button type="button" id="ohResetAvail">Reset defaults</button></div>
  <p id="ohAvailStatus" class="mailto-note" role="status"></p>
- <h2 style="margin-top:28px">Requests</h2>
- <p class="mailto-note">Approve and Reject email the student via EmailJS. Status updates only after the email sends.</p>
+ <h2 style="margin-top:28px">This week’s requests</h2>
+ <p class="mailto-note">Shared across LING101 / 313 / 411. Approve and Reject email the student via EmailJS.</p>
  <p id="ohDecisionStatus" class="book-status" role="status">${esc(ohDecisionMsg)}</p>
  <div class="booking-list">${ohBookings.length?ohBookings.slice().reverse().map(b=>`<div class="booking-item" data-booking-id="${esc(b.id)}"><div class="status ${esc(b.status)}">${esc(b.status)}</div><p>${esc(bookingLabel(b))}</p><p class="muted">${esc(b.email)}</p>${b.why?`<p>${esc(b.why)}</p>`:''}${b.rejectReason?`<p class="muted">Reject reason: ${esc(b.rejectReason)}</p>`:''}${b.status==='pending'?`<div class="book-field reject-field"><label for="reject-${esc(b.id)}">Reject reason</label><input id="reject-${esc(b.id)}" data-reject-reason="${esc(b.id)}" maxlength="200" placeholder="Required to reject"></div><div class="edit-actions"><button type="button" class="primary" data-approve="${esc(b.id)}">Approve</button><button type="button" data-decline="${esc(b.id)}">Reject</button></div>`:''}
  <div class="edit-actions"><button type="button" class="danger" data-clear="${esc(b.id)}">Clear</button></div>
@@ -511,7 +565,7 @@ function officeScreen(){
     ohAvail[d].start=document.querySelector(`[data-av-start="${d}"]`).value||DEFAULT_AVAIL[d].start;
     ohAvail[d].end=document.querySelector(`[data-av-end="${d}"]`).value||DEFAULT_AVAIL[d].end;
    });
-   saveOffice();$('ohAvailStatus').textContent='Hours saved in this browser.';
+   saveOffice();$('ohAvailStatus').textContent='Hours saved for all courses in this browser.';
   };
   $('ohResetAvail').onclick=()=>{ohAvail=clone(DEFAULT_AVAIL);saveOffice();render();};
   document.querySelectorAll('[data-approve]').forEach(btn=>btn.onclick=async()=>{
@@ -580,9 +634,11 @@ async function bookOffice(){
  if(!validEmail(ohDraft.email.trim())){status.textContent='Enter a valid contact email.';return;}
  if(!ohDraft.why.trim()){status.textContent='Write a short explanation of why you want to meet.';return;}
  if(!ohDraft.slot||!slotsForDay(ohDraft.day).includes(ohDraft.slot)){status.textContent='Choose an open slot.';return;}
+ if(slotTooSoon(ohDraft.day,ohDraft.slot)){status.textContent='That slot is within the next hour or already past.';return;}
  if(slotTaken(ohDraft.day,ohDraft.slot)){status.textContent='That slot is taken.';return;}
  const booking={
   id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
+  course:COURSE_ID,
   kind:ohDraft.kind,
   name:ohDraft.kind==='individual'?ohDraft.name.trim():'',
   group:'',
@@ -591,6 +647,7 @@ async function bookOffice(){
   why:ohDraft.why.trim(),
   day:ohDraft.day,
   slot:ohDraft.slot,
+  weekStart:currentWeekStart(),
   status:'pending',
   created:new Date().toISOString(),
   notice:'pending'
@@ -617,6 +674,7 @@ async function bookOffice(){
   status.textContent=`Request saved here. The TA notice was not sent${e&&e.message?`: ${e.message}`:'.'}`;
  }
  btn.disabled=false;
+ render();
 }
 
 $('adminBtn').onclick=toggleAdmin;

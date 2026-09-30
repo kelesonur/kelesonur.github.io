@@ -1,40 +1,30 @@
 'use strict';
-const COURSE_ID='101';
+const COURSE_ID='411';
 const WEEKS=[
-{id:'1–2',topic:'Introduction & Phonetics (Genetti ch. 1–2)',ready:true},
-{id:'3–4',topic:'Phonology; Morphology begins (Genetti ch. 3–4). Assignment 1.',ready:false},
-{id:'4–5',topic:'Morphology (Genetti ch. 4). Mid-term #1?',ready:false},
-{id:'6–7',topic:'Syntax (Genetti ch. 5–6; Fromkin ch. 3 part 1). Assignment 2.',ready:false},
-{id:'8–9',topic:'Syntax & Semantics (Fromkin ch. 3–4). Assignment 3. Mid-term #2?',ready:false},
-{id:'10–11',topic:'Pragmatics, Sociolinguistics, Discourse, Acquisition (Genetti ch. 8–11, 14). Assignment 4.',ready:false},
-{id:'12',topic:'Language Change & review (Genetti ch. 12–13). Final TBA.',ready:false}
+{id:'1',dates:'Sep 23–24',topic:'Ethics in linguistic research; Constructing and supporting a linguistic analysis',readings:'P&S Ch. 2 (Eckert). P&S Ch. 18 (Beavers and Sells).',ready:true},
+{id:'2',dates:'Sep 30–Oct 1',topic:'Preparing for data collection, sampling; Data collection methods',readings:'P&S Ch. 5 (Buchstaller and Khattab). P&S Ch. 3 (Schütze and Sprouse, Judgment data). Optional: P&S Ch. 6 (Surveys and interviews).',ready:false},
+{id:'3',dates:'Oct 7–8',topic:'Designing experiments and data collection methods',readings:'',ready:false},
+{id:'4',dates:'Oct 14–15',topic:'Working with data: intro to statistics, descriptive statistics, probability and sample means',readings:'P&S Ch. 7 (Abbuhl, Gass, and Mackey). P&S Ch. 8 (Kaiser). G&W Chs. 1–4 and 6. J Ch. 1.',ready:false},
+{id:'5',dates:'Oct 21–22',topic:'Inferential statistics: hypothesis testing, intro to the t-statistic',readings:'G&W Chs. 5, 7–9. J Ch. 2, §2.3.',ready:false},
+{id:'6',dates:'Oct 28–29',topic:'Oct 28, 12–1 pm: practicum on R. Oct 29: holiday',readings:'',ready:false},
+{id:'7',dates:'Nov 4–5',topic:'Two samples: independent samples t-test, related samples t-test. First exam',readings:'G&W Chs. 10–11. J Ch. 3, §3.1.',ready:false},
+{id:'8',dates:'Nov 11–12',topic:'Multiple samples: ANOVA (GLM 1). Optional factorial ANOVA',readings:'G&W Ch. 12 and Ch. 14. J Ch. 4, §§4.1–4.2.',ready:false},
+{id:'9',dates:'Nov 18–19',topic:'Repeated measures designs (GLM 4)',readings:'G&W Ch. 13. J Ch. 4, §4.3.',ready:false},
+{id:'10',dates:'Nov 25–26',topic:'Correlation',readings:'G&W Ch. 15. J Ch. 2, §2.4.',ready:false},
+{id:'11',dates:'Dec 2–3',topic:'Linear regression and multiple regression',readings:'G&W Ch. 16. J Ch. 2 §2.4. J Ch. 3 §3.2.',ready:false},
+{id:'12',dates:'Dec 9–10',topic:'Logistic regression. Second exam',readings:'Lecture slides. J Ch. 5 §5.4.',ready:false,extra:'If time: Chi-square; mixed-effects modelling. G&W Ch. 17. J Ch. 7 §7.3.'}
 ];
-const PS12_ITEMS=[
-{id:'handout',title:'PS Handout',blurb:'Slides for weeks 1–2.'},
-{id:'mouth',title:'Build a Mouth Game',blurb:'Articulatory practice.'},
-{id:'phonle',title:'Phonle Game',blurb:'IPA sound guessing.'}
+const WEEK1_ITEMS=[
+{id:'handout',title:'Handout',file:'materials/week1/handout.pdf'},
+{id:'culbertson',title:'Culbertson and Adger 2014',file:'materials/week1/culbertson-adger-2014.pdf'},
+{id:'answers',title:'Answers',file:'materials/week1/answers.pdf'}
 ];
 const SCREENS=['home','start','material','office'];
-const KEY='ling101-fall2026-v1';
-const ADMIN_KEY='ling101-admin-code-v1';
+const KEY='ling411-fall2026-v1';
+const ADMIN_KEY='ling411-admin-code-v1';
+
 const OH_AVAIL_KEY='ling-ta-office-avail-v1';
 const OH_BOOK_KEY='ling-ta-office-bookings-v1';
-const WEB3FORMS_ACCESS_KEY='c5e63062-8265-4af1-8e73-ee93d3dc6c8d';
-const WEB3FORMS_ENDPOINT='https://api.web3forms.com/submit';
-const EMAILJS_PUBLIC_KEY='3lYZ3IywfytlgVe3I';
-const EMAILJS_SERVICE_ID='service_qqvyxba';
-const EMAILJS_APPROVE_TEMPLATE='template_itvkdgj';
-const EMAILJS_REJECT_TEMPLATE='template_zkcw19t';
-const DAY_IDS=['mon','tue','wed','thu','fri'];
-const DAY_LABEL={mon:'Monday',tue:'Tuesday',wed:'Wednesday',thu:'Thursday',fri:'Friday'};
-const DEFAULT_AVAIL={
- mon:{on:true,start:'09:00',end:'13:00'},
- tue:{on:true,start:'09:00',end:'13:00'},
- wed:{on:true,start:'09:00',end:'10:00'},
- thu:{on:true,start:'09:00',end:'12:00'},
- fri:{on:true,start:'09:00',end:'16:00'}
-};
-
 const MONTH_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DAY_OFFSET={mon:0,tue:1,wed:2,thu:3,fri:4};
 const DAY_SHORT={mon:'Mon',tue:'Tue',wed:'Wed',thu:'Thu',fri:'Fri'};
@@ -75,38 +65,53 @@ function slotTooSoon(dayId,slot,weekStartIso=currentWeekStart(),now=new Date()){
 function slotUnavailable(dayId,slot,exceptId){
  return slotTaken(dayId,slot,exceptId)||slotTooSoon(dayId,slot);
 }
-function thisWeekBookings(){
- const week=currentWeekStart();
- return ohBookings.filter(b=>(b.weekStart||'')===week);
-}
+
+const WEB3FORMS_ACCESS_KEY='c5e63062-8265-4af1-8e73-ee93d3dc6c8d';
+const WEB3FORMS_ENDPOINT='https://api.web3forms.com/submit';
+const EMAILJS_PUBLIC_KEY='3lYZ3IywfytlgVe3I';
+const EMAILJS_SERVICE_ID='service_qqvyxba';
+const EMAILJS_APPROVE_TEMPLATE='template_itvkdgj';
+const EMAILJS_REJECT_TEMPLATE='template_zkcw19t';
+const DAY_IDS=['mon','tue','wed','thu','fri'];
+const DAY_LABEL={mon:'Monday',tue:'Tuesday',wed:'Wednesday',thu:'Thursday',fri:'Friday'};
+const DEFAULT_AVAIL={
+ mon:{on:true,start:'09:00',end:'13:00'},
+ tue:{on:true,start:'09:00',end:'13:00'},
+ wed:{on:true,start:'09:00',end:'10:00'},
+ thu:{on:true,start:'09:00',end:'12:00'},
+ fri:{on:true,start:'09:00',end:'16:00'}
+};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clone=v=>JSON.parse(JSON.stringify(v));
-const weekLabel=id=>id==='12'?`Week ${id}`:`Weeks ${id}`;
+const weekLabel=id=>`Week ${id}`;
 const weekMeta=id=>WEEKS.find(w=>w.id===id)||WEEKS[0];
 
 let storageOK=true,admin=false;
 let ohAvail=clone(DEFAULT_AVAIL),ohBookings=[],ohDraft={kind:'individual',day:'mon',slot:null,name:'',group:'',members:'',email:'',why:''},ohDecisionMsg='';
-try{
- const rawA=JSON.parse(localStorage.getItem(OH_AVAIL_KEY));
- if(rawA&&typeof rawA==='object'){
-  DAY_IDS.forEach(d=>{
-   const row=rawA[d];
-   if(row&&typeof row==='object')ohAvail[d]={on:!!row.on,start:typeof row.start==='string'?row.start:DEFAULT_AVAIL[d].start,end:typeof row.end==='string'?row.end:DEFAULT_AVAIL[d].end};
-  });
- }
-}catch(e){storageOK=false;}
-try{
- const rawB=JSON.parse(localStorage.getItem(OH_BOOK_KEY));
- if(Array.isArray(rawB))ohBookings=rawB.filter(b=>b&&typeof b==='object'&&typeof b.id==='string');
-}catch(e){storageOK=false;}
+function loadOffice(){
+ try{
+  const rawA=JSON.parse(localStorage.getItem(OH_AVAIL_KEY));
+  if(rawA&&typeof rawA==='object'){
+   DAY_IDS.forEach(d=>{
+    const row=rawA[d];
+    if(row&&typeof row==='object')ohAvail[d]={on:!!row.on,start:typeof row.start==='string'?row.start:DEFAULT_AVAIL[d].start,end:typeof row.end==='string'?row.end:DEFAULT_AVAIL[d].end};
+   });
+  }
+ }catch(e){storageOK=false;}
+ try{
+  const rawB=JSON.parse(localStorage.getItem(OH_BOOK_KEY));
+  if(Array.isArray(rawB))ohBookings=rawB.filter(b=>b&&typeof b==='object'&&typeof b.id==='string');
+ }catch(e){storageOK=false;}
+}
+loadOffice();
 
-let state={weeks:'1–2',screen:'home',material:null};
+let state={weeks:'1',screen:'home',material:null};
 try{
  const raw=JSON.parse(localStorage.getItem(KEY));
  if(raw&&SCREENS.includes(raw.screen)){
-  state={weeks:raw.weeks||'1–2',screen:raw.screen==='material'?raw.screen:'home',material:PS12_ITEMS.some(i=>i.id===raw.material)?raw.material:null};
-  if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1–2';
+  state={weeks:raw.weeks||'1',screen:raw.screen==='material'?raw.screen:'home',material:WEEK1_ITEMS.some(i=>i.id===raw.material)?raw.material:null};
+  if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1';
  }
 }catch(e){storageOK=false;}
 state.screen='home';
@@ -115,7 +120,6 @@ state.material=null;
 function save(){
  try{localStorage.setItem(KEY,JSON.stringify({weeks:state.weeks,screen:state.screen==='material'?'start':state.screen,material:null}));}catch(e){storageOK=false;}
 }
-function loadOffice(){try{const rawA=JSON.parse(localStorage.getItem(OH_AVAIL_KEY));if(rawA&&typeof rawA==='object'){DAY_IDS.forEach(d=>{const row=rawA[d];if(row&&typeof row==='object')ohAvail[d]={on:!!row.on,start:typeof row.start==='string'?row.start:DEFAULT_AVAIL[d].start,end:typeof row.end==='string'?row.end:DEFAULT_AVAIL[d].end};});}}catch(e){storageOK=false;}try{const rawB=JSON.parse(localStorage.getItem(OH_BOOK_KEY));if(Array.isArray(rawB))ohBookings=rawB.filter(b=>b&&typeof b==='object'&&typeof b.id==='string');}catch(e){storageOK=false;}}
 function saveOffice(){try{localStorage.setItem(OH_AVAIL_KEY,JSON.stringify(ohAvail));localStorage.setItem(OH_BOOK_KEY,JSON.stringify(ohBookings));}catch(e){storageOK=false;}}
 function syncAdminBtn(){const b=$('adminBtn');if(!b)return;b.setAttribute('aria-pressed',String(admin));b.textContent=admin?'Admin on':'Admin';b.classList.toggle('admin-on',admin);}
 function sectionNav(){
@@ -129,7 +133,7 @@ function bindSectionNav(){
  if($('navPs'))$('navPs').onclick=()=>{state.screen='start';state.material=null;save();render();focusMain();};
 }
 function homeScreen(){
- $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING101 Fall 2026</span><span class="title-line title-course"><span class="course-keep">Introduction to Language</span> <span class="course-tail">and Linguistics I</span></span><span class="title-line title-ta"><a href="https://kelesonur.github.io/" target="_blank" rel="noopener noreferrer">TA: Onur Keleş</a></span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
+ $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING411 Fall 2026</span><span class="title-line title-course">Linguistic Methodology</span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
  $('goBook').onclick=()=>{state.screen='office';save();render();focusMain();};
  $('goPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
@@ -143,7 +147,7 @@ function render(){
 function focusMain(){window.scrollTo({top:0,behavior:'instant'});const h=$('app').querySelector('h1,h2');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
 
 function weekPicker(){
- return `<section class="week-picker" aria-label="Choose weeks"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>`<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${state.weeks===w.id?'selected':''}">${weekLabel(w.id)}<small>${w.ready?'Ready':'To be added'}</small></button>`).join('')}</div></section>`;
+ return `<section class="week-picker" aria-label="Choose week"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>`<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${state.weeks===w.id?'selected':''}">${weekLabel(w.id)}<small>${w.ready?'Ready':'To be added'}</small></button>`).join('')}</div></section>`;
 }
 function bindWeekPicker(){
  document.querySelectorAll('[data-weeks]').forEach(button=>{
@@ -155,16 +159,20 @@ function bindWeekPicker(){
   };
  });
 }
+function weekDetails(meta){
+ return `<div class="week-meta"><p class="week-dates">${esc(meta.dates)}</p><p class="week-topic">${esc(meta.topic)}</p>${meta.readings?`<p class="week-readings">${esc(meta.readings)}</p>`:''}</div>`;
+}
 
 function startScreen(){
- if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1–2';
+ if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1';
  const meta=weekMeta(state.weeks);
+ const extra=meta.extra?`<p class="week-extra">${esc(meta.extra)}</p>`:'';
  if(!meta.ready){
-  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1><p>${esc(meta.topic)}</p><p class="muted">To be added.</p></section>`;
+  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1>${weekDetails(meta)}<p class="muted">To be added.</p>${extra}</section>`;
   bindSectionNav();bindWeekPicker();
   return;
  }
- $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING101 · PS</span><h1>${weekLabel(state.weeks)}</h1><p class="muted">${esc(meta.topic)}</p></div><section class="setup material-picker" aria-label="PS activities"><h2>Activities</h2><div class="mode-buttons material-choices">${PS12_ITEMS.map(item=>`<button type="button" data-material="${esc(item.id)}">${esc(item.title)}<small>${esc(item.blurb)}</small></button>`).join('')}</div>${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section></section>`;
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING411 · PS</span><h1>${weekLabel(state.weeks)}</h1>${weekDetails(meta)}</div><section class="setup material-picker" aria-label="Week 1 materials"><h2>Materials</h2><div class="mode-buttons material-choices">${WEEK1_ITEMS.map(item=>`<button type="button" data-material="${esc(item.id)}">${esc(item.title)}<small>PDF</small></button>`).join('')}</div>${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section>${extra}</section>`;
  bindSectionNav();bindWeekPicker();
  document.querySelectorAll('[data-material]').forEach(btn=>{
   btn.onclick=()=>{state.material=btn.dataset.material;state.screen='material';render();focusMain();};
@@ -172,16 +180,9 @@ function startScreen(){
 }
 
 function materialScreen(){
- const item=PS12_ITEMS.find(i=>i.id===state.material)||PS12_ITEMS[0];
- let body='';
- if(item.id==='handout'){
-  body=`<div class="embed-toolbar"><a class="primary" href="materials/ps1.pdf" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="PS1 handout" src="materials/ps1.pdf#view=FitH"></iframe>`;
- }else if(item.id==='mouth'){
-  body=`<iframe class="material-frame game-frame" title="Build a Mouth Game" src="games/build-a-mouth.html" allow="autoplay"></iframe>`;
- }else{
-  body=`<iframe class="material-frame game-frame" title="Phonle Game" src="games/phonle.html" allow="autoplay"></iframe>`;
- }
- $('app').innerHTML=sectionNav()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Weeks 1–2</button><h1>${esc(item.title)}</h1></div>${body}</section>`;
+ const item=WEEK1_ITEMS.find(i=>i.id===state.material)||WEEK1_ITEMS[0];
+ const body=`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="${esc(item.title)}" src="${esc(item.file)}#view=FitH"></iframe>`;
+ $('app').innerHTML=sectionNav()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Week 1</button><h1>${esc(item.title)}</h1></div>${body}</section>`;
  bindSectionNav();
  $('backPs').onclick=()=>{state.screen='start';state.material=null;save();render();focusMain();};
 }
@@ -252,9 +253,9 @@ function notifyMessage(b){
  const {day,time,slotStart}=bookingWhen(b);
  const who=b.kind==='group'?`Members: ${b.members}`:`Name: ${b.name}`;
  return [
-  'LING101 office hour request',
+  'LING411 office hour request',
   '',
-  `Course: LING101`,
+  `Course: LING411`,
   `Type: ${b.kind}`,
   who,
   `Day: ${day}`,
@@ -274,8 +275,8 @@ async function sendBookingNotice(b){
  fd.append('access_key',WEB3FORMS_ACCESS_KEY);
  fd.append('name',displayName);
  fd.append('email',studentEmail);
- fd.append('subject','LING101 office hour request');
- fd.append('from_name','LING101 office hours');
+ fd.append('subject','LING411 office hour request');
+ fd.append('from_name','LING411 office hours');
  fd.append('replyto',studentEmail);
  fd.append('message',notifyMessage(b));
  const res=await fetch(WEB3FORMS_ENDPOINT,{method:'POST',body:fd});
@@ -285,7 +286,6 @@ async function sendBookingNotice(b){
  const success=res.ok&&(data?.success===true||data?.success==='true');
  return {ok:success,status:res.status,data,text};
 }
-
 function initEmailJS(){
  if(typeof emailjs==='undefined'||!emailjs?.init||!emailjs?.send)return false;
  if(!initEmailJS.ready){
@@ -300,14 +300,7 @@ async function sendStudentDecision(b,kind,reason){
  const studentEmail=(b.email||'').trim();
  if(!validEmail(studentEmail))return {ok:false,text:'Booking has no valid student email.'};
  const {day,slotStart}=bookingWhen(b);
- // Templates use {{email}} in To Email (EmailJS contact-form convention); also pass to_email.
- const params={
-  to_email:studentEmail,
-  email:studentEmail,
-  name:studentDisplayName(b),
-  day,
-  time:slotStart
- };
+ const params={to_email:studentEmail,email:studentEmail,name:studentDisplayName(b),day,time:slotStart};
  if(kind==='reject')params.reason=reason;
  const templateId=kind==='approve'?EMAILJS_APPROVE_TEMPLATE:EMAILJS_REJECT_TEMPLATE;
  try{
@@ -318,12 +311,16 @@ async function sendStudentDecision(b,kind,reason){
   return {ok:false,status:e?.status,text};
  }
 }
+function thisWeekBookings(){
+ const week=currentWeekStart();
+ return ohBookings.filter(b=>(b.weekStart||'')===week);
+}
 
 function officeScreen(){
  loadOffice();
+ const week=currentWeekStart();
  if(!DAY_IDS.includes(ohDraft.day)||!ohAvail[ohDraft.day]?.on)ohDraft.day=DAY_IDS.find(d=>ohAvail[d].on)||'mon';
  const slots=slotsForDay(ohDraft.day);
- const week=currentWeekStart();
  if(ohDraft.slot&&(slotUnavailable(ohDraft.day,ohDraft.slot)||!slots.includes(ohDraft.slot)))ohDraft.slot=null;
  const nameField=ohDraft.kind==='individual'
   ?`<div class="book-field"><label for="ohName">Name</label><input id="ohName" maxlength="80" required value="${esc(ohDraft.name)}" autocomplete="name"></div>`
@@ -350,6 +347,7 @@ function officeScreen(){
  <p id="ohStatus" class="book-status" role="status"></p>
  </section>`;
 
+ const weekList=thisWeekBookings();
  const adminPanel=admin?`<section class="office-card admin-panel"><h2>Availability</h2>
  ${DAY_IDS.map(d=>{
   const row=ohAvail[d];
@@ -360,9 +358,9 @@ function officeScreen(){
  <h2 style="margin-top:28px">This week’s requests</h2>
  <p class="mailto-note">Shared across LING101 / 313 / 411. Approve and Reject email the student via EmailJS.</p>
  <p id="ohDecisionStatus" class="book-status" role="status">${esc(ohDecisionMsg)}</p>
- <div class="booking-list">${ohBookings.length?ohBookings.slice().reverse().map(b=>`<div class="booking-item" data-booking-id="${esc(b.id)}"><div class="status ${esc(b.status)}">${esc(b.status)}</div><p>${esc(bookingLabel(b))}</p><p class="muted">${esc(b.email)}</p>${b.why?`<p>${esc(b.why)}</p>`:''}${b.rejectReason?`<p class="muted">Reject reason: ${esc(b.rejectReason)}</p>`:''}${b.status==='pending'?`<div class="book-field reject-field"><label for="reject-${esc(b.id)}">Reject reason</label><input id="reject-${esc(b.id)}" data-reject-reason="${esc(b.id)}" maxlength="200" placeholder="Required to reject"></div><div class="edit-actions"><button type="button" class="primary" data-approve="${esc(b.id)}">Approve</button><button type="button" data-decline="${esc(b.id)}">Reject</button></div>`:''}
+ <div class="booking-list">${weekList.length?weekList.slice().reverse().map(b=>`<div class="booking-item" data-booking-id="${esc(b.id)}"><div class="status ${esc(b.status)}">${esc(b.status)}</div><p>${esc(bookingLabel(b))}</p><p class="muted">${esc(b.email)}</p>${b.why?`<p>${esc(b.why)}</p>`:''}${b.rejectReason?`<p class="muted">Reject reason: ${esc(b.rejectReason)}</p>`:''}${b.status==='pending'?`<div class="book-field reject-field"><label for="reject-${esc(b.id)}">Reject reason</label><input id="reject-${esc(b.id)}" data-reject-reason="${esc(b.id)}" maxlength="200" placeholder="Required to reject"></div><div class="edit-actions"><button type="button" class="primary" data-approve="${esc(b.id)}">Approve</button><button type="button" data-decline="${esc(b.id)}">Reject</button></div>`:''}
  <div class="edit-actions"><button type="button" class="danger" data-clear="${esc(b.id)}">Clear</button></div>
- </div>`).join(''):'<p class="muted">No requests yet.</p>'}</div>
+ </div>`).join(''):'<p class="muted">No requests this week.</p>'}</div>
  </section>`:'';
 
  $('app').innerHTML=sectionNav()+`<section class="office"><h1>Book appointment with TA</h1><p class="office-place">JF311, John Freely Hall, South Campus, inside the Department of Linguistics</p><div class="office-layout">${studentForm}${adminPanel}</div></section>`;

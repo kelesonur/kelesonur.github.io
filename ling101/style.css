@@ -253,4 +253,5 @@ dialog form p{font-size:15px;color:#d5e4f4}
 .week-empty{max-width:720px;margin:12px auto 40px;text-align:center}
 .week-empty h1{margin:8px 0 12px}
 .week-empty .muted{margin-top:18px;font-size:18px}
-
+.week-line{font-size:15px;color:var(--muted);margin:0 0 14px}
+.day-tabs button{font-size:13px;line-height:1.25;padding:10px 6px}
