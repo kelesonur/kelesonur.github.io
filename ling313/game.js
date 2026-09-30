@@ -132,7 +132,7 @@ function bindSectionNav(){
  if($('navPs'))$('navPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
 function homeScreen(){
- $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING313 Fall 2026</span><span class="title-line title-course"><span class="course-keep">Phonology and Morphology</span> <span class="course-tail">of Turkish</span></span><span class="title-line title-ta">TA: Onur Keleş</span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
+ $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING313 Fall 2026</span><span class="title-line title-course"><span class="course-keep">Phonology and Morphology</span> <span class="course-tail">of Turkish</span></span><span class="title-line title-ta"><a href="https://kelesonur.github.io/" target="_blank" rel="noopener noreferrer">TA: Onur Keleş</a></span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
  $('goBook').onclick=()=>{state.screen='office';save();render();focusMain();};
  $('goPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
@@ -370,15 +370,13 @@ function slotTaken(day,slot,exceptId){
 function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
 function bookingLabel(b){
  const when=`${DAY_LABEL[b.day]||b.day} ${b.slot}–${fromMinutes(toMinutes(b.slot)+30)}`;
- if(b.kind==='group')return `${when} · ${b.name} · ${b.group} (${b.members})`;
+ if(b.kind==='group')return `${when} · ${b.members}`;
  return `${when} · ${b.name}`;
 }
 function notifyMessage(b){
  const lines=[
   `Type: ${b.kind}`,
-  `Name: ${b.name}`,
-  b.kind==='group'?`Group: ${b.group}`:null,
-  b.kind==='group'?`Members: ${b.members}`:null,
+  b.kind==='group'?`Members: ${b.members}`:`Name: ${b.name}`,
   `Day: ${DAY_LABEL[b.day]}`,
   `Slot: ${b.slot}–${fromMinutes(toMinutes(b.slot)+30)}`,
   `Contact: ${b.email}`,
@@ -389,7 +387,7 @@ function notifyMessage(b){
 async function sendBookingNotice(b){
  const fd=new FormData();
  fd.append('access_key',WEB3FORMS_ACCESS_KEY);
- fd.append('name',b.kind==='group'?(b.group||b.name):b.name);
+ fd.append('name',b.kind==='group'?b.members:b.name);
  fd.append('email',b.email);
  fd.append('subject','Office hour request');
  fd.append('from_name','LING313 office hours');
@@ -408,17 +406,15 @@ function officeScreen(){
  const slots=slotsForDay(ohDraft.day);
  if(ohDraft.slot&&(slotTaken(ohDraft.day,ohDraft.slot)||!slots.includes(ohDraft.slot)))ohDraft.slot=null;
  const dayShort={mon:'Mon',tue:'Tue',wed:'Wed',thu:'Thu',fri:'Fri'};
- const nameField=`<div class="book-field"><label for="ohName">Name</label><input id="ohName" maxlength="80" required value="${esc(ohDraft.name)}" autocomplete="name"></div>`;
- const groupFields=ohDraft.kind==='group'
-  ?`<div class="book-field"><label for="ohGroupName">Group name</label><input id="ohGroupName" maxlength="80" required value="${esc(ohDraft.group)}"></div><div class="book-field book-members"><label for="ohMembers">Members</label><textarea id="ohMembers" maxlength="400" rows="2" required>${esc(ohDraft.members)}</textarea></div>`
-  :'';
+ const nameField=ohDraft.kind==='individual'
+  ?`<div class="book-field"><label for="ohName">Name</label><input id="ohName" maxlength="80" required value="${esc(ohDraft.name)}" autocomplete="name"></div>`
+  :`<div class="book-field book-members"><label for="ohMembers">Members</label><textarea id="ohMembers" maxlength="400" rows="2" required placeholder="Comma-separated names">${esc(ohDraft.members)}</textarea></div>`;
  const studentForm=`<section class="book-panel">
  <div class="book-kind" role="group" aria-label="Booking type">
   <button type="button" id="ohInd" aria-pressed="${ohDraft.kind==='individual'}" class="${ohDraft.kind==='individual'?'selected':''}">Individual</button>
   <button type="button" id="ohGroup" aria-pressed="${ohDraft.kind==='group'}" class="${ohDraft.kind==='group'?'selected':''}">Group</button>
  </div>
  <div class="book-row">${nameField}<div class="book-field"><label for="ohEmail">Email</label><input id="ohEmail" type="email" maxlength="120" required value="${esc(ohDraft.email)}" autocomplete="email"></div></div>
- ${groupFields}
  <div class="book-field"><label for="ohWhy">Why do you want to meet?</label><textarea id="ohWhy" maxlength="280" rows="3" required>${esc(ohDraft.why)}</textarea></div>
  <div class="book-block"><span class="book-label">Day</span><div class="day-tabs" role="group" aria-label="Day">${DAY_IDS.map(d=>{
   const on=!!ohAvail[d]?.on;
@@ -482,7 +478,6 @@ function officeScreen(){
 
 function readOfficeDraft(){
  if($('ohName'))ohDraft.name=$('ohName').value;
- if($('ohGroupName'))ohDraft.group=$('ohGroupName').value;
  if($('ohMembers'))ohDraft.members=$('ohMembers').value;
  if($('ohEmail'))ohDraft.email=$('ohEmail').value;
  if($('ohWhy'))ohDraft.why=$('ohWhy').value;
@@ -491,8 +486,8 @@ async function bookOffice(){
  readOfficeDraft();
  const status=$('ohStatus');
  const btn=$('ohBook');
- if(!ohDraft.name.trim()){status.textContent='Enter your name.';return;}
- if(ohDraft.kind==='group'&&(!ohDraft.group.trim()||!ohDraft.members.trim())){status.textContent='Enter the group name and members.';return;}
+ if(ohDraft.kind==='individual'&&!ohDraft.name.trim()){status.textContent='Enter your name.';return;}
+ if(ohDraft.kind==='group'&&!ohDraft.members.trim()){status.textContent='Enter the member names.';return;}
  if(!validEmail(ohDraft.email.trim())){status.textContent='Enter a valid contact email.';return;}
  if(!ohDraft.why.trim()){status.textContent='Write a short explanation of why you want to meet.';return;}
  if(!ohDraft.slot||!slotsForDay(ohDraft.day).includes(ohDraft.slot)){status.textContent='Choose an open slot.';return;}
@@ -500,9 +495,9 @@ async function bookOffice(){
  const booking={
   id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
   kind:ohDraft.kind,
-  name:ohDraft.name.trim(),
-  group:ohDraft.group.trim(),
-  members:ohDraft.members.trim(),
+  name:ohDraft.kind==='individual'?ohDraft.name.trim():'',
+  group:'',
+  members:ohDraft.kind==='group'?ohDraft.members.trim():'',
   email:ohDraft.email.trim(),
   why:ohDraft.why.trim(),
   day:ohDraft.day,
