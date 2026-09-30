@@ -267,3 +267,27 @@ dialog form p{font-size:15px;color:#d5e4f4}
 .class-meetings li{margin:0 0 4px}
 .week-empty .class-meetings{text-align:left;max-width:520px;margin-left:auto;margin-right:auto}
 .intro .class-meetings{margin-top:4px}
+
+/* Course assistant chat (floating; does not restyle home/header) */
+.ling101-chat{position:fixed;right:18px;bottom:18px;z-index:40;font-family:'Times New Roman',Times,serif}
+.ling101-chat-toggle{background:var(--navy);color:#fff;border:1px solid var(--bosphorus);border-radius:999px;padding:12px 18px;font-size:14px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.ling101-chat-toggle:hover:not(:disabled){background:#2457a0;border-color:var(--bosphorus)}
+.ling101-chat-panel{position:absolute;right:0;bottom:56px;width:min(360px,calc(100vw - 28px));height:min(460px,70vh);display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.45);overflow:hidden}
+.ling101-chat-panel[hidden]{display:none!important}
+.ling101-chat-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:14px 14px 12px;border-bottom:1px solid var(--line);background:#153154}
+.ling101-chat-header h2{margin:0;font-size:16px;line-height:1.25;font-weight:700}
+.ling101-chat-close{flex:0 0 auto;width:34px;height:34px;padding:0;border-radius:8px;background:transparent;border:1px solid var(--line);color:var(--muted);font-size:22px;line-height:1;font-weight:400}
+.ling101-chat-close:hover:not(:disabled){background:#183456;color:var(--text);border-color:var(--bosphorus)}
+.ling101-chat-transcript{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+.ling101-chat-msg{max-width:92%;padding:9px 12px;border-radius:10px;font-size:14px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+.ling101-chat-msg--user{align-self:flex-end;background:#1a3d66;border:1px solid #3d5f8f;color:var(--text)}
+.ling101-chat-msg--assistant{align-self:flex-start;background:#12263f;border:1px solid var(--line);color:var(--muted)}
+.ling101-chat-form{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:#153154}
+.ling101-chat-input{flex:1;min-width:0;background:#0b1830;color:var(--text);border:1px solid #3d5f8f;border-radius:8px;padding:10px 12px;color-scheme:dark}
+.ling101-chat-input::placeholder{color:#8aa4c4}
+.ling101-chat-send{flex:0 0 auto;padding:10px 14px;font-size:14px}
+@media(max-width:480px){
+ .ling101-chat{right:10px;bottom:10px;left:10px}
+ .ling101-chat-toggle{width:100%}
+ .ling101-chat-panel{left:0;right:0;width:auto;bottom:54px;height:min(520px,72vh)}
+}

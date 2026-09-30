@@ -3,11 +3,11 @@
 
   /* Public Cloudflare Worker URL. Empty until deploy — popup still opens. */
   const CHAT_ENDPOINT = "https://ling313-chat.kelesonur.workers.dev";
-  const USAGE_KEY = "ling313-chat-usage-v1";
+  const USAGE_KEY = "ling101-chat-usage-v1";
   const DAILY_LIMIT = 10;
 
   const LIMIT_MSG =
-    "You've reached today's LING 313 chatbot limit. For additional questions, please contact the TA at onur.keles1@bogazici.edu.tr.";
+    "You've reached today's LING 101 chatbot limit. For additional questions, please contact the TA at onur.keles1@bogazici.edu.tr.";
   const NOT_CONNECTED_MSG = "The course assistant is not connected yet.";
   const API_ERROR_MSG = "Something went wrong. Please try again later or email the TA.";
 
@@ -67,7 +67,7 @@
 
   function appendBubble(transcript, role, text) {
     const bubble = el("div", {
-      className: "ling313-chat-msg ling313-chat-msg--" + role,
+      className: "ling101-chat-msg ling101-chat-msg--" + role,
       text: text,
     });
     transcript.appendChild(bubble);
@@ -77,12 +77,12 @@
 
   function setOpen(root, open) {
     root.classList.toggle("is-open", open);
-    const panel = root.querySelector(".ling313-chat-panel");
-    const toggle = root.querySelector(".ling313-chat-toggle");
+    const panel = root.querySelector(".ling101-chat-panel");
+    const toggle = root.querySelector(".ling101-chat-toggle");
     if (panel) panel.hidden = !open;
     if (toggle) toggle.setAttribute("aria-expanded", open ? "true" : "false");
     if (open) {
-      const input = root.querySelector(".ling313-chat-input");
+      const input = root.querySelector(".ling101-chat-input");
       if (input) setTimeout(function () { input.focus(); }, 50);
     }
   }
@@ -97,7 +97,7 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        course: "ling313",
+        course: "ling101",
         message: message,
         history: history,
       }),
@@ -131,51 +131,51 @@
 
   function buildUI() {
     const root = el("div", {
-      className: "ling313-chat",
-      id: "ling313Chat",
+      className: "ling101-chat",
+      id: "ling101Chat",
     });
 
     const toggle = el(
       "button",
       {
         type: "button",
-        className: "ling313-chat-toggle",
+        className: "ling101-chat-toggle",
         "aria-expanded": "false",
-        "aria-controls": "ling313ChatPanel",
+        "aria-controls": "ling101ChatPanel",
         text: "Course questions",
       }
     );
 
     const panel = el("div", {
-      className: "ling313-chat-panel",
-      id: "ling313ChatPanel",
+      className: "ling101-chat-panel",
+      id: "ling101ChatPanel",
       role: "dialog",
-      "aria-labelledby": "ling313ChatTitle",
+      "aria-labelledby": "ling101ChatTitle",
       hidden: "hidden",
     });
 
-    const header = el("div", { className: "ling313-chat-header" }, [
-      el("div", { className: "ling313-chat-header-text" }, [
-        el("h2", { id: "ling313ChatTitle", text: "LING 313 course assistant" }),
+    const header = el("div", { className: "ling101-chat-header" }, [
+      el("div", { className: "ling101-chat-header-text" }, [
+        el("h2", { id: "ling101ChatTitle", text: "LING 101 course assistant" }),
       ]),
       el("button", {
         type: "button",
-        className: "ling313-chat-close",
+        className: "ling101-chat-close",
         "aria-label": "Close chat",
         text: "×",
       }),
     ]);
 
     const transcript = el("div", {
-      className: "ling313-chat-transcript",
+      className: "ling101-chat-transcript",
       role: "log",
       "aria-live": "polite",
     });
 
-    const form = el("form", { className: "ling313-chat-form" });
+    const form = el("form", { className: "ling101-chat-form" });
     const input = el("input", {
       type: "text",
-      className: "ling313-chat-input",
+      className: "ling101-chat-input",
       placeholder: "Ask a logistics question…",
       autocomplete: "off",
       maxlength: "500",
@@ -183,7 +183,7 @@
     });
     const send = el("button", {
       type: "submit",
-      className: "ling313-chat-send primary",
+      className: "ling101-chat-send primary",
       text: "Send",
     });
     form.appendChild(input);
@@ -199,7 +199,7 @@
     toggle.addEventListener("click", function () {
       setOpen(root, !root.classList.contains("is-open"));
     });
-    panel.querySelector(".ling313-chat-close").addEventListener("click", function () {
+    panel.querySelector(".ling101-chat-close").addEventListener("click", function () {
       setOpen(root, false);
     });
 
