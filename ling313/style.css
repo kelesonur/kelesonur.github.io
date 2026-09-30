@@ -25,8 +25,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .quiet{background:transparent}
 .danger{color:var(--bad)}
 header{max-width:1240px;margin:auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;background:rgba(11,24,48,.94);backdrop-filter:blur(8px)}
-header a{display:flex;align-items:center;gap:13px;color:var(--text);text-decoration:none;font-family:'Times New Roman',Times,serif;font-weight:700;letter-spacing:1px}
-.logo{display:grid;place-items:center;width:48px;height:48px;background:var(--navy);color:var(--bosphorus);border:2px solid var(--bosphorus);border-radius:12px;font-size:25px}
+header a{display:flex;align-items:center;gap:13px;color:var(--text);text-decoration:none;font-family:'Times New Roman',Times,serif;font-weight:700;letter-spacing:0}
+.logo{display:grid;place-items:center;width:48px;height:48px;flex:0 0 auto;background:var(--navy);color:var(--bosphorus);border:2px solid var(--bosphorus);border-radius:12px;font-size:25px}
+.brand-text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.brand-line{display:block;line-height:1.2;letter-spacing:.2px}
+.brand-course{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.brand-ta{font-size:12px;font-weight:600;color:var(--bosphorus)}
 header small{display:block;font:11px/1.45 'Times New Roman',Times,serif;color:var(--muted);letter-spacing:.4px;text-transform:none;max-width:280px;white-space:normal}
 .header-nav{display:flex;gap:6px;flex-wrap:wrap}
 .nav-tab[aria-pressed="true"]{border-color:var(--bosphorus);background:#1a3d66;color:var(--bosphorus)}
@@ -35,7 +39,7 @@ header small{display:block;font:11px/1.45 'Times New Roman',Times,serif;color:va
 #adminBtn{background:transparent;border:1px solid var(--line);color:var(--muted);font-weight:600;letter-spacing:0;min-height:36px;padding:8px 12px;font-size:13px}
 #adminBtn:hover{background:#183456;color:var(--text);border-color:var(--bosphorus)}
 #adminBtn.admin-on,#adminBtn[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--bosphorus)}
-main{max-width:1172px;margin:0 auto;padding:38px 0 60px}
+main{max-width:1172px;margin:0 auto;padding:38px 28px 60px}
 h1,h2,h3{font-family:'Times New Roman',Times,serif;line-height:1.15}
 h1{font-size:clamp(34px,5vw,60px);letter-spacing:-0.5px;margin:12px 0 18px}
 h2{font-size:28px;margin:12px 0 18px}
@@ -108,12 +112,6 @@ dialog::backdrop{background:#000b}
 .dialog-head h2{font-size:26px;margin:0}
 .guide-body p{font-size:15px;color:#d5e4f4}
 .storage-warning{color:var(--bad);font-size:14px}
-.big-text{font-size:20px}
-.big-text .case h2{font-size:36px}
-.big-text .question,.big-text .option{font-size:22px}
-.big-text .data{font-size:30px}
-.big-text .play-grid{grid-template-columns:1fr}
-.big-text .sidebar{display:none}
 .break-panel{max-width:720px;margin:30px auto;text-align:center}
 .break-panel .seal{display:grid;place-items:center;width:90px;height:90px;margin:24px auto;border:2px solid var(--bosphorus);border-radius:50%;font-size:38px;color:var(--bosphorus)}
 .wide-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
@@ -164,17 +162,32 @@ dialog form p{font-size:15px;color:#d5e4f4}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 @media print{header,.wide-actions,.case-actions{display:none}body{background:white;color:black}.results{max-width:none}.result-score,.result-grid strong{color:black}details{break-inside:avoid;background:white}details>*{display:block}}
 
-.office{max-width:880px;margin:0 auto}
-.office h1{font-size:clamp(28px,4vw,44px)}
-.office-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
-.office-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}
+.office{max-width:720px;margin:0 auto}
+.office h1{font-size:clamp(28px,4vw,44px);margin:8px 0 28px}
+.office-layout{display:grid;gap:28px}
+.office-layout:has(.admin-panel){grid-template-columns:1fr 1fr;max-width:1100px;margin:0 auto}
+.book-panel,.office-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px}
 .office-card h2{font-size:20px;margin:0 0 14px}
-.slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-top:10px}
-.slot-grid button{padding:10px 8px;font-size:14px}
-.slot-grid button.selected{border-color:var(--bosphorus);background:#1a3d66}
-.slot-grid button:disabled{opacity:.35}
-.day-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.day-tabs button.selected{border-color:var(--bosphorus);color:var(--bosphorus)}
+.book-kind{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
+.book-kind button{min-height:52px;font-size:17px}
+.book-kind button.selected,.book-kind button[aria-pressed="true"]{border-color:var(--bosphorus);background:#1a3d66;color:var(--bosphorus)}
+.book-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.book-field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.book-field label,.book-label{font-size:14px;font-weight:600;color:var(--muted)}
+.book-field input,.book-field textarea,.office-card input:not([type="checkbox"]),.office-card textarea{background:#0b1830;color:var(--text);border:1px solid #3d5f8f;border-radius:8px;padding:12px;width:100%;color-scheme:dark}
+.book-field input::placeholder,.book-field textarea::placeholder,.office-card input::placeholder,.office-card textarea::placeholder{color:#8aa4c4}
+.book-members{margin-bottom:16px}
+.book-block{margin:22px 0}
+.day-tabs{display:flex;flex-wrap:nowrap;gap:8px;margin-top:10px}
+.day-tabs button{flex:1;min-width:0;padding:12px 6px;font-size:15px}
+.day-tabs button.selected{border-color:var(--bosphorus);background:#1a3d66;color:var(--bosphorus)}
+.day-tabs button:disabled{opacity:.3}
+.slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:10px;margin-top:10px}
+.slot-grid button{padding:12px 8px;font-size:15px}
+.slot-grid button.selected{border-color:var(--bosphorus);background:#1a3d66;color:var(--bosphorus)}
+.slot-grid button.taken,.slot-grid button:disabled{opacity:.32;text-decoration:line-through}
+.book-submit{width:100%;margin-top:8px;min-height:52px;font-size:17px}
+.book-status{font-size:14px;color:var(--muted);margin:14px 0 0;min-height:1.4em}
 .booking-list{display:grid;gap:10px}
 .booking-item{border:1px solid var(--line);border-radius:10px;padding:14px;background:#0f2138}
 .booking-item .status{font-size:12px;letter-spacing:1px;text-transform:uppercase;font-weight:700;color:var(--bosphorus)}
@@ -183,14 +196,34 @@ dialog form p{font-size:15px;color:#d5e4f4}
 .avail-row{display:grid;grid-template-columns:90px 70px 1fr 1fr;gap:8px;align-items:center;margin-bottom:10px}
 .avail-row input[type="time"]{padding:8px}
 .mailto-note{font-size:14px;color:var(--muted);margin-top:10px}
-@media(max-width:850px){.office-grid{grid-template-columns:1fr}.avail-row{grid-template-columns:1fr 1fr}.header-nav{width:100%}}
-@media(max-width:620px){header small{max-width:160px;font-size:10px}}
+@media(max-width:900px){.office-layout:has(.admin-panel){grid-template-columns:1fr}.avail-row{grid-template-columns:1fr 1fr}.header-nav{width:100%}}
+@media(max-width:620px){
+ .book-row{grid-template-columns:1fr}
+ .day-tabs{flex-wrap:wrap}
+ .day-tabs button{flex:1 1 calc(33.33% - 8px)}
+ .brand-course{font-size:11px;letter-spacing:0}
+}
 
-.landing{max-width:880px;margin:40px auto 20px;text-align:center}
-.landing h1{margin-bottom:10px}
+.landing{max-width:min(960px,100%);margin:36px auto 20px;text-align:center;padding:0 8px}
+.site-title{display:flex;flex-direction:column;align-items:center;gap:.18em;margin:0 0 8px;line-height:1.12}
+.site-title .title-line{display:block;font-size:clamp(22px,3.4vw,34px);font-weight:700;letter-spacing:0;color:var(--muted)}
+.site-title .title-course{font-size:clamp(20px,4.1vw,52px);font-weight:700;color:var(--text);letter-spacing:0;white-space:nowrap;max-width:100%}
+.site-title .course-keep,.site-title .course-tail{white-space:nowrap}
+.site-title .title-ta{font-size:clamp(18px,2.6vw,28px);font-weight:600;color:var(--bosphorus);margin-top:.15em}
+.office-place{display:block;margin-top:.45em;color:var(--muted);font-size:clamp(16px,2vw,20px);font-weight:400;line-height:1.45;letter-spacing:0}
+.office>.office-place{margin:0 0 22px;text-align:left}
 .landing-tabs{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px}
 .landing-tabs button{min-height:120px;padding:28px 22px;font-size:clamp(20px,2.6vw,28px);font-weight:700;line-height:1.25;border-width:2px;background:var(--panel)}
 .landing-tabs button:hover{border-color:var(--bosphorus);background:#1a3d66}
 .home-nav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
 .home-nav button[aria-pressed="true"]{border-color:var(--bosphorus);background:#1a3d66;color:var(--bosphorus)}
-@media(max-width:620px){.landing-tabs{grid-template-columns:1fr}.landing-tabs button{min-height:96px;font-size:22px}}
+@media(max-width:620px){
+ .landing-tabs{grid-template-columns:1fr}
+ .landing-tabs button{min-height:96px;font-size:22px}
+ .site-title .title-course{font-size:clamp(16px,5.2vw,28px)}
+}
+@media(max-width:360px){
+ .site-title .title-course{white-space:normal}
+ .site-title .course-keep{display:inline}
+ .site-title .course-tail{display:inline-block}
+}

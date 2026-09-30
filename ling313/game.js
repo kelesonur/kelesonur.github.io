@@ -39,6 +39,8 @@ const ADMIN_KEY='ling313-admin-code-v1';
 const OH_AVAIL_KEY='ling313-oh-avail-v1';
 const OH_BOOK_KEY='ling313-oh-book-v1';
 const TA_EMAIL='onur.keles1@bogazici.edu.tr';
+// Paste a working POST URL here (FormHandle, Formspree, Web3Forms, …). Empty = skip send.
+const BOOKING_MAIL_ENDPOINT='https://api.formhandle.dev/submit/ling313-office';
 const DAY_IDS=['mon','tue','wed','thu','fri'];
 const DAY_LABEL={mon:'Monday',tue:'Tuesday',wed:'Wednesday',thu:'Thursday',fri:'Friday'};
 const DEFAULT_AVAIL={
@@ -81,7 +83,7 @@ function buildCases(edits){
 }
 
 let edits={},storageOK=true,admin=false,editIndex=0,CASES=buildCases();
-let ohAvail=clone(DEFAULT_AVAIL),ohBookings=[],ohDraft={kind:'individual',day:'mon',slot:null,name:'',group:'',members:'',email:''};
+let ohAvail=clone(DEFAULT_AVAIL),ohBookings=[],ohDraft={kind:'individual',day:'mon',slot:null,name:'',group:'',members:'',email:'',why:''};
 try{edits=JSON.parse(localStorage.getItem(EDIT_KEY))||{};if(typeof edits!=='object'||Array.isArray(edits))edits={};}catch(e){edits={};storageOK=false;}
 CASES=buildCases(edits);
 try{
@@ -98,20 +100,19 @@ try{
  if(Array.isArray(rawB))ohBookings=rawB.filter(b=>b&&typeof b==='object'&&typeof b.id==='string');
 }catch(e){storageOK=false;}
 
-let state={weeks:'1–2',screen:'home',mode:'team',team:'',index:0,answers:[],big:false},draft={};
+let state={weeks:'1–2',screen:'home',mode:'team',team:'',index:0,answers:[]},draft={};
 try{
  const raw=JSON.parse(localStorage.getItem(KEY));
  if(raw&&Array.isArray(raw.answers)&&raw.answers.length<=16&&SCREENS.includes(raw.screen)&&Number.isInteger(raw.index)&&raw.index>=0&&raw.index<16){
-  state={...state,...raw,admin:undefined};
+  state={weeks:raw.weeks||'1–2',screen:raw.screen,mode:raw.mode==='class'?'class':'team',team:typeof raw.team==='string'?raw.team:'',index:raw.index,answers:raw.answers};
   if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1–2';
-  if(['library','edit'].includes(state.screen))state.screen='start';
-  if(!['play','break','results'].includes(state.screen))state.screen='home';
  }
 }catch(e){storageOK=false;}
+state.screen='home';
 
 function save(){
  const persistScreen=['library','edit'].includes(state.screen)?'start':state.screen;
- try{localStorage.setItem(KEY,JSON.stringify({weeks:state.weeks,screen:persistScreen,mode:state.mode,team:state.team,index:state.index,answers:state.answers,big:state.big}));}catch(e){storageOK=false;}
+ try{localStorage.setItem(KEY,JSON.stringify({weeks:state.weeks,screen:persistScreen,mode:state.mode,team:state.team,index:state.index,answers:state.answers}));}catch(e){storageOK=false;}
 }
 function saveEdits(){try{localStorage.setItem(EDIT_KEY,JSON.stringify(edits));}catch(e){storageOK=false;}}
 function saveOffice(){try{localStorage.setItem(OH_AVAIL_KEY,JSON.stringify(ohAvail));localStorage.setItem(OH_BOOK_KEY,JSON.stringify(ohBookings));}catch(e){storageOK=false;}}
@@ -130,16 +131,11 @@ function bindSectionNav(){
  if($('navPs'))$('navPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
 function homeScreen(){
- $('app').innerHTML=`<section class="landing"><span class="eyebrow">LING313</span><h1>Phonology and Morphology <span class="accent">of Turkish</span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
+ $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING313 Fall 2026</span><span class="title-line title-course"><span class="course-keep">Phonology and Morphology</span> <span class="course-tail">of Turkish</span></span><span class="title-line title-ta">TA: Onur Keleş</span><span class="title-line office-place">JF311, John Freely Hall, South Campus<br>inside the Department of Linguistics</span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
  $('goBook').onclick=()=>{state.screen='office';save();render();focusMain();};
  $('goPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
 function render(){
- document.body.classList.toggle('big-text',state.big);
- if($('displayBtn')){
-  $('displayBtn').setAttribute('aria-pressed',String(state.big));
-  $('displayBtn').textContent=state.big?'Normal text':'Large text';
- }
  syncAdminBtn();
  if(state.screen==='home')homeScreen();
  else if(state.screen==='office')officeScreen();
@@ -179,10 +175,10 @@ function startScreen(){
  bindSectionNav();bindWeekPicker();
  $('teamMode').onclick=()=>{state.team=$('teamName').value;state.mode='team';save();render();};
  $('classMode').onclick=()=>{state.team=$('teamName').value;state.mode='class';save();render();};
- $('startBtn').onclick=()=>{state.team=$('teamName').value.trim();state.big=state.mode==='class';state.screen=state.answers.length===16?'results':'play';resetDraft();save();render();focusMain();};
+ $('startBtn').onclick=()=>{state.team=$('teamName').value.trim();state.screen=state.answers.length===16?'results':'play';resetDraft();save();render();focusMain();};
  if(admin){
   $('openLibrary').onclick=()=>{state.screen='library';render();focusMain();};
-  $('resetPractice').onclick=()=>{if(confirm('Clear practice progress?')){state={weeks:state.weeks,screen:'start',mode:state.mode,team:state.team,index:0,answers:[],big:false};resetDraft();save();render();focusMain();}};
+  $('resetPractice').onclick=()=>{if(confirm('Clear practice progress?')){state={weeks:state.weeks,screen:'start',mode:state.mode,team:state.team,index:0,answers:[]};resetDraft();save();render();focusMain();}};
  }
 }
 
@@ -259,7 +255,7 @@ function breakScreen(){
 function resultsScreen(){
  $('app').innerHTML=`<section class="results"><span class="eyebrow">${esc(state.team||'TEAM')}</span><h1>Results</h1><div class="result-score">${score()} <small>/ 1600</small></div><div class="result-grid">${ROOMS.map((r,i)=>`<div><span>${r.name}</span><strong>${roomScore(i)} <small>/ 400</small></strong></div>`).join('')}</div><details><summary>Optional · morphology</summary><p><strong>sof = 2, mürü = 3.</strong> “Merdivenleri sof-___ sof-___ çıkmak kolay, mürü-___ mürü-___ çık da göreyim.”</p><details><summary>Suggested</summary><p><strong>sofar sofar · mürüşer mürüşer.</strong></p></details></details><h2>Review</h2>${CASES.map((c,i)=>`<details><summary>${String(i+1).padStart(2,'0')} · ${esc(c.title)} <span class="muted">${state.answers[i]?.skipped?'skip':`${state.answers[i]?.points??0}/100`}</span></summary><p class="correct-answer">${esc(answerText(c))}</p><p>${esc(c.explain)}</p><p class="source">${esc(c.source)}</p></details>`).join('')}<div class="wide-actions"><button class="primary" type="button" id="copyResult">Copy</button><button type="button" id="restart">Start again</button>${admin?`<button type="button" id="openLibrary">All questions</button>`:''}</div><p id="copyStatus" role="status"></p></section>`;
  $('copyResult').onclick=async()=>{const report=`LING313 — ${state.team||'Team'}: ${score()}/1600\n`+ROOMS.map((r,i)=>`${r.name}: ${roomScore(i)}/400`).join('\n');try{await navigator.clipboard.writeText(report);$('copyStatus').textContent='Copied.';}catch(e){$('copyStatus').textContent=report;}};
- $('restart').onclick=()=>{if(confirm('Clear practice progress and start again?')){state={weeks:state.weeks,screen:'start',mode:state.mode,team:state.team,index:0,answers:[],big:false};resetDraft();save();render();focusMain();}};
+ $('restart').onclick=()=>{if(confirm('Clear practice progress and start again?')){state={weeks:state.weeks,screen:'start',mode:state.mode,team:state.team,index:0,answers:[]};resetDraft();save();render();focusMain();}};
  if(admin)$('openLibrary').onclick=()=>{state.screen='library';render();focusMain();};
 }
 
@@ -373,7 +369,7 @@ function slotTaken(day,slot,exceptId){
 function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
 function bookingLabel(b){
  const when=`${DAY_LABEL[b.day]||b.day} ${b.slot}–${fromMinutes(toMinutes(b.slot)+30)}`;
- if(b.kind==='group')return `${when} · Group ${b.group} (${b.members})`;
+ if(b.kind==='group')return `${when} · ${b.name} · ${b.group} (${b.members})`;
  return `${when} · ${b.name}`;
 }
 function notifyMessage(b){
@@ -383,21 +379,25 @@ function notifyMessage(b){
   b.kind==='group'?`Members: ${b.members}`:null,
   `Day: ${DAY_LABEL[b.day]}`,
   `Slot: ${b.slot}–${fromMinutes(toMinutes(b.slot)+30)}`,
-  `Contact: ${b.email}`
+  `Contact: ${b.email}`,
+  b.why?`Why: ${b.why}`:null
  ];
  return lines.filter(Boolean).join('\n');
 }
 async function sendBookingNotice(b){
+ // Paste a working POST URL in BOOKING_MAIL_ENDPOINT. Empty skips send.
+ if(!BOOKING_MAIL_ENDPOINT){
+  return {ok:false,status:0,data:null,text:'Mail endpoint not configured',success:false,activate:false};
+ }
  const payload={
   name:b.kind==='group'?b.group:b.name,
   email:b.email,
   message:notifyMessage(b),
-  _subject:'Office hour request',
-  _template:'table',
-  _captcha:false,
+  subject:'Office hour request',
+  replyto:b.email,
   _replyto:b.email
  };
- const res=await fetch(`https://formsubmit.co/ajax/${TA_EMAIL}`,{
+ const res=await fetch(BOOKING_MAIL_ENDPOINT,{
   method:'POST',
   headers:{'Content-Type':'application/json','Accept':'application/json'},
   body:JSON.stringify(payload)
@@ -405,28 +405,45 @@ async function sendBookingNotice(b){
  const raw=await res.text();
  let data=null;
  try{data=raw?JSON.parse(raw):null;}catch(e){data={message:raw};}
- const text=typeof data?.message==='string'?data.message:(data?JSON.stringify(data):(raw||`HTTP ${res.status}`));
- return {ok:res.ok,status:res.status,data,text,success:data?.success===true||data?.success==='true'};
+ const err=typeof data?.error==='string'?data.error:'';
+ const msg=typeof data?.message==='string'?data.message:(err||(data?JSON.stringify(data):(raw||`HTTP ${res.status}`)));
+ const activate=/not yet verified|pending.?verif|confirm.*(email|inbox)|check your email|activat/i.test(`${msg} ${err} ${data?._tip||''}`);
+ const success=res.ok&&(data?.ok===true||data?.success===true||data?.success==='true');
+ return {ok:res.ok&&success,status:res.status,data,text:msg,success,activate};
 }
 
 function officeScreen(){
  if(!DAY_IDS.includes(ohDraft.day)||!ohAvail[ohDraft.day]?.on)ohDraft.day=DAY_IDS.find(d=>ohAvail[d].on)||'mon';
  const slots=slotsForDay(ohDraft.day);
  if(ohDraft.slot&&(slotTaken(ohDraft.day,ohDraft.slot)||!slots.includes(ohDraft.slot)))ohDraft.slot=null;
- const openDays=DAY_IDS.filter(d=>ohAvail[d].on);
- const studentForm=`<section class="office-card"><h2>Book a slot</h2>
- <div class="mode-buttons" style="margin-bottom:14px"><button type="button" id="ohInd" class="${ohDraft.kind==='individual'?'selected':''}">Individual</button><button type="button" id="ohGroup" class="${ohDraft.kind==='group'?'selected':''}">Group</button></div>
- ${ohDraft.kind==='individual'
-  ?`<label for="ohName">Student name</label><input id="ohName" maxlength="80" value="${esc(ohDraft.name)}" autocomplete="name">`
-  :`<label for="ohGroupName">Group name</label><input id="ohGroupName" maxlength="80" value="${esc(ohDraft.group)}"><label for="ohMembers">Members</label><textarea id="ohMembers" maxlength="400" placeholder="Comma-separated names">${esc(ohDraft.members)}</textarea>`}
- <label for="ohEmail">Contact email</label><input id="ohEmail" type="email" maxlength="120" value="${esc(ohDraft.email)}" autocomplete="email" placeholder="you@example.com">
- <label>Day</label><div class="day-tabs">${openDays.map(d=>`<button type="button" data-oh-day="${d}" class="${ohDraft.day===d?'selected':''}">${DAY_LABEL[d]}</button>`).join('')||'<span class="muted">No open days.</span>'}</div>
- <label>Time</label><div class="slot-grid">${slots.length?slots.map(s=>`<button type="button" data-oh-slot="${s}" class="${ohDraft.slot===s?'selected':''}" ${slotTaken(ohDraft.day,s)?'disabled':''}>${s}</button>`).join(''):'<span class="muted">No open slots.</span>'}</div>
- <div class="edit-actions"><button class="primary" type="button" id="ohBook">Book</button></div>
- <p id="ohStatus" class="mailto-note" role="status"></p>
+ const dayShort={mon:'Mon',tue:'Tue',wed:'Wed',thu:'Thu',fri:'Fri'};
+ const nameField=`<div class="book-field"><label for="ohName">Name</label><input id="ohName" maxlength="80" required value="${esc(ohDraft.name)}" autocomplete="name"></div>`;
+ const groupFields=ohDraft.kind==='group'
+  ?`<div class="book-field"><label for="ohGroupName">Group name</label><input id="ohGroupName" maxlength="80" required value="${esc(ohDraft.group)}"></div><div class="book-field book-members"><label for="ohMembers">Members</label><textarea id="ohMembers" maxlength="400" rows="2" required>${esc(ohDraft.members)}</textarea></div>`
+  :'';
+ const studentForm=`<section class="book-panel">
+ <div class="book-kind" role="group" aria-label="Booking type">
+  <button type="button" id="ohInd" aria-pressed="${ohDraft.kind==='individual'}" class="${ohDraft.kind==='individual'?'selected':''}">Individual</button>
+  <button type="button" id="ohGroup" aria-pressed="${ohDraft.kind==='group'}" class="${ohDraft.kind==='group'?'selected':''}">Group</button>
+ </div>
+ <div class="book-row">${nameField}<div class="book-field"><label for="ohEmail">Email</label><input id="ohEmail" type="email" maxlength="120" required value="${esc(ohDraft.email)}" autocomplete="email"></div></div>
+ ${groupFields}
+ <div class="book-field"><label for="ohWhy">Why do you want to meet?</label><textarea id="ohWhy" maxlength="280" rows="3" required>${esc(ohDraft.why)}</textarea></div>
+ <div class="book-block"><span class="book-label">Day</span><div class="day-tabs" role="group" aria-label="Day">${DAY_IDS.map(d=>{
+  const on=!!ohAvail[d]?.on;
+  const sel=ohDraft.day===d;
+  return `<button type="button" data-oh-day="${d}" class="${sel?'selected':''}" ${on?'':'disabled'} aria-pressed="${sel}">${dayShort[d]}</button>`;
+ }).join('')}</div></div>
+ <div class="book-block"><span class="book-label">Time</span><div class="slot-grid" role="group" aria-label="Time">${slots.length?slots.map(s=>{
+  const taken=slotTaken(ohDraft.day,s);
+  const sel=ohDraft.slot===s;
+  return `<button type="button" data-oh-slot="${s}" class="${sel?'selected':''}${taken?' taken':''}" ${taken?'disabled':''} aria-pressed="${sel}">${s}</button>`;
+ }).join(''):'<span class="muted">No open slots.</span>'}</div></div>
+ <button class="primary book-submit" type="button" id="ohBook">Request this time</button>
+ <p id="ohStatus" class="book-status" role="status"></p>
  </section>`;
 
- const adminPanel=admin?`<section class="office-card"><h2>Availability</h2>
+ const adminPanel=admin?`<section class="office-card admin-panel"><h2>Availability</h2>
  ${DAY_IDS.map(d=>{
   const row=ohAvail[d];
   return `<div class="avail-row"><label><input type="checkbox" data-av-on="${d}" ${row.on?'checked':''}> ${DAY_LABEL[d].slice(0,3)}</label><span></span><input type="time" data-av-start="${d}" value="${esc(row.start)}" ${row.on?'':'disabled'}><input type="time" data-av-end="${d}" value="${esc(row.end)}" ${row.on?'':'disabled'}></div>`;
@@ -434,18 +451,18 @@ function officeScreen(){
  <div class="edit-actions"><button class="primary" type="button" id="ohSaveAvail">Save hours</button><button type="button" id="ohResetAvail">Reset defaults</button></div>
  <p id="ohAvailStatus" class="mailto-note" role="status"></p>
  <h2 style="margin-top:28px">Requests</h2>
- <div class="booking-list">${ohBookings.length?ohBookings.slice().reverse().map(b=>`<div class="booking-item"><div class="status ${esc(b.status)}">${esc(b.status)}</div><p>${esc(bookingLabel(b))}</p><p class="muted">${esc(b.email)}</p><div class="edit-actions">
+ <div class="booking-list">${ohBookings.length?ohBookings.slice().reverse().map(b=>`<div class="booking-item"><div class="status ${esc(b.status)}">${esc(b.status)}</div><p>${esc(bookingLabel(b))}</p><p class="muted">${esc(b.email)}</p>${b.why?`<p>${esc(b.why)}</p>`:''}<div class="edit-actions">
  ${b.status==='pending'?`<button type="button" class="primary" data-approve="${esc(b.id)}">Approve</button><button type="button" data-decline="${esc(b.id)}">Decline</button>`:''}
  <button type="button" class="danger" data-clear="${esc(b.id)}">Clear</button>
  </div></div>`).join(''):'<p class="muted">No requests yet.</p>'}</div>
- </section>`:`<section class="office-card"><h2>TA hours</h2><ul class="muted" style="padding-left:18px;margin:0">${DAY_IDS.filter(d=>ohAvail[d].on).map(d=>`<li>${DAY_LABEL[d]} ${ohAvail[d].start}–${ohAvail[d].end}</li>`).join('')||'<li>No open days</li>'}</ul><p class="mailto-note">Bookings stay in this browser only.</p></section>`;
+ </section>`:'';
 
- $('app').innerHTML=sectionNav()+`<section class="office"><span class="eyebrow">LING313</span><h1>Book appointment with TA</h1><div class="office-grid">${studentForm}${adminPanel}</div></section>`;
+ $('app').innerHTML=sectionNav()+`<section class="office"><h1>Book appointment with TA</h1><p class="office-place">JF311, John Freely Hall, South Campus, inside the Department of Linguistics</p><div class="office-layout">${studentForm}${adminPanel}</div></section>`;
  bindSectionNav();
  $('ohInd').onclick=()=>{readOfficeDraft();ohDraft.kind='individual';render();};
  $('ohGroup').onclick=()=>{readOfficeDraft();ohDraft.kind='group';render();};
- document.querySelectorAll('[data-oh-day]').forEach(b=>b.onclick=()=>{readOfficeDraft();ohDraft.day=b.dataset.ohDay;ohDraft.slot=null;render();});
- document.querySelectorAll('[data-oh-slot]').forEach(b=>b.onclick=()=>{readOfficeDraft();ohDraft.slot=b.dataset.ohSlot;render();});
+ document.querySelectorAll('[data-oh-day]').forEach(b=>b.onclick=()=>{if(b.disabled)return;readOfficeDraft();ohDraft.day=b.dataset.ohDay;ohDraft.slot=null;render();});
+ document.querySelectorAll('[data-oh-slot]').forEach(b=>b.onclick=()=>{if(b.disabled)return;readOfficeDraft();ohDraft.slot=b.dataset.ohSlot;render();});
  $('ohBook').onclick=bookOffice;
  if(admin){
   document.querySelectorAll('[data-av-on]').forEach(cb=>cb.onchange=()=>{const d=cb.dataset.avOn;ohAvail[d].on=cb.checked;document.querySelector(`[data-av-start="${d}"]`).disabled=!cb.checked;document.querySelector(`[data-av-end="${d}"]`).disabled=!cb.checked;});
@@ -477,14 +494,16 @@ function readOfficeDraft(){
  if($('ohGroupName'))ohDraft.group=$('ohGroupName').value;
  if($('ohMembers'))ohDraft.members=$('ohMembers').value;
  if($('ohEmail'))ohDraft.email=$('ohEmail').value;
+ if($('ohWhy'))ohDraft.why=$('ohWhy').value;
 }
 async function bookOffice(){
  readOfficeDraft();
  const status=$('ohStatus');
  const btn=$('ohBook');
- if(ohDraft.kind==='individual'&&!ohDraft.name.trim()){status.textContent='Enter a name.';return;}
- if(ohDraft.kind==='group'&&(!ohDraft.group.trim()||!ohDraft.members.trim())){status.textContent='Enter group name and members.';return;}
+ if(!ohDraft.name.trim()){status.textContent='Enter your name.';return;}
+ if(ohDraft.kind==='group'&&(!ohDraft.group.trim()||!ohDraft.members.trim())){status.textContent='Enter the group name and members.';return;}
  if(!validEmail(ohDraft.email.trim())){status.textContent='Enter a valid contact email.';return;}
+ if(!ohDraft.why.trim()){status.textContent='Write a short explanation of why you want to meet.';return;}
  if(!ohDraft.slot||!slotsForDay(ohDraft.day).includes(ohDraft.slot)){status.textContent='Choose an open slot.';return;}
  if(slotTaken(ohDraft.day,ohDraft.slot)){status.textContent='That slot is taken.';return;}
  const booking={
@@ -494,6 +513,7 @@ async function bookOffice(){
   group:ohDraft.group.trim(),
   members:ohDraft.members.trim(),
   email:ohDraft.email.trim(),
+  why:ohDraft.why.trim(),
   day:ohDraft.day,
   slot:ohDraft.slot,
   status:'pending',
@@ -507,28 +527,25 @@ async function bookOffice(){
  status.textContent='Sending notice to TA…';
  try{
   const result=await sendBookingNotice(booking);
-  const msg=(result.text||'').toLowerCase();
-  const needsActivation=/activat|confirm.*(email|inbox|formsubmit)|check your email/.test(msg);
-  if(needsActivation){
+  if(result.activate){
    booking.notice='activate';
-   status.textContent='Request saved. Confirm the first FormSubmit email once at onur.keles1@bogazici.edu.tr.';
+   status.textContent=`Request saved. Confirm the first email once at ${TA_EMAIL}.`;
   }else if(result.ok || result.success){
    booking.notice='sent';
    status.textContent='Request saved. Notice sent to the TA.';
   }else{
    booking.notice='failed';
-   status.textContent=`Request saved here, but the TA notice failed (${result.text||`HTTP ${result.status}`}).`;
+   status.textContent='Request saved here. The TA notice could not be sent.';
   }
   saveOffice();
  }catch(e){
   booking.notice='failed';
   saveOffice();
-  status.textContent=`Request saved here, but the TA notice could not be sent${e&&e.message?` (${e.message})`:''}.`;
+  status.textContent='Request saved here. The TA notice could not be sent.';
  }
  btn.disabled=false;
 }
 
-$('displayBtn').onclick=()=>{state.big=!state.big;save();render();};
 $('adminBtn').onclick=toggleAdmin;
 $('brand').onclick=e=>{e.preventDefault();state.screen='home';save();render();focusMain();};
 
