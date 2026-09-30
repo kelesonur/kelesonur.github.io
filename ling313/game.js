@@ -39,8 +39,9 @@ const ADMIN_KEY='ling313-admin-code-v1';
 const OH_AVAIL_KEY='ling313-oh-avail-v1';
 const OH_BOOK_KEY='ling313-oh-book-v1';
 const TA_EMAIL='onur.keles1@bogazici.edu.tr';
-// Paste a working POST URL here (FormHandle, Formspree, Web3Forms, …). Empty = skip send.
-const BOOKING_MAIL_ENDPOINT='https://api.formhandle.dev/submit/ling313-office';
+// Web3Forms access key is public by design (alias for the TA inbox).
+const WEB3FORMS_ACCESS_KEY='c5e63062-8265-4af1-8e73-ee93d3dc6c8d';
+const WEB3FORMS_ENDPOINT='https://api.web3forms.com/submit';
 const DAY_IDS=['mon','tue','wed','thu','fri'];
 const DAY_LABEL={mon:'Monday',tue:'Tuesday',wed:'Wednesday',thu:'Thursday',fri:'Friday'};
 const DEFAULT_AVAIL={
@@ -131,7 +132,7 @@ function bindSectionNav(){
  if($('navPs'))$('navPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
 function homeScreen(){
- $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING313 Fall 2026</span><span class="title-line title-course"><span class="course-keep">Phonology and Morphology</span> <span class="course-tail">of Turkish</span></span><span class="title-line title-ta">TA: Onur Keleş</span><span class="title-line office-place">JF311, John Freely Hall, South Campus<br>inside the Department of Linguistics</span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
+ $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING313 Fall 2026</span><span class="title-line title-course"><span class="course-keep">Phonology and Morphology</span> <span class="course-tail">of Turkish</span></span><span class="title-line title-ta">TA: Onur Keleş</span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
  $('goBook').onclick=()=>{state.screen='office';save();render();focusMain();};
  $('goPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
@@ -375,7 +376,8 @@ function bookingLabel(b){
 function notifyMessage(b){
  const lines=[
   `Type: ${b.kind}`,
-  b.kind==='group'?`Group: ${b.group}`:`Name: ${b.name}`,
+  `Name: ${b.name}`,
+  b.kind==='group'?`Group: ${b.group}`:null,
   b.kind==='group'?`Members: ${b.members}`:null,
   `Day: ${DAY_LABEL[b.day]}`,
   `Slot: ${b.slot}–${fromMinutes(toMinutes(b.slot)+30)}`,
@@ -385,31 +387,20 @@ function notifyMessage(b){
  return lines.filter(Boolean).join('\n');
 }
 async function sendBookingNotice(b){
- // Paste a working POST URL in BOOKING_MAIL_ENDPOINT. Empty skips send.
- if(!BOOKING_MAIL_ENDPOINT){
-  return {ok:false,status:0,data:null,text:'Mail endpoint not configured',success:false,activate:false};
- }
- const payload={
-  name:b.kind==='group'?b.group:b.name,
-  email:b.email,
-  message:notifyMessage(b),
-  subject:'Office hour request',
-  replyto:b.email,
-  _replyto:b.email
- };
- const res=await fetch(BOOKING_MAIL_ENDPOINT,{
-  method:'POST',
-  headers:{'Content-Type':'application/json','Accept':'application/json'},
-  body:JSON.stringify(payload)
- });
- const raw=await res.text();
+ const fd=new FormData();
+ fd.append('access_key',WEB3FORMS_ACCESS_KEY);
+ fd.append('name',b.kind==='group'?(b.group||b.name):b.name);
+ fd.append('email',b.email);
+ fd.append('subject','Office hour request');
+ fd.append('from_name','LING313 office hours');
+ fd.append('replyto',b.email);
+ fd.append('message',notifyMessage(b));
+ const res=await fetch(WEB3FORMS_ENDPOINT,{method:'POST',body:fd});
  let data=null;
- try{data=raw?JSON.parse(raw):null;}catch(e){data={message:raw};}
- const err=typeof data?.error==='string'?data.error:'';
- const msg=typeof data?.message==='string'?data.message:(err||(data?JSON.stringify(data):(raw||`HTTP ${res.status}`)));
- const activate=/not yet verified|pending.?verif|confirm.*(email|inbox)|check your email|activat/i.test(`${msg} ${err} ${data?._tip||''}`);
- const success=res.ok&&(data?.ok===true||data?.success===true||data?.success==='true');
- return {ok:res.ok&&success,status:res.status,data,text:msg,success,activate};
+ try{data=await res.json();}catch(e){data=null;}
+ const text=typeof data?.message==='string'?data.message:(res.ok?'OK':`HTTP ${res.status}`);
+ const success=res.ok&&(data?.success===true||data?.success==='true');
+ return {ok:success,status:res.status,data,text};
 }
 
 function officeScreen(){
@@ -523,25 +514,23 @@ async function bookOffice(){
  ohBookings.push(booking);
  saveOffice();
  ohDraft.slot=null;
+ ohDraft.why='';
  btn.disabled=true;
  status.textContent='Sending notice to TA…';
  try{
   const result=await sendBookingNotice(booking);
-  if(result.activate){
-   booking.notice='activate';
-   status.textContent=`Request saved. Confirm the first email once at ${TA_EMAIL}.`;
-  }else if(result.ok || result.success){
+  if(result.ok){
    booking.notice='sent';
    status.textContent='Request saved. Notice sent to the TA.';
   }else{
    booking.notice='failed';
-   status.textContent='Request saved here. The TA notice could not be sent.';
+   status.textContent=`Request saved here. The TA notice was not sent${result.text?`: ${result.text}`:'.'}`;
   }
   saveOffice();
  }catch(e){
   booking.notice='failed';
   saveOffice();
-  status.textContent='Request saved here. The TA notice could not be sent.';
+  status.textContent=`Request saved here. The TA notice was not sent${e&&e.message?`: ${e.message}`:'.'}`;
  }
  btn.disabled=false;
 }
