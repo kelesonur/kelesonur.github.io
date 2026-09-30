@@ -373,25 +373,39 @@ function bookingLabel(b){
  if(b.kind==='group')return `${when} · ${b.members}`;
  return `${when} · ${b.name}`;
 }
+function bookingWhen(b){
+ const day=DAY_LABEL[b.day]||b.day;
+ const time=`${b.slot}–${fromMinutes(toMinutes(b.slot)+30)}`;
+ return {day,time,slotStart:b.slot};
+}
 function notifyMessage(b){
- const lines=[
+ const {day,time,slotStart}=bookingWhen(b);
+ const who=b.kind==='group'?`Members: ${b.members}`:`Name: ${b.name}`;
+ return [
+  'LING313 office hour request',
+  '',
   `Type: ${b.kind}`,
-  b.kind==='group'?`Members: ${b.members}`:`Name: ${b.name}`,
-  `Day: ${DAY_LABEL[b.day]}`,
-  `Slot: ${b.slot}–${fromMinutes(toMinutes(b.slot)+30)}`,
+  who,
+  `Day: ${day}`,
+  `Time: ${time}`,
   `Contact: ${b.email}`,
-  b.why?`Why: ${b.why}`:null
- ];
- return lines.filter(Boolean).join('\n');
+  `Why: ${b.why||''}`,
+  '',
+  'Reply to the student from this email. Suggested replies:',
+  `Approved: Your office hour on ${day} at ${slotStart} is approved. Office: JF311, John Freely Hall, South Campus, inside the Department of Linguistics.`,
+  `Rejected: Your office hour request for ${day} at ${slotStart} is not approved.`
+ ].join('\n');
 }
 async function sendBookingNotice(b){
  const fd=new FormData();
+ const studentEmail=b.email;
+ const displayName=b.kind==='group'?b.members:b.name;
  fd.append('access_key',WEB3FORMS_ACCESS_KEY);
- fd.append('name',b.kind==='group'?b.members:b.name);
- fd.append('email',b.email);
- fd.append('subject','Office hour request');
+ fd.append('name',displayName);
+ fd.append('email',studentEmail);
+ fd.append('subject','LING313 office hour request');
  fd.append('from_name','LING313 office hours');
- fd.append('replyto',b.email);
+ fd.append('replyto',studentEmail);
  fd.append('message',notifyMessage(b));
  const res=await fetch(WEB3FORMS_ENDPOINT,{method:'POST',body:fd});
  let data=null;
@@ -438,6 +452,7 @@ function officeScreen(){
  <div class="edit-actions"><button class="primary" type="button" id="ohSaveAvail">Save hours</button><button type="button" id="ohResetAvail">Reset defaults</button></div>
  <p id="ohAvailStatus" class="mailto-note" role="status"></p>
  <h2 style="margin-top:28px">Requests</h2>
+ <p class="mailto-note">Approve / Decline only updates status here. Reply to the Web3Forms booking email to notify the student.</p>
  <div class="booking-list">${ohBookings.length?ohBookings.slice().reverse().map(b=>`<div class="booking-item"><div class="status ${esc(b.status)}">${esc(b.status)}</div><p>${esc(bookingLabel(b))}</p><p class="muted">${esc(b.email)}</p>${b.why?`<p>${esc(b.why)}</p>`:''}<div class="edit-actions">
  ${b.status==='pending'?`<button type="button" class="primary" data-approve="${esc(b.id)}">Approve</button><button type="button" data-decline="${esc(b.id)}">Decline</button>`:''}
  <button type="button" class="danger" data-clear="${esc(b.id)}">Clear</button>
