@@ -32,10 +32,22 @@ const WEEKS=[
 {id:'10–11',topic:'Verbal inflection'},
 {id:'12',topic:'Nominalization'}
 ];
+const SCREENS=['home','start','play','break','results','library','edit','office'];
 const KEY='ling313-phonology-en-v1';
 const EDIT_KEY='ling313-case-edits-v1';
 const ADMIN_KEY='ling313-admin-code-v1';
-const SCREENS=['start','play','break','results','library','edit'];
+const OH_AVAIL_KEY='ling313-oh-avail-v1';
+const OH_BOOK_KEY='ling313-oh-book-v1';
+const TA_EMAIL='onur.keles1@bogazici.edu.tr';
+const DAY_IDS=['mon','tue','wed','thu','fri'];
+const DAY_LABEL={mon:'Monday',tue:'Tuesday',wed:'Wednesday',thu:'Thursday',fri:'Friday'};
+const DEFAULT_AVAIL={
+ mon:{on:true,start:'09:00',end:'13:00'},
+ tue:{on:true,start:'09:00',end:'13:00'},
+ wed:{on:true,start:'09:00',end:'10:00'},
+ thu:{on:true,start:'09:00',end:'12:00'},
+ fri:{on:true,start:'09:00',end:'16:00'}
+};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clone=v=>JSON.parse(JSON.stringify(v));
@@ -69,31 +81,69 @@ function buildCases(edits){
 }
 
 let edits={},storageOK=true,admin=false,editIndex=0,CASES=buildCases();
+let ohAvail=clone(DEFAULT_AVAIL),ohBookings=[],ohDraft={kind:'individual',day:'mon',slot:null,name:'',group:'',members:'',email:''};
 try{edits=JSON.parse(localStorage.getItem(EDIT_KEY))||{};if(typeof edits!=='object'||Array.isArray(edits))edits={};}catch(e){edits={};storageOK=false;}
 CASES=buildCases(edits);
+try{
+ const rawA=JSON.parse(localStorage.getItem(OH_AVAIL_KEY));
+ if(rawA&&typeof rawA==='object'){
+  DAY_IDS.forEach(d=>{
+   const row=rawA[d];
+   if(row&&typeof row==='object')ohAvail[d]={on:!!row.on,start:typeof row.start==='string'?row.start:DEFAULT_AVAIL[d].start,end:typeof row.end==='string'?row.end:DEFAULT_AVAIL[d].end};
+  });
+ }
+}catch(e){storageOK=false;}
+try{
+ const rawB=JSON.parse(localStorage.getItem(OH_BOOK_KEY));
+ if(Array.isArray(rawB))ohBookings=rawB.filter(b=>b&&typeof b==='object'&&typeof b.id==='string');
+}catch(e){storageOK=false;}
 
-let state={weeks:'1–2',screen:'start',mode:'team',team:'',index:0,answers:[],big:false},draft={};
+let state={weeks:'1–2',screen:'home',mode:'team',team:'',index:0,answers:[],big:false},draft={};
 try{
  const raw=JSON.parse(localStorage.getItem(KEY));
  if(raw&&Array.isArray(raw.answers)&&raw.answers.length<=16&&SCREENS.includes(raw.screen)&&Number.isInteger(raw.index)&&raw.index>=0&&raw.index<16){
   state={...state,...raw,admin:undefined};
   if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1–2';
   if(['library','edit'].includes(state.screen))state.screen='start';
+  if(!['play','break','results'].includes(state.screen))state.screen='home';
  }
 }catch(e){storageOK=false;}
 
-function save(){try{localStorage.setItem(KEY,JSON.stringify({weeks:state.weeks,screen:['library','edit'].includes(state.screen)?'start':state.screen,mode:state.mode,team:state.team,index:state.index,answers:state.answers,big:state.big}));}catch(e){storageOK=false;}}
+function save(){
+ const persistScreen=['library','edit'].includes(state.screen)?'start':state.screen;
+ try{localStorage.setItem(KEY,JSON.stringify({weeks:state.weeks,screen:persistScreen,mode:state.mode,team:state.team,index:state.index,answers:state.answers,big:state.big}));}catch(e){storageOK=false;}
+}
 function saveEdits(){try{localStorage.setItem(EDIT_KEY,JSON.stringify(edits));}catch(e){storageOK=false;}}
+function saveOffice(){try{localStorage.setItem(OH_AVAIL_KEY,JSON.stringify(ohAvail));localStorage.setItem(OH_BOOK_KEY,JSON.stringify(ohBookings));}catch(e){storageOK=false;}}
 function score(){return state.answers.reduce((s,a)=>s+(a?.points||0),0);}
 function roomScore(i){return state.answers.slice(i*4,i*4+4).reduce((s,a)=>s+(a?.points||0),0);}
 function resetDraft(){draft={answer:[],fields:[],reason:null,hint:false};}
 function syncAdminBtn(){const b=$('adminBtn');if(!b)return;b.setAttribute('aria-pressed',String(admin));b.textContent=admin?'Admin on':'Admin';b.classList.toggle('admin-on',admin);}
+function sectionNav(){
+ const onBook=state.screen==='office';
+ const onPs=['start','play','break','results','library','edit'].includes(state.screen);
+ if(state.screen==='home')return '';
+ return `<nav class="home-nav" aria-label="Sections"><button type="button" id="navBook" aria-pressed="${onBook}">Book appointment with TA</button><button type="button" id="navPs" aria-pressed="${onPs}">PS Material</button></nav>`;
+}
+function bindSectionNav(){
+ if($('navBook'))$('navBook').onclick=()=>{state.screen='office';save();render();focusMain();};
+ if($('navPs'))$('navPs').onclick=()=>{state.screen='start';save();render();focusMain();};
+}
+function homeScreen(){
+ $('app').innerHTML=`<section class="landing"><span class="eyebrow">LING313</span><h1>Phonology and Morphology <span class="accent">of Turkish</span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
+ $('goBook').onclick=()=>{state.screen='office';save();render();focusMain();};
+ $('goPs').onclick=()=>{state.screen='start';save();render();focusMain();};
+}
 function render(){
  document.body.classList.toggle('big-text',state.big);
- $('displayBtn').setAttribute('aria-pressed',String(state.big));
- $('displayBtn').textContent=state.big?'Normal text':'Large text';
+ if($('displayBtn')){
+  $('displayBtn').setAttribute('aria-pressed',String(state.big));
+  $('displayBtn').textContent=state.big?'Normal text':'Large text';
+ }
  syncAdminBtn();
- if(state.screen==='start')startScreen();
+ if(state.screen==='home')homeScreen();
+ else if(state.screen==='office')officeScreen();
+ else if(state.screen==='start')startScreen();
  else if(state.screen==='break')breakScreen();
  else if(state.screen==='results')resultsScreen();
  else if(state.screen==='library')libraryScreen();
@@ -120,17 +170,20 @@ function startScreen(){
  if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1–2';
  const meta=weekMeta(state.weeks);
  if(state.weeks!=='1–2'){
-  $('app').innerHTML=weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1><p>${esc(meta.topic)}</p><p class="muted">To be added.</p>${admin?`<div class="wide-actions"><button type="button" id="openLibrary">All questions</button></div>`:''}</section>`;
-  bindWeekPicker();
+  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1><p>${esc(meta.topic)}</p><p class="muted">To be added.</p>${admin?`<div class="wide-actions"><button type="button" id="openLibrary">All questions</button></div>`:''}</section>`;
+  bindSectionNav();bindWeekPicker();
   if(admin)$('openLibrary').onclick=()=>{state.screen='library';render();focusMain();};
   return;
  }
- $('app').innerHTML=weekPicker()+`<section class="intro"><div><span class="eyebrow">LING313</span><h1>Phonology <span class="accent">Practice</span></h1><p class="muted">${esc(meta.topic)}</p></div><section class="setup" aria-label="Session setup"><h2>Format</h2><div class="mode-buttons"><button type="button" id="teamMode" class="${state.mode==='team'?'selected':''}" aria-pressed="${state.mode==='team'}">Team<small>One device</small></button><button type="button" id="classMode" class="${state.mode==='class'?'selected':''}" aria-pressed="${state.mode==='class'}">Projector<small>Whole class</small></button></div><label for="teamName">${state.mode==='class'?'Class name':'Team name'}</label><input id="teamName" maxlength="35" placeholder="Optional" value="${esc(state.team)}" autocomplete="off"><button class="primary" type="button" id="startBtn">${state.answers.length?'Resume':'Start'}</button>${admin?`<button type="button" id="openLibrary" style="width:100%;margin-top:10px">All questions</button>`:''}${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section></section><section class="rooms" aria-label="Four rounds">${ROOMS.map((r,i)=>`<div class="room-card"><span class="room-number">0${i+1}</span><h3>${r.name}</h3></div>`).join('')}</section>`;
- bindWeekPicker();
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro"><div><span class="eyebrow">LING313 · PS</span><h1>Phonology and Morphology <span class="accent">of Turkish</span></h1><p class="muted">${esc(meta.topic)}</p></div><section class="setup" aria-label="Session setup"><h2>Format</h2><div class="mode-buttons"><button type="button" id="teamMode" class="${state.mode==='team'?'selected':''}" aria-pressed="${state.mode==='team'}">Team<small>One device</small></button><button type="button" id="classMode" class="${state.mode==='class'?'selected':''}" aria-pressed="${state.mode==='class'}">Projector<small>Whole class</small></button></div><label for="teamName">${state.mode==='class'?'Class name':'Team name'}</label><input id="teamName" maxlength="35" placeholder="Optional" value="${esc(state.team)}" autocomplete="off"><button class="primary" type="button" id="startBtn">${state.answers.length?'Resume':'Start'}</button>${admin?`<button type="button" id="openLibrary" style="width:100%;margin-top:10px">All questions</button><button type="button" id="resetPractice" class="danger" style="width:100%;margin-top:10px">Reset session</button>`:''}${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section></section><section class="rooms" aria-label="Four rounds">${ROOMS.map((r,i)=>`<div class="room-card"><span class="room-number">0${i+1}</span><h3>${r.name}</h3></div>`).join('')}</section>`;
+ bindSectionNav();bindWeekPicker();
  $('teamMode').onclick=()=>{state.team=$('teamName').value;state.mode='team';save();render();};
  $('classMode').onclick=()=>{state.team=$('teamName').value;state.mode='class';save();render();};
  $('startBtn').onclick=()=>{state.team=$('teamName').value.trim();state.big=state.mode==='class';state.screen=state.answers.length===16?'results':'play';resetDraft();save();render();focusMain();};
- if(admin)$('openLibrary').onclick=()=>{state.screen='library';render();focusMain();};
+ if(admin){
+  $('openLibrary').onclick=()=>{state.screen='library';render();focusMain();};
+  $('resetPractice').onclick=()=>{if(confirm('Clear practice progress?')){state={weeks:state.weeks,screen:'start',mode:state.mode,team:state.team,index:0,answers:[],big:false};resetDraft();save();render();focusMain();}};
+ }
 }
 
 function optionHTML(options,selected,group,locked){
@@ -206,7 +259,7 @@ function breakScreen(){
 function resultsScreen(){
  $('app').innerHTML=`<section class="results"><span class="eyebrow">${esc(state.team||'TEAM')}</span><h1>Results</h1><div class="result-score">${score()} <small>/ 1600</small></div><div class="result-grid">${ROOMS.map((r,i)=>`<div><span>${r.name}</span><strong>${roomScore(i)} <small>/ 400</small></strong></div>`).join('')}</div><details><summary>Optional · morphology</summary><p><strong>sof = 2, mürü = 3.</strong> “Merdivenleri sof-___ sof-___ çıkmak kolay, mürü-___ mürü-___ çık da göreyim.”</p><details><summary>Suggested</summary><p><strong>sofar sofar · mürüşer mürüşer.</strong></p></details></details><h2>Review</h2>${CASES.map((c,i)=>`<details><summary>${String(i+1).padStart(2,'0')} · ${esc(c.title)} <span class="muted">${state.answers[i]?.skipped?'skip':`${state.answers[i]?.points??0}/100`}</span></summary><p class="correct-answer">${esc(answerText(c))}</p><p>${esc(c.explain)}</p><p class="source">${esc(c.source)}</p></details>`).join('')}<div class="wide-actions"><button class="primary" type="button" id="copyResult">Copy</button><button type="button" id="restart">Start again</button>${admin?`<button type="button" id="openLibrary">All questions</button>`:''}</div><p id="copyStatus" role="status"></p></section>`;
  $('copyResult').onclick=async()=>{const report=`LING313 — ${state.team||'Team'}: ${score()}/1600\n`+ROOMS.map((r,i)=>`${r.name}: ${roomScore(i)}/400`).join('\n');try{await navigator.clipboard.writeText(report);$('copyStatus').textContent='Copied.';}catch(e){$('copyStatus').textContent=report;}};
- $('restart').onclick=()=>{$('guide').showModal();$('resetConfirm').hidden=false;};
+ $('restart').onclick=()=>{if(confirm('Clear practice progress and start again?')){state={weeks:state.weeks,screen:'start',mode:state.mode,team:state.team,index:0,answers:[],big:false};resetDraft();save();render();focusMain();}};
  if(admin)$('openLibrary').onclick=()=>{state.screen='library';render();focusMain();};
 }
 
@@ -288,24 +341,196 @@ function adminDialog(mode){
   }
   const stored=localStorage.getItem(ADMIN_KEY);
   if(hashed!==stored){err.hidden=false;err.textContent='Incorrect code.';$('adminCode').select();return;}
-  admin=true;gate.close();state.screen='library';render();focusMain();
+  admin=true;gate.close();if(state.screen!=='office')state.screen='library';render();focusMain();
  };
 }
 
 function toggleAdmin(){
- if(admin){admin=false;if(['library','edit'].includes(state.screen))state.screen='start';render();return;}
+ if(admin){
+  admin=false;
+  if(['library','edit'].includes(state.screen))state.screen='start';
+  render();
+  return;
+ }
  const stored=localStorage.getItem(ADMIN_KEY);
  adminDialog(stored?'unlock':'set');
 }
 
-$('guideBtn').onclick=()=>$('guide').showModal();
-$('closeGuide').onclick=()=>$('guide').close();
+function toMinutes(hhmm){const [h,m]=String(hhmm||'').split(':').map(Number);return (h||0)*60+(m||0);}
+function fromMinutes(n){const h=Math.floor(n/60),m=n%60;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;}
+function slotsForDay(day){
+ const row=ohAvail[day];
+ if(!row||!row.on)return [];
+ const start=toMinutes(row.start),end=toMinutes(row.end);
+ if(!(end>start))return [];
+ const out=[];
+ for(let t=start;t+30<=end;t+=30)out.push(fromMinutes(t));
+ return out;
+}
+function slotTaken(day,slot,exceptId){
+ return ohBookings.some(b=>b.day===day&&b.slot===slot&&b.status!=='declined'&&b.id!==exceptId);
+}
+function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
+function bookingLabel(b){
+ const when=`${DAY_LABEL[b.day]||b.day} ${b.slot}–${fromMinutes(toMinutes(b.slot)+30)}`;
+ if(b.kind==='group')return `${when} · Group ${b.group} (${b.members})`;
+ return `${when} · ${b.name}`;
+}
+function notifyMessage(b){
+ const lines=[
+  `Type: ${b.kind}`,
+  b.kind==='group'?`Group: ${b.group}`:`Name: ${b.name}`,
+  b.kind==='group'?`Members: ${b.members}`:null,
+  `Day: ${DAY_LABEL[b.day]}`,
+  `Slot: ${b.slot}–${fromMinutes(toMinutes(b.slot)+30)}`,
+  `Contact: ${b.email}`
+ ];
+ return lines.filter(Boolean).join('\n');
+}
+async function sendBookingNotice(b){
+ const payload={
+  name:b.kind==='group'?b.group:b.name,
+  email:b.email,
+  message:notifyMessage(b),
+  _subject:'Office hour request',
+  _template:'table',
+  _captcha:false,
+  _replyto:b.email
+ };
+ const res=await fetch(`https://formsubmit.co/ajax/${TA_EMAIL}`,{
+  method:'POST',
+  headers:{'Content-Type':'application/json','Accept':'application/json'},
+  body:JSON.stringify(payload)
+ });
+ const raw=await res.text();
+ let data=null;
+ try{data=raw?JSON.parse(raw):null;}catch(e){data={message:raw};}
+ const text=typeof data?.message==='string'?data.message:(data?JSON.stringify(data):(raw||`HTTP ${res.status}`));
+ return {ok:res.ok,status:res.status,data,text,success:data?.success===true||data?.success==='true'};
+}
+
+function officeScreen(){
+ if(!DAY_IDS.includes(ohDraft.day)||!ohAvail[ohDraft.day]?.on)ohDraft.day=DAY_IDS.find(d=>ohAvail[d].on)||'mon';
+ const slots=slotsForDay(ohDraft.day);
+ if(ohDraft.slot&&(slotTaken(ohDraft.day,ohDraft.slot)||!slots.includes(ohDraft.slot)))ohDraft.slot=null;
+ const openDays=DAY_IDS.filter(d=>ohAvail[d].on);
+ const studentForm=`<section class="office-card"><h2>Book a slot</h2>
+ <div class="mode-buttons" style="margin-bottom:14px"><button type="button" id="ohInd" class="${ohDraft.kind==='individual'?'selected':''}">Individual</button><button type="button" id="ohGroup" class="${ohDraft.kind==='group'?'selected':''}">Group</button></div>
+ ${ohDraft.kind==='individual'
+  ?`<label for="ohName">Student name</label><input id="ohName" maxlength="80" value="${esc(ohDraft.name)}" autocomplete="name">`
+  :`<label for="ohGroupName">Group name</label><input id="ohGroupName" maxlength="80" value="${esc(ohDraft.group)}"><label for="ohMembers">Members</label><textarea id="ohMembers" maxlength="400" placeholder="Comma-separated names">${esc(ohDraft.members)}</textarea>`}
+ <label for="ohEmail">Contact email</label><input id="ohEmail" type="email" maxlength="120" value="${esc(ohDraft.email)}" autocomplete="email" placeholder="you@example.com">
+ <label>Day</label><div class="day-tabs">${openDays.map(d=>`<button type="button" data-oh-day="${d}" class="${ohDraft.day===d?'selected':''}">${DAY_LABEL[d]}</button>`).join('')||'<span class="muted">No open days.</span>'}</div>
+ <label>Time</label><div class="slot-grid">${slots.length?slots.map(s=>`<button type="button" data-oh-slot="${s}" class="${ohDraft.slot===s?'selected':''}" ${slotTaken(ohDraft.day,s)?'disabled':''}>${s}</button>`).join(''):'<span class="muted">No open slots.</span>'}</div>
+ <div class="edit-actions"><button class="primary" type="button" id="ohBook">Book</button></div>
+ <p id="ohStatus" class="mailto-note" role="status"></p>
+ </section>`;
+
+ const adminPanel=admin?`<section class="office-card"><h2>Availability</h2>
+ ${DAY_IDS.map(d=>{
+  const row=ohAvail[d];
+  return `<div class="avail-row"><label><input type="checkbox" data-av-on="${d}" ${row.on?'checked':''}> ${DAY_LABEL[d].slice(0,3)}</label><span></span><input type="time" data-av-start="${d}" value="${esc(row.start)}" ${row.on?'':'disabled'}><input type="time" data-av-end="${d}" value="${esc(row.end)}" ${row.on?'':'disabled'}></div>`;
+ }).join('')}
+ <div class="edit-actions"><button class="primary" type="button" id="ohSaveAvail">Save hours</button><button type="button" id="ohResetAvail">Reset defaults</button></div>
+ <p id="ohAvailStatus" class="mailto-note" role="status"></p>
+ <h2 style="margin-top:28px">Requests</h2>
+ <div class="booking-list">${ohBookings.length?ohBookings.slice().reverse().map(b=>`<div class="booking-item"><div class="status ${esc(b.status)}">${esc(b.status)}</div><p>${esc(bookingLabel(b))}</p><p class="muted">${esc(b.email)}</p><div class="edit-actions">
+ ${b.status==='pending'?`<button type="button" class="primary" data-approve="${esc(b.id)}">Approve</button><button type="button" data-decline="${esc(b.id)}">Decline</button>`:''}
+ <button type="button" class="danger" data-clear="${esc(b.id)}">Clear</button>
+ </div></div>`).join(''):'<p class="muted">No requests yet.</p>'}</div>
+ </section>`:`<section class="office-card"><h2>TA hours</h2><ul class="muted" style="padding-left:18px;margin:0">${DAY_IDS.filter(d=>ohAvail[d].on).map(d=>`<li>${DAY_LABEL[d]} ${ohAvail[d].start}–${ohAvail[d].end}</li>`).join('')||'<li>No open days</li>'}</ul><p class="mailto-note">Bookings stay in this browser only.</p></section>`;
+
+ $('app').innerHTML=sectionNav()+`<section class="office"><span class="eyebrow">LING313</span><h1>Book appointment with TA</h1><div class="office-grid">${studentForm}${adminPanel}</div></section>`;
+ bindSectionNav();
+ $('ohInd').onclick=()=>{readOfficeDraft();ohDraft.kind='individual';render();};
+ $('ohGroup').onclick=()=>{readOfficeDraft();ohDraft.kind='group';render();};
+ document.querySelectorAll('[data-oh-day]').forEach(b=>b.onclick=()=>{readOfficeDraft();ohDraft.day=b.dataset.ohDay;ohDraft.slot=null;render();});
+ document.querySelectorAll('[data-oh-slot]').forEach(b=>b.onclick=()=>{readOfficeDraft();ohDraft.slot=b.dataset.ohSlot;render();});
+ $('ohBook').onclick=bookOffice;
+ if(admin){
+  document.querySelectorAll('[data-av-on]').forEach(cb=>cb.onchange=()=>{const d=cb.dataset.avOn;ohAvail[d].on=cb.checked;document.querySelector(`[data-av-start="${d}"]`).disabled=!cb.checked;document.querySelector(`[data-av-end="${d}"]`).disabled=!cb.checked;});
+  $('ohSaveAvail').onclick=()=>{
+   DAY_IDS.forEach(d=>{
+    ohAvail[d].on=document.querySelector(`[data-av-on="${d}"]`).checked;
+    ohAvail[d].start=document.querySelector(`[data-av-start="${d}"]`).value||DEFAULT_AVAIL[d].start;
+    ohAvail[d].end=document.querySelector(`[data-av-end="${d}"]`).value||DEFAULT_AVAIL[d].end;
+   });
+   saveOffice();$('ohAvailStatus').textContent='Hours saved in this browser.';
+  };
+  $('ohResetAvail').onclick=()=>{ohAvail=clone(DEFAULT_AVAIL);saveOffice();render();};
+  document.querySelectorAll('[data-approve]').forEach(btn=>btn.onclick=()=>{
+   const b=ohBookings.find(x=>x.id===btn.dataset.approve);if(!b)return;
+   b.status='approved';saveOffice();render();
+  });
+  document.querySelectorAll('[data-decline]').forEach(btn=>btn.onclick=()=>{
+   const b=ohBookings.find(x=>x.id===btn.dataset.decline);if(!b)return;
+   b.status='declined';saveOffice();render();
+  });
+  document.querySelectorAll('[data-clear]').forEach(btn=>btn.onclick=()=>{
+   ohBookings=ohBookings.filter(x=>x.id!==btn.dataset.clear);saveOffice();render();
+  });
+ }
+}
+
+function readOfficeDraft(){
+ if($('ohName'))ohDraft.name=$('ohName').value;
+ if($('ohGroupName'))ohDraft.group=$('ohGroupName').value;
+ if($('ohMembers'))ohDraft.members=$('ohMembers').value;
+ if($('ohEmail'))ohDraft.email=$('ohEmail').value;
+}
+async function bookOffice(){
+ readOfficeDraft();
+ const status=$('ohStatus');
+ const btn=$('ohBook');
+ if(ohDraft.kind==='individual'&&!ohDraft.name.trim()){status.textContent='Enter a name.';return;}
+ if(ohDraft.kind==='group'&&(!ohDraft.group.trim()||!ohDraft.members.trim())){status.textContent='Enter group name and members.';return;}
+ if(!validEmail(ohDraft.email.trim())){status.textContent='Enter a valid contact email.';return;}
+ if(!ohDraft.slot||!slotsForDay(ohDraft.day).includes(ohDraft.slot)){status.textContent='Choose an open slot.';return;}
+ if(slotTaken(ohDraft.day,ohDraft.slot)){status.textContent='That slot is taken.';return;}
+ const booking={
+  id:`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
+  kind:ohDraft.kind,
+  name:ohDraft.name.trim(),
+  group:ohDraft.group.trim(),
+  members:ohDraft.members.trim(),
+  email:ohDraft.email.trim(),
+  day:ohDraft.day,
+  slot:ohDraft.slot,
+  status:'pending',
+  created:new Date().toISOString(),
+  notice:'pending'
+ };
+ ohBookings.push(booking);
+ saveOffice();
+ ohDraft.slot=null;
+ btn.disabled=true;
+ status.textContent='Sending notice to TA…';
+ try{
+  const result=await sendBookingNotice(booking);
+  const msg=(result.text||'').toLowerCase();
+  const needsActivation=/activat|confirm.*(email|inbox|formsubmit)|check your email/.test(msg);
+  if(needsActivation){
+   booking.notice='activate';
+   status.textContent='Request saved. Confirm the first FormSubmit email once at onur.keles1@bogazici.edu.tr.';
+  }else if(result.ok || result.success){
+   booking.notice='sent';
+   status.textContent='Request saved. Notice sent to the TA.';
+  }else{
+   booking.notice='failed';
+   status.textContent=`Request saved here, but the TA notice failed (${result.text||`HTTP ${result.status}`}).`;
+  }
+  saveOffice();
+ }catch(e){
+  booking.notice='failed';
+  saveOffice();
+  status.textContent=`Request saved here, but the TA notice could not be sent${e&&e.message?` (${e.message})`:''}.`;
+ }
+ btn.disabled=false;
+}
+
 $('displayBtn').onclick=()=>{state.big=!state.big;save();render();};
 $('adminBtn').onclick=toggleAdmin;
-$('brand').onclick=e=>{e.preventDefault();state.screen='start';save();render();};
-$('resetBtn').onclick=()=>{$('resetConfirm').hidden=false;};
-$('cancelReset').onclick=()=>{$('resetConfirm').hidden=true;};
-$('confirmReset').onclick=()=>{state={weeks:state.weeks,screen:'start',mode:state.mode,team:state.team,index:0,answers:[],big:false};resetDraft();save();$('resetConfirm').hidden=true;$('guide').close();render();focusMain();};
+$('brand').onclick=e=>{e.preventDefault();state.screen='home';save();render();focusMain();};
 
 resetDraft();render();
 if(document.modelContext?.registerTool){try{Promise.resolve(document.modelContext.registerTool({name:'read_current_case',description:'Read the current visible case and game progress; does not submit an answer.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:false},execute:()=>({screen:state.screen,caseNumber:state.index+1,total:16,score:score(),admin,title:state.screen==='play'?CASES[state.index]?.title:null})})).catch(()=>{});}catch(e){}}
