@@ -78,7 +78,7 @@ function bindSectionNav(){
  if($('navPs'))$('navPs').onclick=()=>{state.screen='start';state.material=null;save();render();focusMain();};
 }
 function homeScreen(){
- $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING101 Fall 2026</span><span class="title-line title-course"><span class="course-keep">Introduction to Language</span> <span class="course-tail">and Linguistics I</span></span><span class="title-line title-ta"><a href="https://kelesonur.github.io/" target="_blank" rel="noopener noreferrer">TA: Onur Keleş</a></span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
+ $('app').innerHTML=`<section class="landing"><h1 class="site-title"><span class="title-line">LING101 Fall 2026</span><span class="title-line title-course"><span class="course-keep">Introduction to Language</span> <span class="course-tail">and Linguistics I</span></span><span class="title-line title-instructor">Instructor: Michael Fiddler</span><span class="title-line title-ta"><a href="https://kelesonur.github.io/" target="_blank" rel="noopener noreferrer">TA: Onur Keleş</a></span></h1><div class="landing-tabs"><button type="button" id="goBook">Book appointment with TA</button><button type="button" id="goPs">PS Material</button></div></section>`;
  $('goBook').onclick=()=>{state.screen='office';save();render();focusMain();};
  $('goPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
