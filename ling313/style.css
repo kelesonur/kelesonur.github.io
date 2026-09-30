@@ -25,12 +25,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .quiet{background:transparent}
 .danger{color:var(--bad)}
 header{max-width:1240px;margin:auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;background:rgba(11,24,48,.94);backdrop-filter:blur(8px)}
-header a{display:flex;align-items:center;gap:13px;color:var(--text);text-decoration:none;font-family:'Times New Roman',Times,serif;font-weight:700;letter-spacing:0}
+header a{color:var(--text);text-decoration:none;font-family:'Times New Roman',Times,serif;font-weight:700;letter-spacing:0}
+#brand{display:flex;align-items:center;gap:13px}
+.brand-wrap{display:flex;align-items:center;gap:13px;flex-wrap:wrap;min-width:0}
 .logo{display:grid;place-items:center;width:48px;height:48px;flex:0 0 auto;background:var(--navy);color:var(--bosphorus);border:2px solid var(--bosphorus);border-radius:12px;font-size:25px}
 .brand-text{display:flex;flex-direction:column;gap:2px;min-width:0}
 .brand-line{display:block;line-height:1.2;letter-spacing:.2px}
 .brand-course{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
-.brand-ta{font-size:12px;font-weight:600;color:var(--bosphorus)}
+a.brand-ta{display:inline-block;font-size:12px;font-weight:600;color:var(--bosphorus);text-decoration:none;align-self:flex-end;margin-left:2px}
+a.brand-ta:hover{text-decoration:underline}
 header small{display:block;font:11px/1.45 'Times New Roman',Times,serif;color:var(--muted);letter-spacing:.4px;text-transform:none;max-width:280px;white-space:normal}
 .header-nav{display:flex;gap:6px;flex-wrap:wrap}
 .nav-tab[aria-pressed="true"]{border-color:var(--bosphorus);background:#1a3d66;color:var(--bosphorus)}
@@ -210,6 +213,8 @@ dialog form p{font-size:15px;color:#d5e4f4}
 .site-title .title-course{font-size:clamp(20px,4.1vw,52px);font-weight:700;color:var(--text);letter-spacing:0;white-space:nowrap;max-width:100%}
 .site-title .course-keep,.site-title .course-tail{white-space:nowrap}
 .site-title .title-ta{font-size:clamp(18px,2.6vw,28px);font-weight:600;color:var(--bosphorus);margin-top:.15em}
+.site-title .title-ta a{color:var(--bosphorus);text-decoration:none;font:inherit}
+.site-title .title-ta a:hover{text-decoration:underline}
 .office-place{display:block;margin-top:.45em;color:var(--muted);font-size:clamp(16px,2vw,20px);font-weight:400;line-height:1.45;letter-spacing:0}
 .office>.office-place{margin:0 0 22px;text-align:left}
 .landing-tabs{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px}
