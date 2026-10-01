@@ -920,13 +920,14 @@ async function classifyQuestion(env, course, message) {
   const courseLabel = COURSE_LABEL[course];
   const prompt =
     `Classify one student question for ${courseLabel}. Reply with one word: LOGISTICS, CONTENT, or OTHER.\n` +
-    `LOGISTICS: where or when class meets, including classroom, room, building, day, or time. Also syllabus, week, reading, grade, quiz, exam, attendance, instructor, TA, office hour, Moodle.\n` +
-    `Casual wording is still LOGISTICS. "what classroom are we at on wednesdays" is LOGISTICS.\n` +
+    `LOGISTICS: where or when class meets, including classroom, room, building, day, or time. Also syllabus, this week, next week, which topic is covered, reading, grade, quiz, exam, attendance, instructor, TA, office hour, Moodle.\n` +
+    `Casual wording is still LOGISTICS. "what classroom are we at on wednesdays" is LOGISTICS. "what topic will be covered next week" is LOGISTICS.\n` +
     `CONTENT: asks how a linguistic idea works, or asks for homework or analysis help.\n` +
     `OTHER: not about this course, such as weather, sports, or a different course.\n` +
-    `If it could be about class place, time, or syllabus, choose LOGISTICS.\n` +
+    `If it could be about class place, time, topic, week, or syllabus, choose LOGISTICS.\n` +
     `Examples:\n` +
     `what classroom are we at on wednesdays -> LOGISTICS\n` +
+    `what topic will be covered next week -> LOGISTICS\n` +
     `What room is Monday class in? -> LOGISTICS\n` +
     `How does vowel harmony work? -> CONTENT\n` +
     `What's the weather tomorrow? -> OTHER\n` +
@@ -948,6 +949,12 @@ async function classifyQuestion(env, course, message) {
           : null;
 
   return parseClassifierLabel(text);
+}
+
+function looksLikeSchedule(message) {
+  const q = String(message || "").toLowerCase();
+  if (/\b(weather|recipe|movie|python|code|football|crypto|song|game)\b/.test(q)) return false;
+  return /\b(topic|topics|cover|covered|covering|syllabus|reading|readings|week|classroom|room|class|when|where|monday|tuesday|wednesday|thursday|friday)\b/.test(q);
 }
 
 export default {
@@ -999,6 +1006,10 @@ export default {
       console.log("classifier", course, "CONTENT", "skip_deepseek");
       return jsonResponse({ reply: CONTENT_MSG }, 200, origin);
     }
+    if (label === "OTHER" && looksLikeSchedule(message)) {
+      console.log("classifier", course, "OTHER_OVERRIDE", "to_deepseek");
+      label = "LOGISTICS";
+    }
     if (label === "OTHER") {
       console.log("classifier", course, "OTHER", "skip_deepseek");
       return jsonResponse({ reply: OTHER_MSG[course] }, 200, origin);
@@ -1026,8 +1037,20 @@ export default {
     }
 
     const history = sanitizeHistory(data.history);
+    const today = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/Istanbul",
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(new Date());
     const messages = [
-      { role: "system", content: systemPrompt },
+      {
+        role: "system",
+        content:
+          systemPrompt +
+          `\n\nTODAY\nToday is ${today} (Europe/Istanbul). Use this only to interpret words such as today, this week, and next week. Answer from COURSE DATA. Do not invent topics or dates.`,
+      },
       ...history,
       { role: "user", content: message },
     ];
