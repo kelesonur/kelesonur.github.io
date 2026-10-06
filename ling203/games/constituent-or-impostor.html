@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Constituent or Impostor?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1F3F6; --grid:#DFE4EB; --ink:#18213A; --muted:#5B6478; --card:#FFFFFF; --line:#CBD3DE;
+  --hl:#FFDB3D; --hl2:#BFE0FA; --hl-ink:#18213A;
+  --yes:#1B7A54; --no:#C2372C; --warn:#A8661A;
+  --t1:#2C5BD6; --t2:#D9701A; --t3:#7B3FB6; --t4:#0F8585;
+  --ui:"Bricolage Grotesque", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10151F; --grid:#1A2230; --ink:#E8ECF3; --muted:#9AA4B8; --card:#18202D; --line:#2C3648;
+    --hl:#F2CD38; --hl2:#9CCCF2; --yes:#43C28E; --no:#F0675B; --warn:#E3A84A;
+    --t1:#6E93F2; --t2:#F09A4D; --t3:#B184E6; --t4:#3BBDBD;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10151F; --grid:#1A2230; --ink:#E8ECF3; --muted:#9AA4B8; --card:#18202D; --line:#2C3648;
+  --hl:#F2CD38; --hl2:#9CCCF2; --yes:#43C28E; --no:#F0675B; --warn:#E3A84A;
+  --t1:#6E93F2; --t2:#F09A4D; --t3:#B184E6; --t4:#3BBDBD;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0; min-height:100vh; color:var(--ink); font-family:var(--ui); font-size:18px; line-height:1.45;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:36px 36px;
+}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--t1);outline-offset:3px}
+.app{max-width:1180px;margin:0 auto;padding:24px clamp(14px,3vw,36px) 40px}
+[hidden]{display:none!important}
+
+/* ---------- setup ---------- */
+.hero{padding:clamp(24px,6vh,64px) 0 18px}
+.hero h1{
+  font-weight:800; font-size:clamp(40px,7vw,92px); line-height:.98; letter-spacing:-.02em; margin:0;
+}
+.hero h1 .brk{font-weight:400;color:var(--muted)}
+.hero h1 .hsub{font-size:.32em;font-weight:600;vertical-align:-.15em;color:var(--muted);margin-left:-.05em}
+.hero p{max-width:60ch;color:var(--muted);margin:18px 0 0;font-size:19px}
+.setup{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;margin-top:28px;align-items:start}
+@media (max-width:820px){.setup{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:22px 24px}
+.panel h2{font-size:20px;margin:0 0 12px;font-weight:700}
+.teamrow{display:flex;align-items:center;gap:10px;margin:8px 0}
+.dot{width:14px;height:14px;border-radius:50%;flex:none}
+.teamrow input{flex:1;min-width:0;padding:9px 12px;border:1.5px solid var(--line);border-radius:9px;background:var(--paper)}
+.stepper{display:flex;gap:8px;margin-bottom:6px}
+.chip{border:1.5px solid var(--line);background:var(--paper);padding:7px 14px;border-radius:999px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.howto ol{margin:0;padding-left:1.2em}
+.howto li{margin:6px 0}
+.howto .rule{margin-top:14px;padding-top:12px;border-top:1.5px dashed var(--line);color:var(--muted);font-size:16px}
+.primary{
+  background:var(--ink);color:var(--paper);border:0;border-radius:12px;padding:15px 26px;font-weight:700;font-size:19px;
+}
+.primary:hover{filter:brightness(1.15)}
+.ghostbtn{background:transparent;border:1.5px solid var(--line);border-radius:10px;padding:8px 14px;color:var(--muted);font-size:15px}
+.startrow{display:flex;gap:14px;align-items:center;margin-top:22px;flex-wrap:wrap}
+
+/* ---------- game ---------- */
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.roundinfo{display:flex;align-items:center;gap:12px;font-weight:600;font-size:18px}
+.badge{border:2px solid var(--warn);color:var(--warn);border-radius:999px;padding:2px 12px;font-size:15px;font-weight:700}
+.scores{display:flex;gap:10px;flex-wrap:wrap}
+.score{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:5px 14px 5px 10px;font-weight:600}
+.score b{font-size:20px;min-width:1.3ch;text-align:right;display:inline-block}
+
+.question{margin:clamp(18px,4vh,40px) 0 6px;color:var(--muted);font-size:19px}
+.stage{
+  position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:18px;
+  padding:clamp(22px,4vh,44px) clamp(18px,3vw,40px);min-height:clamp(150px,24vh,230px);
+  display:flex;align-items:center;justify-content:center;
+}
+.ghosts{position:absolute;inset:0;pointer-events:none}
+.line{
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;row-gap:.25em;
+  font-family:var(--serif);font-size:clamp(26px,4vw,52px);line-height:1.3;max-width:100%;
+}
+.tok{display:inline-block;padding:0 .13em;white-space:nowrap;position:relative}
+.ghost{position:absolute}
+.tok.p{padding-left:0;margin-left:-.13em}
+.tok.q{font-size:.62em;color:var(--muted);font-style:italic}
+.tok.brk{flex-basis:100%;height:0;padding:0}
+.tok.star{color:var(--no);font-weight:600;padding-right:0}
+.tok.hl,.tok.hl2{
+  color:var(--hl-ink);background-repeat:no-repeat;background-position:0 62%;background-size:100% 74%;
+}
+.tok.hl{background-image:linear-gradient(var(--hl),var(--hl))}
+.tok.hl2{background-image:linear-gradient(var(--hl2),var(--hl2))}
+.tok.swipe{animation:swipe .5s cubic-bezier(.3,.7,.3,1) both;animation-delay:calc(var(--i) * 90ms + 150ms)}
+@keyframes swipe{from{background-size:0% 74%}to{background-size:100% 74%}}
+.tok.bad{text-decoration:underline wavy var(--no);text-decoration-thickness:2px;text-underline-offset:.18em}
+.tok.br{font-family:var(--ui);font-weight:400;color:var(--muted);padding:0 .02em;font-size:1.15em;line-height:1}
+.tok.br sub{font-size:.38em;font-weight:700;vertical-align:-.35em;margin-left:.05em}
+.tok.br.yes{color:var(--yes)}
+.tok.br + .tok.p{margin-left:.08em}
+
+.lab{display:grid;grid-template-columns:1fr auto;gap:10px 24px;align-items:center;min-height:64px;margin-top:16px}
+.lab:has(.testname:empty){min-height:0;margin-top:0}
+.testname{font-size:22px;font-weight:700}
+.testnote{color:var(--muted);font-size:16px;max-width:70ch}
+.stamp{
+  border:3px solid currentColor;border-radius:10px;padding:6px 14px;font-weight:800;font-size:20px;transform:rotate(-4deg);
+  display:inline-flex;align-items:center;gap:10px;white-space:nowrap;
+}
+.stamp .sym{font-family:var(--serif);font-size:30px;line-height:1}
+.stamp.ok{color:var(--yes)} .stamp.bad{color:var(--no)} .stamp.warn{color:var(--warn)}
+.notebook{list-style:none;margin:10px 0 0;padding:0;font-size:16px}
+.notebook li{display:flex;gap:12px;align-items:baseline;padding:6px 0;border-top:1.5px dashed var(--line)}
+.notebook .nm{font-weight:700;min-width:9.5em}
+.notebook .sent{font-family:var(--serif);flex:1}
+.notebook .j{font-weight:700;white-space:nowrap}
+.j.ok{color:var(--yes)} .j.bad{color:var(--no)} .j.warn{color:var(--warn)}
+
+.bottom{display:flex;gap:18px;align-items:flex-end;justify-content:space-between;margin-top:22px;flex-wrap:wrap}
+.votes{display:flex;gap:12px;flex-wrap:wrap;flex:1}
+.team{background:var(--card);border:1.5px solid var(--line);border-top:5px solid var(--c);border-radius:12px;padding:10px 12px;min-width:190px;flex:1;max-width:280px}
+.team .nm{font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px}
+.team .res{font-weight:800}
+.team .res.win{color:var(--yes)} .team .res.lose{color:var(--muted)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg button{border:1.5px solid var(--line);background:var(--paper);border-radius:8px;padding:8px 6px;font-size:15px;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.seg button:disabled{cursor:default}
+.seg button:disabled:not([aria-pressed="true"]){opacity:.45}
+
+.verdict{flex-basis:100%;order:-1;padding:16px 20px;background:var(--card);border:1.5px solid var(--line);border-radius:14px}
+.verdict h3{margin:0 0 4px;font-size:clamp(28px,3.4vw,40px);font-weight:800;letter-spacing:-.01em}
+.verdict h3.yes{color:var(--yes)} .verdict h3.no{color:var(--no)}
+.verdict p{margin:0;max-width:70ch}
+.actions{display:flex;gap:10px;align-items:center}
+
+/* ---------- end ---------- */
+.final h2{font-size:clamp(36px,5vw,64px);font-weight:800;margin:clamp(24px,6vh,60px) 0 20px;letter-spacing:-.02em}
+.bars{display:grid;gap:14px;max-width:760px}
+.bar{display:grid;grid-template-columns:10em 1fr 3ch;gap:14px;align-items:center;font-weight:700;font-size:20px}
+.bar .track{height:30px;background:var(--card);border:1.5px solid var(--line);border-radius:8px;overflow:hidden}
+.bar .fill{height:100%;background:var(--c);width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.footnote{color:var(--muted);font-size:14px;margin-top:36px}
+
+@media (prefers-reduced-motion: reduce){
+  .tok.swipe{animation:none}
+  .bar .fill{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SETUP -->
+  <section id="setup">
+    <div class="hero">
+      <h1><span class="brk">[</span>Constituent<span class="brk">]</span><span class="hsub">?</span><br>or Impostor?</h1>
+      <p>A class game on constituency tests. Each round highlights a string of words. Teams decide whether it is a real constituent, and then the tests show the answer.</p>
+    </div>
+    <div class="setup">
+      <div class="panel">
+        <h2>Teams</h2>
+        <div class="stepper" id="teamCount" role="group" aria-label="Number of teams"></div>
+        <div id="teamNames"></div>
+        <h2 style="margin-top:20px">Game length</h2>
+        <div class="stepper" id="lengthPick" role="group" aria-label="Game length"></div>
+        <div class="startrow">
+          <button class="primary" id="startBtn">Start game</button>
+        </div>
+      </div>
+      <div class="panel howto">
+        <h2>How to play</h2>
+        <ol>
+          <li>Read the sentence. Each team votes: constituent or impostor.</li>
+          <li>Run the tests one by one. Before each result appears, ask the class to predict it.</li>
+          <li>Show the verdict. A correct vote earns 1 point. Rounds marked "double points" earn 2.</li>
+        </ol>
+        <p class="rule">Always use at least two tests. One test alone can give a false result (Carnie 2013, p.&nbsp;100). Press Enter to move to the next step.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" hidden>
+    <div class="topbar">
+      <div class="roundinfo"><span id="roundLabel"></span><span class="badge" id="trapBadge" hidden>Double points</span></div>
+      <div class="scores" id="scores"></div>
+    </div>
+    <p class="question" id="question">Is the highlighted string a constituent?</p>
+    <div class="stage" id="stage"><div class="ghosts" id="ghosts"></div><div class="line" id="line"></div></div>
+    <div class="lab" id="lab" aria-live="polite">
+      <div><div class="testname" id="testName"></div><div class="testnote" id="testNote"></div></div>
+      <div id="stampBox"></div>
+    </div>
+    <ul class="notebook" id="notebook"></ul>
+    <div class="bottom">
+      <div class="votes" id="votes"></div>
+      <div class="verdict" id="verdict" hidden aria-live="polite"><h3 id="verdictTitle"></h3><p id="verdictWhy"></p></div>
+      <div class="actions">
+        <button class="ghostbtn" id="quitBtn">Quit</button>
+        <button class="primary" id="actionBtn"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section id="end" hidden class="final">
+    <h2 id="winner"></h2>
+    <div class="bars" id="bars"></div>
+    <div class="startrow">
+      <button class="primary" id="againBtn">Play again</button>
+      <button class="ghostbtn" id="teamsBtn">Change teams</button>
+    </div>
+    <p class="footnote">Examples follow Carnie (2013), <i>Syntax: A Generative Introduction</i>, 3rd ed., Chapter 3, and the course materials.</p>
+  </section>
+</div>
+
+<script>
+/* ===================== DATA =====================
+   s:   sentence; [ ] marks the string being tested
+   ans: "c" constituent, "i" impostor
+   tests[].out: result sentence. [ ] = the tested string, { } = new partner string, leading * = ungrammatical
+   tests[].q:   question for the stand-alone test
+   tests[].j:   ok | bad | meaning (grammatical, meaning changed) | mislead (grammatical, but misleading)
+*/
+const ROUNDS = [
+ {id:1, s:"The teacher spoke [about phonology] for an hour.", ans:"c", cat:"PP",
+  tests:[
+   {name:"Stand-alone", q:"What did the teacher speak about?", out:"[About phonology].", j:"ok"},
+   {name:"Clefting", out:"It was [about phonology] that the teacher spoke for an hour.", j:"ok"}],
+  why:"It answers a question on its own and can be clefted as a unit. It is a PP."},
+ {id:2, s:"I really admire [that new] professor.", ans:"i",
+  tests:[
+   {name:"Preposing", out:"*[That new], I really admire professor.", j:"bad"},
+   {name:"Clefting", out:"*It is [that new] that I really admire professor.", j:"bad"}],
+  why:"Only the whole NP that new professor can move. Part of an NP cannot."},
+ {id:3, s:"She met [the director of the lab].", ans:"c", cat:"NP",
+  tests:[
+   {name:"Stand-alone", q:"Who did she meet?", out:"[The director of the lab].", j:"ok"},
+   {name:"Clefting", out:"It was [the director of the lab] that she met.", j:"ok"}],
+  why:"The whole string, PP included, behaves as one unit. It is an NP."},
+ {id:4, s:"[Emma repaired] the broken microphone.", ans:"i", trap:true,
+  tests:[
+   {name:"Coordination", out:"[Emma repaired] and {Daniel tested} the broken microphone.", j:"mislead",
+    note:"This looks fine. Carnie warns that coordination can give a false result here (p. 100)."},
+   {name:"Clefting", out:"*It was [Emma repaired] that the broken microphone.", j:"bad"},
+   {name:"Stand-alone", q:"What happened to the broken microphone?", out:"*[Emma repaired].", j:"bad"}],
+  why:"One test says yes, two say no. The subject and the verb are not a constituent. This is why we always use at least two tests."},
+ {id:5, s:"The committee discussed [the final version of the report] after lunch.", ans:"c", cat:"NP",
+  tests:[
+   {name:"Postposing", out:"The committee discussed after lunch [the final version of the report].", j:"ok",
+    note:"Heavy NP shift: the long NP moves to the end as one unit."},
+   {name:"Clefting", out:"It was [the final version of the report] that the committee discussed after lunch.", j:"ok"}],
+  why:"The string moves to the end and into the cleft as a unit. It is an NP."},
+ {id:6, s:"The slobbering dog kissed [the big boy].", ans:"c", cat:"NP",
+  tests:[
+   {name:"Passive", out:"[The big boy] was kissed by the slobbering dog.", j:"ok"},
+   {name:"Clefting", out:"It was [the big boy] that the slobbering dog kissed.", j:"ok"}],
+  why:"The passive moves it to subject position as one unit. It is an NP."},
+ {id:7, s:"The assistant reviewed [the old experiment] notes.", ans:"i", trap:true,
+  tests:[
+   {name:"Stand-alone", q:"What did the assistant review?", out:"[The old experiment].", j:"meaning",
+    note:"The answer is grammatical, but now the assistant reviewed the experiment, not the notes."},
+   {name:"Clefting", out:"*It was [the old experiment] that the assistant reviewed notes.", j:"bad"},
+   {name:"Preposing", out:"*[The old experiment], the assistant reviewed notes.", j:"bad"}],
+  why:"The string cannot move without leaving notes behind. The fragment answer only works with a different meaning, so it does not count."},
+ {id:8, s:"The researcher [interviewed three participants].", ans:"c", cat:"VP",
+  tests:[
+   {name:"Stand-alone", q:"What did the researcher do?", out:"[Interviewed three participants].", j:"ok"},
+   {name:"Replacement", out:"The researcher interviewed three participants, and the assistant [did so] too.", j:"ok"}],
+  why:"It answers \"What did the researcher do?\" and can be replaced by did so. It is a VP."},
+ {id:9, s:"Many students found the exam [extremely challenging].", ans:"c", cat:"AdjP",
+  tests:[
+   {name:"Stand-alone", q:"How did the students find the exam?", out:"[Extremely challenging].", j:"ok"},
+   {name:"Replacement", out:"Many students found the exam extremely challenging, but I didn't find it [so].", j:"ok"}],
+  why:"It stands alone and can be replaced by so. It is an AdjP."},
+ {id:10, s:"The teacher gave [the students a lecture].", ans:"i", trap:true,
+  tests:[
+   {name:"Coordination", out:"The teacher gave [the students a lecture] and {the parents a short talk}.", j:"mislead",
+    note:"Grammatical, but this is the same false result as before. Check with other tests."},
+   {name:"Clefting", out:"*It was [the students a lecture] that the teacher gave.", j:"bad"},
+   {name:"Pseudoclefting", out:"*[The students a lecture] is what the teacher gave.", j:"bad"}],
+  why:"Here give takes two separate NP objects, the students and a lecture. Together they are not one constituent."},
+ {id:11, s:"Drunks would get [off the bus].", ans:"c", cat:"PP",
+  tests:[
+   {name:"Preposing", out:"[Off the bus], drunks would get.", j:"ok"},
+   {name:"Stand-alone", q:"Did they get off the train?", out:"No, [off the bus].", j:"ok"}],
+  why:"Get is a prepositional verb. Off the bus is a PP and moves as a unit."},
+ {id:12, s:"Drunks would put [off the customers].", ans:"i",
+  tests:[
+   {name:"Preposing", out:"*[Off the customers], drunks would put.", j:"bad"},
+   {name:"Stand-alone", q:"Would drunks put off the waitresses?", out:"*No, [off the customers].", j:"bad"}],
+  why:"Put off is a phrasal verb. Off belongs with put, and the customers is its object (compare: put the customers off)."},
+ {id:13, s:"The students worked [very quickly].", ans:"c", cat:"AdvP",
+  tests:[
+   {name:"Stand-alone", q:"How did the students work?", out:"[Very quickly].", j:"ok"},
+   {name:"Coordination", out:"The students worked [very quickly] and {very carefully}.", j:"ok"}],
+  why:"It stands alone and coordinates with another AdvP. It is an AdvP."},
+ {id:14, s:"He placed [the chairs under] the table.", ans:"i",
+  tests:[
+   {name:"Clefting", out:"*It was [the chairs under] that he placed the table.", j:"bad"},
+   {name:"Replacement", out:"*He placed [them] the table.", j:"bad"}],
+  why:"Under belongs with the table, not with the chairs. The two separate constituents are the NP the chairs and the PP under the table."}
+];
+const LENGTHS = {
+  short:{label:"Short (8 rounds)", order:[1,2,8,4,3,12,11,10]},
+  full:{label:"Full (14 rounds)", order:[1,14,3,2,6,4,5,7,8,9,13,11,12,10]}
+};
+const J = {
+  ok:{sym:"\u2713", label:"Grammatical", cls:"ok", short:"\u2713"},
+  bad:{sym:"*", label:"Ungrammatical", cls:"bad", short:"*"},
+  meaning:{sym:"\u2260", label:"Meaning changed: does not count", cls:"warn", short:"meaning changed"},
+  mislead:{sym:"\u2713", label:"Grammatical, but misleading", cls:"warn", short:"\u2713 but misleading"}
+};
+const TEAM_COLORS = ["var(--t1)","var(--t2)","var(--t3)","var(--t4)"];
+
+/* ===================== HELPERS ===================== */
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+const D = ms => reduce.matches ? 0 : ms;
+let uid = 0;
+
+function parse(str){
+  const out = []; let state = 0;
+  str.trim().split(/\s+/).forEach((chunk, ci) => {
+    let c = chunk;
+    if (ci === 0 && c[0] === "*"){ out.push({text:"*", star:true}); c = c.slice(1); }
+    while (c && (c[0] === "[" || c[0] === "{")){ state = c[0] === "[" ? 1 : 2; c = c.slice(1); }
+    const trail = [];
+    while (c && /[.,?!\]\}]/.test(c[c.length-1])){ trail.unshift(c[c.length-1]); c = c.slice(0,-1); }
+    if (c) out.push({text:c, hl:state});
+    for (const ch of trail){
+      if (ch === "]" || ch === "}") state = 0;
+      else out.push({text:ch, hl:state, punct:true});
+    }
+  });
+  return out;
+}
+const hlCls = t => (t.hl === 1 ? "hl" : t.hl === 2 ? "hl2" : "") + (t.punct ? " p" : "");
+
+/* ===================== STATE ===================== */
+const S = { nTeams:2, names:["Team 1","Team 2","Team 3","Team 4"], length:"short",
+  teams:[], order:[], r:0, phase:"vote", ti:-1, round:null, pool:new Map() };
+
+/* ===================== SETUP UI ===================== */
+function drawSetup(){
+  const tc = $("teamCount"); tc.innerHTML = "";
+  [2,3,4].forEach(n => {
+    const b = document.createElement("button"); b.className = "chip"; b.textContent = n + " teams";
+    b.setAttribute("aria-pressed", S.nTeams === n);
+    b.onclick = () => { S.nTeams = n; drawSetup(); };
+    tc.appendChild(b);
+  });
+  const tn = $("teamNames"); tn.innerHTML = "";
+  for (let i = 0; i < S.nTeams; i++){
+    const row = document.createElement("div"); row.className = "teamrow";
+    row.innerHTML = `<span class="dot" style="background:${TEAM_COLORS[i]}"></span>`;
+    const inp = document.createElement("input"); inp.value = S.names[i]; inp.maxLength = 18;
+    inp.setAttribute("aria-label", "Name of team " + (i+1));
+    inp.oninput = () => { S.names[i] = inp.value; };
+    row.appendChild(inp); tn.appendChild(row);
+  }
+  const lp = $("lengthPick"); lp.innerHTML = "";
+  Object.entries(LENGTHS).forEach(([k,v]) => {
+    const b = document.createElement("button"); b.className = "chip"; b.textContent = v.label;
+    b.setAttribute("aria-pressed", S.length === k);
+    b.onclick = () => { S.length = k; drawSetup(); };
+    lp.appendChild(b);
+  });
+}
+
+function show(id){ ["setup","game","end"].forEach(x => $(x).hidden = x !== id); window.scrollTo(0,0); }
+
+function startGame(){
+  S.teams = Array.from({length:S.nTeams}, (_, i) => ({
+    name:(S.names[i] || "").trim() || ("Team " + (i+1)), color:TEAM_COLORS[i], score:0, vote:null }));
+  S.order = LENGTHS[S.length].order.map(id => ROUNDS.find(r => r.id === id));
+  S.r = 0; show("game"); startRound();
+}
+
+/* ===================== STAGE (FLIP animation) ===================== */
+function baseTarget(round, mode){
+  // mode: "vote" | "yes" | "no"
+  const list = [];
+  const first = round.toks.findIndex(t => t.hl === 1);
+  let last = -1; round.toks.forEach((t,i) => { if (t.hl === 1) last = i; });
+  round.toks.forEach((t,i) => {
+    if (i === first && mode !== "no") list.push({key:"lb", html:"[", cls:"br" + (mode === "yes" ? " yes" : "")});
+    let cls = hlCls(t); if (mode === "no" && t.hl === 1) cls += " bad";
+    list.push({key:"o"+i, text:t.text, cls});
+    if (i === last && mode !== "no")
+      list.push({key:"rb", html:"]<sub>" + (mode === "yes" ? round.cat : "?") + "</sub>", cls:"br" + (mode === "yes" ? " yes" : "")});
+  });
+  return list;
+}
+
+function testTarget(round, test){
+  const list = []; const used = new Set();
+  if (test.q){
+    parse(test.q).forEach(t => list.push({key:"n"+(uid++), text:t.text, cls:"q" + (t.punct ? " p" : "")}));
+    list.push({key:"brk", text:"", cls:"brk"});
+  }
+  parse(test.out).forEach(t => {
+    if (t.star){ list.push({key:"star", text:"*", cls:"star"}); return; }
+    const n = t.text.toLowerCase(), want = t.hl === 1;
+    let idx = round.toks.findIndex((o,i) => !used.has(i) && o.text.toLowerCase() === n && (o.hl === 1) === want);
+    if (idx < 0) idx = round.toks.findIndex((o,i) => !used.has(i) && o.text.toLowerCase() === n);
+    if (idx >= 0){ used.add(idx); list.push({key:"o"+idx, text:t.text, cls:hlCls(t)}); }
+    else list.push({key:"n"+(uid++), text:t.text, cls:hlCls(t)});
+  });
+  return list;
+}
+
+function layout(target, {swipe=false} = {}){
+  const line = $("line"), ghosts = $("ghosts"), stage = $("stage");
+  const sr = stage.getBoundingClientRect();
+  const first = new Map();
+  for (const el of line.children) first.set(el.dataset.key, el.getBoundingClientRect());
+  const keep = new Set(target.map(t => t.key));
+  for (const el of [...line.children]){
+    if (keep.has(el.dataset.key)) continue;
+    const r = first.get(el.dataset.key);
+    if (D(1) && r.width > 0){
+      const g = el.cloneNode(true); g.classList.add("ghost");
+      g.style.left = (r.left - sr.left) + "px"; g.style.top = (r.top - sr.top) + "px";
+      g.style.fontSize = getComputedStyle(el).fontSize;
+      ghosts.appendChild(g);
+      g.animate([{opacity:1},{opacity:0, transform:"translateY(-18px) scale(.9)"}],
+        {duration:D(380), easing:"ease-in", fill:"forwards"}).onfinish = () => g.remove();
+    }
+    el.remove();
+  }
+  let hi = 0;
+  target.forEach(t => {
+    let el = S.pool.get(t.key);
+    if (!el){ el = document.createElement("span"); el.dataset.key = t.key; S.pool.set(t.key, el); }
+    el.className = "tok " + t.cls;
+    if (t.html !== undefined) el.innerHTML = t.html; else el.textContent = t.text;
+    if (swipe && /\bhl\b/.test(t.cls)){ el.classList.add("swipe"); el.style.setProperty("--i", hi++); }
+    line.appendChild(el);
+  });
+  let newIdx = 0;
+  for (const el of line.children){
+    const a = first.get(el.dataset.key);
+    if (a){
+      const b = el.getBoundingClientRect();
+      const dx = a.left - b.left, dy = a.top - b.top;
+      if ((dx || dy) && D(1))
+        el.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:"none"}],
+          {duration:D(700), easing:"cubic-bezier(.2,.8,.2,1)"});
+    } else if (D(1) && !swipe){
+      el.animate([{opacity:0, transform:"translateY(18px) scale(.8)"},{opacity:1, transform:"none"}],
+        {duration:D(420), delay:D(280 + 40*newIdx++), easing:"cubic-bezier(.2,.9,.3,1.3)", fill:"backwards"});
+    }
+  }
+}
+
+function shake(){
+  if (!D(1)) return;
+  $("stage").animate([{transform:"translateX(0)"},{transform:"translateX(-9px)"},{transform:"translateX(8px)"},
+    {transform:"translateX(-5px)"},{transform:"translateX(3px)"},{transform:"translateX(0)"}],
+    {duration:420, delay:720, easing:"ease-out"});
+}
+
+/* ===================== ROUND FLOW ===================== */
+function startRound(){
+  const round = S.order[S.r];
+  round.toks = parse(round.s);
+  S.round = round; S.phase = "vote"; S.ti = -1;
+  S.teams.forEach(t => t.vote = null);
+  S.pool = new Map(); $("line").innerHTML = ""; $("ghosts").innerHTML = "";
+  $("roundLabel").textContent = `Round ${S.r + 1} of ${S.order.length}`;
+  $("trapBadge").hidden = !round.trap;
+  $("question").textContent = "Is the highlighted string a constituent?";
+  $("testName").textContent = ""; $("testNote").textContent = ""; $("stampBox").innerHTML = "";
+  $("notebook").innerHTML = "";
+  $("verdict").hidden = true; $("votes").hidden = false;
+  drawScores(); drawVotes();
+  layout(baseTarget(round, "vote"), {swipe:true});
+  updateAction();
+}
+
+function drawScores(bump){
+  const sc = $("scores"); sc.innerHTML = "";
+  S.teams.forEach((t,i) => {
+    const d = document.createElement("div"); d.className = "score";
+    d.innerHTML = `<span class="dot" style="background:${t.color}"></span><span></span><b>${t.score}</b>`;
+    d.children[1].textContent = t.name;
+    sc.appendChild(d);
+    if (bump && bump[i] && D(1))
+      d.querySelector("b").animate([{transform:"scale(1.8)", color:t.color},{transform:"scale(1)"}],
+        {duration:600, easing:"cubic-bezier(.2,.8,.2,1)"});
+  });
+}
+
+function drawVotes(results){
+  const v = $("votes"); v.innerHTML = "";
+  const locked = S.phase !== "vote";
+  S.teams.forEach((t,i) => {
+    const card = document.createElement("div"); card.className = "team"; card.style.setProperty("--c", t.color);
+    const nm = document.createElement("div"); nm.className = "nm";
+    const nmText = document.createElement("span"); nmText.textContent = t.name; nm.appendChild(nmText);
+    if (results){
+      const r = document.createElement("span"); r.className = "res " + (results[i] > 0 ? "win" : "lose");
+      r.textContent = results[i] > 0 ? "+" + results[i] : (t.vote ? "0" : "no vote");
+      nm.appendChild(r);
+    }
+    card.appendChild(nm);
+    const seg = document.createElement("div"); seg.className = "seg";
+    [["c","Constituent"],["i","Impostor"]].forEach(([val,label]) => {
+      const b = document.createElement("button"); b.textContent = label;
+      b.setAttribute("aria-pressed", t.vote === val); b.disabled = locked;
+      b.setAttribute("aria-label", `${t.name}: ${label}`);
+      b.onclick = () => { t.vote = t.vote === val ? null : val; drawVotes(); };
+      seg.appendChild(b);
+    });
+    card.appendChild(seg); v.appendChild(card);
+  });
+}
+
+function updateAction(){
+  const round = S.round, btn = $("actionBtn");
+  if (S.phase === "verdict"){
+    btn.textContent = S.r < S.order.length - 1 ? "Next round" : "See final scores";
+  } else if (S.ti < round.tests.length - 1){
+    const t = round.tests[S.ti + 1];
+    btn.textContent = `Run test ${S.ti + 2} of ${round.tests.length}: ${t.name}`;
+  } else btn.textContent = "Show verdict";
+}
+
+function logTest(test){
+  const li = document.createElement("li");
+  const j = J[test.j];
+  const plain = (test.q ? test.q + " " : "") + test.out.replace(/[\[\]{}]/g, "");
+  li.innerHTML = `<span class="nm"></span><span class="sent"></span><span class="j ${j.cls}"></span>`;
+  li.children[0].textContent = test.name;
+  li.children[1].textContent = plain;
+  li.children[2].textContent = j.short;
+  $("notebook").appendChild(li);
+}
+
+function runTest(){
+  const round = S.round;
+  if (S.ti >= 0) logTest(round.tests[S.ti]);
+  S.ti++; S.phase = "test";
+  const test = round.tests[S.ti];
+  if (S.ti === 0) drawVotes();
+  $("question").textContent = "What does this test show?";
+  $("testName").textContent = test.name;
+  $("testNote").textContent = "";
+  $("stampBox").innerHTML = "";
+  layout(testTarget(round, test));
+  if (test.j === "bad") shake();
+  const j = J[test.j];
+  setTimeout(() => {
+    if (S.round !== round || S.ti !== round.tests.indexOf(test) || S.phase !== "test") return;
+    $("stampBox").innerHTML = `<span class="stamp ${j.cls}"><span class="sym">${j.sym}</span><span>${j.label}</span></span>`;
+    $("testNote").textContent = test.note || "";
+    const st = $("stampBox").firstChild;
+    if (D(1)) st.animate([{transform:"rotate(-4deg) scale(2.2)", opacity:0},{transform:"rotate(-4deg) scale(1)", opacity:1}],
+      {duration:320, easing:"cubic-bezier(.3,1.4,.5,1)"});
+  }, D(950));
+  updateAction();
+}
+
+function showVerdict(){
+  const round = S.round;
+  logTest(round.tests[S.ti]);
+  S.phase = "verdict";
+  $("testName").textContent = ""; $("testNote").textContent = ""; $("stampBox").innerHTML = "";
+  const yes = round.ans === "c";
+  $("question").textContent = yes ? "The verdict: a real constituent." : "The verdict: an impostor.";
+  layout(baseTarget(round, yes ? "yes" : "no"));
+  if (!yes) shake();
+  const pts = round.trap ? 2 : 1;
+  const results = S.teams.map(t => t.vote === round.ans ? pts : 0);
+  S.teams.forEach((t,i) => t.score += results[i]);
+  drawScores(results); drawVotes(results);
+  const h = $("verdictTitle");
+  h.textContent = yes ? `Constituent: ${round.cat}` : "Impostor";
+  h.className = yes ? "yes" : "no";
+  $("verdictWhy").textContent = round.why;
+  $("verdict").hidden = false;
+  updateAction();
+}
+
+function action(){
+  if (S.phase === "verdict"){
+    if (S.r < S.order.length - 1){ S.r++; startRound(); } else endGame();
+  } else if (S.ti < S.round.tests.length - 1) runTest();
+  else showVerdict();
+}
+
+function endGame(){
+  show("end");
+  const sorted = [...S.teams].sort((a,b) => b.score - a.score);
+  const top = sorted[0].score;
+  const winners = sorted.filter(t => t.score === top);
+  $("winner").textContent = winners.length > 1 ? "It's a tie!" : `${winners[0].name} wins!`;
+  const max = Math.max(1, top);
+  const bars = $("bars"); bars.innerHTML = "";
+  sorted.forEach(t => {
+    const row = document.createElement("div"); row.className = "bar"; row.style.setProperty("--c", t.color);
+    row.innerHTML = `<span></span><div class="track"><div class="fill"></div></div><span>${t.score}</span>`;
+    row.children[0].textContent = t.name;
+    bars.appendChild(row);
+    requestAnimationFrame(() => requestAnimationFrame(() => row.querySelector(".fill").style.width = (t.score / max * 100) + "%"));
+  });
+}
+
+/* ===================== EVENTS ===================== */
+$("startBtn").onclick = startGame;
+$("actionBtn").onclick = action;
+$("quitBtn").onclick = () => { if (confirm("Quit this game? Scores will be lost.")) show("setup"); };
+$("againBtn").onclick = startGame;
+$("teamsBtn").onclick = () => { drawSetup(); show("setup"); };
+document.addEventListener("keydown", e => {
+  if ($("game").hidden || e.repeat) return;
+  if (e.target.closest && e.target.closest("button, input")) return;
+  if (e.key === "Enter" || e.key === " "){ e.preventDefault(); action(); }
+});
+drawSetup();
+</script>
+</body>
+</html>

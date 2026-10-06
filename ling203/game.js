@@ -1,24 +1,26 @@
 const COURSE_ID='203';
-const CLASS_TIMES=[
- {label:'Tue · 13:00–14:50'},
- {label:'Wed · 11:00–12:50'}
-];
 const WEEKS=[
-{id:'1',topic:'Generative grammar; parts of speech',readings:'Carnie ch. 1–2',ready:false,meetings:CLASS_TIMES},
-{id:'2',topic:'Constituency, trees, and rules',readings:'Carnie ch. 3',ready:false,meetings:CLASS_TIMES},
-{id:'3',topic:'Structural relations',readings:'Carnie ch. 4',ready:false,meetings:CLASS_TIMES},
-{id:'4',topic:'Binding theory; X-bar theory',readings:'Carnie ch. 5–6',ready:false,meetings:CLASS_TIMES},
-{id:'5',topic:'Extending X-bar theory to functional categories',readings:'Carnie ch. 7',ready:false,meetings:CLASS_TIMES},
-{id:'6',topic:'Constraining X-bar: theta theory',readings:'Carnie ch. 8',ready:false,meetings:CLASS_TIMES},
-{id:'7',topic:'Midterm 1; auxiliaries and functional categories',readings:'Carnie ch. 9',ready:false,meetings:CLASS_TIMES},
-{id:'8',topic:'Head-to-head movement',readings:'Carnie ch. 10',ready:false,meetings:CLASS_TIMES},
-{id:'9',topic:'DP movement',readings:'Carnie ch. 11',ready:false,meetings:CLASS_TIMES},
-{id:'10',topic:'Wh-movement and locality',readings:'Carnie ch. 12',ready:false,meetings:CLASS_TIMES},
-{id:'11',topic:'A unified theory of movement',readings:'Carnie ch. 13',ready:false,meetings:CLASS_TIMES},
-{id:'12',topic:'Midterm 2',readings:'',ready:false,meetings:CLASS_TIMES},
-{id:'13',topic:'Expanded VPs',readings:'Carnie ch. 14',ready:false,meetings:CLASS_TIMES},
-{id:'14',topic:'Raising, control, and empty categories',readings:'Carnie ch. 15',ready:false,meetings:CLASS_TIMES}
+{id:'1',topic:'Generative grammar; parts of speech',readings:'Carnie ch. 1–2',ready:false,meetings:[{iso:'2026-09-22',time:'13:00–15:00',room:'M2152'},{iso:'2026-09-23',time:'11:00–13:00',room:'M1171'}]},
+{id:'2',topic:'Constituency, trees, and rules',readings:'Carnie ch. 3',ready:false,meetings:[{iso:'2026-09-29',time:'13:00–15:00',room:'M2152'},{iso:'2026-09-30',time:'11:00–13:00',room:'M1171'}]},
+{id:'3',topic:'Structural relations',readings:'Carnie ch. 4',ready:true,meetings:[{iso:'2026-10-06',time:'13:00–15:00',room:'M2152'},{iso:'2026-10-07',time:'11:00–13:00',room:'M1171'}]},
+{id:'4',topic:'Binding theory; X-bar theory',readings:'Carnie ch. 5–6',ready:false,meetings:[{iso:'2026-10-13',time:'13:00–15:00',room:'M2152'},{iso:'2026-10-14',time:'11:00–13:00',room:'M1171'}]},
+{id:'5',topic:'Extending X-bar theory to functional categories',readings:'Carnie ch. 7',ready:false,meetings:[{iso:'2026-10-20',time:'13:00–15:00',room:'M2152'},{iso:'2026-10-21',time:'11:00–13:00',room:'M1171'}]},
+{id:'6',topic:'Constraining X-bar: theta theory',readings:'Carnie ch. 8',ready:false,meetings:[{iso:'2026-10-27',time:'13:00–15:00',room:'M2152'},{iso:'2026-10-28',time:'11:00–13:00',room:'M1171'}]},
+{id:'7',topic:'Midterm 1; auxiliaries and functional categories',readings:'Carnie ch. 9',ready:false,meetings:[{iso:'2026-11-03',time:'13:00–15:00',room:'M2152'},{iso:'2026-11-04',time:'11:00–13:00',room:'M1171'}]},
+{id:'8',topic:'Head-to-head movement',readings:'Carnie ch. 10',ready:false,meetings:[{iso:'2026-11-10',time:'13:00–15:00',room:'M2152'},{iso:'2026-11-11',time:'11:00–13:00',room:'M1171'}]},
+{id:'9',topic:'DP movement',readings:'Carnie ch. 11',ready:false,meetings:[{iso:'2026-11-17',time:'13:00–15:00',room:'M2152'},{iso:'2026-11-18',time:'11:00–13:00',room:'M1171'}]},
+{id:'10',topic:'Wh-movement and locality',readings:'Carnie ch. 12',ready:false,meetings:[{iso:'2026-11-24',time:'13:00–15:00',room:'M2152'},{iso:'2026-11-25',time:'11:00–13:00',room:'M1171'}]},
+{id:'11',topic:'A unified theory of movement',readings:'Carnie ch. 13',ready:false,meetings:[{iso:'2026-12-01',time:'13:00–15:00',room:'M2152'},{iso:'2026-12-02',time:'11:00–13:00',room:'M1171'}]},
+{id:'12',topic:'Midterm 2',readings:'',ready:false,meetings:[{iso:'2026-12-08',time:'13:00–15:00',room:'M2152'},{iso:'2026-12-09',time:'11:00–13:00',room:'M1171'}]},
+{id:'13',topic:'Expanded VPs',readings:'Carnie ch. 14',ready:false,meetings:[{iso:'2026-12-15',time:'13:00–15:00',room:'M2152'},{iso:'2026-12-16',time:'11:00–13:00',room:'M1171'}]},
+{id:'14',topic:'Raising, control, and empty categories',readings:'Carnie ch. 15',ready:false,meetings:[{iso:'2026-12-22',time:'13:00–15:00',room:'M2152'},{iso:'2026-12-23',time:'11:00–13:00',room:'M1171'}]}
 ];
+const WEEK_ITEMS={
+'3':[
+{id:'handout',title:'PS Handout',kind:'pdf',file:'materials/ps1.pdf'},
+{id:'game',title:'Constituent or Impostor?',kind:'html',file:'games/constituent-or-impostor.html'}
+]
+};
 const SCREENS=['home','start','material','office'];
 const KEY='ling203-fall2026-v1';
 const ADMIN_KEY='ling203-admin-code-v1';
@@ -110,7 +112,7 @@ let state={weeks:'1',screen:'home',material:null};
 try{
  const raw=JSON.parse(localStorage.getItem(KEY));
  if(raw&&SCREENS.includes(raw.screen)){
-  state={weeks:raw.weeks||'1',screen:raw.screen==='material'?raw.screen:'home',material:WEEK1_ITEMS.some(i=>i.id===raw.material)?raw.material:null};
+  state={weeks:raw.weeks||'1',screen:raw.screen==='material'?raw.screen:'home',material:null};
   if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1';
  }
 }catch(e){storageOK=false;}
@@ -177,16 +179,18 @@ function weekDetails(meta){
  return `<div class="week-meta">${classMeetingsHtml(meta.meetings)}<p class="week-topic">${esc(meta.topic)}</p>${meta.readings?`<p class="week-readings">${esc(meta.readings)}</p>`:''}</div>`;
 }
 
+function weekItems(id){return WEEK_ITEMS[id]||[];}
 function startScreen(){
  if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1';
  const meta=weekMeta(state.weeks);
+ const items=weekItems(state.weeks);
  const extra=meta.extra?`<p class="week-extra">${esc(meta.extra)}</p>`:'';
- if(!meta.ready){
-  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1>${weekDetails(meta)}<p class="muted">Classroom is not listed in the syllabus. PS hours: TBA.</p><p class="muted">To be added.</p>${extra}</section>`;
+ if(!items.length){
+  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1>${weekDetails(meta)}<p class="muted">To be added.</p>${extra}</section>`;
   bindSectionNav();bindWeekPicker();
   return;
  }
- $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING203 · PS</span><h1>${weekLabel(state.weeks)}</h1>${weekDetails(meta)}</div><section class="setup material-picker" aria-label="Week 1 materials"><h2>Materials</h2><div class="mode-buttons material-choices">${WEEK1_ITEMS.map(item=>`<button type="button" data-material="${esc(item.id)}">${esc(item.title)}<small>PDF</small></button>`).join('')}</div>${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section>${extra}</section>`;
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING203 · PS</span><h1>${weekLabel(state.weeks)}</h1>${weekDetails(meta)}</div><section class="setup material-picker" aria-label="Week ${esc(state.weeks)} materials"><h2>Materials</h2><div class="mode-buttons material-choices">${items.map(item=>`<button type="button" data-material="${esc(item.id)}">${esc(item.title)}<small>${item.kind==='html'?'Game':'PDF'}</small></button>`).join('')}</div>${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section>${extra}</section>`;
  bindSectionNav();bindWeekPicker();
  document.querySelectorAll('[data-material]').forEach(btn=>{
   btn.onclick=()=>{state.material=btn.dataset.material;state.screen='material';render();focusMain();};
@@ -194,9 +198,14 @@ function startScreen(){
 }
 
 function materialScreen(){
- const item=WEEK1_ITEMS.find(i=>i.id===state.material)||WEEK1_ITEMS[0];
- const body=`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="${esc(item.title)}" src="${esc(item.file)}#view=FitH"></iframe>`;
- $('app').innerHTML=sectionNav()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Week 1</button><h1>${esc(item.title)}</h1></div>${body}</section>`;
+ const items=weekItems(state.weeks);
+ const item=items.find(i=>i.id===state.material)||items[0];
+ if(!item){state.screen='start';startScreen();return;}
+ const html=item.kind==='html';
+ const body=html
+  ?`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open game</a></div><iframe class="material-frame game-frame" title="${esc(item.title)}" src="${esc(item.file)}"></iframe>`
+  :`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="${esc(item.title)}" src="${esc(item.file)}#view=FitH"></iframe>`;
+ $('app').innerHTML=sectionNav()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Week ${esc(state.weeks)}</button><h1>${esc(item.title)}</h1></div>${body}</section>`;
  bindSectionNav();
  $('backPs').onclick=()=>{state.screen='start';state.material=null;save();render();focusMain();};
 }
