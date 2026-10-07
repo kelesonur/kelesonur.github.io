@@ -1,24 +1,30 @@
 'use strict';
 const COURSE_ID='411';
 const WEEKS=[
-{id:'1',dates:'Sep 23–24',topic:'Ethics in linguistic research; Constructing and supporting a linguistic analysis',readings:'P&S Ch. 2 (Eckert). P&S Ch. 18 (Beavers and Sells).',ready:true,meetings:[{iso:'2026-09-23',time:'12:00–14:00',room:'M1200'},{iso:'2026-09-24',time:'12:00–14:00',room:'HHZ08'}]},
-{id:'2',dates:'Sep 30–Oct 1',topic:'Preparing for data collection, sampling; Data collection methods',readings:'P&S Ch. 5 (Buchstaller and Khattab). P&S Ch. 3 (Schütze and Sprouse, Judgment data). Optional: P&S Ch. 6 (Surveys and interviews).',ready:false,meetings:[{iso:'2026-09-30',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-01',time:'12:00–14:00',room:'HHZ08'}]},
-{id:'3',dates:'Oct 7–8',topic:'Designing experiments and data collection methods',readings:'',ready:false,meetings:[{iso:'2026-10-07',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-08',time:'12:00–14:00',room:'HHZ08'}]},
-{id:'4',dates:'Oct 14–15',topic:'Working with data: intro to statistics, descriptive statistics, probability and sample means',readings:'P&S Ch. 7 (Abbuhl, Gass, and Mackey). P&S Ch. 8 (Kaiser). G&W Chs. 1–4 and 6. J Ch. 1.',ready:false,meetings:[{iso:'2026-10-14',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-15',time:'12:00–14:00',room:'HHZ08'}]},
-{id:'5',dates:'Oct 21–22',topic:'Inferential statistics: hypothesis testing, intro to the t-statistic',readings:'G&W Chs. 5, 7–9. J Ch. 2, §2.3.',ready:false,meetings:[{iso:'2026-10-21',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-22',time:'12:00–14:00',room:'HHZ08'}]},
-{id:'6',dates:'Oct 28–29',topic:'Oct 28, 12–1 pm: practicum on R. Oct 29: holiday',readings:'',ready:false,meetings:[{iso:'2026-10-28',time:'12:00–13:00',room:'M1200'},{iso:'2026-10-29',note:'holiday'}]},
-{id:'7',dates:'Nov 4–5',topic:'Two samples: independent samples t-test, related samples t-test. First exam',readings:'G&W Chs. 10–11. J Ch. 3, §3.1.',ready:false,meetings:[{iso:'2026-11-04',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-05',time:'12:00–14:00',room:'HHZ08'}]},
-{id:'8',dates:'Nov 11–12',topic:'Multiple samples: ANOVA (GLM 1). Optional factorial ANOVA',readings:'G&W Ch. 12 and Ch. 14. J Ch. 4, §§4.1–4.2.',ready:false,meetings:[{iso:'2026-11-11',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-12',time:'12:00–14:00',room:'HHZ08'}]},
-{id:'9',dates:'Nov 18–19',topic:'Repeated measures designs (GLM 4)',readings:'G&W Ch. 13. J Ch. 4, §4.3.',ready:false,meetings:[{iso:'2026-11-18',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-19',time:'12:00–14:00',room:'HHZ08'}]},
-{id:'10',dates:'Nov 25–26',topic:'Correlation',readings:'G&W Ch. 15. J Ch. 2, §2.4.',ready:false,meetings:[{iso:'2026-11-25',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-26',time:'12:00–14:00',room:'HHZ08'}]},
-{id:'11',dates:'Dec 2–3',topic:'Linear regression and multiple regression',readings:'G&W Ch. 16. J Ch. 2 §2.4. J Ch. 3 §3.2.',ready:false,meetings:[{iso:'2026-12-02',time:'12:00–14:00',room:'M1200'},{iso:'2026-12-03',time:'12:00–14:00',room:'HHZ08'}]},
-{id:'12',dates:'Dec 9–10',topic:'Logistic regression. Second exam',readings:'Lecture slides. J Ch. 5 §5.4.',ready:false,extra:'If time: Chi-square; mixed-effects modelling. G&W Ch. 17. J Ch. 7 §7.3.',meetings:[{iso:'2026-12-09',time:'12:00–14:00',room:'M1200'},{iso:'2026-12-10',time:'12:00–14:00',room:'HHZ08'}]}
+{id:'1',dates:'Sep 23–24',topic:'Ethics in linguistic research; Constructing and supporting a linguistic analysis',readings:'P&S Ch. 2 (Eckert). P&S Ch. 18 (Beavers and Sells).',ready:true,meetings:[{iso:'2026-09-23',time:'10:00–11:00',note:'PS'},{iso:'2026-09-23',time:'12:00–14:00',room:'M1200'},{iso:'2026-09-24',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'2',dates:'Sep 30–Oct 1',topic:'Preparing for data collection, sampling; Data collection methods',readings:'P&S Ch. 5 (Buchstaller and Khattab). P&S Ch. 3 (Schütze and Sprouse, Judgment data). Optional: P&S Ch. 6 (Surveys and interviews).',ready:false,ps:'none',meetings:[{iso:'2026-09-30',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-01',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'3',dates:'Oct 7–8',topic:'Designing experiments and data collection methods',readings:'P&S Ch. 7 (Abbuhl, Gass, and Mackey). P&S Ch. 8 (Kaiser).',ready:true,meetings:[{iso:'2026-10-07',time:'10:00–11:00',note:'PS'},{iso:'2026-10-07',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-08',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'4',dates:'Oct 14–15',topic:'Working with data: intro to statistics, descriptive statistics, probability and sample means',readings:'G&W Chs. 1–4 and 6. J Ch. 1.',ready:false,meetings:[{iso:'2026-10-14',time:'10:00–11:00',note:'PS'},{iso:'2026-10-14',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-15',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'5',dates:'Oct 21–22',topic:'Inferential statistics: hypothesis testing, intro to the t-statistic',readings:'G&W Chs. 5, 7–9. J Ch. 2, §2.3.',ready:false,meetings:[{iso:'2026-10-21',time:'10:00–11:00',note:'PS'},{iso:'2026-10-21',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-22',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'6',dates:'Oct 28–29',topic:'Oct 28, 12–1 pm: practicum on R. Oct 29: holiday',readings:'',ready:false,meetings:[{iso:'2026-10-28',time:'12:00–13:00',room:'M1200',note:'PS, R practicum'},{iso:'2026-10-29',note:'holiday'}]},
+{id:'7',dates:'Nov 4–5',topic:'Two samples: independent samples t-test, related samples t-test. First exam',readings:'G&W Chs. 10–11. J Ch. 3, §3.1.',ready:false,meetings:[{iso:'2026-11-04',time:'10:00–11:00',note:'PS'},{iso:'2026-11-04',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-05',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'8',dates:'Nov 11–12',topic:'Multiple samples: ANOVA (GLM 1). Optional factorial ANOVA',readings:'G&W Ch. 12 and Ch. 14. J Ch. 4, §§4.1–4.2.',ready:false,meetings:[{iso:'2026-11-11',time:'10:00–11:00',note:'PS'},{iso:'2026-11-11',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-12',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'9',dates:'Nov 18–19',topic:'Repeated measures designs (GLM 4)',readings:'G&W Ch. 13. J Ch. 4, §4.3.',ready:false,meetings:[{iso:'2026-11-18',time:'10:00–11:00',note:'PS'},{iso:'2026-11-18',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-19',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'10',dates:'Nov 25–26',topic:'Correlation',readings:'G&W Ch. 15. J Ch. 2, §2.4.',ready:false,meetings:[{iso:'2026-11-25',time:'10:00–11:00',note:'PS'},{iso:'2026-11-25',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-26',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'11',dates:'Dec 2–3',topic:'Linear regression and multiple regression',readings:'G&W Ch. 16. J Ch. 2 §2.4. J Ch. 3 §3.2.',ready:false,meetings:[{iso:'2026-12-02',time:'10:00–11:00',note:'PS'},{iso:'2026-12-02',time:'12:00–14:00',room:'M1200'},{iso:'2026-12-03',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'12',dates:'Dec 9–10',topic:'Logistic regression. Second exam',readings:'Lecture slides. J Ch. 5 §5.4.',ready:false,extra:'If time: Chi-square; mixed-effects modelling. G&W Ch. 17. J Ch. 7 §7.3.',meetings:[{iso:'2026-12-09',time:'10:00–11:00',note:'PS'},{iso:'2026-12-09',time:'12:00–14:00',room:'M1200'},{iso:'2026-12-10',time:'12:00–14:00',room:'HHZ08'}]}
 ];
-const WEEK1_ITEMS=[
-{id:'handout',title:'Handout',file:'materials/week1/handout.pdf'},
-{id:'culbertson',title:'Culbertson and Adger 2014',file:'materials/week1/culbertson-adger-2014.pdf'},
-{id:'answers',title:'Answers',file:'materials/week1/answers.pdf'}
-];
+const WEEK_ITEMS={
+'1':[
+{id:'handout',title:'Handout',kind:'pdf',file:'materials/week1/handout.pdf'},
+{id:'culbertson',title:'Culbertson and Adger 2014',kind:'pdf',file:'materials/week1/culbertson-adger-2014.pdf'},
+{id:'answers',title:'Answers',kind:'pdf',file:'materials/week1/answers.pdf'}
+],
+'3':[
+{id:'handout',title:'PS Handout',kind:'pdf',file:'materials/week3/judgment-design.pdf'},
+{id:'builder',title:'Judgment Experiment Builder',kind:'html',file:'games/judgment-experiment-builder.html'}
+]
+};
 const SCREENS=['home','start','material','office'];
 const KEY='ling411-fall2026-v1';
 const ADMIN_KEY='ling411-admin-code-v1';
@@ -110,7 +116,7 @@ let state={weeks:'1',screen:'home',material:null};
 try{
  const raw=JSON.parse(localStorage.getItem(KEY));
  if(raw&&SCREENS.includes(raw.screen)){
-  state={weeks:raw.weeks||'1',screen:raw.screen==='material'?raw.screen:'home',material:WEEK1_ITEMS.some(i=>i.id===raw.material)?raw.material:null};
+  state={weeks:raw.weeks||'1',screen:raw.screen==='material'?raw.screen:'home',material:null};
   if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1';
  }
 }catch(e){storageOK=false;}
@@ -146,8 +152,14 @@ function render(){
 }
 function focusMain(){window.scrollTo({top:0,behavior:'instant'});const h=$('app').querySelector('h1,h2');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
 
+function weekItems(id){return WEEK_ITEMS[id]||[];}
+function weekBadge(w){
+ if(weekItems(w.id).length)return 'Ready';
+ if(w.ps==='none')return 'No PS';
+ return 'To be added';
+}
 function weekPicker(){
- return `<section class="week-picker" aria-label="Choose week"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>`<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${state.weeks===w.id?'selected':''}">${weekLabel(w.id)}<small>${w.ready?'Ready':'To be added'}</small></button>`).join('')}</div></section>`;
+ return `<section class="week-picker" aria-label="Choose week"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>`<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${state.weeks===w.id?'selected':''}">${weekLabel(w.id)}<small>${weekBadge(w)}</small></button>`).join('')}</div></section>`;
 }
 function bindWeekPicker(){
  document.querySelectorAll('[data-weeks]').forEach(button=>{
@@ -164,9 +176,12 @@ function formatClassMeeting(m){
  const [y,mo,d]=String(m.iso||'').split('-').map(Number);
  const dt=new Date(y,mo-1,d);
  const head=`${DOW_SHORT[dt.getDay()]} ${dt.getDate()} ${MONTH_SHORT[dt.getMonth()]}`;
- if(m.note)return `${head} · ${m.note}`;
- if(m.time&&m.room)return `${head} · ${m.time} · ${m.room}`;
- return head;
+ if(m.note&&!m.time)return `${head} · ${m.note}`;
+ let line=head;
+ if(m.time)line+=` · ${m.time}`;
+ if(m.room)line+=` · ${m.room}`;
+ if(m.note)line+=` · ${m.note}`;
+ return line;
 }
 function classMeetingsHtml(meetings){
  if(!meetings||!meetings.length)return '';
@@ -179,13 +194,15 @@ function weekDetails(meta){
 function startScreen(){
  if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1';
  const meta=weekMeta(state.weeks);
+ const items=weekItems(state.weeks);
  const extra=meta.extra?`<p class="week-extra">${esc(meta.extra)}</p>`:'';
- if(!meta.ready){
-  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1>${weekDetails(meta)}<p class="muted">To be added.</p>${extra}</section>`;
+ if(!items.length){
+  const empty=meta.ps==='none'?'No PS.':'To be added.';
+  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1>${weekDetails(meta)}<p class="muted">${empty}</p>${extra}</section>`;
   bindSectionNav();bindWeekPicker();
   return;
  }
- $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING411 · PS</span><h1>${weekLabel(state.weeks)}</h1>${weekDetails(meta)}</div><section class="setup material-picker" aria-label="Week 1 materials"><h2>Materials</h2><div class="mode-buttons material-choices">${WEEK1_ITEMS.map(item=>`<button type="button" data-material="${esc(item.id)}">${esc(item.title)}<small>PDF</small></button>`).join('')}</div>${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section>${extra}</section>`;
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING411 · PS</span><h1>${weekLabel(state.weeks)}</h1>${weekDetails(meta)}</div><section class="setup material-picker" aria-label="Week ${esc(state.weeks)} materials"><h2>Materials</h2><div class="mode-buttons material-choices">${items.map(item=>`<button type="button" data-material="${esc(item.id)}">${esc(item.title)}<small>${item.kind==='html'?'Game':'PDF'}</small></button>`).join('')}</div>${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section>${extra}</section>`;
  bindSectionNav();bindWeekPicker();
  document.querySelectorAll('[data-material]').forEach(btn=>{
   btn.onclick=()=>{state.material=btn.dataset.material;state.screen='material';render();focusMain();};
@@ -193,9 +210,14 @@ function startScreen(){
 }
 
 function materialScreen(){
- const item=WEEK1_ITEMS.find(i=>i.id===state.material)||WEEK1_ITEMS[0];
- const body=`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="${esc(item.title)}" src="${esc(item.file)}#view=FitH"></iframe>`;
- $('app').innerHTML=sectionNav()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Week 1</button><h1>${esc(item.title)}</h1></div>${body}</section>`;
+ const items=weekItems(state.weeks);
+ const item=items.find(i=>i.id===state.material)||items[0];
+ if(!item){state.screen='start';startScreen();return;}
+ const html=item.kind==='html';
+ const body=html
+  ?`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open game</a></div><iframe class="material-frame game-frame" title="${esc(item.title)}" src="${esc(item.file)}"></iframe>`
+  :`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="${esc(item.title)}" src="${esc(item.file)}#view=FitH"></iframe>`;
+ $('app').innerHTML=sectionNav()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Week ${esc(state.weeks)}</button><h1>${esc(item.title)}</h1></div>${body}</section>`;
  bindSectionNav();
  $('backPs').onclick=()=>{state.screen='start';state.material=null;save();render();focusMain();};
 }

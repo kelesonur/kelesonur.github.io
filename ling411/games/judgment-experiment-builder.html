@@ -1,0 +1,454 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Judgment Experiment Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one stepper across the top, then a two-column stage (explanation | visual) that stacks on phones */
+:root{
+  --bg:#eef2f5; --panel:#ffffff; --ink:#18222e; --muted:#5a6878; --line:#d3dbe3; --soft:#e4eaf0;
+  --accent:#2f5d8a;
+  --cA:#2a8c80; --cB:#3d6fb6; --cC:#c08417; --cD:#c2456b; --fill:#8c97a4; --bad:#c2453a;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121820; --panel:#1a222c; --ink:#e3e9ef; --muted:#9aa7b5; --line:#2e3a47; --soft:#232d39;
+  --accent:#7fb0e0; --cA:#4cc0b0; --cB:#6f9be0; --cC:#e0aa45; --cD:#e57495; --fill:#76818e; --bad:#ef7a6e;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121820; --panel:#1a222c; --ink:#e3e9ef; --muted:#9aa7b5; --line:#2e3a47; --soft:#232d39;
+  --accent:#7fb0e0; --cA:#4cc0b0; --cB:#6f9be0; --cC:#e0aa45; --cD:#e57495; --fill:#76818e; --bad:#ef7a6e;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;padding-inline:16px;padding-block:20px 40px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header h1{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3.4vw,2.1rem);margin:0;text-wrap:balance;letter-spacing:-.01em}
+header p{margin:.2rem 0 0;color:var(--muted);max-width:65ch}
+nav.steps{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+nav.steps button{flex:0 0 auto;font:600 .82rem var(--body);color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;display:flex;gap:6px;align-items:center}
+nav.steps button .n{font-family:var(--mono);font-size:.75rem}
+nav.steps button[aria-current="step"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+nav.steps button.done{color:var(--ink)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.stage{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:24px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:24px}
+@media (max-width:760px){.stage{grid-template-columns:minmax(0,1fr);padding:18px}}
+.text h2{font-family:var(--display);font-weight:700;font-size:1.45rem;margin:0 0 .4rem;text-wrap:balance}
+.text .eyebrow{font:600 .72rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.text p{margin:.55rem 0;max-width:60ch}
+.text ul{margin:.4rem 0;padding-left:1.1rem}
+.text li{margin:.2rem 0}
+.visual{min-width:0;display:flex;flex-direction:column;gap:14px;animation:rise .35s ease}
+@keyframes rise{from{transform:translateY(6px);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.foot{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.btn{font:600 .9rem var(--body);border-radius:8px;padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+.btn:disabled{opacity:.4;cursor:default}
+.small{font-size:.85rem;color:var(--muted)}
+.mono{font-family:var(--mono)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:600 .8rem var(--body);border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:6px;padding:5px 10px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ex{font-style:italic}
+.tag{display:inline-block;font:600 .75rem var(--mono);color:#fff;border-radius:4px;padding:1px 6px;min-width:1.6em;text-align:center}
+.A{background:var(--cA)}.B{background:var(--cB)}.C{background:var(--cC)}.D{background:var(--cD)}.F{background:var(--fill)}
+.hl1{color:var(--cB);font-weight:600;font-style:normal}
+.hl2{color:var(--cC);font-weight:600;font-style:normal}
+.gap{font-family:var(--mono);color:var(--cD);font-style:normal;font-weight:600}
+.badw{color:var(--bad);font-weight:600;font-style:normal;text-decoration:underline wavy}
+.box{border:1px solid var(--line);border-radius:8px;padding:14px;background:var(--bg)}
+
+/* step 1 */
+.sent{font-size:clamp(1.05rem,2.6vw,1.35rem);display:flex;flex-wrap:wrap;gap:.35em;padding-top:46px;position:relative}
+.sent span{position:relative}
+.bracket{color:var(--muted);font-family:var(--mono)}
+.hyp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.hyp{grid-template-columns:1fr}}
+.hyp div{border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.hyp b{font-family:var(--mono)}
+
+/* step 2 */
+.factors{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.factors{grid-template-columns:1fr}}
+.factor{border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.factor h4{margin:0 0 6px;font:600 .75rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.lv{display:inline-block;margin:2px 4px 2px 0;padding:3px 8px;border-radius:5px;background:var(--soft);font-weight:600;font-size:.9rem}
+.grid22{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;align-items:stretch}
+.grid22 .h{font:600 .78rem var(--body);color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center;padding:4px}
+.cell{border-radius:8px;padding:10px;color:#fff;transform:scale(.6);opacity:0;transition:transform .45s cubic-bezier(.3,1.4,.5,1),opacity .3s}
+.cell.on{transform:none;opacity:1}
+.cell .tag{background:rgba(0,0,0,.22)}
+.cell p{margin:6px 0 0;font-size:.88rem;font-style:italic;line-height:1.3}
+
+/* step 3 / 5 tables */
+.itab{width:100%;border-collapse:collapse}
+.itab td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.itab td:first-child{width:2.4em}
+
+/* step 4 */
+.trial{border:1px solid var(--line);border-radius:8px;padding:16px;background:var(--bg);display:flex;flex-direction:column;gap:12px}
+.trial .q{font-size:.85rem;color:var(--muted)}
+.opts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.opt{font:600 .95rem var(--body);border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer}
+.opt.sel{background:var(--accent);color:var(--panel);border-color:var(--accent)}
+.likert .opt{width:2.4em;padding:6px 0}
+.choice{display:flex;flex-direction:column;gap:6px}
+.choice .opt{text-align:left;font-weight:400;font-style:italic}
+.me{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.95rem}
+.me input{font:600 1rem var(--mono);width:6em;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
+.pros{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.pros{grid-template-columns:1fr}}
+.pros div{border-top:3px solid var(--cA);padding-top:6px;font-size:.92rem}
+.pros div.l{border-top-color:var(--cD)}
+.pros b{display:block;font:600 .72rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* step 5 */
+.conf{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.conf button{text-align:left;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:8px 10px;cursor:pointer;font:600 .88rem var(--body)}
+.conf button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.conf button span{display:block;font-weight:400;font-size:.8rem;color:var(--muted)}
+
+/* step 6 */
+.ls-wrap{overflow-x:auto}
+.ls{border-collapse:separate;border-spacing:4px;font-variant-numeric:tabular-nums}
+.ls th{font:600 .72rem var(--mono);color:var(--muted);padding:0 2px}
+.ls th.row{text-align:right;padding-right:6px;cursor:pointer;white-space:nowrap}
+.ls td{width:34px;height:30px;border-radius:5px;text-align:center;color:#fff;font:600 .78rem var(--mono);opacity:0;transform:scale(.4);transition:transform .3s,opacity .3s}
+.ls td.on{opacity:1;transform:none}
+.ls tr.dim td{opacity:.18}
+.ls tr.sel th.row{color:var(--ink)}
+.counts{display:flex;flex-wrap:wrap;gap:10px;font-variant-numeric:tabular-nums}
+.counts span{display:flex;align-items:center;gap:5px;font-weight:600}
+.warn{color:var(--bad);font-weight:600}
+.ok{color:var(--cA);font-weight:600}
+
+/* step 7 */
+.seq{display:flex;flex-wrap:wrap;gap:4px}
+.tok{width:24px;height:30px;border-radius:4px;display:flex;align-items:center;justify-content:center;font:600 .68rem var(--mono);color:#fff;animation:pop .3s both}
+.tok.P{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.tok.W{background:var(--fill);outline:2px dashed var(--panel);outline-offset:-4px}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.82rem;color:var(--muted)}
+.legend span{display:flex;gap:5px;align-items:center}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.sumrow{display:flex;flex-wrap:wrap;gap:18px;font-variant-numeric:tabular-nums}
+.sumrow div b{display:block;font:700 1.4rem var(--display)}
+.sumrow div{font-size:.8rem;color:var(--muted)}
+
+/* step 8 */
+svg text{fill:var(--ink);font-family:var(--body)}
+svg .ax{stroke:var(--line)}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Designing a judgment experiment</h1>
+    <p>Step through one experiment from question to data. The example is extraction out of a <em>whether</em>-island.</p>
+  </header>
+
+  <nav class="steps" id="nav" aria-label="Steps"></nav>
+
+  <section class="stage" aria-live="polite">
+    <div class="text" id="text"></div>
+    <div class="visual" id="visual"></div>
+  </section>
+
+  <div class="foot">
+    <button class="btn" id="prev">Previous</button>
+    <span class="small" id="pos"></span>
+    <button class="btn primary" id="next">Next</button>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const COND = {
+  A:{f1:"No extraction", f2:"No island"},
+  B:{f1:"Extraction", f2:"No island"},
+  C:{f1:"No extraction", f2:"Island"},
+  D:{f1:"Extraction", f2:"Island"}
+};
+const ITEMS = [
+  {A:'Who thinks <i class="hl2">that</i> John bought a car?', B:'<i class="hl1">What</i> do you think <i class="hl2">that</i> John bought <i class="gap">__</i>?', C:'Who wonders <i class="hl2">whether</i> John bought a car?', D:'<i class="hl1">What</i> do you wonder <i class="hl2">whether</i> John bought <i class="gap">__</i>?'},
+  {A:'Who thinks <i class="hl2">that</i> Mary read a novel?', B:'<i class="hl1">What</i> do you think <i class="hl2">that</i> Mary read <i class="gap">__</i>?', C:'Who wonders <i class="hl2">whether</i> Mary read a novel?', D:'<i class="hl1">What</i> do you wonder <i class="hl2">whether</i> Mary read <i class="gap">__</i>?'},
+  {A:'Who thinks <i class="hl2">that</i> the chef cooked the soup?', B:'<i class="hl1">What</i> do you think <i class="hl2">that</i> the chef cooked <i class="gap">__</i>?', C:'Who wonders <i class="hl2">whether</i> the chef cooked the soup?', D:'<i class="hl1">What</i> do you wonder <i class="hl2">whether</i> the chef cooked <i class="gap">__</i>?'},
+  {A:'Who thinks <i class="hl2">that</i> the team won the match?', B:'<i class="hl1">What</i> do you think <i class="hl2">that</i> the team won <i class="gap">__</i>?', C:'Who wonders <i class="hl2">whether</i> the team won the match?', D:'<i class="hl1">What</i> do you wonder <i class="hl2">whether</i> the team won <i class="gap">__</i>?'}
+];
+
+const plain = h => h.replace(/<[^>]+>/g,'');
+const tag = c => `<span class="tag ${c}">${c}</span>`;
+
+const STEPS = [
+ {label:"Question", render:stepQuestion},
+ {label:"Conditions", render:stepConditions},
+ {label:"Items", render:stepItems},
+ {label:"Task", render:stepTask},
+ {label:"Confounds", render:stepConfounds},
+ {label:"Counterbalancing", render:stepLatin},
+ {label:"Fillers and practice", render:stepFillers},
+ {label:"Data", render:stepData}
+];
+let cur = 0;
+
+function go(i){
+  cur = Math.max(0, Math.min(STEPS.length-1, i));
+  const nav = $('#nav'); nav.innerHTML='';
+  STEPS.forEach((s,k)=>{
+    const b=document.createElement('button');
+    b.innerHTML=`<span class="n">${k+1}</span>${s.label}`;
+    if(k===cur) b.setAttribute('aria-current','step');
+    if(k<cur) b.classList.add('done');
+    b.onclick=()=>go(k); nav.appendChild(b);
+  });
+  $('#text').innerHTML=''; $('#visual').innerHTML='';
+  $('#visual').style.animation='none'; void $('#visual').offsetWidth; $('#visual').style.animation='';
+  STEPS[cur].render($('#text'), $('#visual'));
+  $('#prev').disabled = cur===0;
+  $('#next').disabled = cur===STEPS.length-1;
+  $('#pos').textContent = `Step ${cur+1} of ${STEPS.length}`;
+  const a = nav.children[cur]; if(a && a.scrollIntoView) a.scrollIntoView({block:'nearest',inline:'nearest'});
+}
+$('#prev').onclick=()=>go(cur-1);
+$('#next').onclick=()=>go(cur+1);
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT') return;
+  if(e.key==='ArrowRight') go(cur+1);
+  if(e.key==='ArrowLeft') go(cur-1);
+});
+
+/* 1 */
+function stepQuestion(t,v){
+  t.innerHTML=`<div class="eyebrow">Step 1 · Phenomenon</div>
+  <h2>Start with a question and two hypotheses</h2>
+  <p>Speakers rate <span class="ex">What do you wonder whether John bought?</span> as bad. Why?</p>
+  <p>Write a hypothesis H and an alternative H′. The experiment is useful only if they predict <b>different</b> ratings somewhere.</p>`;
+  const words = ['What','do','you','wonder','[','whether','John','bought','__',']','?'];
+  v.innerHTML=`<div class="box"><div class="sent" id="sent">${words.map((w,i)=>{
+      const cls = w==='['||w===']'?'bracket':(w==='__'?'gap':(w==='What'?'hl1':(w==='whether'?'hl2':'')));
+      return `<span id="w${i}" class="${cls}">${w}</span>`}).join('')}<svg id="arc" style="position:absolute;left:0;top:0;width:100%;height:60px;overflow:visible" aria-hidden="true"></svg></div>
+    <p class="small" style="margin:.6rem 0 0">The <i class="hl1">wh</i>-word is linked to a gap inside a <i class="hl2">whether</i>-clause.</p></div>
+  <div class="hyp">
+    <div><b>H</b><br>Extraction out of a <i>whether</i>-clause (an island) has a <b>special</b> cost.</div>
+    <div><b>H′</b><br>The low rating is only the sum of two separate costs: a long extraction and a <i>whether</i>-clause.</div>
+  </div>`;
+  requestAnimationFrame(()=>{
+    const s=$('#sent'), a=$('#w0'), g=$('#w8'), svg=$('#arc'); if(!a||!g) return;
+    const r=s.getBoundingClientRect(), ra=a.getBoundingClientRect(), rg=g.getBoundingClientRect();
+    if(Math.abs(ra.top-rg.top)>10) return;
+    const x1=rg.left-r.left+rg.width/2, x2=ra.left-r.left+ra.width/2, y=ra.top-r.top-2;
+    svg.innerHTML=`<path d="M${x1},${y} C${x1},${y-40} ${x2},${y-40} ${x2},${y}" fill="none" stroke="var(--cD)" stroke-width="2" stroke-dasharray="400" stroke-dashoffset="400"><animate attributeName="stroke-dashoffset" from="400" to="0" dur="1s" fill="freeze"/></path><path d="M${x2-5},${y-8} L${x2},${y} L${x2+5},${y-8}" fill="none" stroke="var(--cD)" stroke-width="2"/>`;
+  });
+}
+
+/* 2 */
+function stepConditions(t,v){
+  t.innerHTML=`<div class="eyebrow">Step 2 · Manipulation</div>
+  <h2>Cross the factors to get conditions</h2>
+  <p>The factors are your <b>independent variables</b>. Each factor has <b>levels</b>.</p>
+  <p>Two factors with two levels each give a 2 × 2 design with 4 conditions.</p>
+  <p>This lets you look at both main effects and the <b>interaction</b>. Only the interaction separates H from H′.</p>`;
+  v.innerHTML=`<div class="factors">
+    <div class="factor"><h4>Factor 1 · Extraction</h4><span class="lv">No extraction</span><span class="lv">Extraction</span></div>
+    <div class="factor"><h4>Factor 2 · Structure</h4><span class="lv">No island (<i>that</i>)</span><span class="lv">Island (<i>whether</i>)</span></div>
+  </div>
+  <div><button class="btn primary" id="cross">Cross the factors</button></div>
+  <div class="grid22" id="g22">
+    <div></div><div class="h">No extraction</div><div class="h">Extraction</div>
+    <div class="h">No island</div>${cellH('A')}${cellH('B')}
+    <div class="h">Island</div>${cellH('C')}${cellH('D')}
+  </div>
+  <p class="small mono" id="eq">2 levels × 2 levels = 4 conditions</p>`;
+  $('#cross').onclick=()=>{ ['A','B','C','D'].forEach((c,i)=>setTimeout(()=>$('#cell'+c).classList.add('on'),i*180)); $('#cross').disabled=true; };
+  setTimeout(()=>$('#cross') && !$('#cross').disabled && $('#cross').click(), 500);
+}
+function cellH(c){return `<div class="cell ${c}" id="cell${c}"><span class="tag">${c}</span><p>${plain(ITEMS[0][c])}</p></div>`}
+
+/* 3 */
+function stepItems(t,v){
+  t.innerHTML=`<div class="eyebrow">Step 3 · Items</div>
+  <h2>Write each item in all conditions</h2>
+  <p>An <b>item</b> is one set of sentences, one version per condition. The versions should differ only in the factors.</p>
+  <p>Write many items with different words. Then you can check that the pattern holds across items, not only across participants.</p>
+  <p class="small"><i class="hl1">wh</i>-word and <i class="gap">__</i> gap: Factor 1. <i class="hl2">that / whether</i>: Factor 2.</p>`;
+  v.innerHTML=`<div class="chips" id="ich" role="group" aria-label="Choose an item">${ITEMS.map((_,i)=>`<button class="chip" data-i="${i}">Item ${i+1}</button>`).join('')}</div>
+  <table class="itab" id="itab"></table>
+  <p class="small">The same words appear in A–D. Only the parts in colour change.</p>`;
+  const show=i=>{
+    v.querySelectorAll('#ich .chip').forEach(b=>b.setAttribute('aria-pressed', b.dataset.i==i));
+    $('#itab').innerHTML=['A','B','C','D'].map(c=>`<tr><td>${tag(c)}</td><td class="ex">${ITEMS[i][c]}</td></tr>`).join('');
+  };
+  v.querySelectorAll('#ich .chip').forEach(b=>b.onclick=()=>show(+b.dataset.i));
+  show(0);
+}
+
+/* 4 */
+const TASKS = {
+  yn:{name:"Yes-no", plus:"Very easy to use. Gives proportions.", minus:"Less sensitive to differences between conditions."},
+  lk:{name:"Likert scale", plus:"Numerical and intuitive.", minus:"Participants may not treat the steps as equal. Solution: z-scores."},
+  fc:{name:"Forced choice", plus:"Easy to use. Good statistical power for two conditions.", minus:"Little information about the size of the difference, and none about the overall scale."},
+  me:{name:"Magnitude estimation", plus:"No fixed steps, so many levels of acceptability.", minus:"Participants often use round numbers that do not depend on the standard."}
+};
+function stepTask(t,v){
+  t.innerHTML=`<div class="eyebrow">Step 4 · Task</div>
+  <h2>Choose how people respond</h2>
+  <p>The responses are your <b>dependent variable</b>. Choose the task that gives the information your hypothesis needs.</p>
+  <p>Here we need the size of each difference to test the interaction, so a rating task fits better than forced choice.</p>
+  <p>Match the instruction to the question. <span class="ex">Is this grammatical?</span>, <span class="ex">How acceptable is this?</span> and <span class="ex">How natural does this sound?</span> can cue different things.</p>`;
+  v.innerHTML=`<div class="chips" id="tch">${Object.entries(TASKS).map(([k,o])=>`<button class="chip" data-k="${k}">${o.name}</button>`).join('')}</div>
+  <div class="trial" id="trial"></div>
+  <div class="pros"><div><b>Benefit</b><span id="plus"></span></div><div class="l"><b>Limitation</b><span id="minus"></span></div></div>`;
+  const D = plain(ITEMS[0].D), B = plain(ITEMS[0].B);
+  const show=k=>{
+    v.querySelectorAll('#tch .chip').forEach(b=>b.setAttribute('aria-pressed', b.dataset.k===k));
+    $('#plus').textContent=TASKS[k].plus; $('#minus').textContent=TASKS[k].minus;
+    const tr=$('#trial');
+    if(k==='yn') tr.innerHTML=`<div class="q">Is this sentence acceptable?</div><div class="ex">${D}</div><div class="opts">${['Yes','No'].map(o=>`<button class="opt">${o}</button>`).join('')}</div>`;
+    if(k==='lk') tr.innerHTML=`<div class="q">How acceptable is this sentence? 1 = completely unacceptable, 7 = completely acceptable</div><div class="ex">${D}</div><div class="opts likert">${[1,2,3,4,5,6,7].map(o=>`<button class="opt">${o}</button>`).join('')}</div>`;
+    if(k==='fc') tr.innerHTML=`<div class="q">Which sentence is more acceptable?</div><div class="choice">${[B,D].map(o=>`<button class="opt">${o}</button>`).join('')}</div>`;
+    if(k==='me') tr.innerHTML=`<div class="q">The standard has acceptability 100. Rate the item relative to it.</div>
+      <div class="me"><span class="small">Standard</span><span class="ex">Who thinks that my brother was kept tabs on by the FBI?</span><span class="small">Value</span><span class="mono">100</span>
+      <span class="small">Item</span><span class="ex">${D}</span><label class="small" for="meval">Value</label><input id="meval" type="number" inputmode="numeric" placeholder="?"></div>`;
+    tr.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{tr.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')});
+  };
+  v.querySelectorAll('#tch .chip').forEach(b=>b.onclick=()=>show(b.dataset.k));
+  show('lk');
+}
+
+/* 5 */
+const CONF = [
+  {k:"Lexical", d:"frequency, length, familiarity", bad:'<i class="hl1">What</i> do you wonder <i class="hl2">whether</i> John <i class="badw">procured</i> <i class="gap">__</i>?', note:"D uses a rare verb. Low ratings could come from <i>procured</i>, not from the island. Use the same verb in all four versions."},
+  {k:"Semantic", d:"plausibility, animacy, thematic fit", bad:'<i class="hl1">What</i> do you wonder <i class="hl2">whether</i> John <i class="badw">ate</i> <i class="gap">__</i>? (object: <i class="badw">a car</i>)', note:"An implausible event lowers ratings in every condition where it appears. Keep plausibility the same across versions."},
+  {k:"Structural", d:"sentence length, embedding, complexity", bad:'<i class="hl1">What</i> do you wonder <i class="hl2">whether</i> <i class="badw">the man who lives next door</i> bought <i class="gap">__</i>?', note:"A longer, more complex subject makes D harder to process. Keep length and structure matched."},
+  {k:"Pragmatic", d:"context, information structure, discourse fit", bad:'(Context given only before D)', note:"If some versions get a context and others do not, the context becomes a second manipulation. Give all versions the same context, or none."},
+  {k:"Speaker-related", d:"dialect, experience, multilingualism", bad:'(Participants from different dialects in different lists)', note:"Recruit participants with similar backgrounds, or record dialect and language background so you can check it later."}
+];
+function stepConfounds(t,v){
+  t.innerHTML=`<div class="eyebrow">Step 5 · Confounds</div>
+  <h2>Hold everything else constant</h2>
+  <p>A confound is any difference between conditions other than your factors. It can change the ratings, and you will not know why.</p>
+  <p>To test X: manipulate X, hold other factors constant, and think about alternative explanations before you collect data.</p>
+  <p class="small">Click a category to see an example of what can go wrong in condition <span class="tag D">D</span>.</p>`;
+  v.innerHTML=`<div class="conf" id="cf">${CONF.map((c,i)=>`<button data-i="${i}">${c.k}<span>${c.d}</span></button>`).join('')}</div>
+  <div class="box" id="cfbox"></div>`;
+  const show=i=>{
+    v.querySelectorAll('#cf button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.i==i));
+    $('#cfbox').innerHTML=`<div class="small">Problem version of ${tag('D')}</div><p class="ex" style="margin:.3rem 0">${CONF[i].bad}</p>
+      <div class="small">Matched version</div><p class="ex" style="margin:.3rem 0">${ITEMS[0].D}</p><p style="margin:.5rem 0 0">${CONF[i].note}</p>`;
+  };
+  v.querySelectorAll('#cf button').forEach(b=>b.onclick=()=>show(+b.dataset.i));
+  show(0);
+}
+
+/* 6 */
+function stepLatin(t,v){
+  t.innerHTML=`<div class="eyebrow">Step 6 · Counterbalancing</div>
+  <h2>Each participant sees each item once</h2>
+  <p>Do not show one participant several versions of the same item. They would notice the manipulation.</p>
+  <p>Make one list per condition. Each list shifts the conditions by one step (a Latin square). Across lists, every item appears in every condition.</p>
+  <p>Click a list to see what one participant gets. Change the number of items and watch the counts.</p>`;
+  v.innerHTML=`<div class="chips" id="nch" role="group" aria-label="Number of items">${[8,10,12].map(n=>`<button class="chip" data-n="${n}">${n} items</button>`).join('')}</div>
+  <div class="ls-wrap"><table class="ls" id="ls"></table></div>
+  <div class="counts" id="cnt"></div><div id="msg" class="small"></div>`;
+  let n=8, sel=0;
+  const draw=(animate)=>{
+    v.querySelectorAll('#nch .chip').forEach(b=>b.setAttribute('aria-pressed', +b.dataset.n===n));
+    const C=['A','B','C','D'];
+    let h='<tr><th></th>'+Array.from({length:n},(_,j)=>`<th>${j+1}</th>`).join('')+'</tr>';
+    for(let l=0;l<4;l++){
+      h+=`<tr data-l="${l}" class="${l===sel?'sel':'dim'}"><th class="row" tabindex="0">List ${l+1}</th>`;
+      for(let j=0;j<n;j++){const c=C[(j+l)%4]; h+=`<td class="${c}" data-d="${l+j}">${c}</td>`}
+      h+='</tr>';
+    }
+    $('#ls').innerHTML=h;
+    $('#ls').querySelectorAll('td').forEach(td=>{ if(animate) setTimeout(()=>td.classList.add('on'), td.dataset.d*45); else td.classList.add('on'); });
+    $('#ls').querySelectorAll('tr[data-l]').forEach(tr=>{
+      const pick=()=>{sel=+tr.dataset.l; draw(false)};
+      tr.querySelector('th').onclick=pick;
+      tr.querySelector('th').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick()}};
+    });
+    const counts={A:0,B:0,C:0,D:0};
+    for(let j=0;j<n;j++) counts[C[(j+sel)%4]]++;
+    $('#cnt').innerHTML=`<span class="small" style="font-weight:400">List ${sel+1} gets:</span>`+C.map(c=>`<span>${tag(c)} ${counts[c]}</span>`).join('');
+    const eq = Object.values(counts).every(x=>x===counts.A);
+    $('#msg').innerHTML = eq ? `<span class="ok">Balanced.</span> ${n} items ÷ 4 conditions = ${n/4} items per condition for every participant.`
+      : `<span class="warn">Not balanced.</span> ${n} is not a multiple of 4, so some conditions get more items than others.`;
+  };
+  v.querySelectorAll('#nch .chip').forEach(b=>b.onclick=()=>{n=+b.dataset.n; draw(true)});
+  draw(true);
+}
+
+/* 7 */
+function stepFillers(t,v){
+  t.innerHTML=`<div class="eyebrow">Step 7 · Fillers and practice</div>
+  <h2>Hide the items and teach the scale</h2>
+  <ul>
+    <li><b>Practice items</b> show the low, middle and high points of the scale (1, 4, 7).</li>
+    <li>The first trials are unannounced <b>warm-up</b> fillers.</li>
+    <li><b>Fillers</b> disguise the experimental items. Usual ratio 1:2 or 1:3. They should vary in structure and acceptability.</li>
+    <li>The order is <b>pseudorandomized</b>: random, but with constraints. Here, no two experimental items in a row.</li>
+  </ul>`;
+  v.innerHTML=`<div class="chips" id="rch" role="group" aria-label="Filler ratio">${[1,2,3].map(r=>`<button class="chip" data-r="${r}">1:${r}</button>`).join('')}<button class="btn" id="shuf" style="margin-left:auto">Shuffle order</button></div>
+  <div class="sumrow" id="sum"></div>
+  <div class="seq" id="seq" aria-label="Trial order for List 1"></div>
+  <div class="legend"><span><i style="border:1.5px solid var(--ink)"></i>Practice</span><span><i class="F"></i>Filler</span><span><i class="A"></i><i class="B"></i><i class="C"></i><i class="D"></i>Experimental item</span></div>
+  <p class="small">Trial order for one participant (List 1, 8 items). Warm-up fillers are marked W.</p>`;
+  let r=2;
+  const exp=['A','B','C','D','A','B','C','D'];
+  const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+  const build=()=>{
+    v.querySelectorAll('#rch .chip').forEach(b=>b.setAttribute('aria-pressed', +b.dataset.r===r));
+    const nF=exp.length*r, warm=Math.min(5,nF-exp.length+1);
+    // pseudorandomize: experimental items never adjacent
+    const rest=nF-warm, e=shuffle([...exp]);
+    const gaps=Array(e.length+1).fill(0);
+    for(let i=1;i<e.length;i++) gaps[i]=1;
+    for(let k=e.length-1;k<rest;k++) gaps[Math.floor(Math.random()*gaps.length)]++;
+    const seq=[]; gaps.forEach((g,i)=>{for(let k=0;k<g;k++) seq.push('F'); if(i<e.length) seq.push(e[i]);});
+    const all=[['P','1'],['P','4'],['P','7'],...Array(warm).fill(['W','W']),...seq.map(x=>[x,x==='F'?'':x])];
+    $('#seq').innerHTML=all.map((x,i)=>`<span class="tok ${x[0]==='F'?'F':x[0]}" style="animation-delay:${i*18}ms">${x[1]}</span>`).join('');
+    $('#sum').innerHTML=`<div><b>${exp.length}</b>experimental</div><div><b>${nF}</b>fillers</div><div><b>3</b>practice</div><div><b>${exp.length+nF+3}</b>trials in total</div>`;
+  };
+  v.querySelectorAll('#rch .chip').forEach(b=>b.onclick=()=>{r=+b.dataset.r;build()});
+  $('#shuf').onclick=build;
+  build();
+}
+
+/* 8 */
+function stepData(t,v){
+  t.innerHTML=`<div class="eyebrow">Step 8 · Data</div>
+  <h2>Read the interaction</h2>
+  <p>Example mean ratings on a 1–7 scale.</p>
+  <ul>
+    <li>Extraction costs 0.5 points without an island.</li>
+    <li>The island costs 0.3 points without extraction.</li>
+    <li>H′ adds the two costs: 6.5 − 0.5 − 0.3 = <b>5.7</b> for <span class="tag D">D</span>.</li>
+    <li>The observed rating is <b>2.0</b>. The difference, 3.7 points, is the interaction. It supports H.</li>
+  </ul>
+  <p class="small">After data collection: exclude participants who did not do the task correctly, check outliers, and analyse with mixed-effects models.</p>`;
+  v.innerHTML=`<div class="chips"><button class="chip" id="hp" aria-pressed="false">Show what H′ predicts</button></div>
+  <div style="overflow-x:auto"><svg id="ch" viewBox="0 0 460 300" role="img" aria-label="Interaction plot of mean ratings" style="width:100%;max-width:560px;min-width:300px"></svg></div>`;
+  const X=[110,330], Y=r=>260-(r-1)*36; // 1..7 -> 260..44
+  let s='';
+  for(let r=1;r<=7;r++) s+=`<line class="ax" x1="60" x2="400" y1="${Y(r)}" y2="${Y(r)}"/><text x="50" y="${Y(r)+4}" font-size="12" text-anchor="end">${r}</text>`;
+  s+=`<text x="${X[0]}" y="285" font-size="13" text-anchor="middle">No extraction</text><text x="${X[1]}" y="285" font-size="13" text-anchor="middle">Extraction</text>`;
+  const line=(a,b,col,lab,c1,c2)=>`<path d="M${X[0]},${Y(a)} L${X[1]},${Y(b)}" stroke="${col}" stroke-width="3" fill="none" stroke-dasharray="300" stroke-dashoffset="300"><animate attributeName="stroke-dashoffset" from="300" to="0" dur=".8s" fill="freeze"/></path>
+    <circle cx="${X[0]}" cy="${Y(a)}" r="6" fill="var(--c${c1})"/><circle cx="${X[1]}" cy="${Y(b)}" r="6" fill="var(--c${c2})"/>
+    <text x="${X[0]-12}" y="${Y(a)+(c1==='A'?-10:18)}" font-size="12" text-anchor="end">${c1} ${a.toFixed(1)}</text>
+    <text x="${X[1]+12}" y="${Y(b)+4}" font-size="12">${c2} ${b.toFixed(1)}</text>
+    <text x="410" y="${Y(b)+(lab==='No island'?-12:22)}" font-size="12" font-weight="600" text-anchor="end" style="fill:${col}">${lab}</text>`;
+  s+=line(6.5,6.0,'var(--cB)','No island','A','B');
+  s+=line(6.2,2.0,'var(--cD)','Island','C','D');
+  s+=`<g id="hpg" opacity="0" style="transition:opacity .4s"><path d="M${X[0]},${Y(6.2)} L${X[1]},${Y(5.7)}" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5" fill="none"/>
+     <circle cx="${X[1]}" cy="${Y(5.7)}" r="5" fill="var(--panel)" stroke="var(--muted)" stroke-width="2"/>
+     <text x="${X[1]+12}" y="${Y(5.7)+16}" font-size="12" style="fill:var(--muted)">H′: 5.7</text>
+     <line x1="${X[1]+4}" x2="${X[1]+4}" y1="${Y(5.7)+6}" y2="${Y(2.0)-6}" stroke="var(--ink)" stroke-width="1.5"/>
+     <text x="${X[1]+12}" y="${(Y(5.7)+Y(2.0))/2+4}" font-size="12" font-weight="600">interaction 3.7</text></g>`;
+  $('#ch').innerHTML=s;
+  $('#hp').onclick=()=>{const on=$('#hp').getAttribute('aria-pressed')!=='true'; $('#hp').setAttribute('aria-pressed',on); $('#hpg').setAttribute('opacity',on?1:0)};
+}
+
+go(0);
+</script>
+
+</body></html>
