@@ -654,6 +654,7 @@ footer p { margin: 0; max-width: 46em; }
   let liveChips = [], livePlayer = null;
   window.addEventListener('message', (e) => {
     const d = e.data; if (!d || !d.poze || !livePlayer || e.source !== livePlayer.contentWindow) return;
+    if (d.type === 'ready') { const ld = $('liveStage').querySelector('.loader'); if (ld) ld.remove(); }
     if (d.type === 'frame') liveChips.forEach((b, i) => b.classList.toggle('on', i === d.chip));
   });
 
@@ -693,7 +694,8 @@ footer p { margin: 0; max-width: 46em; }
       livePlayer = document.createElement('iframe');
       livePlayer.title = '3D signer, your sentence';
       livePlayer.src = 'player/index.html?' + new URLSearchParams({ embed: '1', avatar: 'business', shirt: '26324a', m: API + res.motion_url });
-      stage.appendChild(livePlayer);
+      const ld = document.createElement('div'); ld.className = 'loader'; ld.innerHTML = '<span>Loading the signer</span>';
+      stage.append(livePlayer, ld);
       liveChips = renderChips($('liveChips'), res.signs.map((s) => ({ label: s.label, strategy: s.strategy })), true);
       liveChips.forEach((b, i) => b.onclick = () => livePlayer.contentWindow.postMessage({ type: 'seek', chip: i }, '*'));
       $('liveMeta').textContent = 'Sign plan by ' + res.model + ': ' + res.gloss + '. ' + (res.cached ? 'From cache.' : 'Took ' + res.seconds.toFixed(1) + ' s.')
