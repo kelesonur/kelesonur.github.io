@@ -1,0 +1,529 @@
+[
+ {
+  "id": "656-01",
+  "turkish": "Bu akşam saat dokuzda buluşacağız.",
+  "gloss": "BU AKŞAM SAAT DOKUZ BULUŞMAK",
+  "signs": [
+   {
+    "label": "BU",
+    "strategy": "direct",
+    "source": "4"
+   },
+   {
+    "label": "AKŞAM",
+    "strategy": "direct",
+    "source": "258"
+   },
+   {
+    "label": "SAAT",
+    "strategy": "sense",
+    "source": "84"
+   },
+   {
+    "label": "DOKUZ",
+    "strategy": "direct",
+    "source": "656"
+   },
+   {
+    "label": "BULUŞMAK",
+    "strategy": "direct",
+    "source": "314"
+   }
+  ],
+  "seconds": 3.0
+ },
+ {
+  "id": "02-01",
+  "turkish": "O işe gelmedi.",
+  "gloss": "O İŞ GELMEK^DEĞİL",
+  "signs": [
+   {
+    "label": "O",
+    "strategy": "direct",
+    "source": "2"
+   },
+   {
+    "label": "İŞ",
+    "strategy": "direct",
+    "source": "37"
+   },
+   {
+    "label": "GELMEK",
+    "strategy": "direct",
+    "source": "20"
+   },
+   {
+    "label": "DEĞİL",
+    "strategy": "direct",
+    "source": "52"
+   }
+  ],
+  "seconds": 2.7
+ },
+ {
+  "id": "1687-02",
+  "turkish": "İnsanlara alçaltıcı davranılmamalıdır. Bütün insanlar eşittir.",
+  "gloss": "İNSAN KİŞİ ALÇALMAK YAPMAK^DEĞİL İNSAN HEPSİ EŞİT",
+  "signs": [
+   {
+    "label": "İNSAN",
+    "strategy": "direct",
+    "source": "99"
+   },
+   {
+    "label": "KİŞİ",
+    "strategy": "direct",
+    "source": "39"
+   },
+   {
+    "label": "ALÇALMAK",
+    "strategy": "direct",
+    "source": "1687"
+   },
+   {
+    "label": "YAPMAK",
+    "strategy": "direct",
+    "source": "21"
+   },
+   {
+    "label": "DEĞİL",
+    "strategy": "direct",
+    "source": "52"
+   },
+   {
+    "label": "İNSAN",
+    "strategy": "direct",
+    "source": "99"
+   },
+   {
+    "label": "HEPSİ",
+    "strategy": "direct",
+    "source": "24"
+   },
+   {
+    "label": "EŞİT",
+    "strategy": "direct",
+    "source": "413"
+   }
+  ],
+  "seconds": 5.1
+ },
+ {
+  "id": "492-03",
+  "turkish": "Arkadaşımın kötü hiçbir huyu yok. Çok temiz biri, ona çok güveniyorum.",
+  "gloss": "BEN ARKADAŞ HUY KÖTÜ HİÇ TEMİZ BEN GÜVENMEK",
+  "signs": [
+   {
+    "label": "BEN",
+    "strategy": "direct",
+    "source": "1"
+   },
+   {
+    "label": "ARKADAŞ",
+    "strategy": "direct",
+    "source": "55"
+   },
+   {
+    "label": "HUY",
+    "strategy": "fingerspell",
+    "source": "fingerspell:spreadthesign:HUY"
+   },
+   {
+    "label": "KÖTÜ",
+    "strategy": "direct",
+    "source": "319"
+   },
+   {
+    "label": "HİÇ",
+    "strategy": "direct",
+    "source": "29"
+   },
+   {
+    "label": "TEMİZ",
+    "strategy": "direct",
+    "source": "492"
+   },
+   {
+    "label": "BEN",
+    "strategy": "direct",
+    "source": "1"
+   },
+   {
+    "label": "GÜVENMEK",
+    "strategy": "direct",
+    "source": "1158"
+   }
+  ],
+  "seconds": 6.2
+ },
+ {
+  "id": "1330-01",
+  "turkish": "Kız kardeşim evlenirken damat tarafı gelin almaya geldiği zaman, kırmızı kurdele bağlandıktan sonra onu (evden) çıkardık.",
+  "gloss": "BEN KIZ KARDEŞ EVLENMEK DAMAT GELİN ALMAK GELMEK KIRMIZI KURDELE BAĞLAMAK BAĞLAMAK SONRA ÇIKARMAK",
+  "signs": [
+   {
+    "label": "BEN",
+    "strategy": "direct",
+    "source": "1"
+   },
+   {
+    "label": "KIZ",
+    "strategy": "direct",
+    "source": "63"
+   },
+   {
+    "label": "KARDEŞ",
+    "strategy": "direct",
+    "source": "124"
+   },
+   {
+    "label": "EVLENMEK",
+    "strategy": "direct",
+    "source": "134"
+   },
+   {
+    "label": "DAMAT",
+    "strategy": "direct",
+    "source": "isaretce-lex:damat"
+   },
+   {
+    "label": "IX3a",
+    "strategy": "synth-ix",
+    "source": "synth-IX3a"
+   },
+   {
+    "label": "GELİN",
+    "strategy": "direct",
+    "source": "1330"
+   },
+   {
+    "label": "IX3b",
+    "strategy": "synth-ix",
+    "source": "synth-IX3b"
+   },
+   {
+    "label": "3aALMAK3b",
+    "strategy": "synth-agr",
+    "source": "synth-agr:44"
+   },
+   {
+    "label": "GELMEK",
+    "strategy": "direct",
+    "source": "20"
+   },
+   {
+    "label": "KIRMIZI",
+    "strategy": "direct",
+    "source": "530"
+   },
+   {
+    "label": "KURDELE",
+    "strategy": "direct",
+    "source": "spreadthesign-lex:kurdele"
+   },
+   {
+    "label": "BAĞLAMAK",
+    "strategy": "sense",
+    "source": "333"
+   },
+   {
+    "label": "SONRA",
+    "strategy": "direct",
+    "source": "77"
+   },
+   {
+    "label": "ÇIKARMAK",
+    "strategy": "sense",
+    "source": "411"
+   }
+  ],
+  "seconds": 9.3
+ },
+ {
+  "id": "1217-01",
+  "turkish": "Oğlum yüzmeyi bilmediği için sürekli batıyordu, şimdi ona öğrettim ve çok güzel yüzüyor.",
+  "gloss": "BEN OĞUL YÜZMEK BİLMEK^DEĞİL BATMAK BATMAK BEN ÖĞRETMEK ÖĞRETMEK ŞİMDİ YÜZMEK USTA OLMAK",
+  "signs": [
+   {
+    "label": "BEN",
+    "strategy": "direct",
+    "source": "1"
+   },
+   {
+    "label": "OĞUL",
+    "strategy": "direct",
+    "source": "201"
+   },
+   {
+    "label": "YÜZMEK",
+    "strategy": "direct",
+    "source": "251"
+   },
+   {
+    "label": "BİLMEK",
+    "strategy": "direct",
+    "source": "6:mirrored-left-to-right"
+   },
+   {
+    "label": "DEĞİL",
+    "strategy": "direct",
+    "source": "52"
+   },
+   {
+    "label": "BATMAK",
+    "strategy": "sense",
+    "source": "1217"
+   },
+   {
+    "label": "BEN",
+    "strategy": "direct",
+    "source": "1"
+   },
+   {
+    "label": "ÖĞRETMEK",
+    "strategy": "direct",
+    "source": "202"
+   },
+   {
+    "label": "ŞİMDİ",
+    "strategy": "direct",
+    "source": "27"
+   },
+   {
+    "label": "YÜZMEK",
+    "strategy": "direct",
+    "source": "251"
+   },
+   {
+    "label": "USTA",
+    "strategy": "direct",
+    "source": "272"
+   },
+   {
+    "label": "OLMAK",
+    "strategy": "direct",
+    "source": "8"
+   }
+  ],
+  "seconds": 8.6
+ },
+ {
+  "id": "241-06",
+  "turkish": "Bugün sevgilimle yıl dönümümüz. Bir cafe bulmuş ve bana sürpriz yapmak için orayı bizim için kapatmış. İçeri girdiğimde hiç kimse yoktu, içerisi bomboştu.",
+  "gloss": "BUGÜN SEVGİLİ YIL DÖNÜM SÜRPRİZ CAFE KİRA TUTMAK KİRA TUTMAK BEN GİTMEK KİMSE YOK BOŞ",
+  "signs": [
+   {
+    "label": "BUGÜN",
+    "strategy": "direct",
+    "source": "605"
+   },
+   {
+    "label": "SEVGİLİ",
+    "strategy": "direct",
+    "source": "794"
+   },
+   {
+    "label": "YIL DÖNÜM",
+    "strategy": "direct",
+    "source": "spreadthesign-lex:yil_donumu"
+   },
+   {
+    "label": "SÜRPRİZ",
+    "strategy": "direct",
+    "source": "191"
+   },
+   {
+    "label": "CAFE",
+    "strategy": "orthographic-loan",
+    "source": "1582"
+   },
+   {
+    "label": "KİRA",
+    "strategy": "direct",
+    "source": "1480"
+   },
+   {
+    "label": "TUTMAK",
+    "strategy": "direct",
+    "source": "210"
+   },
+   {
+    "label": "KİRA",
+    "strategy": "direct",
+    "source": "1480"
+   },
+   {
+    "label": "TUTMAK",
+    "strategy": "direct",
+    "source": "210"
+   },
+   {
+    "label": "BEN",
+    "strategy": "direct",
+    "source": "1"
+   },
+   {
+    "label": "GİTMEK",
+    "strategy": "sense",
+    "source": "5"
+   },
+   {
+    "label": "KİMSE",
+    "strategy": "direct",
+    "source": "1450"
+   },
+   {
+    "label": "YOK",
+    "strategy": "direct",
+    "source": "9"
+   },
+   {
+    "label": "BOŞ",
+    "strategy": "direct",
+    "source": "140"
+   }
+  ],
+  "seconds": 10.2
+ },
+ {
+  "id": "1917-02",
+  "turkish": "Benim gözlerim mavi, saçlarım sarı olduğu için arkadaşlarım sürekli Alman mısın? diye soruyorlar. Ben de onlara hayır Türkiye'de doğdum (Türküm) diyorum.",
+  "gloss": "BEN GÖZ MAVİ SAÇ SARI ARKADAŞ SORMAK ALMAN? BEN HAYIR TÜRKİYE DOĞMAK BEN TÜRK",
+  "signs": [
+   {
+    "label": "BEN",
+    "strategy": "direct",
+    "source": "1"
+   },
+   {
+    "label": "GÖZ",
+    "strategy": "direct",
+    "source": "213"
+   },
+   {
+    "label": "MAVİ",
+    "strategy": "direct",
+    "source": "1352"
+   },
+   {
+    "label": "SAÇ",
+    "strategy": "direct",
+    "source": "227"
+   },
+   {
+    "label": "SARI",
+    "strategy": "direct",
+    "source": "1120"
+   },
+   {
+    "label": "ARKADAŞ",
+    "strategy": "direct",
+    "source": "55"
+   },
+   {
+    "label": "SORMAK",
+    "strategy": "direct",
+    "source": "93"
+   },
+   {
+    "label": "ALMAN?",
+    "strategy": "direct",
+    "source": "1917"
+   },
+   {
+    "label": "BEN",
+    "strategy": "direct",
+    "source": "1"
+   },
+   {
+    "label": "HAYIR",
+    "strategy": "direct",
+    "source": "139"
+   },
+   {
+    "label": "TÜRKİYE",
+    "strategy": "direct",
+    "source": "isaretce-lex:turkiye"
+   },
+   {
+    "label": "DOĞMAK",
+    "strategy": "direct",
+    "source": "316"
+   },
+   {
+    "label": "BEN",
+    "strategy": "direct",
+    "source": "1"
+   },
+   {
+    "label": "TÜRK",
+    "strategy": "direct",
+    "source": "266"
+   }
+  ],
+  "seconds": 8.5
+ },
+ {
+  "id": "299-01",
+  "turkish": "Öğretmenin verdiği tarih ödevini kütüphanede ararştırarak bulabildim.",
+  "gloss": "ÖĞRETMEN TARİH ÖDEV VERMEK BEN KÜTÜPHANE BEN GİTMEK ARAŞTIRMAK ARAŞTIRMAK BULMAK",
+  "signs": [
+   {
+    "label": "ÖĞRETMEN",
+    "strategy": "direct",
+    "source": "94"
+   },
+   {
+    "label": "IX3a",
+    "strategy": "synth-ix",
+    "source": "synth-IX3a"
+   },
+   {
+    "label": "TARİH",
+    "strategy": "direct",
+    "source": "491"
+   },
+   {
+    "label": "ÖDEV",
+    "strategy": "direct",
+    "source": "1105"
+   },
+   {
+    "label": "3aVERMEK1",
+    "strategy": "synth-agr",
+    "source": "synth-agr:18"
+   },
+   {
+    "label": "BEN",
+    "strategy": "direct",
+    "source": "1"
+   },
+   {
+    "label": "KÜTÜPHANE",
+    "strategy": "direct",
+    "source": "spreadthesign-lex:kutuphane"
+   },
+   {
+    "label": "BEN",
+    "strategy": "direct",
+    "source": "1"
+   },
+   {
+    "label": "GİTMEK",
+    "strategy": "sense",
+    "source": "5"
+   },
+   {
+    "label": "ARAŞTIRMAK",
+    "strategy": "direct",
+    "source": "299"
+   },
+   {
+    "label": "BULMAK",
+    "strategy": "direct",
+    "source": "179"
+   }
+  ],
+  "seconds": 7.8
+ }
+]
