@@ -1,0 +1,540 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Phoneme or Allophone?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: worksheet column. Workbench = word list beside a 5-step analysis panel; rule notation reference below.
+   Two sound colors (A teal, B berry) mark the pair under analysis everywhere on the page. */
+:root{
+  --bg:#f1f3f7; --surface:#ffffff; --sunk:#e8ecf2; --ink:#17202d; --muted:#596375; --line:#d4dae4;
+  --accent:#3445a6; --accent-soft:#e2e6f9;
+  --a:#0b746b; --a-soft:#d2eeea; --b:#a5346d; --b-soft:#f6dbe9;
+  --ok:#2a7839; --ok-soft:#dcf0df; --bad:#ad342b; --bad-soft:#f8dfdc;
+  --f-ipa:"Gentium Book Plus","Charis SIL","Doulos SIL","Noto Serif",Georgia,serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11151d; --surface:#192029; --sunk:#141a22; --ink:#e5e9f1; --muted:#9aa4b6; --line:#2c3545;
+  --accent:#93a2f2; --accent-soft:#252e52;
+  --a:#55c9b9; --a-soft:#123733; --b:#ee8fbf; --b-soft:#41203a;
+  --ok:#72c681; --ok-soft:#1a3220; --bad:#f08d82; --bad-soft:#3d1f1c; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#11151d; --surface:#192029; --sunk:#141a22; --ink:#e5e9f1; --muted:#9aa4b6; --line:#2c3545;
+  --accent:#93a2f2; --accent-soft:#252e52;
+  --a:#55c9b9; --a-soft:#123733; --b:#ee8fbf; --b-soft:#41203a;
+  --ok:#72c681; --ok-soft:#1a3220; --bad:#f08d82; --bad-soft:#3d1f1c; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body)}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px;padding-block:28px 56px;display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{font-family:var(--f-ipa);font-weight:700;text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(2rem,5vw,2.9rem)}
+h2{font-size:1.6rem}
+h3{font-size:1.15rem}
+p{margin:0}
+.eyebrow{font:500 .74rem/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{max-width:64ch;color:var(--muted);font-size:1.02rem}
+header{display:flex;flex-direction:column;gap:10px}
+.ipa{font-family:var(--f-ipa);font-size:1.12em}
+.sa{color:var(--a);background:var(--a-soft);border-radius:3px;padding:0 .08em;font-weight:700}
+.sb{color:var(--b);background:var(--b-soft);border-radius:3px;padding:0 .08em;font-weight:700}
+.slot{display:inline-block;width:1.4em;border-bottom:2px solid currentColor;height:.85em;vertical-align:baseline;margin-inline:.15em}
+.gloss{color:var(--muted)}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* dataset bar */
+.bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);padding:6px 12px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.toggle{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.9rem;margin-left:auto;cursor:pointer}
+
+.bench{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:820px){.bench{grid-template-columns:minmax(0,1fr)}.toggle{margin-left:0}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.data{padding:16px;display:flex;flex-direction:column;gap:12px}
+.data .blurb{color:var(--muted);font-size:.9rem}
+.pairsel{display:flex;gap:6px;flex-wrap:wrap}
+.pairbtn{border:1px solid var(--line);background:var(--sunk);border-radius:6px;padding:3px 10px;cursor:pointer;font-family:var(--f-ipa);font-size:1.05rem}
+.pairbtn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.legend{display:flex;gap:14px;font-size:.88rem;flex-wrap:wrap}
+.wordlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.wordlist li{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px dashed var(--line)}
+.wordlist li:last-child{border-bottom:0}
+.wordlist .ipa{font-size:1.2rem}
+.wordlist .gloss{text-align:right;font-size:.9rem}
+.hint{font-size:.82rem;color:var(--muted)}
+
+/* steps */
+.steps{display:flex;flex-direction:column}
+.tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--line)}
+.tab{flex:1 0 auto;border:0;background:none;padding:12px 14px;cursor:pointer;display:flex;gap:8px;align-items:center;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tab .n{font:500 .78rem var(--f-mono);width:1.6rem;height:1.6rem;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab[aria-selected="true"] .n{background:var(--accent);color:var(--surface);border-color:var(--accent)}
+.stepbody{padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.task{border-left:3px solid var(--accent);padding:2px 0 2px 12px}
+.task .eyebrow{color:var(--accent)}
+.nav{display:flex;justify-content:space-between;gap:10px;padding:0 20px 20px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 14px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.btn:disabled{opacity:.4;cursor:default}
+.reveal{align-self:flex-start}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th{font:500 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+td .ipa{font-size:1.15rem}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:520px){.cols{grid-template-columns:minmax(0,1fr)}}
+.envcol{border:1px solid var(--line);border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.envcol h4{margin:0;font:600 .95rem var(--f-body)}
+.envrow{display:flex;justify-content:space-between;gap:8px;padding:3px 8px;border-radius:4px}
+.envrow.shared{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.envrow .c{font:.8rem var(--f-mono);color:var(--muted)}
+.note{padding:10px 14px;border-radius:6px;background:var(--sunk);font-size:.95rem}
+.note.ok{background:var(--ok-soft);color:var(--ok)}
+.note.bad{background:var(--bad-soft);color:var(--bad)}
+.note.key{background:var(--accent-soft);color:var(--ink)}
+.pairs{display:flex;flex-direction:column;gap:8px}
+.mp{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:6px}
+.mp .vs{font:.75rem var(--f-mono);color:var(--muted)}
+.tag{font:500 .72rem var(--f-mono);letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--sunk);color:var(--muted);margin-left:auto}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.bad{background:var(--bad-soft);color:var(--bad)}
+
+/* flowchart */
+.fcwrap{overflow-x:auto}
+.fc{width:100%;min-width:520px;max-width:680px;height:auto;display:block}
+.fc rect{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.fc text{fill:var(--muted);font:13px var(--f-body)}
+.fc .q text{fill:var(--ink)}
+.fc .r text.t1{font-weight:600;fill:var(--ink)}
+.fc path.e{fill:none;stroke:var(--line);stroke-width:2}
+.fc .lbl{font:600 12px var(--f-mono);fill:var(--muted)}
+.fc .on rect{stroke:var(--accent);stroke-width:2.5;fill:var(--accent-soft)}
+.fc path.e.on{stroke:var(--accent);stroke-width:3}
+.fc .lbl.on{fill:var(--accent)}
+.ahp{fill:var(--line)} .ahp-on{fill:var(--accent)}
+
+/* rule */
+.rule{font-family:var(--f-ipa);font-size:clamp(1.5rem,4.2vw,2.3rem);display:flex;flex-wrap:wrap;align-items:center;gap:.3em .35em;line-height:1.3}
+.fm{display:inline-flex;flex-direction:column;justify-content:center;vertical-align:middle;border-left:1.5px solid currentColor;border-right:1.5px solid currentColor;border-radius:3px;padding:.05em .35em;font-size:.55em;line-height:1.25;text-align:left;font-family:var(--f-body)}
+.builder{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font:500 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.field select{border:1px solid var(--line);border-radius:6px;background:var(--sunk);padding:6px 8px;font-family:var(--f-ipa);font-size:1.05rem;max-width:100%}
+.rulebox{border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px;background:var(--sunk)}
+.prose{color:var(--muted)}
+.okc{color:var(--ok);font-weight:600}.badc{color:var(--bad);font-weight:600}
+.suggest{display:flex;flex-direction:column;gap:6px}
+.suggest button{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 12px;cursor:pointer;font-family:var(--f-ipa);font-size:1.1rem}
+
+/* reference */
+.ref{display:flex;flex-direction:column;gap:18px}
+.refgrid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px}
+@media (max-width:820px){.refgrid{grid-template-columns:minmax(0,1fr)}}
+.card{padding:20px;display:flex;flex-direction:column;gap:14px}
+.anat{font-family:var(--f-ipa);font-size:clamp(1.8rem,5vw,2.6rem);display:flex;flex-wrap:wrap;gap:.15em .3em;align-items:center}
+.anat button{border:1px dashed transparent;background:none;border-radius:6px;padding:0 .15em;cursor:pointer;font:inherit}
+.anat button:hover{border-color:var(--line)}
+.anat button[aria-pressed="true"]{border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent)}
+.explain{min-height:4.5em}
+.explain b{font-family:var(--f-ipa);font-size:1.1em}
+.sym{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:baseline;margin:0}
+.sym dt{font-family:var(--f-ipa);font-size:1.15rem;text-align:center;min-width:2.4em}
+.sym dd{margin:0;color:var(--muted)}
+.gen{display:flex;flex-direction:column;gap:6px;font-family:var(--f-ipa);font-size:1.25rem}
+.gen .big{font-size:1.6rem;display:flex;align-items:center;gap:.35em;flex-wrap:wrap;color:var(--accent)}
+.practice{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}
+details{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:12px 14px}
+details summary{cursor:pointer;list-style:none;display:flex;flex-direction:column;gap:4px}
+details summary::-webkit-details-marker{display:none}
+details summary .k{font:500 .7rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+details summary .q{font-size:1rem}
+details summary .q .ipa{font-size:1.2rem}
+details .a{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-family:var(--f-ipa);font-size:1.3rem;color:var(--accent)}
+details .a.txt{font-family:var(--f-body);font-size:1rem}
+footer{color:var(--muted);font-size:.85rem}
+@media (prefers-reduced-motion:no-preference){.stepbody{animation:fade .18s ease-out}@keyframes fade{from{opacity:.4}to{opacity:1}}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">LING 101.03 · Problem Session 2 · Fall 2026</div>
+    <h1>Phoneme or Allophone?</h1>
+    <p class="lede">Work through a phonological analysis one step at a time. Pick a data set, follow the five steps, and test your own rule against the data.</p>
+  </header>
+
+  <section aria-labelledby="bench-h" style="display:flex;flex-direction:column;gap:14px">
+    <h2 id="bench-h" class="sr" style="position:absolute;left:-9999px">Analysis workbench</h2>
+    <div class="bar">
+      <div class="chips" id="chips" role="group" aria-label="Data set"></div>
+      <label class="toggle"><input type="checkbox" id="practice"> Practice mode (hide answers)</label>
+    </div>
+    <div class="bench">
+      <aside class="panel data" id="data" aria-label="Data"></aside>
+      <div class="panel steps">
+        <div class="tabs" role="tablist" id="tabs"></div>
+        <div class="stepbody" id="stepbody" role="tabpanel"></div>
+        <div class="nav"><button class="btn" id="prev">Previous step</button><button class="btn primary" id="next">Next step</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ref" aria-labelledby="ref-h">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="eyebrow">Reference</div>
+      <h2 id="ref-h">Reading a phonological rule</h2>
+    </div>
+    <div class="refgrid">
+      <div class="panel card">
+        <p class="hint">Click each part of the rule.</p>
+        <div class="anat" id="anat">
+          <button data-k="ph" aria-pressed="true">/d/</button>
+          <button data-k="arr" aria-pressed="false">→</button>
+          <button data-k="al" aria-pressed="false">[ð]</button>
+          <button data-k="sl" aria-pressed="false">/</button>
+          <button data-k="L" aria-pressed="false">V</button>
+          <button data-k="us" aria-pressed="false"><span class="slot" style="width:1.2em"></span></button>
+          <button data-k="R" aria-pressed="false">V</button>
+        </div>
+        <p class="explain" id="explain" aria-live="polite"></p>
+        <div class="note key"><b>Read it aloud:</b> “/d/ becomes [ð] between vowels.” <span class="gloss">General shape:</span> <span class="ipa">/X/ → [Y] / A __ B</span>, “X becomes Y after A and before B.”</div>
+      </div>
+      <div class="panel card">
+        <h3>Symbols</h3>
+        <dl class="sym">
+          <dt>/ /</dt><dd>Underlying phoneme (abstract)</dd>
+          <dt>[ ]</dt><dd>Surface allophone (what is pronounced)</dd>
+          <dt>→</dt><dd>becomes</dd>
+          <dt>/</dt><dd>in the environment of</dd>
+          <dt><span class="slot" style="width:1.1em"></span></dt><dd>where the changing sound sits</dd>
+          <dt>#</dt><dd>word boundary: <span class="ipa">#__</span> word-initial, <span class="ipa">__#</span> word-final</dd>
+          <dt>V, C</dt><dd>any vowel, any consonant</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="refgrid">
+      <div class="panel card">
+        <h3>Generalize with natural classes</h3>
+        <p class="prose">If several sounds change in the same way and in the same environment, write one rule for the whole class using features.</p>
+        <div class="gen">
+          <div>/b/ → [β] / V <span class="slot"></span> V</div>
+          <div>/d/ → [ð] / V <span class="slot"></span> V</div>
+          <div>/ɡ/ → [ɣ] / V <span class="slot"></span> V</div>
+          <div class="big"><span class="fm"><span>+stop</span><span>+voice</span></span> → <span class="fm"><span>+fricative</span></span> / V <span class="slot"></span> V</div>
+        </div>
+        <p class="hint">Spanish spirantization. On the right of the arrow, list only the feature that changes.</p>
+      </div>
+      <div class="panel card">
+        <h3>Features in the environment</h3>
+        <p class="prose">Natural classes can also describe the environment. English past tense <span class="ipa">-ed</span> is voiceless after a voiceless sound: <span class="ipa">[wɔkt]</span> ‘walked’, but <span class="ipa">[pleɪd]</span> ‘played’.</p>
+        <div class="gen"><div class="big">/d/ → <span class="fm"><span>−voice</span></span> / <span class="fm"><span>−voice</span></span> <span class="slot"></span></div></div>
+        <p class="hint">Choose the allophone with the wider distribution as the underlying form. Then the rule only needs to describe the special case.</p>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h3>Practice: translate between prose and rules</h3>
+      <div class="practice">
+        <details><summary><span class="k">Prose to rule</span><span class="q">[k] becomes [x] between vowels.</span></summary><div class="a">/k/ → [x] / V <span class="slot"></span> V</div></details>
+        <details><summary><span class="k">Prose to rule</span><span class="q">[z] becomes [s] at the end of a word.</span></summary><div class="a">/z/ → [s] / <span class="slot"></span> #</div></details>
+        <details><summary><span class="k">Prose to rule</span><span class="q">[a] is nasalized before a nasal consonant.</span></summary><div class="a">/a/ → [ã] / <span class="slot"></span> <span class="fm"><span>+nasal</span></span></div></details>
+        <details><summary><span class="k">Rule to prose</span><span class="q"><span class="ipa">/t/ → [ɾ] / V __ V</span></span></summary><div class="a txt">/t/ becomes a flap [ɾ] between vowels, as in English <span class="ipa">[foɾəɡɹæf]</span> ‘photograph’.</div></details>
+        <details><summary><span class="k">Rule to prose</span><span class="q"><span class="ipa">/p/ → [pʰ] / # __</span></span></summary><div class="a txt">/p/ is aspirated at the start of a word, as in English <span class="ipa">[pʰat]</span> ‘pot’ but <span class="ipa">[spat]</span> ‘spot’.</div></details>
+        <details><summary><span class="k">Rule to prose</span><span class="q"><span class="ipa">/n/ → [ŋ] / __ [+velar]</span></span></summary><div class="a txt">/n/ becomes [ŋ] before a velar consonant, as in <span class="ipa">[ɪŋkəɹɛkt]</span> ‘incorrect’.</div></details>
+      </div>
+    </div>
+  </section>
+  <footer>Companion to the LING 101 phonology lecture and Problem Session 2. Korean, Sindhi and Mokilese data are from Problem Session 2. Spanish is a constructed worked example.</footer>
+</div>
+
+<script>
+const DATA={
+  spanish:{label:'Spanish',blurb:'Spanish has a voiced stop [d] and a voiced fricative [ð]. One phoneme or two?',pairs:[['d','ð']],
+    words:[['deðo','finger'],['dama','lady'],['kaða','each'],['donde','where'],['naða','nothing'],['falda','skirt'],['toðo','all'],['andar','to walk'],['boða','wedding'],['dulse','sweet'],['miðo','I measure'],['kaldo','broth']]},
+  korean:{label:'Korean',blurb:'Korean is a language isolate spoken in Korea. Are [s] and [ʃ] allophones of the same phoneme or separate phonemes?',pairs:[['s','ʃ']],
+    words:[['ʃi','poem'],['miʃin','superstition'],['ʃinmun','newspaper'],['tʰaksaŋʃige','table clock'],['ʃilsu','mistake'],['oʃip','fifty'],['paŋʃik','method'],['kanʃik','snack'],['kaʃi','thorn'],['sal','flesh'],['kasu','singer'],['sanmun','prose'],['kasəl','hypothesis'],['miso','smile'],['susek','search'],['tapsa','exploration'],['so','cow']]},
+  sindhi:{label:'Sindhi',blurb:'Sindhi is an Indo-Aryan language of Pakistan and India. Examine [p], [pʰ] and [b], two at a time. [ɳ] and [ɖ] are the voiced retroflex nasal and oral stop.',pairs:[['p','pʰ'],['p','b'],['pʰ','b']],
+    words:[['pənʊ','leaf'],['ɖakʰə','grape'],['ɖəpʊ','fear'],['pʰəɳu','hood of snake'],['kənʊ','ear'],['perʊ','foot'],['barʊ','weight'],['kʰirʊ','milk'],['putʰi','back'],['bənʊ','forest'],['pʰərʊ','arrow head'],['abʊ','water']]},
+  mokilese:{label:'Mokilese',blurb:'Mokilese is an Austronesian language of Micronesia. Examine the voiced and voiceless vowel pairs [i]/[i̥] and [u]/[u̥].',pairs:[['i','i̥'],['u','u̥']],
+    words:[['pi̥senmoŋ','hair'],['tu̥pu̥kda','bought'],['pu̥ko','basket'],['pi̥t͡ʃumene','this pig'],['su̥pwo','firewood'],['si̥ko','to talk about'],['uduk','flesh'],['masak','hard'],['liŋ','beautiful'],['pilda','to choose'],['poki','to strike something'],['lud͡ʒ','to jump']]}
+};
+const STEPS=[
+  {t:'Environments',task:'Examine the distribution. For each sound, list the phonetic environments where it occurs: the sound before it and the sound after it.'},
+  {t:'Minimal pairs',task:'Look for minimal pairs: two words that differ only in these two sounds.'},
+  {t:'Overlap',task:'If there are no minimal pairs, check whether the environments overlap. If they never overlap, the sounds may be in complementary distribution.'},
+  {t:'Decide',task:'Decide: separate phonemes, or allophones of one phoneme?'},
+  {t:'Write the rule',task:'Choose the underlying phoneme and write a rule for when it becomes the other sound. Use natural classes where you can.'}
+];
+const S={ds:'spanish',pair:0,step:0,practice:false,revealed:{}};
+
+const nfd=s=>s.normalize('NFD');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const isMod=c=>/[̀-ͯʰ-˿᷀-᷿]/.test(c);
+function tokenize(s){
+  s=nfd(s).trim().replace(/[\[\]\/ˈˌ.]/g,'');
+  if(/\s/.test(s))return s.split(/\s+/).filter(Boolean);
+  const ch=[...s],out=[];
+  for(let i=0;i<ch.length;i++){
+    const c=ch[i];
+    if(out.length&&isMod(c)){out[out.length-1]+=c;if((c==='͡'||c==='͜')&&i+1<ch.length)out[out.length-1]+=ch[++i];}
+    else out.push(c);
+  }
+  return out;
+}
+const VOW='iyɨʉɯuɪʏʊeøɘɵɤoəɛœɜɞʌɔæɐaɶɑɒ', VL='ptʈckqʔɸfθsʃʂçxχħhɕʍʜ', NAS='mɱnɳɲŋɴ';
+const isV=t=>t!=null&&VOW.includes(t[0]);
+const voiceless=t=>/[̥̊]/.test(t)||VL.includes(t[0]);
+const cls=x=>x==='#'?'#':isV(x)?'V':'C';
+
+function getData(){
+  const D=DATA[S.ds];const [A,B]=D.pairs[S.pair].map(nfd);
+  return {words:D.words.map(([i,g])=>({ipa:nfd(i),toks:tokenize(i),gloss:g})),A,B};
+}
+function analyze(d){
+  const {A,B,words}=d;const occ={A:[],B:[]};
+  words.forEach((w,wi)=>w.toks.forEach((t,i)=>{
+    if(A&&B&&(t===A||t===B)){
+      const L=i>0?w.toks[i-1]:'#',R=i<w.toks.length-1?w.toks[i+1]:'#';
+      (t===A?occ.A:occ.B).push({wi,L,R,key:L+' '+R,ckey:cls(L)+' '+cls(R)});
+    }
+  }));
+  const mp=[],fv=[],nmp=[];
+  for(let i=0;i<words.length;i++)for(let j=i+1;j<words.length;j++){
+    const x=words[i].toks,y=words[j].toks;if(x.length!==y.length)continue;
+    const sw=[],ot=[];
+    for(let k=0;k<x.length;k++){if(x[k]!==y[k]){if((x[k]===A&&y[k]===B)||(x[k]===B&&y[k]===A))sw.push(k);else ot.push(k);}}
+    if(sw.length&&!ot.length)(words[i].gloss===words[j].gloss?fv:mp).push([i,j]);
+    /* near-minimal: one other difference, not next to the target, so the target's environment is identical */
+    else if(sw.length&&ot.length===1&&sw.every(k=>Math.abs(k-ot[0])>1)&&words[i].gloss!==words[j].gloss)nmp.push([i,j]);
+  }
+  const uniq=(arr,f)=>{const m=new Map();arr.forEach(o=>m.set(f(o),(m.get(f(o))||0)+1));return m;};
+  const eA=uniq(occ.A,o=>o.key),eB=uniq(occ.B,o=>o.key),cA=uniq(occ.A,o=>o.ckey),cB=uniq(occ.B,o=>o.ckey);
+  const overlap=[...eA.keys()].filter(k=>eB.has(k));
+  let verdict;
+  if(!occ.A.length||!occ.B.length)verdict='missing';
+  else if(mp.length)verdict='contrastive';
+  else if(fv.length)verdict='free';
+  else if(overlap.length&&nmp.length)verdict='near';
+  else if(overlap.length)verdict='unclear';
+  else verdict='complementary';
+  return {occ,mp,fv,nmp,eA,eB,cA,cB,overlap,verdict};
+}
+const wordHTML=(toks,A,B)=>toks.map(t=>t===A?`<span class="sa">${esc(t)}</span>`:t===B?`<span class="sb">${esc(t)}</span>`:esc(t)).join('');
+const envHTML=key=>{const [L,R]=key.split(' ');return `${esc(L)}<span class="slot"></span>${esc(R)}`;};
+
+/* ---------- rule logic ---------- */
+function matchEnv(o,t){
+  if(o==='any')return true;if(o==='#')return t==null;if(t==null)return false;
+  if(o==='V')return isV(t);if(o==='C')return !isV(t);
+  if(o==='vl')return !isV(t)&&voiceless(t);if(o==='vd')return !isV(t)&&!voiceless(t);
+  if(o==='N')return !isV(t)&&NAS.includes(t[0]);
+  if(o.startsWith('seg:'))return t===o.slice(4);return false;
+}
+function testRule(d,phon,allo,L,R){
+  return d.words.filter(w=>w.toks.some(t=>t===d.A||t===d.B)).map(w=>{
+    const u=w.toks.map(t=>(t===d.A||t===d.B)?phon:t);
+    const out=u.map((t,i)=>t===phon&&matchEnv(L,i>0?u[i-1]:null)&&matchEnv(R,i<u.length-1?u[i+1]:null)?allo:t);
+    return {w,u,out,ok:out.join('')===w.toks.join('')};
+  });
+}
+const fm=f=>`<span class="fm">${f.map(x=>`<span>${x}</span>`).join('')}</span>`;
+function noteHTML(o){
+  return {any:'',['#']:'#',V:'V',C:'C',vl:fm(['+cons','−voice']),vd:fm(['+cons','+voice']),N:fm(['+nasal'])}[o]??esc(o.slice(4));
+}
+function ruleHTML(phon,allo,L,R){
+  const head=`<span>/${esc(phon)}/</span><span>→</span><span>[${esc(allo)}]</span>`;
+  if(L==='any'&&R==='any')return head;
+  return head+`<span>/</span>${L!=='any'?`<span>${noteHTML(L)}</span>`:''}<span class="slot"></span>${R!=='any'?`<span>${noteHTML(R)}</span>`:''}`;
+}
+function prose(phon,allo,L,R){
+  const nm={'#':['at the start of a word','at the end of a word'],V:['after a vowel','before a vowel'],C:['after a consonant','before a consonant'],
+    vl:['after a voiceless consonant','before a voiceless consonant'],vd:['after a voiced consonant','before a voiced consonant'],N:['after a nasal','before a nasal']};
+  const pl={V:'vowels',C:'consonants',vl:'voiceless consonants',vd:'voiced consonants',N:'nasals'};
+  let env;
+  if(L==='any'&&R==='any')env='everywhere';
+  else if(L===R&&pl[L])env='between '+pl[L];
+  else{const p=[];
+    if(L!=='any')p.push(L.startsWith('seg:')?`after [${L.slice(4)}]`:nm[L][0]);
+    if(R!=='any')p.push(R.startsWith('seg:')?`before [${R.slice(4)}]`:nm[R][1]);
+    env=p.join(' and ');}
+  return `/${phon}/ becomes [${allo}] ${env}.`;
+}
+function envOptions(d){
+  const segs=[...new Set(d.words.flatMap(w=>w.toks))].filter(t=>t!==d.A&&t!==d.B).sort();
+  return [['any','(nothing)'],['#','#  word edge'],['V','V  any vowel'],['C','C  any consonant'],['vl','voiceless consonant'],['vd','voiced consonant'],['N','nasal consonant'],...segs.map(s=>['seg:'+s,s])];
+}
+function workingRules(d){
+  const opts=envOptions(d).map(o=>o[0]);
+  const sc=o=>o==='any'?0:['#','V','C'].includes(o)?1:['vl','vd','N'].includes(o)?2:3;
+  const found=[];
+  for(const pi of [0,1]){const phon=pi?d.B:d.A,allo=pi?d.A:d.B;
+    for(const L of opts)for(const R of opts){
+      if(L==='any'&&R==='any')continue;
+      if(testRule(d,phon,allo,L,R).every(r=>r.ok))found.push({pi,L,R,s:sc(L)+sc(R)});
+    }}
+  found.sort((a,b)=>a.s-b.s);
+  if(!found.length)return [];
+  const min=found[0].s;return found.filter(f=>f.s<=min+2&&f.s<=4).slice(0,6);
+}
+
+/* ---------- rendering ---------- */
+const $=id=>document.getElementById(id);
+function renderChips(){
+  $('chips').innerHTML=Object.entries(DATA).map(([k,v])=>`<button class="chip" data-ds="${k}" aria-pressed="${S.ds===k}">${v.label}</button>`).join('');
+}
+function renderData(d){
+  const D=DATA[S.ds];let h=`<h3>${D.label}</h3><p class="blurb">${esc(D.blurb)}</p>`;
+  if(D.pairs.length>1){
+    h+=`<div class="pairsel" role="group" aria-label="Sound pair">${D.pairs.map((p,i)=>`<button class="pairbtn" data-pair="${i}" aria-pressed="${S.pair===i}">[${p[0]}] / [${p[1]}]</button>`).join('')}</div>`;
+  }
+  h+=`<div class="legend"><span>Sound A <span class="ipa sa">${esc(d.A||'?')}</span></span><span>Sound B <span class="ipa sb">${esc(d.B||'?')}</span></span></div>`;
+  h+=`<ul class="wordlist">${d.words.map(w=>`<li><span class="ipa">[${wordHTML(w.toks,d.A,d.B)}]</span><span class="gloss">‘${esc(w.gloss)}’</span></li>`).join('')}</ul>`;
+  $('data').innerHTML=h;
+}
+function renderTabs(){
+  $('tabs').innerHTML=STEPS.map((s,i)=>`<button class="tab" role="tab" data-step="${i}" aria-selected="${S.step===i}"><span class="n">${i+1}</span>${s.t}</button>`).join('');
+  $('prev').disabled=S.step===0;$('next').disabled=S.step===STEPS.length-1;
+}
+function hidden(step){return S.practice&&!S.revealed[step]&&step<4;}
+function renderStep(){
+  const d=getData(),a=analyze(d),i=S.step;
+  let h=`<div class="task"><div class="eyebrow">Step ${i+1} of 5</div><p>${STEPS[i].task}</p></div>`;
+  if(!d.words.length){$('stepbody').innerHTML=h+`<p class="note">Add some words to analyze.</p>`;return;}
+  if(a.verdict==='missing'&&i<4){$('stepbody').innerHTML=h+`<p class="note bad">At least one of the two sounds does not occur in the data. Check the spelling of Sound A and Sound B.</p>`;return;}
+  if(hidden(i)){
+    h+=`<p class="prose">Try this step on paper first.</p><button class="btn primary reveal" id="reveal">Show the answer for step ${i+1}</button>`;
+    $('stepbody').innerHTML=h;$('reveal').onclick=()=>{S.revealed[i]=true;renderStep();};return;
+  }
+  const A=`<span class="ipa sa">[${esc(d.A)}]</span>`,B=`<span class="ipa sb">[${esc(d.B)}]</span>`;
+  if(i===0){
+    const rows=[...a.occ.A.map(o=>({o,s:'A'})),...a.occ.B.map(o=>({o,s:'B'}))];
+    h+=`<div class="tablewrap"><table><thead><tr><th>Sound</th><th>Word</th><th>Gloss</th><th>Environment</th><th>As classes</th></tr></thead><tbody>${
+      rows.map(({o,s})=>{const w=d.words[o.wi];return `<tr><td>${s==='A'?A:B}</td><td class="ipa">[${wordHTML(w.toks,d.A,d.B)}]</td><td class="gloss">‘${esc(w.gloss)}’</td><td class="ipa">${envHTML(o.key)}</td><td class="ipa">${envHTML(o.ckey)}</td></tr>`;}).join('')
+    }</tbody></table></div><p class="hint"># marks a word boundary. “As classes” replaces each neighbor with V (vowel) or C (consonant), which helps you spot natural classes.</p>`;
+  }
+  if(i===1){
+    if(a.mp.length||a.fv.length){
+      h+=`<div class="pairs">${a.mp.map(([x,y])=>`<div class="mp"><span class="ipa">[${wordHTML(d.words[x].toks,d.A,d.B)}]</span> <span class="gloss">‘${esc(d.words[x].gloss)}’</span><span class="vs">vs</span><span class="ipa">[${wordHTML(d.words[y].toks,d.A,d.B)}]</span> <span class="gloss">‘${esc(d.words[y].gloss)}’</span><span class="tag bad">meaning changes</span></div>`).join('')}${
+        a.fv.map(([x,y])=>`<div class="mp"><span class="ipa">[${wordHTML(d.words[x].toks,d.A,d.B)}]</span><span class="vs">vs</span><span class="ipa">[${wordHTML(d.words[y].toks,d.A,d.B)}]</span> <span class="gloss">both ‘${esc(d.words[x].gloss)}’</span><span class="tag ok">same meaning</span></div>`).join('')}</div>`;
+      h+=a.mp.length?`<p class="note key">Found ${a.mp.length===1?'a minimal pair':a.mp.length+' minimal pairs'}. Swapping ${A} and ${B} alone changes the meaning, so the two sounds contrast.</p>`
+        :`<p class="note key">These words differ only in ${A} and ${B}, but the meaning stays the same. That points to free variation.</p>`;
+    }else h+=`<p class="note">No minimal pairs in this data. No two words differ only in ${A} and ${B}. Go on to step 3 and compare the environments.</p>`;
+    if(!a.mp.length&&a.nmp.length){
+      h+=`<h3>Near-minimal pairs</h3><div class="pairs">${a.nmp.map(([x,y])=>`<div class="mp"><span class="ipa">[${wordHTML(d.words[x].toks,d.A,d.B)}]</span> <span class="gloss">‘${esc(d.words[x].gloss)}’</span><span class="vs">vs</span><span class="ipa">[${wordHTML(d.words[y].toks,d.A,d.B)}]</span> <span class="gloss">‘${esc(d.words[y].gloss)}’</span><span class="tag">one other difference</span></div>`).join('')}</div>
+      <p class="hint">These words differ in ${A} and ${B} and in one other sound. If the target sounds appear in the same environment in such a pair, it still counts as evidence for contrast.</p>`;
+    }
+  }
+  if(i===2){
+    const col=(m,sel,label,ov)=>`<div class="envcol"><h4>${label}</h4>${[...m.entries()].map(([k,n])=>`<div class="envrow${ov.includes(k)?' shared':''}"><span class="ipa">${envHTML(k)}</span><span class="c">×${n}</span></div>`).join('')}</div>`;
+    const cov=[...a.cA.keys()].filter(k=>a.cB.has(k));
+    h+=`<h3>Exact environments</h3><div class="cols">${col(a.eA,'A',`Sound A ${A}`,a.overlap)}${col(a.eB,'B',`Sound B ${B}`,a.overlap)}</div>`;
+    h+=a.overlap.length?`<p class="note key">Shared environment: <span class="ipa">${a.overlap.map(envHTML).join(', ')}</span>. Both sounds can appear here, so you cannot predict which one occurs.</p>`
+      :`<p class="note ok">No exact environment is shared. You can predict which sound occurs from its neighbors.</p>`;
+    h+=`<h3>The same environments as classes</h3><div class="cols">${col(a.cA,'A',`Sound A ${A}`,cov)}${col(a.cB,'B',`Sound B ${B}`,cov)}</div>`;
+    if(!a.overlap.length)h+=cov.length?`<p class="hint">Some class patterns overlap (highlighted). The rule will need a more specific class or a specific sound on one side.</p>`
+      :`<p class="hint">Even at the level of V and C the patterns do not overlap. Look for the class that all environments of one sound share: that is your rule environment.</p>`;
+  }
+  if(i===3){
+    h+=flowchart(a.verdict);
+    const ex=a.mp[0]?`<span class="ipa">[${esc(d.words[a.mp[0][0]].ipa)}]</span> and <span class="ipa">[${esc(d.words[a.mp[0][1]].ipa)}]</span>`:'';
+    const v={
+      complementary:`<p class="note ok"><b>Allophones of one phoneme, in complementary distribution.</b> ${A} and ${B} never occur in the same environment, and the environment tells you which one appears. Go to step 5 and write the rule.</p>`,
+      contrastive:`<p class="note key"><b>Separate phonemes, in contrastive distribution.</b> The minimal pair ${ex} shows both sounds in the same environment with different meanings. Write them as <span class="ipa">/${esc(d.A)}/</span> and <span class="ipa">/${esc(d.B)}/</span>. No rule is needed.</p>`,
+      free:`<p class="note key"><b>Allophones of one phoneme, in free variation.</b> ${A} and ${B} occur in the same environment, but switching them does not change the meaning.</p>`,
+      near:`<p class="note key"><b>Separate phonemes, in contrastive distribution.</b> There is no exact minimal pair, but both sounds occur in the same environment (<span class="ipa">${a.overlap.map(envHTML).join(', ')}</span>), and the near-minimal pair <span class="ipa">[${esc(d.words[a.nmp[0][0]].ipa)}]</span> ‘${esc(d.words[a.nmp[0][0]].gloss)}’ and <span class="ipa">[${esc(d.words[a.nmp[0][1]].ipa)}]</span> ‘${esc(d.words[a.nmp[0][1]].gloss)}’ shows a difference in meaning. You cannot predict which sound occurs, so they are <span class="ipa">/${esc(d.A)}/</span> and <span class="ipa">/${esc(d.B)}/</span>.</p>`,
+      unclear:`<p class="note"><b>Same environment, but no minimal pair in this data.</b> The sounds share <span class="ipa">${a.overlap.map(envHTML).join(', ')}</span>, so they are not in complementary distribution. They are probably separate phonemes. Look for a near-minimal pair or more data.</p>`
+    }[a.verdict];
+    h+=v;
+  }
+  if(i===4){renderRule(d,a,h);return;}
+  $('stepbody').innerHTML=h;
+}
+function flowchart(v){
+  const on={complementary:['q1','e1n','l1n','r1'],free:['q1','e1y','l1y','q2','e2n','l2n','r2'],contrastive:['q1','e1y','l1y','q2','e2y','l2y','r3'],near:['q1','e1y','l1y','q2','e2y','l2y','r3'],unclear:['q1','e1y','l1y','q2']}[v]||[];
+  const c=id=>on.includes(id)?' on':'';
+  const box=(id,x,y,w,h,l1,l2,kind)=>`<g class="${kind}${c(id)}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8"/><text x="${x+w/2}" y="${y+h/2-4}" text-anchor="middle" class="t1">${l1}</text><text x="${x+w/2}" y="${y+h/2+14}" text-anchor="middle">${l2}</text></g>`;
+  const edge=(id,d)=>`<path class="e${c(id)}" d="${d}" marker-end="url(#${c(id)?'ahon':'ah'})"/>`;
+  return `<div class="fcwrap"><svg class="fc" viewBox="0 0 670 290" role="img" aria-label="Decision chart: same environments? If no, complementary distribution. If yes, does switching change meaning? No: free variation. Yes: separate phonemes.">
+  <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="ahp"/></marker>
+  <marker id="ahon" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" class="ahp-on"/></marker></defs>
+  ${edge('e1n','M110 84 V206')}${edge('e1y','M270 52 H391')}${edge('e2n','M450 84 V150 H325 V206')}${edge('e2y','M555 84 V206')}
+  <text class="lbl${c('l1n')}" x="118" y="150">No</text><text class="lbl${c('l1y')}" x="330" y="44" text-anchor="middle">Yes</text>
+  <text class="lbl${c('l2n')}" x="442" y="120" text-anchor="end">No</text><text class="lbl${c('l2y')}" x="563" y="150">Yes</text>
+  ${box('q1',10,20,260,64,'Do the two sounds occur','in the same environments?','q')}
+  ${box('q2',395,20,260,64,'Does switching them','change the meaning?','q')}
+  ${box('r1',10,210,200,70,'Allophones of one phoneme','complementary distribution','r')}
+  ${box('r2',225,210,200,70,'Allophones of one phoneme','free variation','r')}
+  ${box('r3',455,210,200,70,'Separate phonemes','contrastive distribution','r')}
+  </svg></div>`;
+}
+let RULE={pi:0,L:'any',R:'any'};
+function renderRule(d,a,h){
+  const opts=envOptions(d);
+  const sel=(id,val)=>`<select id="${id}">${opts.map(([v,l])=>`<option value="${esc(v)}"${v===val?' selected':''}>${esc(l)}</option>`).join('')}</select>`;
+  h+=`<div class="builder">
+    <div class="field"><label for="rph">Underlying phoneme</label><select id="rph"><option value="0"${RULE.pi===0?' selected':''}>/${esc(d.A)}/ becomes [${esc(d.B)}]</option><option value="1"${RULE.pi===1?' selected':''}>/${esc(d.B)}/ becomes [${esc(d.A)}]</option></select></div>
+    <div class="field"><label for="rL">Before the sound</label>${sel('rL',RULE.L)}</div>
+    <div class="field"><label for="rR">After the sound</label>${sel('rR',RULE.R)}</div>
+  </div><div id="ruleout"></div>`;
+  $('stepbody').innerHTML=h;
+  const go=()=>{RULE={pi:+$('rph').value,L:$('rL').value,R:$('rR').value};renderRuleOut(d,a);};
+  ['rph','rL','rR'].forEach(id=>$(id).addEventListener('change',go));
+  renderRuleOut(d,a);
+}
+function renderRuleOut(d,a){
+  const phon=RULE.pi?d.B:d.A,allo=RULE.pi?d.A:d.B;
+  const res=testRule(d,phon,allo,RULE.L,RULE.R),okN=res.filter(r=>r.ok).length;
+  let h=`<div class="rulebox"><div class="rule" aria-label="Your rule">${ruleHTML(phon,allo,RULE.L,RULE.R)}</div><p class="prose">${esc(prose(phon,allo,RULE.L,RULE.R))}</p></div>`;
+  const all=okN===res.length;
+  h+=`<p class="note ${all?'ok':'bad'}">${all?`The rule derives all ${res.length} words correctly.`:`The rule derives ${okN} of ${res.length} words correctly. Look at the rows marked “wrong”.`}</p>`;
+  h+=`<div class="tablewrap"><table><thead><tr><th>Underlying</th><th>Rule gives</th><th>Attested</th><th>Check</th></tr></thead><tbody>${
+    res.map(r=>`<tr><td class="ipa">/${wordHTML(r.u,d.A,d.B)}/</td><td class="ipa">[${wordHTML(r.out,d.A,d.B)}]</td><td class="ipa">[${wordHTML(r.w.toks,d.A,d.B)}] <span class="gloss" style="font-family:var(--f-body);font-size:.85rem">‘${esc(r.w.gloss)}’</span></td><td>${r.ok?'<span class="okc">✓ right</span>':'<span class="badc">✗ wrong</span>'}</td></tr>`).join('')
+  }</tbody></table></div>`;
+  if(['contrastive','free','unclear','near'].includes(a.verdict)){
+    h+=`<p class="note">Step 4 found both sounds in the same environment. No rule of the form <span class="ipa">/X/ → [Y] / A __ B</span> can predict them, so every rule you try here will fail on some words. That failure is the evidence.</p>`;
+  }else{
+    h+=`<div><button class="btn" id="showrules">Show rules that fit the data</button></div><div id="rules"></div>`;
+  }
+  $('ruleout').innerHTML=h;
+  const sb=$('showrules');
+  if(sb)sb.onclick=()=>{
+    const ws=workingRules(d);
+    $('rules').innerHTML=ws.length?`<div class="suggest"><p class="prose">These rules derive every word. Click one to load it. When several fit, prefer the one that uses a natural class and makes sense phonetically (for example, a fricative between vowels is lenition).</p>${
+      ws.map((w,k)=>{const p=w.pi?d.B:d.A,al=w.pi?d.A:d.B;return `<button data-k="${k}"><span class="rule" style="font-size:1.25rem">${ruleHTML(p,al,w.L,w.R)}</span></button>`;}).join('')}</div>`
+      :`<p class="note">No single rule with one condition on each side fits this data. Real rules sometimes need two environments, or the sounds may contrast after all.</p>`;
+    $('rules').querySelectorAll('button').forEach(b=>b.onclick=()=>{const w=ws[+b.dataset.k];RULE={pi:w.pi,L:w.L,R:w.R};renderStep();});
+  };
+}
+
+/* ---------- events ---------- */
+$('chips').addEventListener('click',e=>{const b=e.target.closest('[data-ds]');if(!b)return;S.ds=b.dataset.ds;S.pair=0;S.revealed={};RULE={pi:0,L:'any',R:'any'};render();});
+$('data').addEventListener('click',e=>{const b=e.target.closest('[data-pair]');if(!b)return;S.pair=+b.dataset.pair;S.revealed={};RULE={pi:0,L:'any',R:'any'};render();});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(!b)return;S.step=+b.dataset.step;renderTabs();renderStep();});
+$('prev').onclick=()=>{if(S.step>0){S.step--;renderTabs();renderStep();}};
+$('next').onclick=()=>{if(S.step<4){S.step++;renderTabs();renderStep();}};
+$('practice').addEventListener('change',e=>{S.practice=e.target.checked;S.revealed={};renderStep();});
+function render(){renderChips();renderData(getData());renderTabs();renderStep();}
+render();
+
+const EXPL={
+  ph:'<b>/d/</b> is the underlying phoneme, written in slashes. It is the abstract category the speaker stores. Pick the allophone with the widest distribution.',
+  arr:'<b>→</b> means “becomes”.',
+  al:'<b>[ð]</b> is the surface allophone, written in square brackets. This is what is actually pronounced in the environment.',
+  sl:'<b>/</b> means “in the environment of”. Everything to its right describes where the change happens.',
+  L:'<b>V</b> before the blank: the sound right before the target. Here, any vowel.',
+  us:'The blank <b>__</b> marks the position of the changing sound.',
+  R:'<b>V</b> after the blank: the sound right after the target. With V on both sides, the rule applies between vowels.'
+};
+const anat=$('anat'),ex=$('explain');ex.innerHTML=EXPL.ph;
+anat.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;anat.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));ex.innerHTML=EXPL[b.dataset.k];});
+</script>
+
+</body></html>
