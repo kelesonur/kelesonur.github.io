@@ -253,6 +253,8 @@ dialog form p{font-size:15px;color:#d5e4f4}
 .material-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
 .material-head h1{margin:0;font-size:clamp(24px,3vw,36px)}
 .embed-toolbar{display:flex;gap:10px;margin-bottom:12px}
+.embed-toolbar a.primary{display:inline-block;width:auto;text-decoration:none}
+.embed-toolbar a.primary{display:inline-block;width:auto;text-decoration:none}
 .material-frame{width:100%;border:1px solid var(--line);border-radius:12px;background:#0b1830}
 .pdf-frame{min-height:min(78vh,820px);height:78vh}
 .game-frame{min-height:min(85vh,900px);height:85vh}

@@ -2,7 +2,7 @@
 const COURSE_ID='101';
 const WEEKS=[
 {id:'1–2',topic:'Introduction & Phonetics (Genetti ch. 1–2)',ready:true,meetings:[{iso:'2026-09-21',time:'13:00–15:00',room:'NH002'},{iso:'2026-09-23',time:'13:00–15:00',room:'EF116'},{iso:'2026-09-28',time:'13:00–15:00',room:'NH002'},{iso:'2026-09-30',time:'13:00–15:00',room:'EF116'}]},
-{id:'3–4',topic:'Phonology; Morphology begins (Genetti ch. 3–4). Assignment 1.',ready:false,meetings:[{iso:'2026-10-05',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-07',time:'13:00–15:00',room:'EF116'},{iso:'2026-10-12',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-14',time:'13:00–15:00',room:'EF116'}]},
+{id:'3–4',topic:'Phonology; Morphology begins (Genetti ch. 3–4). Assignment 1.',ready:true,meetings:[{iso:'2026-10-05',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-07',time:'13:00–15:00',room:'EF116'},{iso:'2026-10-12',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-14',time:'13:00–15:00',room:'EF116'}]},
 {id:'4–5',topic:'Morphology (Genetti ch. 4). Mid-term #1?',ready:false,meetings:[{iso:'2026-10-12',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-14',time:'13:00–15:00',room:'EF116'},{iso:'2026-10-19',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-21',time:'13:00–15:00',room:'EF116'}]},
 {id:'6–7',topic:'Syntax (Genetti ch. 5–6; Fromkin ch. 3 part 1). Assignment 2.',ready:false,meetings:[{iso:'2026-10-26',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-28',note:'no class (Republic Day)'},{iso:'2026-11-02',time:'13:00–15:00',room:'NH002'},{iso:'2026-11-04',time:'13:00–15:00',room:'EF116'}]},
 {id:'8–9',topic:'Syntax & Semantics (Fromkin ch. 3–4). Assignment 3. Mid-term #2?',ready:false,meetings:[{iso:'2026-11-09',time:'13:00–15:00',room:'NH002'},{iso:'2026-11-11',time:'13:00–15:00',room:'EF116'},{iso:'2026-11-16',time:'13:00–15:00',room:'NH002'},{iso:'2026-11-18',time:'13:00–15:00',room:'EF116'}]},
@@ -10,10 +10,17 @@ const WEEKS=[
 {id:'12',topic:'Language Change & review (Genetti ch. 12–13). Final TBA.',ready:false,meetings:[{iso:'2026-12-07',time:'13:00–15:00',room:'NH002'},{iso:'2026-12-09',time:'13:00–15:00',room:'EF116'}]}
 ];
 const PS12_ITEMS=[
-{id:'handout',title:'PS Handout',blurb:'Slides for weeks 1–2.'},
-{id:'mouth',title:'Build a Mouth Game',blurb:'Articulatory practice.'},
-{id:'phonle',title:'Phonle Game',blurb:'IPA sound guessing.'}
+{id:'handout',title:'PS Handout',blurb:'Slides for weeks 1–2.',kind:'pdf',file:'materials/ps1.pdf'},
+{id:'mouth',title:'Build a Mouth Game',blurb:'Articulatory practice.',kind:'html',file:'games/build-a-mouth.html'},
+{id:'phonle',title:'Phonle Game',blurb:'IPA sound guessing.',kind:'html',file:'games/phonle.html'}
 ];
+const WEEK_ITEMS={
+'1–2':PS12_ITEMS,
+'3–4':[
+{id:'handout',title:'PS Handout',blurb:'October 7 handout.',kind:'pdf',file:'materials/ps2.pdf'},
+{id:'phoneme',title:'Phoneme or Allophone?',blurb:'Phonology practice.',kind:'html',file:'games/phoneme-or-allophone.html'}
+]
+};
 const SCREENS=['home','start','material','office'];
 const KEY='ling101-fall2026-v1';
 const ADMIN_KEY='ling101-admin-code-v1';
@@ -169,15 +176,17 @@ function bindWeekPicker(){
  });
 }
 
+function weekItems(id){return WEEK_ITEMS[id]||[];}
 function startScreen(){
  if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1–2';
  const meta=weekMeta(state.weeks);
- if(!meta.ready){
+ const items=weekItems(state.weeks);
+ if(!items.length){
   $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p>${esc(meta.topic)}</p><p class="muted">To be added.</p></section>`;
   bindSectionNav();bindWeekPicker();
   return;
  }
- $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING101 · PS</span><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p class="muted">${esc(meta.topic)}</p></div><section class="setup material-picker" aria-label="PS activities"><h2>Activities</h2><div class="mode-buttons material-choices">${PS12_ITEMS.map(item=>`<button type="button" data-material="${esc(item.id)}">${esc(item.title)}<small>${esc(item.blurb)}</small></button>`).join('')}</div>${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section></section>`;
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING101 · PS</span><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p class="muted">${esc(meta.topic)}</p></div><section class="setup material-picker" aria-label="PS activities"><h2>Activities</h2><div class="mode-buttons material-choices">${items.map(item=>`<button type="button" data-material="${esc(item.id)}">${esc(item.title)}<small>${esc(item.blurb)}</small></button>`).join('')}</div>${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section></section>`;
  bindSectionNav();bindWeekPicker();
  document.querySelectorAll('[data-material]').forEach(btn=>{
   btn.onclick=()=>{state.material=btn.dataset.material;state.screen='material';render();focusMain();};
@@ -185,16 +194,14 @@ function startScreen(){
 }
 
 function materialScreen(){
- const item=PS12_ITEMS.find(i=>i.id===state.material)||PS12_ITEMS[0];
- let body='';
- if(item.id==='handout'){
-  body=`<div class="embed-toolbar"><a class="primary" href="materials/ps1.pdf" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="PS1 handout" src="materials/ps1.pdf#view=FitH"></iframe>`;
- }else if(item.id==='mouth'){
-  body=`<iframe class="material-frame game-frame" title="Build a Mouth Game" src="games/build-a-mouth.html" allow="autoplay"></iframe>`;
- }else{
-  body=`<iframe class="material-frame game-frame" title="Phonle Game" src="games/phonle.html" allow="autoplay"></iframe>`;
- }
- $('app').innerHTML=sectionNav()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Weeks 1–2</button><h1>${esc(item.title)}</h1></div>${body}</section>`;
+ const items=weekItems(state.weeks);
+ const item=items.find(i=>i.id===state.material)||items[0];
+ if(!item){state.screen='start';startScreen();return;}
+ const html=item.kind==='html';
+ const body=html
+  ?`<iframe class="material-frame game-frame" title="${esc(item.title)}" src="${esc(item.file)}" allow="autoplay"></iframe>`
+  :`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="${esc(item.title)}" src="${esc(item.file)}#view=FitH"></iframe>`;
+ $('app').innerHTML=sectionNav()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← ${esc(weekLabel(state.weeks))}</button><h1>${esc(item.title)}</h1></div>${body}</section>`;
  bindSectionNav();
  $('backPs').onclick=()=>{state.screen='start';state.material=null;save();render();focusMain();};
 }
