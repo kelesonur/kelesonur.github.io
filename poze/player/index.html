@@ -186,7 +186,20 @@ try {
   const manager = new THREE.LoadingManager();
   manager.onError = () => { texFail++; };
   const gltf = await new GLTFLoader(manager).parseAsync(buf, '');
-  await new Promise((r) => { manager.onLoad = r; setTimeout(r, 8000); });
+  // POZE_FAST_LOAD_2026_10_07: parseAsync already waits for the textures, so the old
+  // `manager.onLoad` wait never fired and always ran into its 8 s timeout. Wait only for
+  // texture images that are still decoding (at most 8 s).
+  const pending = [];
+  gltf.scene.traverse((o) => {
+    if (!o.isMesh) return;
+    for (const m of (Array.isArray(o.material) ? o.material : [o.material])) {
+      for (const k of ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'emissiveMap', 'aoMap']) {
+        const img = m && m[k] && m[k].image;
+        if (img && img.complete === false) pending.push(new Promise((r) => { img.addEventListener('load', r, { once: true }); img.addEventListener('error', r, { once: true }); }));
+      }
+    }
+  });
+  if (pending.length) await Promise.race([Promise.all(pending), new Promise((r) => setTimeout(r, 8000))]);
   window.createImageBitmap = cib;
   if (texFail) console.warn(texFail + ' textures failed to load');
   root = gltf.scene;
