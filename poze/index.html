@@ -205,17 +205,16 @@ textarea, input[type="text"], input[type="password"], input[type="url"] {
 }
 textarea { min-height: 120px; resize: vertical; font-size: 19px; line-height: 1.4; }
 textarea:focus, input:focus { outline: 2px solid var(--focus); outline-offset: 1px; border-color: transparent; }
-details.conn { border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; margin: 0 0 16px; background: var(--card); }
-details.conn summary { cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-details.conn .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
-details.conn .dot.ok { background: #1f9d55; }
-details.conn .dot.bad { background: var(--c-miss); }
-details.conn[open] summary { margin-bottom: 12px; }
+.status { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--muted); margin: 12px 0 0; }
+.status .dot { flex: none;  width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+.status .dot.ok { background: #1f9d55; }
+.status .dot.bad { background: var(--c-miss); }
 .tries { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 16px; }
 .try { font: inherit; font-size: 13.5px; color: var(--ink); background: transparent; border: 1px dashed var(--line); border-radius: 999px; padding: 5px 11px; cursor: pointer; }
 .try:hover { border-color: var(--ink); border-style: solid; }
-.livestage { position: relative; aspect-ratio: 4 / 3; border-radius: 22px; overflow: hidden; background: var(--stage); display: grid; place-items: center; }
-.livestage video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.livestage { position: relative; aspect-ratio: 4 / 3; border-radius: 22px; overflow: hidden; background: radial-gradient(120% 90% at 50% 18%, color-mix(in srgb, var(--stage) 60%, #fff) 0%, var(--stage) 62%); display: grid; place-items: center; }
+.livestage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.status .dot.wait { background: var(--c-spell); }
 .livemsg { padding: 28px; text-align: center; color: var(--muted); max-width: 30em; }
 .livemsg strong { color: var(--ink); display: block; font-size: 18px; margin-bottom: 6px; }
 .stages { display: flex; gap: 6px; margin: 14px 0 10px; flex-wrap: wrap; }
@@ -361,37 +360,24 @@ footer p { margin: 0; max-width: 46em; }
 
     <section class="block" id="live" aria-labelledby="live-h">
       <h2 class="big" id="live-h">Try your own sentence.</h2>
-      <p class="sub">Live mode runs the full pipeline on a Poze server: Claude writes the sign plan, the server selects signs, builds the motion and renders the signer. Connect a server below to use it.</p>
+      <p class="sub">Write a Turkish sentence and the full pipeline runs live: Claude Sonnet 5 writes the sign plan, the server selects signs and builds the motion, and your browser animates the signer.</p>
       <div class="live">
         <form id="liveForm" novalidate>
           <div class="field">
             <label for="sentence">Turkish sentence</label>
-            <textarea id="sentence" maxlength="400" placeholder="Yarın sabah saat onda toplantımız var." required></textarea>
+            <textarea id="sentence" maxlength="200" placeholder="Yarın sabah saat onda toplantımız var." required></textarea>
           </div>
           <div class="tries" id="tries" aria-label="Example sentences"></div>
-          <details class="conn" id="conn">
-            <summary><span class="dot" id="dot"></span><span id="connText">Server not connected</span></summary>
-            <div class="field">
-              <label for="api">Server address</label>
-              <input id="api" type="url" value="http://127.0.0.1:8765" spellcheck="false" autocomplete="off">
-              <span class="hint">Start it with signer_study/free_translation/run_server.sh. Chrome and Edge can reach a server on this computer from this page.</span>
-            </div>
-            <div class="field">
-              <label for="key">Anthropic API key (optional)</label>
-              <input id="key" type="password" spellcheck="false" autocomplete="off" placeholder="Leave empty if the server has its own key">
-              <span class="hint">Sent only to the server above for this request. Never stored by this page.</span>
-            </div>
-            <button class="btn" id="check" type="button">Check connection</button>
-          </details>
           <button class="btn primary" id="go" type="submit">Translate to TİD</button>
+          <p class="status" id="status"><span class="dot" id="dot"></span><span id="connText">Checking the live server</span></p>
           <ul class="stages" id="stages" aria-label="Progress">
-            <li data-s="gloss">Sign plan</li><li data-s="synth">Select signs</li><li data-s="face">Face</li><li data-s="motion">Motion</li><li data-s="render-avatar">Render</li>
+            <li data-s="gloss">Sign plan</li><li data-s="synth">Select signs</li><li data-s="face">Face</li><li data-s="motion">Motion</li>
           </ul>
           <p class="err" id="err" role="alert" hidden></p>
         </form>
         <div>
           <div class="livestage" id="liveStage">
-            <div class="livemsg"><strong>Your signing appears here</strong>Write a sentence and press Translate to TİD. A short sentence takes about 10 to 30 seconds the first time.</div>
+            <div class="livemsg"><strong>Your signing appears here</strong>Write a sentence and press Translate to TİD. A short sentence takes about 20 seconds. If the server has been idle, the first one takes about a minute longer while it starts.</div>
           </div>
           <ul class="chips" id="liveChips" aria-label="Signs in your sentence" style="margin-top:14px"></ul>
           <p class="livemeta" id="liveMeta"></p>
@@ -509,6 +495,7 @@ footer p { margin: 0; max-width: 46em; }
     if (!src) return strat && strat.startsWith('synth') ? 'Generated from space rules' : '';
     if (/^\d+$/.test(src)) return 'TİD Sözlük entry ' + src;
     if (src.startsWith('isaretce')) return 'İşaretçe dictionary';
+    if (src.startsWith('spreadthesign-lex')) return 'Spread the Sign dictionary';
     if (src.startsWith('fingerspell')) return 'Manual alphabet, letter by letter';
     if (src.startsWith('synth')) return 'Generated from space rules';
     return src;
@@ -630,35 +617,45 @@ footer p { margin: 0; max-width: 46em; }
   }).catch(() => { $('tr').textContent = 'The examples could not be loaded. Open this page from a web server, not from a file.'; });
 
   // ---------------- live mode ----------------
+  const API_DEFAULT = 'https://poze-api-79059222633.europe-west1.run.app';
   const TRIES = ['Yarın sabah saat onda toplantımız var.', 'Kütüphane hafta sonu kapalı.', 'Annem bana kırmızı bir kitap verdi.', 'Bu otobüs hastaneye gidiyor mu?'];
   TRIES.forEach((s) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'try'; b.textContent = s; b.onclick = () => { $('sentence').value = s; $('sentence').focus(); }; $('tries').appendChild(b); });
   const params = new URLSearchParams(location.search);
-  if (params.get('api')) $('api').value = params.get('api');
-  const base = () => $('api').value.trim().replace(/\/+$/, '');
+  const API = (params.get('api') || API_DEFAULT).replace(/\/+$/, '');
+  const setStatus = (kind, text) => { $('dot').className = 'dot ' + kind; $('connText').textContent = text; };
+  let serverReady = false;
 
-  async function check() {
-    $('dot').className = 'dot'; $('connText').textContent = 'Checking the server';
+  async function check(wake) {
     try {
-      const r = await fetch(base() + '/health', { cache: 'no-store' });
+      const r = await fetch(API + '/health', { cache: 'no-store' });
       const h = await r.json();
-      $('dot').className = 'dot ok';
-      $('connText').textContent = 'Server connected' + (h.model ? ', plan model ' + h.model : '');
-      return true;
+      serverReady = h.ready;
+      if (h.error) setStatus('bad', 'The live server has a problem. The examples above still work.');
+      else if (!h.ready) { setStatus('wait', 'Live server is starting, about a minute'); setTimeout(() => check(true), 4000); }
+      else setStatus('ok', 'Live server ready. ' + h.left_today + ' translations left for you today.');
+      return h;
     } catch (e) {
-      $('dot').className = 'dot bad';
-      $('connText').textContent = 'Server not reachable at ' + base();
-      return false;
+      setStatus(wake ? 'wait' : 'wait', 'Waking the live server, this can take about a minute');
+      if (wake) setTimeout(() => check(true), 5000);
+      return null;
     }
   }
-  $('check').onclick = check;
-  if (params.get('api')) check();
+  // wake the server when the live section comes into view, not on page load
+  let woke = false;
+  new IntersectionObserver((es) => { if (!woke && es.some((e) => e.isIntersecting)) { woke = true; check(true); } }, { rootMargin: '300px' }).observe($('live'));
 
-  const order = ['gloss', 'synth', 'face', 'motion', 'render-avatar'];
+  const order = ['gloss', 'synth', 'face', 'motion'];
   function showStage(s) {
     const k = order.indexOf(s);
-    document.querySelectorAll('#stages li').forEach((li, i) => { li.classList.toggle('done', k > i); li.classList.toggle('on', k === i); });
+    document.querySelectorAll('#stages li').forEach((li, i) => { li.classList.toggle('done', k > i || s === 'done'); li.classList.toggle('on', k === i); });
   }
   function showErr(msg) { $('err').hidden = !msg; $('err').textContent = msg || ''; }
+
+  let liveChips = [], livePlayer = null;
+  window.addEventListener('message', (e) => {
+    const d = e.data; if (!d || !d.poze || !livePlayer || e.source !== livePlayer.contentWindow) return;
+    if (d.type === 'frame') liveChips.forEach((b, i) => b.classList.toggle('on', i === d.chip));
+  });
 
   $('liveForm').onsubmit = async (e) => {
     e.preventDefault();
@@ -666,44 +663,46 @@ footer p { margin: 0; max-width: 46em; }
     if (!sentence) { showErr('Write a Turkish sentence first.'); $('sentence').focus(); return; }
     showErr('');
     $('go').disabled = true; $('go').textContent = 'Translating';
+    if (!serverReady) setStatus('wait', 'Waking the live server, this can take about a minute');
     let polling = true;
-    const poll = async () => {
+    (async () => {
       while (polling) {
-        try { const p = await (await fetch(base() + '/progress', { cache: 'no-store' })).json(); if (p.busy) showStage(p.stage); } catch (_) {}
-        await new Promise((r) => setTimeout(r, 600));
+        try { const p = await (await fetch(API + '/progress', { cache: 'no-store' })).json(); if (p.busy) { showStage(p.stage); setStatus('ok', 'Working on your sentence'); } } catch (_) {}
+        await new Promise((r) => setTimeout(r, 700));
       }
-    };
-    showStage('gloss'); poll();
+    })();
+    showStage('gloss');
     try {
-      const headers = { 'Content-Type': 'application/json' };
-      const key = $('key').value.trim(); if (key) headers['x-api-key'] = key;
-      const r = await fetch(base() + '/translate', { method: 'POST', headers, body: JSON.stringify({ sentence, figure: 'avatar' }) });
-      const res = await r.json();
-      if (!res.ok) throw new Error(res.error || 'The server could not translate this sentence.');
-      showStage('done');
-      document.querySelectorAll('#stages li').forEach((li) => { li.classList.add('done'); li.classList.remove('on'); });
-      const v = document.createElement('video');
-      v.src = res.video_url; v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true; v.controls = true;
-      $('liveStage').replaceChildren(v);
-      const segs = (res.segments || []).filter((s) => s.start !== undefined);
-      const signs = segs.length
-        ? segs.map((s) => ({ label: s.gloss || s.token, strategy: s.strategy }))
-          .concat((res.missing || []).map((m) => ({ label: m, missing: true })))
-        : (res.tokens || []).map((t) => ({ label: t.label || t.token, strategy: t.strategy, missing: !t.found }));
-      const els = renderChips($('liveChips'), signs, true);
-      els.forEach((b, i) => { if (segs[i]) b.onclick = () => { v.currentTime = segs[i].start; v.play(); }; });
-      if (segs.length) {
-        v.ontimeupdate = () => { const tt = v.currentTime; let on = -1; segs.forEach((s, i) => { if (tt >= s.start && tt < s.end) on = i; }); els.forEach((b, i) => b.classList.toggle('on', i === on)); };
+      let r, res;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          r = await fetch(API + '/translate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sentence }) });
+          res = await r.json();
+          if (r.status === 503 && res.code === 'loading') { await new Promise((ok) => setTimeout(ok, 8000)); continue; }
+          break;
+        } catch (err) {
+          if (attempt === 2) throw err;
+          await new Promise((ok) => setTimeout(ok, 8000));
+        }
       }
-      const tm = res.timing || {};
-      $('liveMeta').textContent = 'Sign plan: ' + res.gloss + (res.model ? ' (' + res.model + ')' : '') + '. Time: ' + (res.cached ? 'cached' : (res.seconds || 0).toFixed(1) + ' s') + '.';
-      $('dot').className = 'dot ok';
+      if (!res.ok) throw new Error(res.error || 'The server could not translate this sentence.');
+      serverReady = true;
+      showStage('done');
+      const stage = $('liveStage');
+      stage.replaceChildren();
+      livePlayer = document.createElement('iframe');
+      livePlayer.title = '3D signer, your sentence';
+      livePlayer.src = 'player/index.html?' + new URLSearchParams({ embed: '1', avatar: 'business', shirt: '26324a', m: API + res.motion_url });
+      stage.appendChild(livePlayer);
+      liveChips = renderChips($('liveChips'), res.signs.map((s) => ({ label: s.label, strategy: s.strategy })), true);
+      liveChips.forEach((b, i) => b.onclick = () => livePlayer.contentWindow.postMessage({ type: 'seek', chip: i }, '*'));
+      $('liveMeta').textContent = 'Sign plan by ' + res.model + ': ' + res.gloss + '. ' + (res.cached ? 'From cache.' : 'Took ' + res.seconds.toFixed(1) + ' s.')
+        + (res.missing && res.missing.length ? ' Not found: ' + res.missing.join(', ') + '.' : '');
+      setStatus('ok', 'Done. ' + res.left_today + ' translations left for you today.');
     } catch (err) {
       showStage('');
-      if (err instanceof TypeError) {
-        showErr('Could not reach a Poze server at ' + base() + '. Start the server, then open the connection settings and check the address.');
-        $('conn').open = true; $('dot').className = 'dot bad'; $('connText').textContent = 'Server not reachable at ' + base();
-      } else showErr(err.message);
+      if (err instanceof TypeError) { showErr('Could not reach the live server. Try again in a minute.'); setStatus('bad', 'Live server not reachable'); }
+      else showErr(err.message);
     } finally {
       polling = false; $('go').disabled = false; $('go').textContent = 'Translate to TİD';
     }
