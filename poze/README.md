@@ -1,6 +1,6 @@
-# Poze demo site
+# SignPoze demo site
 
-Product introduction and demo for Poze (text to sign language). Static site for GitHub Pages at
+Product introduction and demo for SignPoze (text to sign language). Static site for GitHub Pages at
 `https://kelesonur.github.io/poze/`.
 
 ## What is here
