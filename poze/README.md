@@ -57,5 +57,6 @@ an https page to a local http server; use Chrome or Edge for the local setup.
   Known leftover: a few frames in 1330-01 and 492-03 still overlap by about 1 cm.
 - Hand cleanup when a motion loads (`HAND_CLEAN` in `player/index.html`): finger landmarks are smoothed over
   time (less shaking, for example NASIL), small finger bends under 30 degrees are made straight, and a
-  pointing hand (index out, other fingers curled, for example SEN) gets a straight index. Fingerspelling is
+  pointing hand (index out, other fingers curled, for example SEN) gets a straight index and the other three
+  fingers are set to a fist (they are hidden behind the hand in the video, so the tracker guesses). Fingerspelling is
   left as recorded. The left hand in NASIL still moves more than the right.
