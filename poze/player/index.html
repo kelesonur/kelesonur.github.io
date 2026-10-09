@@ -1556,10 +1556,39 @@ function poseArm(s, i, push, off = null) {
   }
 }
 
+// QUESTION_BROWS_2026_10_09 (Onur): the eyebrows rise on question words (NE, NASIL, NEREDE, KİM, NEDEN...).
+// Weight 1 on the sign, fading in over 4 frames before it and out over 5 frames after it.
+const QUESTION_WORD = /^(NE|NASIL|NEREDE|NEREYE|NEREDEN|NERESİ|KİM|KİMİN|KİME|KİMDEN|NİÇİN|NEDEN|NİYE|KAÇ|KAÇINCI|HANGİ|HANGİSİ|NEYİ|NEYE|NEYLE|NELER|NEKADAR)([ _\-0-9(]|$)/;
+let QW = null;
+function questionWeight(i) {
+  if (!QW) {
+    QW = new Float32Array(T);
+    let a = 0;
+    while (a < T) {
+      const l = M.label[a];
+      if (!l) { a++; continue; }
+      let b = a; while (b + 1 < T && M.label[b + 1] === l) b++;
+      if (QUESTION_WORD.test(String(l).toUpperCase().replace(/\s+/g, ''))) {
+        for (let k = Math.max(0, a - 4); k <= Math.min(T - 1, b + 5); k++) {
+          const w = k < a ? (k - (a - 5)) / 5 : k > b ? ((b + 6) - k) / 6 : 1;
+          QW[k] = Math.max(QW[k], Math.min(1, Math.max(0, w)));
+        }
+      }
+      a = b + 1;
+    }
+  }
+  return QW[Math.min(T - 1, Math.max(0, i))];
+}
 function applyFace(i, F, on) {
   if (M.face_shapes) {
+    const qb = questionWeight(i);
     for (const [name, values] of Object.entries(M.face_shapes)) {
       let value = on * values[i];
+      if (qb > 0) {
+        if (name === 'AK_03_BrowInnerUp') value = Math.max(value, on * 0.75 * qb);
+        else if (name === 'AK_04_BrowOuterUpLeft' || name === 'AK_05_BrowOuterUpRight') value = Math.max(value, on * 0.6 * qb);
+        else if (name === 'AK_01_BrowDownLeft' || name === 'AK_02_BrowDownRight') value *= 1 - qb;
+      }
       // The mesh's fully-open bind eyelids look like a stare. A small neutral
       // lid closure calibrates that mesh without adding a facial expression.
       if (name === 'AK_09_EyeBlinkLeft' || name === 'AK_10_EyeBlinkRight') {
