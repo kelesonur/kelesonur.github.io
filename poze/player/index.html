@@ -320,6 +320,68 @@ if (M.hh && M.arms.L.wrist && M.arms.R.wrist && !DBG.has('notouchz')) {
     M.arms.R.wrist[i][2] = zr + (zc - zr) * ws[i];
   }
 }
+// HAND_CLEAN_2026_10_09 (Onur: in SEN the pointing index is crooked, in NASIL the hands shake).
+// The recorded hand landmarks are tracked frame by frame with no smoothing, so they jitter, and an
+// extended finger comes out slightly bent. Both fixed here, once, when the motion is loaded:
+//  1. finger landmarks are smoothed over time (relative to the wrist, so hand movement is untouched)
+//  2. a finger joint bent less than 30 deg is made straight (fades out to 50 deg, bigger bends stay)
+// Fingerspelling frames (fs > 0.5) are left exactly as recorded.
+(() => {
+  const FING = [[5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16], [17, 18, 19, 20]];
+  const fixBend = (th) => (th <= 0.5236 ? 0 : th >= 0.8727 ? th : th * (th - 0.5236) / 0.3491);
+  // turn v towards u until the angle between them is th2 (v keeps its length)
+  const toward = (v, u, th2) => {
+    const L = v.length(), un = u.clone().normalize();
+    const perp = v.clone().addScaledVector(un, -v.dot(un));
+    if (perp.lengthSq() < 1e-10) return v.clone();
+    return un.multiplyScalar(Math.cos(th2) * L).addScaledVector(perp.normalize(), Math.sin(th2) * L);
+  };
+  const ang3 = (a, b, c) => new THREE.Vector3(...a).sub(new THREE.Vector3(...b)).angleTo(new THREE.Vector3(...c).sub(new THREE.Vector3(...b)));
+  // index extended (PIP and DIP nearly straight), middle / ring / pinky curled at the knuckle
+  const pointing = (h) => ang3(h[5], h[6], h[7]) > 2.2 && ang3(h[6], h[7], h[8]) > 2.2
+    && [[9, 10], [13, 14], [17, 18]].every(([m, n]) => ang3(h[0], h[m], h[n]) < 1.85);
+  for (const s of ['L', 'R']) {
+    const A = M.arms[s]; if (!A || !A.hand) continue;
+    const N = A.hand.length;
+    const free = (i) => !(A.fs && A.fs[i] > 0.5);
+    let rel = A.hand.map((h) => h.map((p) => [p[0] - h[0][0], p[1] - h[0][1], p[2] - h[0][2]]));
+    for (let pass = 0; pass < 2; pass++) {
+      const prev = rel;
+      rel = prev.map((h, i) => {
+        if (!free(i)) return h;
+        const a = prev[Math.max(0, i - 1)], c = prev[Math.min(N - 1, i + 1)];
+        return h.map((p, k) => [0, 1, 2].map((q) => 0.25 * a[k][q] + 0.5 * p[q] + 0.25 * c[k][q]));
+      });
+    }
+    for (let i = 0; i < N; i++) {
+      const h = rel[i];
+      if (free(i)) for (const [a0, a1, a2, a3] of FING) {
+        const P = [a0, a1, a2, a3].map((k) => new THREE.Vector3(...h[k]));
+        let d0 = P[1].clone().sub(P[0]), d1 = P[2].clone().sub(P[1]), d2 = P[3].clone().sub(P[2]);
+        if (d0.length() < 1e-6 || d1.length() < 1e-6 || d2.length() < 1e-6) continue;
+        // POINT_2026_10_09 (SEN, BEN, O...): index out with the other three fingers curled is a pointing
+        // hand. The tracker leaves the index flexed ~50 deg at the knuckle, so it looks hooked; it is
+        // brought in line with the palm and the rest of the finger follows.
+        if (a0 === 5 && pointing(h)) {
+          const u = new THREE.Vector3(...h[5]).sub(new THREE.Vector3(...h[0]));
+          const thk = d0.angleTo(u);
+          const thk2 = thk <= 1.05 ? 0 : thk >= 1.4 ? thk : thk * (thk - 1.05) / 0.35;
+          const nd0 = toward(d0, u, thk2);
+          const q = new THREE.Quaternion().setFromUnitVectors(d0.clone().normalize(), nd0.clone().normalize());
+          d0 = nd0; d1.applyQuaternion(q); d2.applyQuaternion(q);
+          P[1] = P[0].clone().add(d0); h[a1] = P[1].toArray();
+        }
+        const th1 = d0.angleTo(d1);
+        d1 = toward(d1, d0, fixBend(th1));
+        const th2 = d1.angleTo(d2);
+        d2 = toward(d2, d1, fixBend(th2));
+        const q1 = P[1].clone(), q2 = q1.clone().add(d1), q3 = q2.clone().add(d2);
+        h[a2] = q2.toArray(); h[a3] = q3.toArray();
+      }
+      A.hand[i] = h.map((p, k) => [p[0] + A.hand[i][0][0], p[1] + A.hand[i][0][1], p[2] + A.hand[i][0][2]]);
+    }
+  }
+})();
 const TORSO = (() => {
   const midX = 0.5 * (wpos(B('L UpperArm')).x + wpos(B('R UpperArm')).x);
   const y0 = wpos(B('Pelvis')).y - 0.15, y1 = wpos(B('R UpperArm')).y - 0.08;
