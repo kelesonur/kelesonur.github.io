@@ -522,6 +522,7 @@ footer p { margin: 0; max-width: 46em; }
     return src;
   };
 
+  const NORMAL = 0.75;   // normal playback = 75% of recorded speed (slowed 9 Oct 2026)
   let EX = [], cur = null, chipEls = [], playing = true, total = 1, fps = 24, slow = false, faceOn = true, liveEx = null;
   const player = $('player'), stage = $('stage');
   function post(msg) { try { player.contentWindow.postMessage(msg, '*'); } catch (e) {} }
@@ -605,7 +606,7 @@ footer p { margin: 0; max-width: 46em; }
     if (d.type === 'ready') {
       total = d.total; fps = d.fps || 24; stage.classList.add('ready');
       if (cur && !cur.seconds) { cur.frames = total; cur.fps = fps; cur.seconds = total / fps; fillStats(cur); }
-      post({ type: 'speed', value: slow ? 0.5 : 1 });
+      post({ type: 'speed', value: slow ? 0.5 : NORMAL });
       post({ type: 'view', value: +$('yaw').value });
       if (!faceOn) post({ type: 'face', value: false });
       setPlaying(true);
@@ -632,7 +633,7 @@ footer p { margin: 0; max-width: 46em; }
   $('play').onclick = () => setPlaying(!playing);
   $('bigplay').onclick = () => setPlaying(!playing);
   $('replay').onclick = () => { post({ type: 'restart' }); setPlaying(true, false); };
-  $('slow').onclick = () => { slow = !slow; $('slow').setAttribute('aria-pressed', String(slow)); post({ type: 'speed', value: slow ? 0.5 : 1 }); };
+  $('slow').onclick = () => { slow = !slow; $('slow').setAttribute('aria-pressed', String(slow)); post({ type: 'speed', value: slow ? 0.5 : NORMAL }); };
   $('face').onclick = () => { faceOn = !faceOn; $('face').setAttribute('aria-pressed', String(faceOn)); $('face').textContent = faceOn ? 'Yüz açık' : 'Yüz kapalı'; post({ type: 'face', value: faceOn }); };
   $('yaw').oninput = (e) => post({ type: 'view', value: +e.target.value });
   // Space bar pauses and resumes, except while typing or on a focused control
