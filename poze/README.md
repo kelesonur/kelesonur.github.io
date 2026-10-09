@@ -6,6 +6,9 @@ Product introduction and demo for SignPoze (text to sign language). Static site 
 ## What is here
 
 - `index.html`: the landing page and demo (one file, no build step).
+- `tr/index.html`: the Turkish page. The live translation form comes first and drives the same signer as
+  the examples (one player; your result is added to the example rail). It has a large pause button on the
+  signer and the Space key pauses and resumes. It reads `../assets/examples.json` and `../player/`.
 - `assets/examples.json`: the curated sentences (Turkish, gloss, and how each sign was found).
 - `player/index.html`: the latest avatar renderer (copy of `rendering_attempts/gemma4_all25/page_hinge`,
   elbow-twist fix, Business_Male_06, navy shirt) with an added `?embed=1` mode. In embed mode it hides its
@@ -38,7 +41,8 @@ an https page to a local http server; use Chrome or Edge for the local setup.
 2. Add an entry to `assets/examples.json`: `id`, `turkish`, `gloss`, `seconds`
    (playback frames / 24) and `signs` (one per sign segment in the motion `label` track, in order,
    with `label`, `strategy` and `source` from the sample's `tokens.json`).
-3. Add an English translation and a short description to the `EN` and `SHOWS` maps in `index.html`.
+3. Add an English translation and a short description to the `EN` and `SHOWS` maps in `index.html`,
+   and a Turkish description to the `SHOWS` map in `tr/index.html`.
 
 ## Test locally
 
