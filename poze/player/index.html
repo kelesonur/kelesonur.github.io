@@ -404,6 +404,15 @@ if (M.hh && M.arms.L.wrist && M.arms.R.wrist && !DBG.has('notouchz')) {
           const q1 = V3(h[m]).addScaledVector(dir(80), L0), q2 = q1.clone().addScaledVector(dir(165), L1), q3 = q2.clone().addScaledVector(dir(215), L2);
           for (const [k, q] of [[n2, q1], [o, q2], [t, q3]]) h[k] = V3(h[k]).lerp(q, w).toArray();
         }
+        // THUMB_2026_10_09 (Onur, photo of the signer): in SEN the thumb is not extended, it rests on the
+        // curled fingers. Its two outer segments aim at the middle finger's first joint.
+        {
+          const T = V3(h[10]).lerp(V3(h[14]), 0.25);
+          const b2 = V3(h[2]), La = V3(h[3]).sub(b2).length(), Lb = V3(h[4]).sub(V3(h[3])).length();
+          const p3 = b2.clone().addScaledVector(T.clone().sub(b2).normalize(), La);
+          const p4 = p3.clone().addScaledVector(T.clone().sub(p3).normalize(), Lb);
+          h[3] = V3(h[3]).lerp(p3, w).toArray(); h[4] = V3(h[4]).lerp(p4, w).toArray();
+        }
       }
       A.hand[i] = h.map((p, k) => [p[0] + A.hand[i][0][0], p[1] + A.hand[i][0][1], p[2] + A.hand[i][0][2]]);
     }
