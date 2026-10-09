@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>SignPoze: yazıdan işaret diline</title>
-<meta name="description" content="SignPoze yazılı Türkçe cümleleri Türk İşaret Dili'ne (TİD) çevirir ve üç boyutlu bir işaretçiyle gösterir. Kendi cümlenizi yazıp deneyin.">
+<meta name="description" content="SignPoze yazılı Türkçe cümleleri Türk İşaret Dili'ne (TİD) çevirir ve üç boyutlu bir avatarla gösterir. Kendi cümlenizi yazıp deneyin.">
 <link rel="alternate" hreflang="en" href="https://kelesonur.github.io/poze/">
 <link rel="alternate" hreflang="tr" href="https://kelesonur.github.io/poze/tr/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -323,7 +323,7 @@ footer p { margin: 0; max-width: 46em; }
     <section class="hero2" aria-labelledby="h1">
       <div>
         <h1 id="h1"><span>Türkçe yazın.</span> <span>TİD olarak izleyin.</span></h1>
-        <p class="lede">SignPoze, yazdığınız Türkçe cümleyi Türk İşaret Dili'ne (TİD) çevirir ve üç boyutlu bir işaretçiyle gösterir. Bir cümle yazın: Claude Haiku 5.5 işaret planını hazırlar, sunucu işaretleri seçip hareketi oluşturur, işaretçi de tarayıcınızda canlanır.</p>
+        <p class="lede">SignPoze, yazdığınız Türkçe cümleyi Türk İşaret Dili'ne (TİD) çevirir ve üç boyutlu bir avatarla gösterir. Bir cümle yazın: Claude Haiku 5.5 işaret planını hazırlar, sunucu işaretleri seçip hareketi oluşturur, avatar tarayıcınızda canlanır.</p>
 
         <form id="liveForm" novalidate>
           <div class="field">
@@ -344,8 +344,8 @@ footer p { margin: 0; max-width: 46em; }
       <div>
         <div class="stagewrap">
           <div class="stage" id="stage">
-            <iframe id="player" title="Üç boyutlu işaretçi" loading="eager" allow="autoplay"></iframe>
-            <div class="loader"><span>İşaretçi yükleniyor</span></div>
+            <iframe id="player" title="Üç boyutlu avatar" loading="eager" allow="autoplay"></iframe>
+            <div class="loader"><span>Avatar yükleniyor</span></div>
             <div class="busy" aria-hidden="true">Cümleniz hazırlanıyor</div>
             <div class="caption" id="caption" aria-hidden="true"></div>
             <button class="bigplay" id="bigplay" type="button" aria-label="Durdur">
@@ -362,7 +362,7 @@ footer p { margin: 0; max-width: 46em; }
             <button class="btn" id="slow" type="button" aria-pressed="false">Yarım hız</button>
             <button class="btn" id="face" type="button" aria-pressed="true">Yüz açık</button>
             <label class="yaw">Döndür
-              <input id="yaw" type="range" min="-90" max="90" step="1" value="0" aria-label="İşaretçiyi döndür">
+              <input id="yaw" type="range" min="-90" max="90" step="1" value="0" aria-label="Avatarı döndür">
             </label>
           </div>
           <p class="kbd">Durdurmak veya devam ettirmek için <kbd>Boşluk</kbd> tuşunu da kullanabilirsiniz.</p>
@@ -377,7 +377,7 @@ footer p { margin: 0; max-width: 46em; }
             <li><i class="context"></i>Bağlamdan seçildi</li>
             <li><i class="sub"></i>Yerine geçen işaret</li>
             <li><i class="spell"></i>Parmak alfabesi</li>
-            <li><i class="space"></i>Uzam ve yön</li>
+            <li><i class="space"></i>İşaretleme alanı ve yön</li>
           </ul>
         </div>
       </div>
@@ -390,12 +390,12 @@ footer p { margin: 0; max-width: 46em; }
 
     <section class="block" id="how" aria-labelledby="how-h">
       <h2 class="big" id="how-h">Üç aşama, her biri incelenebilir.</h2>
-      <p class="sub">İşaret dili, konuşulan dilin sözcük sözcük karşılığı değildir. Sözcük sırası, uzam ve hareket de dilbilgisi taşır. SignPoze her kararı görünür kılar, böylece bir hatanın hangi aşamadan geldiği bulunabilir. Aşağıdaki paneller, yukarıda oynatılan cümleyi gösterir.</p>
+      <p class="sub">İşaret dili, konuşulan dilin sözcük sözcük karşılığı değildir. Sözcük sırası, işaretleme alanı ve hareket de dilbilgisi taşır. SignPoze her kararı görünür kılar, böylece bir hatanın hangi aşamadan geldiği bulunabilir. Aşağıdaki paneller, yukarıda oynatılan cümleyi gösterir.</p>
       <div class="steps">
         <div class="step">
           <div class="n">1</div>
           <h3>Yorumla</h3>
-          <p>Claude Haiku 5.5 cümleyi okur ve bir işaret planı hazırlar: TİD'e uygun sözcük sırası, olumsuzluk, soru, özel adlar ve işaret uzamında hangi göndergelere yer ayrılacağı.</p>
+          <p>Claude Haiku 5.5 cümleyi okur ve bir işaret planı hazırlar: TİD'e uygun sözcük sırası, olumsuzluk, soru, özel adlar ve işaretleme alanında hangi göndergelere yer ayrılacağı.</p>
           <div class="panel">
             <p class="k">Girdi</p><p class="v" id="p-tr"></p>
             <p class="k">İşaret planı</p><p class="v gl" id="p-gl"></p>
@@ -410,7 +410,7 @@ footer p { margin: 0; max-width: 46em; }
         <div class="step">
           <div class="n">3</div>
           <h3>Canlandır</h3>
-          <p>Kaynak videolardan çıkarılan gövde, el ve yüz hareketleri, yeniden zamanlanmış geçişlerle birleştirilir. Hareket insan eklem sınırları içinde tutulur; yönlü eylemlerde eller uzamdaki ilgili noktalara yöneltilir.</p>
+          <p>Kaynak videolardan çıkarılan gövde, el ve yüz hareketleri, yeniden zamanlanmış geçişlerle birleştirilir. Hareket insan eklem sınırları içinde tutulur; uyum fiillerinde eller işaretleme alanındaki ilgili noktalara yöneltilir.</p>
           <div class="panel stats" id="p-stats"></div>
         </div>
       </div>
@@ -423,9 +423,9 @@ footer p { margin: 0; max-width: 46em; }
         <div>
           <h3>Diller arasında ortak</h3>
           <ul>
-            <li><b>İşaret planı biçimi.</b> Olumsuzluk, soru, ikileme ve uzamsal gönderim işaretlerini içeren bir gloss dizisi.</li>
+            <li><b>İşaret planı biçimi.</b> Olumsuzluk, soru, ikileme ve işaretleme alanında gönderim işaretlerini içeren bir gloss dizisi.</li>
             <li><b>Arama ve yedek çözümler.</b> Cümle bağlamına göre anlam seçimi, eş anlamlı ve kök biçim eşleştirme, uygun işaret yoksa parmak alfabesi.</li>
-            <li><b>Hareket motoru.</b> Videodan çıkarılan poz verisi, yeniden zamanlanmış geçişler, eklem sınırları, el teması, yüz ve ağız hareketi, uzamsal uyum.</li>
+            <li><b>Hareket motoru.</b> Videodan çıkarılan poz verisi, yeniden zamanlanmış geçişler, eklem sınırları, el teması, yüz ve ağız hareketi, işaretleme alanında uyum.</li>
             <li><b>Değerlendirme.</b> Otomatik gloss ve poz ölçütleri; ayrıca Sağır işaretçilerle ve tercümanlarla yapılacak çalışmalar için araçlar.</li>
           </ul>
         </div>
@@ -433,7 +433,7 @@ footer p { margin: 0; max-width: 46em; }
           <h3>Her dil için eklenen</h3>
           <ul>
             <li><b>Kayıtlar.</b> Ana dili işaret dili olan işaretçilerden, onay ve yeniden kullanım lisansıyla alınmış işaret sözlüğü.</li>
-            <li><b>Dilbilimsel kurallar.</b> Sözcük sırası, olumsuzluk ve soru işaretleme, eylem uyumu, parmak alfabesi.</li>
+            <li><b>Dilbilimsel kurallar.</b> Sözcük sırası, olumsuzluk ve soru işaretleme, fiil uyumu, parmak alfabesi.</li>
             <li><b>Örnekler.</b> Yorumlama aşamasına hedef dilin dilbilgisini öğreten paralel cümle çiftleri.</li>
             <li><b>Doğrulama.</b> Herkese açık kullanımdan önce o dili kullanan işaretçilerden alınan değerlendirmeler.</li>
           </ul>
@@ -459,7 +459,7 @@ footer p { margin: 0; max-width: 46em; }
         <p>İstemler, TİD'e özgü yönergeler ve çözümlü örnekler içerir. Aynı cümle tekrar istendiğinde hızlı ve düşük maliyetli yanıt verilsin diye sonuçlar cümleye ve istem sürümüne göre önbelleğe alınır.</p>
       </div>
       <ol>
-        <li><b>İşaret planını yazmak</b><span>Türkçe cümleyi; olumsuzluk, soru ve uzam işaretlerini içeren, sıralı bir TİD gloss dizisine çevirir.</span></li>
+        <li><b>İşaret planını yazmak</b><span>Türkçe cümleyi; olumsuzluk, soru ve işaretleme alanı işaretlerini içeren, sıralı bir TİD gloss dizisine çevirir.</span></li>
         <li><b>Yerine geçecek işareti değerlendirmek</b><span>Bir işaret sözlükte yoksa Claude aday işaretleri ve tanımlarını cümleyle karşılaştırır; birini kabul eder ya da hepsini reddedip parmak alfabesini seçer.</span></li>
         <li><b>Sırada: etiketleme desteği</b><span>Kendi işaret kayıtlarımızda tutarlılık denetimi. Her dilbilimsel kararı bir insan gözden geçirir.</span></li>
       </ol>
@@ -468,7 +468,7 @@ footer p { margin: 0; max-width: 46em; }
 
   <footer>
     <p>SignPoze araştırma aşamasındaki bir üründür. Burada gösterilen işaretleme otomatik olarak üretilmiştir ve Sağır işaretçilerle birlikte değerlendirilmektedir. İnsan tercümanların yerini almaz.</p>
-    <p>İşaretçi modeli: Microsoft Rocketbox (MIT lisansı). İşaret kaynakları: TİD Sözlük, İşaretçe, Spread the Sign alfabesi.</p>
+    <p>Avatar modeli: Microsoft Rocketbox (MIT lisansı). İşaret kaynakları: TİD Sözlük, İşaretçe, Spread the Sign alfabesi.</p>
   </footer>
 </div>
 
@@ -490,11 +490,11 @@ footer p { margin: 0; max-width: 46em; }
     '02-01': 'Olumsuzluk',
     '1687-02': 'Olumsuzluk, çoğul gönderme',
     '492-03': 'Parmak alfabesiyle gösterilen sözcük',
-    '1330-01': 'İşaret uzamında gösterme, yönlü eylem',
+    '1330-01': 'İşaretleme alanında gösterme, uyum fiili',
     '1217-01': 'Olumsuzluk, anlam bağlamdan seçildi',
     '241-06': 'Alıntı sözcük, daha uzun cümle',
     '1917-02': 'Soru, aktarılan söz',
-    '299-01': 'Kendine (işaretçiye) yönelen eylem',
+    '299-01': 'Kendine yönelen uyum fiili',
   };
   const KIND = {
     'direct': ['direct', 'Sözlük işareti'],
@@ -508,17 +508,17 @@ footer p { margin: 0; max-width: 46em; }
     'orthographic': ['sub', 'Yazım varyantı'],
     'oov-llm': ['sub', 'Claude\'un seçtiği karşılık'],
     'fingerspell': ['spell', 'Parmak alfabesi'],
-    'synth-ix': ['space', 'Uzamda nokta'],
-    'synth-agr': ['space', 'Yönlü eylem'],
+    'synth-ix': ['space', 'İşaretleme alanında nokta'],
+    'synth-agr': ['space', 'Uyum fiili'],
   };
   const kindOf = (s) => KIND[s] || ['direct', s || 'Sözlük işareti'];
   const sourceText = (src, strat) => {
-    if (!src) return strat && strat.startsWith('synth') ? 'Uzam kurallarından üretildi' : '';
+    if (!src) return strat && strat.startsWith('synth') ? 'İşaretleme alanı kurallarından üretildi' : '';
     if (/^\d+$/.test(src)) return 'TİD Sözlük, madde ' + src;
     if (src.startsWith('isaretce')) return 'İşaretçe sözlüğü';
     if (src.startsWith('spreadthesign-lex')) return 'Spread the Sign sözlüğü';
     if (src.startsWith('fingerspell')) return 'Parmak alfabesi, harf harf';
-    if (src.startsWith('synth')) return 'Uzam kurallarından üretildi';
+    if (src.startsWith('synth')) return 'İşaretleme alanı kurallarından üretildi';
     return src;
   };
 
