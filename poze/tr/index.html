@@ -328,7 +328,7 @@ footer p { margin: 0; max-width: 46em; }
         <form id="liveForm" novalidate>
           <div class="field">
             <label for="sentence">Türkçe cümle</label>
-            <textarea id="sentence" maxlength="200" placeholder="Yarın sabah saat onda toplantımız var." required></textarea>
+            <textarea id="sentence" maxlength="200" placeholder="Annem yemek yapıyor." required></textarea>
             <span class="hint">En fazla 200 karakter. Kısa, günlük cümleler en iyi sonucu verir.</span>
           </div>
           <div class="tries" id="tries" aria-label="Örnek cümleler"></div>
@@ -667,7 +667,7 @@ footer p { margin: 0; max-width: 46em; }
 
   // ---------------- live mode ----------------
   const API_DEFAULT = 'https://poze-api-79059222633.europe-west1.run.app';
-  const TRIES = ['Yarın sabah saat onda toplantımız var.', 'Kütüphane hafta sonu kapalı.', 'Annem bana kırmızı bir kitap verdi.', 'Bu otobüs hastaneye gidiyor mu?'];
+  const TRIES = ['Annem yemek yapıyor.', 'Sen nerede çalışıyorsun?', 'Bu akşam saat dokuzda buluşacağız.', 'Hava bugün çok güzel.'];
   TRIES.forEach((s) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'try'; b.textContent = s; b.onclick = () => { $('sentence').value = s; $('sentence').focus(); }; $('tries').appendChild(b); });
   const params = new URLSearchParams(location.search);
   const API = (params.get('api') || API_DEFAULT).replace(/\/+$/, '');
