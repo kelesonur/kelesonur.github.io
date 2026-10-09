@@ -353,6 +353,10 @@ if (M.hh && M.arms.L.wrist && M.arms.R.wrist && !DBG.has('notouchz')) {
         return h.map((p, k) => [0, 1, 2].map((q) => 0.25 * a[k][q] + 0.5 * p[q] + 0.25 * c[k][q]));
       });
     }
+    const pt = rel.map((h, i) => free(i) && A.active[i] > 0.3 && pointing(h));
+    let wt = pt.map((v) => (v ? 1 : 0));
+    for (let pass = 0; pass < 2; pass++) { const w0 = wt; wt = w0.map((v, i) => 0.25 * w0[Math.max(0, i - 1)] + 0.5 * v + 0.25 * w0[Math.min(N - 1, i + 1)]); }
+    let flexSign = 1;
     for (let i = 0; i < N; i++) {
       const h = rel[i];
       if (free(i)) for (const [a0, a1, a2, a3] of FING) {
@@ -362,7 +366,7 @@ if (M.hh && M.arms.L.wrist && M.arms.R.wrist && !DBG.has('notouchz')) {
         // POINT_2026_10_09 (SEN, BEN, O...): index out with the other three fingers curled is a pointing
         // hand. The tracker leaves the index flexed ~50 deg at the knuckle, so it looks hooked; it is
         // brought in line with the palm and the rest of the finger follows.
-        if (a0 === 5 && pointing(h)) {
+        if (a0 === 5 && pt[i]) {
           const u = new THREE.Vector3(...h[5]).sub(new THREE.Vector3(...h[0]));
           const thk = d0.angleTo(u);
           const thk2 = thk <= 1.05 ? 0 : thk >= 1.4 ? thk : thk * (thk - 1.05) / 0.35;
@@ -377,6 +381,29 @@ if (M.hh && M.arms.L.wrist && M.arms.R.wrist && !DBG.has('notouchz')) {
         d2 = toward(d2, d1, fixBend(th2));
         const q1 = P[1].clone(), q2 = q1.clone().add(d1), q3 = q2.clone().add(d2);
         h[a2] = q2.toArray(); h[a3] = q3.toArray();
+      }
+      if (wt[i] > 0.02 && free(i)) {
+        // FIST_2026_10_09: the curled fingers of a pointing hand are tracked loosely (they are hidden
+        // behind the hand), so they are set to a fist: knuckle 80, middle joint +85, end joint +50 deg
+        const V3 = (a) => new THREE.Vector3(...a);
+        const fwd = V3(h[9]).sub(V3(h[0])).normalize();
+        const side = V3(h[5]).sub(V3(h[17])).normalize();
+        const nrm = side.clone().cross(fwd).normalize();
+        // which way the fingers curl: from the recorded ring and pinky, else as in the frame before
+        let sc = 0;
+        for (const [m, n2, o, t] of [[13, 14, 15, 16], [17, 18, 19, 20]]) {
+          const e0 = V3(h[n2]).sub(V3(h[m])), e1 = V3(h[o]).sub(V3(h[n2])), e2 = V3(h[t]).sub(V3(h[o]));
+          sc += e1.clone().add(e2).sub(e0.multiplyScalar(2)).dot(nrm);
+        }
+        if (Math.abs(sc) > 0.01) flexSign = sc > 0 ? 1 : -1;
+        const fn = nrm.clone().multiplyScalar(-flexSign);
+        const dir = (deg) => fwd.clone().multiplyScalar(Math.cos(deg * Math.PI / 180)).addScaledVector(fn, Math.sin(deg * Math.PI / 180));
+        const w = Math.min(1, wt[i]);
+        for (const [m, n2, o, t] of [[9, 10, 11, 12], [13, 14, 15, 16], [17, 18, 19, 20]]) {
+          const L0 = V3(h[n2]).sub(V3(h[m])).length(), L1 = V3(h[o]).sub(V3(h[n2])).length(), L2 = V3(h[t]).sub(V3(h[o])).length();
+          const q1 = V3(h[m]).addScaledVector(dir(80), L0), q2 = q1.clone().addScaledVector(dir(165), L1), q3 = q2.clone().addScaledVector(dir(215), L2);
+          for (const [k, q] of [[n2, q1], [o, q2], [t, q3]]) h[k] = V3(h[k]).lerp(q, w).toArray();
+        }
       }
       A.hand[i] = h.map((p, k) => [p[0] + A.hand[i][0][0], p[1] + A.hand[i][0][1], p[2] + A.hand[i][0][2]]);
     }
