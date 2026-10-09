@@ -63,3 +63,8 @@ an https page to a local http server; use Chrome or Edge for the local setup.
 - Thumb of a pointing hand rests on the fist (photo of the real signer, 9 Oct).
 - Eyebrows rise on question words (`QUESTION_WORD` in `player/index.html`: NE, NASIL, NEREDE, KİM, NEDEN, NİÇİN,
   KAÇ, HANGİ and forms), fading in 4 frames before the sign and out 5 frames after. Add words to that list.
+
+
+## Agreement verbs (9 Oct 2026)
+- Player puts the depth of an agreement verb back (wrist moves from start locus depth to end locus depth), because the exported wrist stays at arm's length. This is a compensation; the cause is upstream in the synthesis/export.
+- Sideways eye gaze is no longer taken from the export (it was set during IX). The eyes turn toward the end locus only during an agreement verb (3a = left sign, 3b = opposite; 3b sign assumed).
