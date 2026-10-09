@@ -122,7 +122,7 @@ if (RENDER) document.documentElement.classList.add('render');
 const EMBED = QS.get('embed') === '1';
 if (EMBED) document.documentElement.classList.add('embed');
 let playbackReady = false;
-let M, T = 0, frame = 0, t = 0, playing = false, speed = 1, loop = true, faceOn = true;
+let M, T = 0, frame = 0, t = 0, playing = false, speed = 0.75, loop = true, faceOn = true;
 
 try {
   M = await (await fetch(QS.get('m') || 'motion_1003-03.json', {cache: 'no-store'})).json();
@@ -577,6 +577,12 @@ function offsAt(i, h, tL, tR) {
   const [sl, sr] = shares(i);
   return [tL.clone().addScaledVector(AXIS[i], -sl * h), tR.clone().addScaledVector(AXIS[i], sr * h)];
 }
+// recorded hands that touch (2D, hh) in a dictionary sign, both arms active, avatar hands still apart
+function signTouch(i, hh, aL, aR, gap) {
+  if (DBG.has('nosigntouch')) return false;
+  const fs = Math.max(M.arms.L.fs ? M.arms.L.fs[i] : 0, M.arms.R.fs ? M.arms.R.fs[i] : 0);
+  return fs < 0.5 && !!(M.label && M.label[i]) && aL > 0.3 && aR > 0.3 && hh < 0.045 && gap > 0.03 && gap < 0.09;
+}
 // what frame i still needs: dh (hand-hand, + = apart) and torso pushes; kind of hand-hand need
 function frameNeed(i, h, tL, tR, iters, allowPull, allowBack) {
   let dh = 0, kind = 0;                 // kind: 1 push, -1 pull, -2 take back
@@ -600,10 +606,12 @@ function frameNeed(i, h, tL, tR, iters, allowPull, allowBack) {
     if (aL > 0.05 && aR > 0.05) {
       const { gap, closest } = handGap();
       if (gap < -0.001) { dh += -gap + 0.003; kind = 1; changed = true; }
-      else if (fsContact(i) && gap > 0.006 && closest) {
+      else if ((fsContact(i) || (it < iters - 1 && signTouch(i, hh, aL, aR, gap))) && gap > 0.006 && closest) {
         // FS_CONTACT: close the remaining gap along the line between the nearest hand parts
         // (the hand-hand axis is sideways; in R the hands meet one above the other)
-        const g = 0.5 * (gap - 0.003);
+        // SIGN_TOUCH_2026_10_09 (Onur: İSİM / AD, the hands do not touch): the same pull for any
+        // two-handed sign whose recorded hands touch, not only fingerspelled letters
+        const g = fsContact(i) ? 0.5 * (gap - 0.003) : 0.5 * (gap - 0.006) * Math.min(1, (0.045 - hh) / 0.02);
         t.L.addScaledVector(closest, g); t.R.addScaledVector(closest, -g); changed = true;
       }
       else if (DBG.has('nohh') && !recordedFS) { /* no pull / take-back */ }   // FS_CONTACT_2026_10_05: letters whose hands touch (T, R, M) are pulled into contact
@@ -743,6 +751,18 @@ function computeOffsets() {
   for (let i = 0; i < T; i++) {
     const [oL, oR] = offsAt(i, H2[i], TP.L[i], TP.R[i]);
     OFFS.L.push(oL); OFFS.R.push(oR);
+  }
+  // SIGN_TOUCH_2026_10_09: after all smoothing, hands that still overlap are pushed apart
+  // (the touch pull above must never leave one hand inside the other)
+  if (!DBG.has('nohh')) for (let i = 0; i < T; i++) {
+    if (Math.min(M.arms.L.active[i], M.arms.R.active[i]) < 0.3) continue;
+    for (let it = 0; it < 4; it++) {
+      poseAt(i, OFFS.L[i], OFFS.R[i]);
+      const { gap, dir } = handGap();
+      if (gap > -0.001 || !dir) break;
+      const d = dir.clone().multiplyScalar((-gap + 0.002) * 0.5);
+      OFFS.L[i].sub(d); OFFS.R[i].add(d);
+    }
   }
 }
 // Avatar landmark k (MediaPipe hand numbering) of the posed hand of side s, world.
@@ -1658,7 +1678,7 @@ function setPlaying(p) {
   if (p) { t = frame / M.fps; clock.getDelta(); }
 }
 $('play').onclick = () => setPlaying(!playing);
-$('slow').onclick = () => { speed = speed === 1 ? 0.5 : 1; $('slow').setAttribute('aria-pressed', String(speed !== 1)); };
+$('slow').onclick = () => { speed = speed === 0.75 ? 0.5 : 0.75; $('slow').setAttribute('aria-pressed', String(speed !== 0.75)); };
 $('loop').onclick = () => { loop = !loop; $('loop').setAttribute('aria-pressed', String(loop)); };
 $('face').onclick = () => {
   faceOn = !faceOn;

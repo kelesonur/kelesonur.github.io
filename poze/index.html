@@ -505,6 +505,7 @@ footer p { margin: 0; max-width: 46em; }
     return src;
   };
 
+  const NORMAL = 0.75;   // normal playback = 75% of recorded speed (slowed 9 Oct 2026)
   let EX = [], cur = null, chipEls = [], playing = true, total = 1, slow = false, faceOn = true;
   const player = $('player'), stage = $('stage');
 
@@ -579,7 +580,7 @@ footer p { margin: 0; max-width: 46em; }
     const d = e.data; if (!d || !d.poze || e.source !== player.contentWindow) return;
     if (d.type === 'ready') {
       total = d.total; stage.classList.add('ready');
-      post({ type: 'speed', value: slow ? 0.5 : 1 });
+      post({ type: 'speed', value: slow ? 0.5 : NORMAL });
       post({ type: 'view', value: +$('yaw').value });
       if (!faceOn) post({ type: 'face', value: false });
       setPlaying(true, false);
@@ -602,7 +603,7 @@ footer p { margin: 0; max-width: 46em; }
   }
   $('play').onclick = () => setPlaying(!playing);
   $('replay').onclick = () => { post({ type: 'restart' }); setPlaying(true, false); };
-  $('slow').onclick = () => { slow = !slow; $('slow').setAttribute('aria-pressed', String(slow)); post({ type: 'speed', value: slow ? 0.5 : 1 }); };
+  $('slow').onclick = () => { slow = !slow; $('slow').setAttribute('aria-pressed', String(slow)); post({ type: 'speed', value: slow ? 0.5 : NORMAL }); };
   $('face').onclick = () => { faceOn = !faceOn; $('face').setAttribute('aria-pressed', String(faceOn)); $('face').textContent = faceOn ? 'Face on' : 'Face off'; post({ type: 'face', value: faceOn }); };
   $('yaw').oninput = (e) => post({ type: 'view', value: +e.target.value });
 

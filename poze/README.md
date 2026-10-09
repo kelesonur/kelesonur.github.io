@@ -48,3 +48,10 @@ an https page to a local http server; use Chrome or Edge for the local setup.
 
     cd poze_site && python3 -m http.server 8000
     open http://localhost:8000/
+
+## Changes 9 Oct 2026
+
+- Normal playback is now 75% of recorded speed (half speed button unchanged).
+- Two-handed dictionary signs whose recorded hands touch (for example İSİM) now pull the avatar's hands
+  together (`signTouch` in `player/index.html`); before, only fingerspelled letters did.
+  Known leftover: a few frames in 1330-01 and 492-03 still overlap by about 1 cm.
