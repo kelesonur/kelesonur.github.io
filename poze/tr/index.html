@@ -323,13 +323,13 @@ footer p { margin: 0; max-width: 46em; }
     <section class="hero2" aria-labelledby="h1">
       <div>
         <h1 id="h1"><span>Türkçe yazın.</span> <span>TİD olarak izleyin.</span></h1>
-        <p class="lede">SignPoze yazılı cümleleri Türk İşaret Dili'ne (TİD) çevirir ve üç boyutlu bir işaretçiyle gösterir. Bir cümle yazın: Claude Haiku 5.5 işaret planını yazar, sunucu işaretleri seçip hareketi oluşturur, işaretçi tarayıcınızda canlanır.</p>
+        <p class="lede">SignPoze, yazdığınız Türkçe cümleyi Türk İşaret Dili'ne (TİD) çevirir ve üç boyutlu bir işaretçiyle gösterir. Bir cümle yazın: Claude Haiku 5.5 işaret planını hazırlar, sunucu işaretleri seçip hareketi oluşturur, işaretçi de tarayıcınızda canlanır.</p>
 
         <form id="liveForm" novalidate>
           <div class="field">
             <label for="sentence">Türkçe cümle</label>
             <textarea id="sentence" maxlength="200" placeholder="Yarın sabah saat onda toplantımız var." required></textarea>
-            <span class="hint">En fazla 200 karakter. Kısa ve günlük cümleler en iyi sonucu verir.</span>
+            <span class="hint">En fazla 200 karakter. Kısa, günlük cümleler en iyi sonucu verir.</span>
           </div>
           <div class="tries" id="tries" aria-label="Örnek cümleler"></div>
           <button class="btn primary" id="go" type="submit">TİD'e çevir</button>
@@ -365,7 +365,7 @@ footer p { margin: 0; max-width: 46em; }
               <input id="yaw" type="range" min="-90" max="90" step="1" value="0" aria-label="İşaretçiyi döndür">
             </label>
           </div>
-          <p class="kbd">Durdurmak ya da sürdürmek için <kbd>Boşluk</kbd> tuşuna da basabilirsiniz.</p>
+          <p class="kbd">Durdurmak veya devam ettirmek için <kbd>Boşluk</kbd> tuşunu da kullanabilirsiniz.</p>
         </div>
 
         <div class="now" aria-live="polite">
@@ -390,12 +390,12 @@ footer p { margin: 0; max-width: 46em; }
 
     <section class="block" id="how" aria-labelledby="how-h">
       <h2 class="big" id="how-h">Üç aşama, her biri incelenebilir.</h2>
-      <p class="sub">İşaret dili, konuşulan dilin sözcük sözcük kopyası değildir. Sözcük sırası, uzam ve hareket dilbilgisi taşır. SignPoze her kararı görünür tutar; böylece bir hata, onu yapan aşamaya kadar izlenebilir. Aşağıdaki paneller yukarıda oynayan cümleyi izler.</p>
+      <p class="sub">İşaret dili, konuşulan dilin sözcük sözcük karşılığı değildir. Sözcük sırası, uzam ve hareket de dilbilgisi taşır. SignPoze her kararı görünür kılar, böylece bir hatanın hangi aşamadan geldiği bulunabilir. Aşağıdaki paneller, yukarıda oynatılan cümleyi gösterir.</p>
       <div class="steps">
         <div class="step">
           <div class="n">1</div>
           <h3>Yorumla</h3>
-          <p>Claude Haiku 5.5 cümleyi okur ve bir işaret planı yazar: TİD sözcük sırası, olumsuzluk, sorular, adlar ve hangi göndergelerin işaret uzamında bir yer alacağı.</p>
+          <p>Claude Haiku 5.5 cümleyi okur ve bir işaret planı hazırlar: TİD'e uygun sözcük sırası, olumsuzluk, soru, özel adlar ve işaret uzamında hangi göndergelere yer ayrılacağı.</p>
           <div class="panel">
             <p class="k">Girdi</p><p class="v" id="p-tr"></p>
             <p class="k">İşaret planı</p><p class="v gl" id="p-gl"></p>
@@ -404,38 +404,38 @@ footer p { margin: 0; max-width: 46em; }
         <div class="step">
           <div class="n">2</div>
           <h3>İşaretleri seç</h3>
-          <p>Planlanan her işaret, kayıtlı sözlük işaretleriyle eşleştirilir. Doğru anlamı bağlam seçer. Uygun bir işaret yoksa Claude tüm adayları reddedebilir ve sözcük parmak alfabesiyle gösterilir.</p>
+          <p>Planlanan her işaret, kayıtlı sözlük işaretleriyle eşleştirilir. Doğru anlamı bağlam belirler. Uygun işaret yoksa Claude tüm adayları reddedebilir ve sözcük parmak alfabesiyle gösterilir.</p>
           <div class="panel reswrap"><table class="res" aria-label="Her işaretin nasıl bulunduğu"><tbody id="p-res"></tbody></table></div>
         </div>
         <div class="step">
           <div class="n">3</div>
           <h3>Canlandır</h3>
-          <p>Kaynak videolardan izlenen gövde, el ve yüz hareketi yeniden zamanlanmış geçişlerle birleştirilir, insan eklem sınırları içinde tutulur ve yönlü eylemlerde uzamdaki noktalara yöneltilir.</p>
+          <p>Kaynak videolardan çıkarılan gövde, el ve yüz hareketleri, yeniden zamanlanmış geçişlerle birleştirilir. Hareket insan eklem sınırları içinde tutulur; yönlü eylemlerde eller uzamdaki ilgili noktalara yöneltilir.</p>
           <div class="panel stats" id="p-stats"></div>
         </div>
       </div>
     </section>
 
     <section class="block" id="languages" aria-labelledby="lang-h">
-      <h2 class="big" id="lang-h">Bir kez kurulur. Her seferinde bir işaret diline genişler.</h2>
-      <p class="sub">Dünyada 300'den fazla işaret dili var. Çoğu için hiç otomatik çeviri yok. SignPoze, tüm işaret dillerinin paylaştığı parçaları her dilin kendi ihtiyaçlarından ayırır. Bu yüzden yeni bir dil, yeni bir sistem değil; yeni kayıtlar ve yeni kurallar demektir.</p>
+      <h2 class="big" id="lang-h">Tek sistem, her işaret diline uyarlanabilir.</h2>
+      <p class="sub">Dünyada 300'den fazla işaret dili var ve çoğu için otomatik çeviri yok. SignPoze, işaret dillerinin ortak yönlerini her dilin kendine özgü gereksinimlerinden ayırır. Böylece yeni bir dil için yeni bir sistem gerekmez; yeni kayıtlar ve kurallar yeter.</p>
       <div class="split">
         <div>
           <h3>Diller arasında ortak</h3>
           <ul>
-            <li><b>İşaret planı biçimi.</b> Olumsuzluk, soru, ikileme ve uzamsal gönderim işaretleri içeren bir gloss dizisi.</li>
-            <li><b>Arama ve yedek yollar.</b> Cümle bağlamından anlam seçimi, eş anlamlı ve kök biçim eşleştirme, uygun işaret yoksa parmak alfabesi.</li>
-            <li><b>Hareket motoru.</b> Videodan poz izleri, yeniden zamanlanmış geçişler, eklem sınırları, el teması, yüz ve ağız hareketi, uzamsal uyum.</li>
-            <li><b>Değerlendirme.</b> Otomatik gloss ve poz ölçütleri, ayrıca Sağır işaretçiler ve tercümanlar için çalışma araçları.</li>
+            <li><b>İşaret planı biçimi.</b> Olumsuzluk, soru, ikileme ve uzamsal gönderim işaretlerini içeren bir gloss dizisi.</li>
+            <li><b>Arama ve yedek çözümler.</b> Cümle bağlamına göre anlam seçimi, eş anlamlı ve kök biçim eşleştirme, uygun işaret yoksa parmak alfabesi.</li>
+            <li><b>Hareket motoru.</b> Videodan çıkarılan poz verisi, yeniden zamanlanmış geçişler, eklem sınırları, el teması, yüz ve ağız hareketi, uzamsal uyum.</li>
+            <li><b>Değerlendirme.</b> Otomatik gloss ve poz ölçütleri; ayrıca Sağır işaretçilerle ve tercümanlarla yapılacak çalışmalar için araçlar.</li>
           </ul>
         </div>
         <div>
           <h3>Her dil için eklenen</h3>
           <ul>
-            <li><b>Kayıtlar.</b> Ana dili işaret dili olan işaretçilerden, onay ve yeniden kullanım lisansıyla alınmış bir işaret sözlüğü.</li>
-            <li><b>Dilbilimsel kurallar.</b> Sözcük sırası, olumsuzluk ve soru işaretleme, eylem uyumu ve parmak alfabesi.</li>
-            <li><b>Örnekler.</b> Yorumlama aşamasına hedef dilin dilbilgisini öğreten paralel cümleler.</li>
-            <li><b>Doğrulama.</b> Herkese açık kullanımdan önce o dilin işaretçilerinden alınan değerlendirmeler.</li>
+            <li><b>Kayıtlar.</b> Ana dili işaret dili olan işaretçilerden, onay ve yeniden kullanım lisansıyla alınmış işaret sözlüğü.</li>
+            <li><b>Dilbilimsel kurallar.</b> Sözcük sırası, olumsuzluk ve soru işaretleme, eylem uyumu, parmak alfabesi.</li>
+            <li><b>Örnekler.</b> Yorumlama aşamasına hedef dilin dilbilgisini öğreten paralel cümle çiftleri.</li>
+            <li><b>Doğrulama.</b> Herkese açık kullanımdan önce o dili kullanan işaretçilerden alınan değerlendirmeler.</li>
           </ul>
         </div>
       </div>
@@ -443,31 +443,31 @@ footer p { margin: 0; max-width: 46em; }
 
     <section class="block" id="evidence" aria-labelledby="ev-h">
       <h2 class="big" id="ev-h">Varsayım değil, ölçüm.</h2>
-      <p class="sub">SignPoze, işaret dili ve dil modelleri üzerine akademik araştırmadan doğdu. Her aşamayı test ediyoruz ve sistemi, hizmet ettiği insanlarla birlikte test ediyoruz.</p>
+      <p class="sub">SignPoze, işaret dili ve dil modelleri üzerine yapılan akademik araştırmadan doğdu. Her aşamayı ayrı ayrı test ediyoruz, sistemi de kullanacak insanlarla birlikte test ediyoruz.</p>
       <div class="facts">
-        <div class="fact"><b>371</b><span>otomatik test setindeki, eğitimde kullanılmamış Türkçe cümle</span></div>
-        <div class="fact"><b>%99,9</b><span>bu sette planlanan işaretlerin videoda gerçekleşen oranı (5.062 işaretin 5.056'sı)</span></div>
-        <div class="fact"><b>11</b><span>işaret planı için karşılaştırılan açık ve kapalı model kurulumu</span></div>
-        <div class="fact"><b>3</b><span>işaretçi çalışmamızdaki koşul: SignPoze, uzman planlı SignPoze ve gerçek bir işaretçi</span></div>
+        <div class="fact"><b>371</b><span>otomatik test setindeki, ayrılmış Türkçe cümle</span></div>
+        <div class="fact"><b>%99,9</b><span>bu sette planlanan işaretlerden videoda yer alanların oranı (5.062 işaretin 5.056'sı)</span></div>
+        <div class="fact"><b>11</b><span>işaret planı için karşılaştırılan açık ve kapalı model</span></div>
+        <div class="fact"><b>3</b><span>işaretçi çalışmamızdaki koşul: SignPoze, uzman planıyla SignPoze ve gerçek bir işaretçi</span></div>
       </div>
     </section>
 
     <section class="claude" aria-labelledby="cl-h">
       <div>
         <h2 id="cl-h">Claude ile geliştirildi.</h2>
-        <p>Claude Haiku 5.5, anlamı kavramayı gerektiren iki adımı üstlenir. Diğer tüm adımlar belirlenimci ve izlenebilirdir; bu yüzden bir dil modeli kararı her zaman adı konmuş, incelenebilir bir adımdır.</p>
-        <p>İstemler TİD'e özgü talimatlar ve çözümlü örnekler içerir. Tekrar eden istekler hızlı ve düşük maliyetli olsun diye sonuçlar cümleye ve istem sürümüne göre önbelleğe alınır.</p>
+        <p>Claude Haiku 5.5, anlam anlayışı gerektiren iki adımı yürütür. Diğer adımlar kural tabanlıdır ve izlenebilir; bu yüzden dil modelinin verdiği her karar ayrı bir adım olarak görülür ve gözden geçirilebilir.</p>
+        <p>İstemler, TİD'e özgü yönergeler ve çözümlü örnekler içerir. Aynı cümle tekrar istendiğinde hızlı ve düşük maliyetli yanıt verilsin diye sonuçlar cümleye ve istem sürümüne göre önbelleğe alınır.</p>
       </div>
       <ol>
-        <li><b>İşaret planını yazmak</b><span>Türkçe cümleden olumsuzluk, soru ve uzam işaretleri içeren sıralı bir TİD gloss dizisine.</span></li>
-        <li><b>Yerine geçecek işareti değerlendirmek</b><span>Bir işaret eksik olduğunda Claude aday işaretleri ve tanımlarını cümleyle karşılaştırır; birini kabul eder ya da hepsini reddedip parmak alfabesini seçer.</span></li>
-        <li><b>Sırada: etiketleme desteği</b><span>Kendi işaret kayıtlarımızda tutarlılık denetimleri; her dilbilimsel kararı bir insan gözden geçirir.</span></li>
+        <li><b>İşaret planını yazmak</b><span>Türkçe cümleyi; olumsuzluk, soru ve uzam işaretlerini içeren, sıralı bir TİD gloss dizisine çevirir.</span></li>
+        <li><b>Yerine geçecek işareti değerlendirmek</b><span>Bir işaret sözlükte yoksa Claude aday işaretleri ve tanımlarını cümleyle karşılaştırır; birini kabul eder ya da hepsini reddedip parmak alfabesini seçer.</span></li>
+        <li><b>Sırada: etiketleme desteği</b><span>Kendi işaret kayıtlarımızda tutarlılık denetimi. Her dilbilimsel kararı bir insan gözden geçirir.</span></li>
       </ol>
     </section>
   </main>
 
   <footer>
-    <p>SignPoze araştırma aşamasında bir üründür. Burada gösterilen işaretleme otomatik olarak üretilmiştir ve Sağır işaretçilerle değerlendirilmektedir. İnsan tercümanların yerini tutmaz.</p>
+    <p>SignPoze araştırma aşamasındaki bir üründür. Burada gösterilen işaretleme otomatik olarak üretilmiştir ve Sağır işaretçilerle birlikte değerlendirilmektedir. İnsan tercümanların yerini almaz.</p>
     <p>İşaretçi modeli: Microsoft Rocketbox (MIT lisansı). İşaret kaynakları: TİD Sözlük, İşaretçe, Spread the Sign alfabesi.</p>
   </footer>
 </div>
@@ -488,13 +488,13 @@ footer p { margin: 0; max-width: 46em; }
   const SHOWS = {
     '656-01': 'Zaman ifadesi, anlam bağlamdan seçildi',
     '02-01': 'Olumsuzluk',
-    '1687-02': 'Olumsuzluk, çoğul gönderim',
+    '1687-02': 'Olumsuzluk, çoğul gönderme',
     '492-03': 'Parmak alfabesiyle gösterilen sözcük',
-    '1330-01': 'Uzamda gösterme, yönlü eylem',
+    '1330-01': 'İşaret uzamında gösterme, yönlü eylem',
     '1217-01': 'Olumsuzluk, anlam bağlamdan seçildi',
-    '241-06': 'Alıntı sözcük, daha uzun metin',
+    '241-06': 'Alıntı sözcük, daha uzun cümle',
     '1917-02': 'Soru, aktarılan söz',
-    '299-01': 'İşaretçiye yönelen eylem',
+    '299-01': 'Kendine (işaretçiye) yönelen eylem',
   };
   const KIND = {
     'direct': ['direct', 'Sözlük işareti'],
@@ -597,7 +597,7 @@ footer p { margin: 0; max-width: 46em; }
     [[n, 'cümledeki işaret'],
      [secs ? fmt1(secs) + ' sn' : '…', 'kesintisiz işaretleme'],
      [frames || '…', 'kare, saniyede ' + (ex.fps || 24)],
-     [nonDirect, 'işaret için sözlükte aramanın ötesinde bir karar gerekti']]
+     [nonDirect, 'işaret için sözlük araması yetmedi']]
       .forEach(([v, l]) => { const d = document.createElement('div'); const b = document.createElement('b'); b.textContent = v; const s = document.createElement('span'); s.textContent = l; d.append(b, s); box.appendChild(d); });
   }
 
@@ -732,14 +732,14 @@ footer p { margin: 0; max-width: 46em; }
       if (!res || !res.ok) throw new Error('Sunucu bu cümleyi çeviremedi.' + (res && res.error ? ' (' + res.error + ')' : ''));
       serverReady = true;
       showStage('done');
-      const missing = res.missing && res.missing.length ? ' Bulunamayan: ' + res.missing.join(', ') + '.' : '';
+      const missing = res.missing && res.missing.length ? ' Bulunamayan işaretler: ' + res.missing.join(', ') + '.' : '';
       liveEx = {
         id: 'live',
         turkish: sentence,
         gloss: res.gloss,
         signs: res.signs.map((s) => ({ label: s.label, strategy: s.strategy, source: s.source })),
         motion: API + res.motion_url,
-        note: 'Sizin cümleniz. İşaret planı: ' + res.model + '. ' + (res.cached ? 'Önbellekten geldi.' : fmt1(res.seconds) + ' sn sürdü.') + missing,
+        note: 'Sizin cümleniz. İşaret planını ' + res.model + ' hazırladı. ' + (res.cached ? 'Önbellekten geldi.' : fmt1(res.seconds) + ' sn sürdü.') + missing,
       };
       const rail = $('rail');
       const old = rail.querySelector('[data-id="live"]'); if (old) old.remove();
