@@ -60,3 +60,6 @@ an https page to a local http server; use Chrome or Edge for the local setup.
   pointing hand (index out, other fingers curled, for example SEN) gets a straight index and the other three
   fingers are set to a fist (they are hidden behind the hand in the video, so the tracker guesses). Fingerspelling is
   left as recorded. The left hand in NASIL still moves more than the right.
+- Thumb of a pointing hand rests on the fist (photo of the real signer, 9 Oct).
+- Eyebrows rise on question words (`QUESTION_WORD` in `player/index.html`: NE, NASIL, NEREDE, KİM, NEDEN, NİÇİN,
+  KAÇ, HANGİ and forms), fading in 4 frames before the sign and out 5 frames after. Add words to that list.
