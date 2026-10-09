@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>SignPoze: text to sign language</title>
-<meta name="description" content="SignPoze turns written text into sign language, starting with Turkish Sign Language (TİD). Language model interpretation, recorded sign retrieval and 3D motion synthesis.">
+<title>SignPoze: yazıdan işaret diline</title>
+<meta name="description" content="SignPoze yazılı Türkçe cümleleri Türk İşaret Dili'ne (TİD) çevirir ve üç boyutlu bir işaretçiyle gösterir. Kendi cümlenizi yazıp deneyin.">
+<link rel="alternate" hreflang="en" href="https://kelesonur.github.io/poze/">
 <link rel="alternate" hreflang="tr" href="https://kelesonur.github.io/poze/tr/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -265,189 +266,214 @@ footer p { margin: 0; max-width: 46em; }
   .chip.on { transform: none; }
   .loader span::before { animation-duration: 3s; }
 }
+/* --- TR page: live translation first, one shared signer --- */
+.bar .right { display: flex; align-items: center; gap: 10px; }
+.lang { font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; min-height: 36px; display: inline-flex; align-items: center; }
+.lang:hover { border-color: var(--ink); }
+
+.hero2 { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: 40px; padding: 16px 0 8px; align-items: start; }
+@media (max-width: 980px) { .hero2 { grid-template-columns: 1fr; row-gap: 28px; } }
+.hero2 h1 { font-size: clamp(36px, 3.7vw, 54px); line-height: 1.08; letter-spacing: -0.04em; font-weight: 800; margin: 6px 0 16px; }
+.hero2 h1 span { display: block; }
+.hero2 .lede { font-size: 18px; color: var(--muted); max-width: 34em; margin: 0 0 24px; }
+.hero2 textarea { min-height: 104px; }
+.hero2 .now { margin-top: 18px; }
+.hero2 .now .en { margin-bottom: 14px; }
+
+.stage .busy {
+  position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+  background: color-mix(in srgb, var(--paper) 86%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-radius: 999px; padding: 7px 14px; font-size: 14px; font-weight: 600; display: none; align-items: center; gap: 9px; white-space: nowrap;
+}
+.stage .busy::before { content: ""; width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--ink); animation: spin 0.9s linear infinite; }
+.stage.working .busy { display: inline-flex; }
+.bigplay {
+  position: absolute; left: 14px; bottom: 16px; width: 48px; height: 48px; border-radius: 50%;
+  border: 0; cursor: pointer; display: grid; place-items: center; color: var(--paper); background: color-mix(in srgb, var(--ink) 82%, transparent);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .18); opacity: 0; transition: opacity .2s, transform .15s;
+}
+.stage.ready .bigplay { opacity: 1; }
+.bigplay:hover { transform: scale(1.06); }
+.bigplay svg { width: 18px; height: 18px; }
+.kbd { font-size: 12.5px; color: var(--muted); }
+.kbd kbd { font: inherit; font-weight: 600; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 0 5px; }
+@media (max-width: 560px) { .kbd { display: none; } }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="bar">
-    <a class="logo" href="#top" aria-label="SignPoze home">
+    <a class="logo" href="#top" aria-label="SignPoze ana sayfa">
       <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="9" fill="currentColor"/><path d="M10 23V12.5a2 2 0 0 1 4 0V16m0-5.5V9a2 2 0 0 1 4 0v7m0-5a2 2 0 0 1 4 0v6.5c0 3.6-2.6 6.5-6.5 6.5h-.5c-2 0-3.6-.9-4.8-2.4L7.3 19a1.9 1.9 0 0 1 3-2.3l-.3-.2" fill="none" stroke="var(--paper)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       SignPoze
     </a>
-    <nav aria-label="Sections">
-      <a href="#how">How it works</a>
-      <a href="#live">Try your own sentence</a>
-      <a href="#languages">Any sign language</a>
-      <a href="#evidence">Evidence</a>
+    <nav aria-label="Bölümler">
+      <a href="#top">Kendiniz deneyin</a>
+      <a href="#how">Nasıl çalışır</a>
+      <a href="#languages">Her işaret dili</a>
+      <a href="#evidence">Kanıtlar</a>
     </nav>
-    <div style="display:flex;align-items:center;gap:10px">
-      <a class="btn" href="tr/" hreflang="tr" lang="tr" style="text-decoration:none">Türkçe</a>
-      <button class="btn" id="theme" type="button" aria-label="Switch colour theme">Theme</button>
+    <div class="right">
+      <a class="lang" href="../" hreflang="en" lang="en">English</a>
+      <button class="btn" id="theme" type="button" aria-label="Renk temasını değiştir">Tema</button>
     </div>
   </header>
 
   <main id="top">
-    <section class="hero" aria-labelledby="h1">
-      <div class="copy">
-        <h1 id="h1"><span>Written text in.</span> <span>Sign language out.</span></h1>
-        <p class="lede">SignPoze translates written sentences into animated signing. It plans the sentence the way a signer would, picks recorded signs from real dictionaries, and moves a 3D signer with natural timing, facial movement and use of space. We start with Turkish Sign Language (TİD).</p>
+    <section class="hero2" aria-labelledby="h1">
+      <div>
+        <h1 id="h1"><span>Türkçe yazın.</span> <span>TİD olarak izleyin.</span></h1>
+        <p class="lede">SignPoze yazılı cümleleri Türk İşaret Dili'ne (TİD) çevirir ve üç boyutlu bir işaretçiyle gösterir. Bir cümle yazın: Claude Haiku 5.5 işaret planını yazar, sunucu işaretleri seçip hareketi oluşturur, işaretçi tarayıcınızda canlanır.</p>
 
+        <form id="liveForm" novalidate>
+          <div class="field">
+            <label for="sentence">Türkçe cümle</label>
+            <textarea id="sentence" maxlength="200" placeholder="Yarın sabah saat onda toplantımız var." required></textarea>
+            <span class="hint">En fazla 200 karakter. Kısa ve günlük cümleler en iyi sonucu verir.</span>
+          </div>
+          <div class="tries" id="tries" aria-label="Örnek cümleler"></div>
+          <button class="btn primary" id="go" type="submit">TİD'e çevir</button>
+          <p class="status" id="status"><span class="dot" id="dot"></span><span id="connText">Canlı sunucu kontrol ediliyor</span></p>
+          <ul class="stages" id="stages" aria-label="İlerleme">
+            <li data-s="gloss">İşaret planı</li><li data-s="synth">İşaret seçimi</li><li data-s="face">Yüz</li><li data-s="motion">Hareket</li>
+          </ul>
+          <p class="err" id="err" role="alert" hidden></p>
+        </form>
       </div>
+
+      <div>
+        <div class="stagewrap">
+          <div class="stage" id="stage">
+            <iframe id="player" title="Üç boyutlu işaretçi" loading="eager" allow="autoplay"></iframe>
+            <div class="loader"><span>İşaretçi yükleniyor</span></div>
+            <div class="busy" aria-hidden="true">Cümleniz hazırlanıyor</div>
+            <div class="caption" id="caption" aria-hidden="true"></div>
+            <button class="bigplay" id="bigplay" type="button" aria-label="Durdur">
+              <svg viewBox="0 0 14 14" aria-hidden="true"><path id="bigIcon" d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/></svg>
+            </button>
+            <div class="progress" aria-hidden="true"><b id="bar"></b></div>
+          </div>
+          <div class="controls">
+            <button class="btn" id="play" type="button" aria-pressed="true">
+              <svg viewBox="0 0 14 14" aria-hidden="true"><path id="playIcon" d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/></svg>
+              <span>Durdur</span>
+            </button>
+            <button class="btn" id="replay" type="button">Baştan oynat</button>
+            <button class="btn" id="slow" type="button" aria-pressed="false">Yarım hız</button>
+            <button class="btn" id="face" type="button" aria-pressed="true">Yüz açık</button>
+            <label class="yaw">Döndür
+              <input id="yaw" type="range" min="-90" max="90" step="1" value="0" aria-label="İşaretçiyi döndür">
+            </label>
+          </div>
+          <p class="kbd">Durdurmak ya da sürdürmek için <kbd>Boşluk</kbd> tuşuna da basabilirsiniz.</p>
+        </div>
 
         <div class="now" aria-live="polite">
-        <p class="tr" id="tr"></p>
-        <p class="en" id="en"></p>
-        <ul class="chips" id="chips" aria-label="Signs in this sentence. Select one to jump to it."></ul>
-        <ul class="legend" aria-label="How each sign was produced">
-          <li><i></i>Dictionary sign</li>
-          <li><i class="context"></i>Chosen by context</li>
-          <li><i class="sub"></i>Substitute</li>
-          <li><i class="spell"></i>Fingerspelled</li>
-          <li><i class="space"></i>Space and direction</li>
-        </ul>
-      </div>
-      
-      <div class="stagewrap">
-        <div class="stage" id="stage">
-          <iframe id="player" title="3D signer" loading="eager" allow="autoplay"></iframe>
-          <div class="loader"><span>Loading the signer</span></div>
-          <div class="caption" id="caption" aria-hidden="true"></div>
-          <div class="progress" aria-hidden="true"><b id="bar"></b></div>
-        </div>
-        <div class="controls">
-          <button class="btn" id="play" type="button" aria-pressed="true">
-            <svg viewBox="0 0 14 14" aria-hidden="true"><path id="playIcon" d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/></svg>
-            <span>Pause</span>
-          </button>
-          <button class="btn" id="replay" type="button">Replay</button>
-          <button class="btn" id="slow" type="button" aria-pressed="false">Half speed</button>
-          <button class="btn" id="face" type="button" aria-pressed="true">Face on</button>
-          <label class="yaw">Turn
-            <input id="yaw" type="range" min="-90" max="90" step="1" value="0" aria-label="Turn the signer">
-          </label>
+          <p class="tr" id="tr"></p>
+          <p class="en" id="en"></p>
+          <ul class="chips" id="chips" aria-label="Bu cümledeki işaretler. Birini seçerek o işarete atlayın."></ul>
+          <ul class="legend" aria-label="Her işaretin nasıl üretildiği">
+            <li><i></i>Sözlük işareti</li>
+            <li><i class="context"></i>Bağlamdan seçildi</li>
+            <li><i class="sub"></i>Yerine geçen işaret</li>
+            <li><i class="spell"></i>Parmak alfabesi</li>
+            <li><i class="space"></i>Uzam ve yön</li>
+          </ul>
         </div>
       </div>
     </section>
 
     <section class="picker" aria-labelledby="pick-h">
-      <h2 id="pick-h">Choose a sentence. Each one shows a different part of the system.</h2>
+      <h2 id="pick-h">Ya da hazır bir örnek seçin. Her örnek sistemin farklı bir yönünü gösterir.</h2>
       <div class="rail" id="rail" role="list"></div>
     </section>
 
     <section class="block" id="how" aria-labelledby="how-h">
-      <h2 class="big" id="how-h">Three stages, each one you can inspect.</h2>
-      <p class="sub">A sign language is not a word-for-word copy of the spoken language. Word order, space and movement carry grammar. SignPoze keeps each decision visible, so an error can be traced to the stage that made it. The panels below follow the sentence playing above.</p>
+      <h2 class="big" id="how-h">Üç aşama, her biri incelenebilir.</h2>
+      <p class="sub">İşaret dili, konuşulan dilin sözcük sözcük kopyası değildir. Sözcük sırası, uzam ve hareket dilbilgisi taşır. SignPoze her kararı görünür tutar; böylece bir hata, onu yapan aşamaya kadar izlenebilir. Aşağıdaki paneller yukarıda oynayan cümleyi izler.</p>
       <div class="steps">
         <div class="step">
           <div class="n">1</div>
-          <h3>Interpret</h3>
-          <p>Claude Haiku 5.5 reads the sentence and writes a sign plan: TİD word order, negation, questions, names, and which referents get a place in signing space.</p>
+          <h3>Yorumla</h3>
+          <p>Claude Haiku 5.5 cümleyi okur ve bir işaret planı yazar: TİD sözcük sırası, olumsuzluk, sorular, adlar ve hangi göndergelerin işaret uzamında bir yer alacağı.</p>
           <div class="panel">
-            <p class="k">Input</p><p class="v" id="p-tr"></p>
-            <p class="k">Sign plan</p><p class="v gl" id="p-gl"></p>
+            <p class="k">Girdi</p><p class="v" id="p-tr"></p>
+            <p class="k">İşaret planı</p><p class="v gl" id="p-gl"></p>
           </div>
         </div>
         <div class="step">
           <div class="n">2</div>
-          <h3>Select signs</h3>
-          <p>Each planned sign is matched to recorded dictionary signs. Context picks the right sense. When no sign fits, Claude can reject every candidate and the word is fingerspelled.</p>
-          <div class="panel reswrap"><table class="res" aria-label="How each sign was found"><tbody id="p-res"></tbody></table></div>
+          <h3>İşaretleri seç</h3>
+          <p>Planlanan her işaret, kayıtlı sözlük işaretleriyle eşleştirilir. Doğru anlamı bağlam seçer. Uygun bir işaret yoksa Claude tüm adayları reddedebilir ve sözcük parmak alfabesiyle gösterilir.</p>
+          <div class="panel reswrap"><table class="res" aria-label="Her işaretin nasıl bulunduğu"><tbody id="p-res"></tbody></table></div>
         </div>
         <div class="step">
           <div class="n">3</div>
-          <h3>Animate</h3>
-          <p>Body, hand and face motion tracked from the source videos is joined with retimed transitions, kept inside human joint ranges, and bent toward points in space for directional verbs.</p>
+          <h3>Canlandır</h3>
+          <p>Kaynak videolardan izlenen gövde, el ve yüz hareketi yeniden zamanlanmış geçişlerle birleştirilir, insan eklem sınırları içinde tutulur ve yönlü eylemlerde uzamdaki noktalara yöneltilir.</p>
           <div class="panel stats" id="p-stats"></div>
         </div>
       </div>
     </section>
 
-    <section class="block" id="live" aria-labelledby="live-h">
-      <h2 class="big" id="live-h">Try your own sentence.</h2>
-      <p class="sub">Write a Turkish sentence and the full pipeline runs live: Claude Haiku 5.5 writes the sign plan, the server selects signs and builds the motion, and your browser animates the signer.</p>
-      <div class="live">
-        <form id="liveForm" novalidate>
-          <div class="field">
-            <label for="sentence">Turkish sentence</label>
-            <textarea id="sentence" maxlength="200" placeholder="Yarın sabah saat onda toplantımız var." required></textarea>
-          </div>
-          <div class="tries" id="tries" aria-label="Example sentences"></div>
-          <button class="btn primary" id="go" type="submit">Translate to TİD</button>
-          <p class="status" id="status"><span class="dot" id="dot"></span><span id="connText">Checking the live server</span></p>
-          <ul class="stages" id="stages" aria-label="Progress">
-            <li data-s="gloss">Sign plan</li><li data-s="synth">Select signs</li><li data-s="face">Face</li><li data-s="motion">Motion</li>
-          </ul>
-          <p class="err" id="err" role="alert" hidden></p>
-        </form>
-        <div>
-          <div class="livestage" id="liveStage">
-            <div class="livemsg"><strong>Your signing appears here</strong>Write a sentence and press Translate to TİD. A short sentence takes about 20 seconds. If the server has been idle, the first one takes about a minute longer while it starts.</div>
-          </div>
-          <ul class="chips" id="liveChips" aria-label="Signs in your sentence" style="margin-top:14px"></ul>
-          <p class="livemeta" id="liveMeta"></p>
-        </div>
-      </div>
-    </section>
-
     <section class="block" id="languages" aria-labelledby="lang-h">
-      <h2 class="big" id="lang-h">Built once. Extended one sign language at a time.</h2>
-      <p class="sub">There are more than 300 sign languages. Most have no automatic translation at all. SignPoze separates what every sign language shares from what each one needs, so a new language means new recordings and new rules, not a new system.</p>
+      <h2 class="big" id="lang-h">Bir kez kurulur. Her seferinde bir işaret diline genişler.</h2>
+      <p class="sub">Dünyada 300'den fazla işaret dili var. Çoğu için hiç otomatik çeviri yok. SignPoze, tüm işaret dillerinin paylaştığı parçaları her dilin kendi ihtiyaçlarından ayırır. Bu yüzden yeni bir dil, yeni bir sistem değil; yeni kayıtlar ve yeni kurallar demektir.</p>
       <div class="split">
         <div>
-          <h3>Shared across languages</h3>
+          <h3>Diller arasında ortak</h3>
           <ul>
-            <li><b>Sign plan format.</b> A gloss sequence with markers for negation, questions, reduplication and spatial reference.</li>
-            <li><b>Retrieval and fallback.</b> Sense selection from sentence context, synonym and root-form matching, and a fingerspelling fallback when no sign fits.</li>
-            <li><b>Motion engine.</b> Pose tracks from video, retimed transitions, joint limits, hand contact, face and mouth movement, and spatial agreement.</li>
-            <li><b>Evaluation.</b> Automatic gloss and pose metrics, plus study tools for Deaf signers and interpreters.</li>
+            <li><b>İşaret planı biçimi.</b> Olumsuzluk, soru, ikileme ve uzamsal gönderim işaretleri içeren bir gloss dizisi.</li>
+            <li><b>Arama ve yedek yollar.</b> Cümle bağlamından anlam seçimi, eş anlamlı ve kök biçim eşleştirme, uygun işaret yoksa parmak alfabesi.</li>
+            <li><b>Hareket motoru.</b> Videodan poz izleri, yeniden zamanlanmış geçişler, eklem sınırları, el teması, yüz ve ağız hareketi, uzamsal uyum.</li>
+            <li><b>Değerlendirme.</b> Otomatik gloss ve poz ölçütleri, ayrıca Sağır işaretçiler ve tercümanlar için çalışma araçları.</li>
           </ul>
         </div>
         <div>
-          <h3>Added for each language</h3>
+          <h3>Her dil için eklenen</h3>
           <ul>
-            <li><b>Recordings.</b> A dictionary of signs from native signers, with consent and licences for reuse.</li>
-            <li><b>Linguistic rules.</b> Word order, negation and question marking, verb agreement and the manual alphabet.</li>
-            <li><b>Examples.</b> Parallel sentences that teach the interpretation step the target grammar.</li>
-            <li><b>Validation.</b> Ratings from signers of that language before anything is used in public.</li>
+            <li><b>Kayıtlar.</b> Ana dili işaret dili olan işaretçilerden, onay ve yeniden kullanım lisansıyla alınmış bir işaret sözlüğü.</li>
+            <li><b>Dilbilimsel kurallar.</b> Sözcük sırası, olumsuzluk ve soru işaretleme, eylem uyumu ve parmak alfabesi.</li>
+            <li><b>Örnekler.</b> Yorumlama aşamasına hedef dilin dilbilgisini öğreten paralel cümleler.</li>
+            <li><b>Doğrulama.</b> Herkese açık kullanımdan önce o dilin işaretçilerinden alınan değerlendirmeler.</li>
           </ul>
         </div>
       </div>
     </section>
 
     <section class="block" id="evidence" aria-labelledby="ev-h">
-      <h2 class="big" id="ev-h">Measured, not assumed.</h2>
-      <p class="sub">SignPoze grew out of academic research on sign language and language models. We test every stage and we test with the people the system is for.</p>
+      <h2 class="big" id="ev-h">Varsayım değil, ölçüm.</h2>
+      <p class="sub">SignPoze, işaret dili ve dil modelleri üzerine akademik araştırmadan doğdu. Her aşamayı test ediyoruz ve sistemi, hizmet ettiği insanlarla birlikte test ediyoruz.</p>
       <div class="facts">
-        <div class="fact"><b>371</b><span>held-out Turkish sentences in the automatic test set</span></div>
-        <div class="fact"><b>99.9%</b><span>of planned signs realised in the video on that set (5,056 of 5,062)</span></div>
-        <div class="fact"><b>11</b><span>model setups compared for the sign plan, open and closed</span></div>
-        <div class="fact"><b>3</b><span>conditions in our signer study: SignPoze, SignPoze with expert plans, and a real signer</span></div>
+        <div class="fact"><b>371</b><span>otomatik test setindeki, eğitimde kullanılmamış Türkçe cümle</span></div>
+        <div class="fact"><b>%99,9</b><span>bu sette planlanan işaretlerin videoda gerçekleşen oranı (5.062 işaretin 5.056'sı)</span></div>
+        <div class="fact"><b>11</b><span>işaret planı için karşılaştırılan açık ve kapalı model kurulumu</span></div>
+        <div class="fact"><b>3</b><span>işaretçi çalışmamızdaki koşul: SignPoze, uzman planlı SignPoze ve gerçek bir işaretçi</span></div>
       </div>
     </section>
 
     <section class="claude" aria-labelledby="cl-h">
       <div>
-        <h2 id="cl-h">Built on Claude.</h2>
-        <p>Claude Haiku 5.5 handles the two steps that need understanding of meaning. Every other step is deterministic and traceable, so a language model decision is always a named, reviewable step.</p>
-        <p>Prompts carry TİD-specific instructions and worked examples, and results are cached by sentence and prompt version for fast, low-cost repeat requests.</p>
+        <h2 id="cl-h">Claude ile geliştirildi.</h2>
+        <p>Claude Haiku 5.5, anlamı kavramayı gerektiren iki adımı üstlenir. Diğer tüm adımlar belirlenimci ve izlenebilirdir; bu yüzden bir dil modeli kararı her zaman adı konmuş, incelenebilir bir adımdır.</p>
+        <p>İstemler TİD'e özgü talimatlar ve çözümlü örnekler içerir. Tekrar eden istekler hızlı ve düşük maliyetli olsun diye sonuçlar cümleye ve istem sürümüne göre önbelleğe alınır.</p>
       </div>
       <ol>
-        <li><b>Writing the sign plan</b><span>Turkish sentence to an ordered TİD gloss sequence with negation, question and spatial markers.</span></li>
-        <li><b>Judging substitutes</b><span>When a sign is missing, Claude compares candidate signs and their definitions with the sentence, then accepts one or rejects them all in favour of fingerspelling.</span></li>
-        <li><b>Next: annotation support</b><span>Consistency checks on our own sign recordings, with every linguistic decision reviewed by a person.</span></li>
+        <li><b>İşaret planını yazmak</b><span>Türkçe cümleden olumsuzluk, soru ve uzam işaretleri içeren sıralı bir TİD gloss dizisine.</span></li>
+        <li><b>Yerine geçecek işareti değerlendirmek</b><span>Bir işaret eksik olduğunda Claude aday işaretleri ve tanımlarını cümleyle karşılaştırır; birini kabul eder ya da hepsini reddedip parmak alfabesini seçer.</span></li>
+        <li><b>Sırada: etiketleme desteği</b><span>Kendi işaret kayıtlarımızda tutarlılık denetimleri; her dilbilimsel kararı bir insan gözden geçirir.</span></li>
       </ol>
     </section>
   </main>
 
   <footer>
-    <p>SignPoze is a research-stage product. The signing shown here is generated and is being evaluated with Deaf signers. It is not a replacement for human interpreters.</p>
-    <p>Signer model: Microsoft Rocketbox (MIT licence). Sign sources: TİD Sözlük, İşaretçe, Spread the Sign alphabet.</p>
+    <p>SignPoze araştırma aşamasında bir üründür. Burada gösterilen işaretleme otomatik olarak üretilmiştir ve Sağır işaretçilerle değerlendirilmektedir. İnsan tercümanların yerini tutmaz.</p>
+    <p>İşaretçi modeli: Microsoft Rocketbox (MIT lisansı). İşaret kaynakları: TİD Sözlük, İşaretçe, Spread the Sign alfabesi.</p>
   </footer>
 </div>
 
 <script>
 (() => {
-  // theme toggle (in memory only)
   const rootEl = document.documentElement;
   document.getElementById('theme').onclick = () => {
     const dark = rootEl.dataset.theme ? rootEl.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
@@ -456,58 +482,48 @@ footer p { margin: 0; max-width: 46em; }
 
   const $ = (id) => document.getElementById(id);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const PLAYER = '../player/index.html';
+  const fmt1 = (x) => x.toLocaleString('tr-TR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
-  const EN = {
-    '656-01': 'We are meeting tonight at nine.',
-    '02-01': 'He did not come to work.',
-    '1687-02': 'People must not be treated in a degrading way. All people are equal.',
-    '492-03': 'My friend has no bad habits at all. He is a very decent person and I trust him a lot.',
-    '1330-01': 'When my sister got married and the groom\'s family came to take the bride, we tied a red ribbon and walked her out.',
-    '1217-01': 'My son kept sinking because he could not swim. I taught him, and now he swims very well.',
-    '241-06': 'Today is our anniversary. My partner found a café and closed it just for us as a surprise. When I walked in, it was completely empty.',
-    '1917-02': 'My eyes are blue and my hair is blond, so friends keep asking if I am German. I tell them no, I was born in Türkiye.',
-    '299-01': 'I found the history homework my teacher gave us by researching in the library.',
-  };
   const SHOWS = {
-    '656-01': 'Time expression, sense chosen by context',
-    '02-01': 'Negation',
-    '1687-02': 'Negation, plural reference',
-    '492-03': 'Fingerspelled word',
-    '1330-01': 'Pointing in space, directional verb',
-    '1217-01': 'Negation, sense chosen by context',
-    '241-06': 'Loan word, longer text',
-    '1917-02': 'Question, quoted speech',
-    '299-01': 'Directional verb toward the signer',
+    '656-01': 'Zaman ifadesi, anlam bağlamdan seçildi',
+    '02-01': 'Olumsuzluk',
+    '1687-02': 'Olumsuzluk, çoğul gönderim',
+    '492-03': 'Parmak alfabesiyle gösterilen sözcük',
+    '1330-01': 'Uzamda gösterme, yönlü eylem',
+    '1217-01': 'Olumsuzluk, anlam bağlamdan seçildi',
+    '241-06': 'Alıntı sözcük, daha uzun metin',
+    '1917-02': 'Soru, aktarılan söz',
+    '299-01': 'İşaretçiye yönelen eylem',
   };
   const KIND = {
-    'direct': ['direct', 'Dictionary sign'],
-    'sense': ['context', 'Chosen by context'],
-    'context': ['context', 'Chosen by context'],
-    'morphological': ['sub', 'Root form'],
-    'root-finder': ['sub', 'Root form'],
-    'synonym': ['sub', 'Synonym'],
-    'lexicon-alternative': ['sub', 'Dictionary variant'],
-    'orthographic-loan': ['sub', 'Spelling variant'],
-    'orthographic': ['sub', 'Spelling variant'],
-    'oov-llm': ['sub', 'Substitute chosen by Claude'],
-    'fingerspell': ['spell', 'Fingerspelled'],
-    'synth-ix': ['space', 'Point in space'],
-    'synth-agr': ['space', 'Directional verb'],
+    'direct': ['direct', 'Sözlük işareti'],
+    'sense': ['context', 'Bağlamdan seçildi'],
+    'context': ['context', 'Bağlamdan seçildi'],
+    'morphological': ['sub', 'Kök biçim'],
+    'root-finder': ['sub', 'Kök biçim'],
+    'synonym': ['sub', 'Eş anlamlı'],
+    'lexicon-alternative': ['sub', 'Sözlük varyantı'],
+    'orthographic-loan': ['sub', 'Yazım varyantı'],
+    'orthographic': ['sub', 'Yazım varyantı'],
+    'oov-llm': ['sub', 'Claude\'un seçtiği karşılık'],
+    'fingerspell': ['spell', 'Parmak alfabesi'],
+    'synth-ix': ['space', 'Uzamda nokta'],
+    'synth-agr': ['space', 'Yönlü eylem'],
   };
-  const kindOf = (s) => KIND[s] || ['direct', s || 'Dictionary sign'];
+  const kindOf = (s) => KIND[s] || ['direct', s || 'Sözlük işareti'];
   const sourceText = (src, strat) => {
-    if (!src) return strat && strat.startsWith('synth') ? 'Generated from space rules' : '';
-    if (/^\d+$/.test(src)) return 'TİD Sözlük entry ' + src;
-    if (src.startsWith('isaretce')) return 'İşaretçe dictionary';
-    if (src.startsWith('spreadthesign-lex')) return 'Spread the Sign dictionary';
-    if (src.startsWith('fingerspell')) return 'Manual alphabet, letter by letter';
-    if (src.startsWith('synth')) return 'Generated from space rules';
+    if (!src) return strat && strat.startsWith('synth') ? 'Uzam kurallarından üretildi' : '';
+    if (/^\d+$/.test(src)) return 'TİD Sözlük, madde ' + src;
+    if (src.startsWith('isaretce')) return 'İşaretçe sözlüğü';
+    if (src.startsWith('spreadthesign-lex')) return 'Spread the Sign sözlüğü';
+    if (src.startsWith('fingerspell')) return 'Parmak alfabesi, harf harf';
+    if (src.startsWith('synth')) return 'Uzam kurallarından üretildi';
     return src;
   };
 
-  let EX = [], cur = null, chipEls = [], playing = true, total = 1, slow = false, faceOn = true;
+  let EX = [], cur = null, chipEls = [], playing = true, total = 1, fps = 24, slow = false, faceOn = true, liveEx = null;
   const player = $('player'), stage = $('stage');
-
   function post(msg) { try { player.contentWindow.postMessage(msg, '*'); } catch (e) {} }
 
   function renderChips(listEl, signs, animate) {
@@ -515,7 +531,7 @@ footer p { margin: 0; max-width: 46em; }
     const els = signs.map((s, i) => {
       const li = document.createElement('li');
       const b = document.createElement('button');
-      const [k, name] = s.missing ? ['miss', 'Not found, skipped'] : kindOf(s.strategy);
+      const [k, name] = s.missing ? ['miss', 'Bulunamadı, atlandı'] : kindOf(s.strategy);
       b.type = 'button'; b.className = 'chip'; b.dataset.kind = k; b.textContent = s.label;
       b.title = name; b.setAttribute('aria-label', s.label + ', ' + name);
       b.style.setProperty('--i', i);
@@ -534,21 +550,23 @@ footer p { margin: 0; max-width: 46em; }
     requestAnimationFrame(step);
   }
 
-  function pick(id, scroll) {
-    const ex = EX.find((e) => e.id === id); if (!ex) return;
+  function markRail() {
+    document.querySelectorAll('.ex').forEach((b) => b.setAttribute('aria-current', String(!!cur && b.dataset.id === cur.id)));
+  }
+
+  // Load an example or a live result into the one shared signer.
+  function load(ex) {
     cur = ex;
-    document.querySelectorAll('.ex').forEach((b) => b.setAttribute('aria-current', String(b.dataset.id === id)));
+    markRail();
     typeText($('tr'), ex.turkish);
-    $('en').textContent = EN[id] || '';
+    $('en').textContent = ex.note || '';
     chipEls = renderChips($('chips'), ex.signs, true);
     chipEls.forEach((b, i) => b.onclick = () => post({ type: 'seek', chip: i }));
     stage.classList.remove('ready');
     $('caption').classList.remove('show');
     $('bar').style.width = '0';
-    const qs = new URLSearchParams({ embed: '1', avatar: 'business', shirt: '26324a', m: 'motions/' + id + '.json' });
-    player.src = 'player/index.html?' + qs;
+    player.src = PLAYER + '?' + new URLSearchParams({ embed: '1', avatar: 'business', shirt: '26324a', m: ex.motion });
     fillPanels(ex);
-    if (scroll) $('top').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
   }
 
   function fillPanels(ex) {
@@ -566,23 +584,31 @@ footer p { margin: 0; max-width: 46em; }
       if (src) b.append(document.createElement('br'), src);
       tr.append(a, b); tb.appendChild(tr);
     });
+    fillStats(ex);
+  }
+
+  function fillStats(ex) {
+    const box = $('p-stats'); box.replaceChildren();
     const n = ex.signs.length;
-    const nonDirect = ex.signs.filter((s) => s.strategy !== 'direct').length;
-    const frames = Math.round(ex.seconds * 24);
-    $('p-stats').innerHTML = '';
-    [[n, 'signs in the sentence'], [ex.seconds.toFixed(1) + ' s', 'of continuous signing'],
-     [frames, 'frames at 24 per second'], [nonDirect, nonDirect === 1 ? 'sign needed a decision beyond lookup' : 'signs needed a decision beyond lookup']]
-      .forEach(([v, l]) => { const d = document.createElement('div'); const b = document.createElement('b'); b.textContent = v; const s = document.createElement('span'); s.textContent = l; d.append(b, s); $('p-stats').appendChild(d); });
+    const nonDirect = ex.signs.filter((s) => s.strategy && s.strategy !== 'direct').length;
+    const secs = ex.seconds;
+    const frames = ex.frames || (secs ? Math.round(secs * 24) : null);
+    [[n, 'cümledeki işaret'],
+     [secs ? fmt1(secs) + ' sn' : '…', 'kesintisiz işaretleme'],
+     [frames || '…', 'kare, saniyede ' + (ex.fps || 24)],
+     [nonDirect, 'işaret için sözlükte aramanın ötesinde bir karar gerekti']]
+      .forEach(([v, l]) => { const d = document.createElement('div'); const b = document.createElement('b'); b.textContent = v; const s = document.createElement('span'); s.textContent = l; d.append(b, s); box.appendChild(d); });
   }
 
   window.addEventListener('message', (e) => {
     const d = e.data; if (!d || !d.poze || e.source !== player.contentWindow) return;
     if (d.type === 'ready') {
-      total = d.total; stage.classList.add('ready');
+      total = d.total; fps = d.fps || 24; stage.classList.add('ready');
+      if (cur && !cur.seconds) { cur.frames = total; cur.fps = fps; cur.seconds = total / fps; fillStats(cur); }
       post({ type: 'speed', value: slow ? 0.5 : 1 });
       post({ type: 'view', value: +$('yaw').value });
       if (!faceOn) post({ type: 'face', value: false });
-      setPlaying(true, false);
+      setPlaying(true);
     } else if (d.type === 'frame') {
       $('bar').style.width = (100 * (d.frame + 1) / total).toFixed(2) + '%';
       chipEls.forEach((b, i) => b.classList.toggle('on', i === d.chip));
@@ -593,32 +619,50 @@ footer p { margin: 0; max-width: 46em; }
     }
   });
 
+  const PAUSE_D = 'M3 2h3v10H3zM8 2h3v10H8z', PLAY_D = 'M3 1.5v11l9-5.5z';
   function setPlaying(p, send = true) {
     playing = p;
     $('play').setAttribute('aria-pressed', String(p));
-    $('play').querySelector('span').textContent = p ? 'Pause' : 'Play';
-    $('playIcon').setAttribute('d', p ? 'M3 2h3v10H3zM8 2h3v10H8z' : 'M3 1.5v11l9-5.5z');
+    $('play').querySelector('span').textContent = p ? 'Durdur' : 'Oynat';
+    $('playIcon').setAttribute('d', p ? PAUSE_D : PLAY_D);
+    $('bigIcon').setAttribute('d', p ? PAUSE_D : PLAY_D);
+    $('bigplay').setAttribute('aria-label', p ? 'Durdur' : 'Oynat');
     if (send) post({ type: p ? 'play' : 'pause' });
   }
   $('play').onclick = () => setPlaying(!playing);
+  $('bigplay').onclick = () => setPlaying(!playing);
   $('replay').onclick = () => { post({ type: 'restart' }); setPlaying(true, false); };
   $('slow').onclick = () => { slow = !slow; $('slow').setAttribute('aria-pressed', String(slow)); post({ type: 'speed', value: slow ? 0.5 : 1 }); };
-  $('face').onclick = () => { faceOn = !faceOn; $('face').setAttribute('aria-pressed', String(faceOn)); $('face').textContent = faceOn ? 'Face on' : 'Face off'; post({ type: 'face', value: faceOn }); };
+  $('face').onclick = () => { faceOn = !faceOn; $('face').setAttribute('aria-pressed', String(faceOn)); $('face').textContent = faceOn ? 'Yüz açık' : 'Yüz kapalı'; post({ type: 'face', value: faceOn }); };
   $('yaw').oninput = (e) => post({ type: 'view', value: +e.target.value });
+  // Space bar pauses and resumes, except while typing or on a focused control
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== ' ' || e.ctrlKey || e.metaKey || e.altKey) return;
+    const t = e.target;
+    if (t.closest && t.closest('textarea, input, button, select, a, [contenteditable]')) return;
+    e.preventDefault();
+    setPlaying(!playing);
+  });
 
-  fetch('assets/examples.json').then((r) => r.json()).then((data) => {
-    EX = data;
+  function railCard(ex, label) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'ex'; b.dataset.id = ex.id; b.setAttribute('role', 'listitem');
+    const t = document.createElement('span'); t.className = 't'; t.textContent = ex.turkish;
+    const f = document.createElement('span'); f.className = 'f'; f.textContent = label;
+    b.append(t, f);
+    b.onclick = () => { load(ex); if (innerWidth < 980) stage.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' }); };
+    return b;
+  }
+
+  fetch('../assets/examples.json').then((r) => r.json()).then((data) => {
+    EX = data.map((ex) => Object.assign({}, ex, {
+      motion: 'motions/' + ex.id + '.json',
+      note: SHOWS[ex.id] || '',
+    }));
     const rail = $('rail');
-    EX.forEach((ex) => {
-      const b = document.createElement('button');
-      b.type = 'button'; b.className = 'ex'; b.dataset.id = ex.id; b.setAttribute('role', 'listitem');
-      const t = document.createElement('span'); t.className = 't'; t.textContent = ex.turkish;
-      const f = document.createElement('span'); f.className = 'f'; f.textContent = (SHOWS[ex.id] || '') + ', ' + ex.seconds.toFixed(1) + ' s';
-      b.append(t, f); b.onclick = () => pick(ex.id, innerWidth < 980);
-      rail.appendChild(b);
-    });
-    pick(EX[0].id, false);
-  }).catch(() => { $('tr').textContent = 'The examples could not be loaded. Open this page from a web server, not from a file.'; });
+    EX.forEach((ex) => rail.appendChild(railCard(ex, (SHOWS[ex.id] || '') + ', ' + fmt1(ex.seconds) + ' sn')));
+    if (!cur) load(EX[0]);
+  }).catch(() => { $('tr').textContent = 'Örnekler yüklenemedi. Bu sayfayı bir dosyadan değil, bir web sunucusundan açın.'; });
 
   // ---------------- live mode ----------------
   const API_DEFAULT = 'https://poze-api-79059222633.europe-west1.run.app';
@@ -634,19 +678,18 @@ footer p { margin: 0; max-width: 46em; }
       const r = await fetch(API + '/health', { cache: 'no-store' });
       const h = await r.json();
       serverReady = h.ready;
-      if (h.error) setStatus('bad', 'The live server has a problem. The examples above still work.');
-      else if (!h.ready) { setStatus('wait', 'Live server is starting, about a minute'); setTimeout(() => check(true), 4000); }
-      else setStatus('ok', 'Live server ready. ' + h.left_today + ' translations left for you today.');
+      if (h.error) setStatus('bad', 'Canlı sunucuda bir sorun var. Hazır örnekler yine çalışıyor.');
+      else if (!h.ready) { setStatus('wait', 'Canlı sunucu başlıyor, yaklaşık bir dakika sürebilir'); setTimeout(() => check(true), 4000); }
+      else setStatus('ok', 'Canlı sunucu hazır. Bugün ' + h.left_today + ' çeviri hakkınız kaldı.');
       return h;
     } catch (e) {
-      setStatus(wake ? 'wait' : 'wait', 'Waking the live server, this can take about a minute');
+      setStatus('wait', 'Canlı sunucu uyandırılıyor, bu yaklaşık bir dakika sürebilir');
       if (wake) setTimeout(() => check(true), 5000);
       return null;
     }
   }
-  // wake the server when the live section comes into view, not on page load
-  let woke = false;
-  new IntersectionObserver((es) => { if (!woke && es.some((e) => e.isIntersecting)) { woke = true; check(true); } }, { rootMargin: '300px' }).observe($('live'));
+  // the form is the first thing on the page, so wake the server right away
+  check(true);
 
   const order = ['gloss', 'synth', 'face', 'motion'];
   function showStage(s) {
@@ -655,24 +698,18 @@ footer p { margin: 0; max-width: 46em; }
   }
   function showErr(msg) { $('err').hidden = !msg; $('err').textContent = msg || ''; }
 
-  let liveChips = [], livePlayer = null;
-  window.addEventListener('message', (e) => {
-    const d = e.data; if (!d || !d.poze || !livePlayer || e.source !== livePlayer.contentWindow) return;
-    if (d.type === 'ready') { const ld = $('liveStage').querySelector('.loader'); if (ld) ld.remove(); }
-    if (d.type === 'frame') liveChips.forEach((b, i) => b.classList.toggle('on', i === d.chip));
-  });
-
   $('liveForm').onsubmit = async (e) => {
     e.preventDefault();
     const sentence = $('sentence').value.trim();
-    if (!sentence) { showErr('Write a Turkish sentence first.'); $('sentence').focus(); return; }
+    if (!sentence) { showErr('Önce Türkçe bir cümle yazın.'); $('sentence').focus(); return; }
     showErr('');
-    $('go').disabled = true; $('go').textContent = 'Translating';
-    if (!serverReady) setStatus('wait', 'Waking the live server, this can take about a minute');
+    $('go').disabled = true; $('go').textContent = 'Çevriliyor';
+    stage.classList.add('working');
+    if (!serverReady) setStatus('wait', 'Canlı sunucu uyandırılıyor, bu yaklaşık bir dakika sürebilir');
     let polling = true;
     (async () => {
       while (polling) {
-        try { const p = await (await fetch(API + '/progress', { cache: 'no-store' })).json(); if (p.busy) { showStage(p.stage); setStatus('ok', 'Working on your sentence'); } } catch (_) {}
+        try { const p = await (await fetch(API + '/progress', { cache: 'no-store' })).json(); if (p.busy) { showStage(p.stage); setStatus('ok', 'Cümleniz işleniyor'); } } catch (_) {}
         await new Promise((r) => setTimeout(r, 700));
       }
     })();
@@ -690,27 +727,32 @@ footer p { margin: 0; max-width: 46em; }
           await new Promise((ok) => setTimeout(ok, 8000));
         }
       }
-      if (!res.ok) throw new Error(res.error || 'The server could not translate this sentence.');
+      if (r && r.status === 429) throw new Error('Bugünkü çeviri sınırına ulaşıldı. Yarın yeniden deneyebilirsiniz; hazır örnekler yine çalışıyor.');
+      if (!res || !res.ok) throw new Error('Sunucu bu cümleyi çeviremedi.' + (res && res.error ? ' (' + res.error + ')' : ''));
       serverReady = true;
       showStage('done');
-      const stage = $('liveStage');
-      stage.replaceChildren();
-      livePlayer = document.createElement('iframe');
-      livePlayer.title = '3D signer, your sentence';
-      livePlayer.src = 'player/index.html?' + new URLSearchParams({ embed: '1', avatar: 'business', shirt: '26324a', m: API + res.motion_url });
-      const ld = document.createElement('div'); ld.className = 'loader'; ld.innerHTML = '<span>Loading the signer</span>';
-      stage.append(livePlayer, ld);
-      liveChips = renderChips($('liveChips'), res.signs.map((s) => ({ label: s.label, strategy: s.strategy })), true);
-      liveChips.forEach((b, i) => b.onclick = () => livePlayer.contentWindow.postMessage({ type: 'seek', chip: i }, '*'));
-      $('liveMeta').textContent = 'Sign plan by ' + res.model + ': ' + res.gloss + '. ' + (res.cached ? 'From cache.' : 'Took ' + res.seconds.toFixed(1) + ' s.')
-        + (res.missing && res.missing.length ? ' Not found: ' + res.missing.join(', ') + '.' : '');
-      setStatus('ok', 'Done. ' + res.left_today + ' translations left for you today.');
+      const missing = res.missing && res.missing.length ? ' Bulunamayan: ' + res.missing.join(', ') + '.' : '';
+      liveEx = {
+        id: 'live',
+        turkish: sentence,
+        gloss: res.gloss,
+        signs: res.signs.map((s) => ({ label: s.label, strategy: s.strategy, source: s.source })),
+        motion: API + res.motion_url,
+        note: 'Sizin cümleniz. İşaret planı: ' + res.model + '. ' + (res.cached ? 'Önbellekten geldi.' : fmt1(res.seconds) + ' sn sürdü.') + missing,
+      };
+      const rail = $('rail');
+      const old = rail.querySelector('[data-id="live"]'); if (old) old.remove();
+      rail.prepend(railCard(liveEx, 'Sizin cümleniz'));
+      load(liveEx);
+      if (innerWidth < 980) stage.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+      setStatus('ok', 'Hazır. Bugün ' + res.left_today + ' çeviri hakkınız kaldı.');
     } catch (err) {
       showStage('');
-      if (err instanceof TypeError) { showErr('Could not reach the live server. Try again in a minute.'); setStatus('bad', 'Live server not reachable'); }
+      if (err instanceof TypeError) { showErr('Canlı sunucuya ulaşılamadı. Bir dakika sonra yeniden deneyin.'); setStatus('bad', 'Canlı sunucuya ulaşılamıyor'); }
       else showErr(err.message);
     } finally {
-      polling = false; $('go').disabled = false; $('go').textContent = 'Translate to TİD';
+      polling = false; stage.classList.remove('working');
+      $('go').disabled = false; $('go').textContent = 'TİD\'e çevir';
     }
   };
 })();
