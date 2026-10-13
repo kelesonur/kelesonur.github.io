@@ -277,7 +277,7 @@ function handoutScreen(){
 
 function labScreen(){
  if(state.weeks!=='3–4'){state.screen='start';render();return;}
- $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Weeks 3–4</button><h1>Sound Lab</h1></div><div class="embed-toolbar"><a class="primary" href="games/sound-lab/index.html" target="_blank" rel="noopener noreferrer">Open lab</a></div><iframe class="material-frame game-frame" title="Sound Lab" src="games/sound-lab/index.html"></iframe></section>`;
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Weeks 3–4</button><h1>Sound Lab</h1></div><div class="embed-toolbar"><a class="primary" href="games/sound-lab/index.html?v=2" target="_blank" rel="noopener noreferrer">Open lab</a></div><iframe class="material-frame game-frame" title="Sound Lab" src="games/sound-lab/index.html?v=2"></iframe></section>`;
  bindSectionNav();bindWeekPicker();
  $('backPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }

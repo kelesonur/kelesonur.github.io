@@ -263,129 +263,130 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outl
 
 <script>
 /* ============ DATA ============ */
+/* Notation follows the LING 313.02 handouts (W1-W4): /a/ = [ɑ]; stops and /ʧ/ are aspirated everywhere
+   except syllable-finally; /h/ → [ç] only with [i]; /v/ → [β] and /f/ → [ɸ] next to rounded vowels;
+   word-final /r/ → [ɾ̥]; fronting is marked with the plus sign below: [u̟], [ɑ̟], [o̟]. */
 const SPOT = [
   { label: 'a', tokens: ['/', 'd', 'i', 'ɾ̥', 's', 'e', 'kʰ', '/'], wrong: [0, 3, 6, 7], correct: false,
     expl: 'The slashes mark a <b>phonemic</b> transcription. Devoicing (<span class="ipa">[ɾ̥]</span>) and aspiration (<span class="ipa">[kʰ]</span>) are allophonic details, so they only belong in a phonetic transcription in square brackets.',
     key: 'Wrong: allophonic detail ([ɾ̥], [kʰ]) inside phonemic slashes.' },
   { label: 'b', tokens: ['[', 'tʰ', 'o', 'n', 'o', 'kʰ', ']'], wrong: [], correct: true,
-    expl: 'Transcribed correctly. Voiceless stops are aspirated word-initially and word-finally, so both <span class="ipa">[tʰ]</span> and <span class="ipa">[kʰ]</span> are expected.',
+    expl: 'Transcribed correctly. Voiceless stops are aspirated in every position except syllable-final, so word-initial <span class="ipa">[tʰ]</span> and word-final <span class="ipa">[kʰ]</span> (after a back vowel) are both expected.',
     key: 'Correct.', check: 'tonok is not a Turkish word, so I treated it as a well-formed nonce form.' },
-  { label: 'c', tokens: ['[', 's', 'tʰ', 'a', 'ɹ', 'b', 'a', 'k', 's', ']'], wrong: [2, 4], correct: false,
-    expl: '<span class="ipa">[ɹ]</span> is the English approximant; Turkish /r/ is a tap <span class="ipa">[ɾ]</span>. A stop right after <span class="ipa">[s]</span> is also not aspirated, so <span class="ipa">[tʰ]</span> is wrong too. Bonus: canonical Turkish has no word-initial cluster like /st/.',
-    key: 'Wrong: [ɹ] is not a Turkish sound; [tʰ] after [s] is not aspirated (also #st cluster).', check: 'The game accepts a tap on either [ɹ] or [tʰ].' },
-  { label: 'd', tokens: ['[', 'ɫ', 'a', 'ɸ', 'e', 'b', 'e', 's', 'i', ']'], wrong: [3], correct: false,
-    expl: '<span class="ipa">[ɸ]</span> is the allophone of /f/ next to rounded vowels, as in <span class="w">küfür</span>. Here /f/ sits between <span class="ipa">[a]</span> and <span class="ipa">[e]</span>, so it stays <span class="ipa">[f]</span>.',
-    key: 'Wrong: [ɸ] only appears next to rounded vowels.' }
+  { label: 'c', tokens: ['[', 's', 'tʰ', 'ɑ', 'ɹ', 'b', 'ɑ', 'k', 's', ']'], wrong: [4], correct: false,
+    expl: 'Turkish /r/ is a tap <span class="ipa">[ɾ]</span> (devoiced <span class="ipa">[ɾ̥]</span> word-finally). <span class="ipa">[ɹ]</span> is the English approximant. The rest follows the course rules: <span class="ipa">[tʰ]</span> is syllable-initial, so it is aspirated, and <span class="ipa">[k]</span> is syllable-final, so it is not.',
+    key: 'Wrong: [ɹ]. [tʰ] and [k] follow the aspiration rule.', check: 'Your handout writes [a]; the course uses [ɑ] for /a/, so the game shows [ɑ]. If the word-initial /st/ cluster should also count as an error, tell me.' },
+  { label: 'd', tokens: ['[', 'ɫ', 'ɑ', 'ɸ', 'e', 'b', 'e', 's', 'i', ']'], wrong: [1, 2, 3], correct: false,
+    expl: '<span class="ipa">[ɸ]</span> appears only next to a rounded vowel. Here /f/ is between <span class="ipa">[ɑ]</span> and <span class="ipa">[e]</span>, so it stays <span class="ipa">[f]</span>. Also, the course notes say that word-initial /l/ is velarized only in <span class="w">lala</span>. So <span class="w">laf</span> starts with the light /l/, and the vowel after it is fronted: <span class="ipa">[lɑ̟f]</span>.',
+    key: 'Wrong: [ɸ] (no rounded vowel nearby); also word-initial [ɫ] (light /l/ + [ɑ̟] expected).', check: 'The W3 slides say word-initial [ɫ] occurs only in lala, so [ɫ] counts as an error too. If you meant only [ɸ], tell me.' }
 ];
 
 const TRANS = [
-  { w: 'vücut', a: ['ʋyʤutʰ'], alt: ['vyʤutʰ'], note: '/v/ next to a rounded vowel is <span class="ipa">[ʋ]</span>; word-final /t/ is aspirated.', check: 'Accepts [v] as well as [ʋ].' },
-  { w: 'cetvel', a: ['ʤetvɛl'], note: '<span class="w">cet-</span> is closed by /t/ (not a sonorant), so <span class="ipa">[e]</span>; <span class="w">-vel</span> is closed by /l/, so <span class="ipa">[ɛ]</span>.' },
-  { w: 'küfür', a: ['cyɸyɾ̥'], note: 'Palatal <span class="ipa">[c]</span> before a front vowel, <span class="ipa">[ɸ]</span> between rounded vowels, final /r/ devoiced.' },
-  { w: 'sergüzeşt', a: ['sɛɾɟyzeʃtʰ'], alt: ['sɛɾɟyzeʃt'], note: '<span class="w">ser-</span> is closed by /r/, so <span class="ipa">[ɛ]</span>; palatal <span class="ipa">[ɟ]</span> before <span class="ipa">[y]</span>; final /t/ aspirated.', check: 'Accepts final [t] without aspiration after [ʃ].' },
-  { w: 'rüzgar', a: ['ɾyzɟaɾ̥'], alt: ['ɾyzɟa̟ɾ̥'], note: 'Palatal <span class="ipa">[ɟ]</span> before /a/ (older spelling <span class="w">rüzgâr</span>); final /r/ devoiced.', check: 'Accepts a fronted [a̟] after [ɟ].' },
-  { w: 'volkan', a: ['ʋoɫkan'], alt: ['voɫkan'], note: '<span class="ipa">[ʋ]</span> before rounded <span class="ipa">[o]</span>; /l/ after a back vowel is velarized <span class="ipa">[ɫ]</span>.', check: 'Accepts [v] as well as [ʋ].' },
-  { w: 'bencil', a: ['bɛnʤil'], note: '<span class="w">ben-</span> is closed by /n/, so <span class="ipa">[ɛ]</span>; light <span class="ipa">[l]</span> after <span class="ipa">[i]</span>.' },
-  { w: 'bekçi', a: ['becʧi'], alt: ['bekʧi'], note: '/k/ after a front vowel is palatal <span class="ipa">[c]</span>.', check: 'Accepts velar [k] too.' },
-  { w: 'sahte', a: ['saxte'], note: '/h/ after a back vowel and before a consonant is <span class="ipa">[x]</span>.' },
-  { w: 'tercih', a: ['tʰɛɾʤiç'], alt: ['tɛɾʤiç'], note: 'Initial <span class="ipa">[tʰ]</span>; <span class="w">ter-</span> is closed by /r/, so <span class="ipa">[ɛ]</span>; final /h/ after <span class="ipa">[i]</span> is <span class="ipa">[ç]</span>.', check: 'Accepts initial [t] without aspiration.' }
+  { w: 'vücut', a: ['βyʤutʰ'], note: '/v/ before a rounded vowel is <span class="ipa">[β]</span>; word-final /t/ is aspirated.' },
+  { w: 'cetvel', a: ['ʤetvɛl'], note: '<span class="w">cet-</span> is closed by /t/, so <span class="ipa">[e]</span>, and that /t/ is syllable-final, so unaspirated. <span class="w">-vel</span> is closed by a liquid, so <span class="ipa">[ɛ]</span>.' },
+  { w: 'küfür', a: ['cʰyɸyɾ̥'], note: '<span class="ipa">[cʰ]</span> before a front vowel, <span class="ipa">[ɸ]</span> between rounded vowels, word-final /r/ devoiced.' },
+  { w: 'sergüzeşt', a: ['sɛɾɟyzeʃtʰ'], note: '<span class="w">ser-</span> is closed by a liquid, so <span class="ipa">[ɛ]</span>; <span class="ipa">[ɟ]</span> before <span class="ipa">[y]</span>; word-final /t/ aspirated.' },
+  { w: 'rüzgar', a: ['ɾyzɟɑ̟ɾ̥'], note: '<span class="w">rüzgâr</span> has the /ɟ/ phoneme, which fronts the next vowel to <span class="ipa">[ɑ̟]</span>; word-final /r/ devoiced.' },
+  { w: 'volkan', a: ['βoɫkʰɑn'], note: '<span class="ipa">[β]</span> before rounded <span class="ipa">[o]</span>; syllable-final /l/ after a back vowel is <span class="ipa">[ɫ]</span>; <span class="ipa">[kʰ]</span> is syllable-initial.' },
+  { w: 'bencil', a: ['benʤil'], note: 'The nasal in <span class="w">ben-</span> is not word-final, so /e/ stays <span class="ipa">[e]</span>. Compare <span class="w">ben</span> <span class="ipa">[bɛn]</span>.' },
+  { w: 'bekçi', a: ['becʧʰi'], note: 'Syllable-final /k/ after a front vowel is unaspirated palatal <span class="ipa">[c]</span>; <span class="ipa">[ʧʰ]</span> is syllable-initial.' },
+  { w: 'sahte', a: ['sɑxtʰe'], note: 'Syllable-final /h/ after a back vowel is <span class="ipa">[x]</span>; <span class="ipa">[tʰ]</span> is syllable-initial.' },
+  { w: 'tercih', a: ['tʰɛɾʤiç'], note: 'Initial <span class="ipa">[tʰ]</span>; <span class="w">ter-</span> is closed by a liquid, so <span class="ipa">[ɛ]</span>; word-final /h/ after <span class="ipa">[i]</span> is <span class="ipa">[ç]</span>.' }
 ];
 
 const MATCH = [
   { title: 'voiceless velar fricative', steps: [
       { q: 'Which symbol?', kind: 'ipa', opts: ['ç', 'x', 'ɣ', 'h'], ans: 1 },
       { q: 'Which word contains it?', kind: 'word', opts: ['hasta', 'sahte', 'tercih', 'ahenk'], ans: 1 } ],
-    why: '<span class="ipa">[x]</span> is the allophone of /h/ after a back vowel before a consonant: <span class="w">sa[x]te</span>. <span class="w">hasta</span> and <span class="w">ahenk</span> have <span class="ipa">[h]</span>; <span class="w">tercih</span> ends in <span class="ipa">[ç]</span>.' },
+    why: '<span class="ipa">[x]</span> is /h/ in syllable-final position after a back vowel: <span class="ipa">[sɑxtʰe]</span>. <span class="w">hasta</span> and <span class="w">ahenk</span> have <span class="ipa">[h]</span>; <span class="w">tercih</span> ends in <span class="ipa">[ç]</span>.' },
   { title: 'velarized lateral approximant', steps: [
       { q: 'Which symbol?', kind: 'ipa', opts: ['l', 'ʎ', 'ɫ', 'ɾ'], ans: 2 },
       { q: 'Which word contains it?', kind: 'word', opts: ['bencil', 'kontrol', 'lâl', 'volkan'], ans: 3 } ],
-    why: '/l/ next to a back vowel in native words is velarized: <span class="w">vo[ɫ]kan</span>. The other three have light <span class="ipa">[l]</span>.' },
+    why: 'Syllable-final /l/ after a back vowel is velarized: <span class="ipa">[βoɫkʰɑn]</span>. <span class="w">bencil</span> has <span class="ipa">[l]</span> after a front vowel; <span class="w">kontrol</span> and <span class="w">lâl</span> have the light /l/ phoneme.' },
   { title: 'voiceless bilabial fricative', steps: [
       { q: 'Which symbol?', kind: 'ipa', opts: ['f', 'β', 'θ', 'ɸ'], ans: 3 },
       { q: 'Which word contains it?', kind: 'word', opts: ['kafa', 'küfür', 'elf', 'fıstıkçı'], ans: 1 } ],
-    why: '/f/ between rounded vowels becomes <span class="ipa">[ɸ]</span>: <span class="w">kü[ɸ]ür</span>.' },
+    why: '/f/ before or after a rounded vowel is <span class="ipa">[ɸ]</span>: <span class="ipa">[cʰyɸyɾ̥]</span>.' },
   { title: 'voiceless velar oral stop', steps: [
       { q: 'Which symbol?', kind: 'ipa', opts: ['c', 'k', 'g', 'q'], ans: 1 },
-      { q: 'Which word contains it?', kind: 'word', opts: ['ekim', 'bekçi', 'tutku', 'kâr'], ans: 2 } ],
-    why: '/k/ next to back vowels is velar: <span class="w">tut[k]u</span>. <span class="w">ekim</span>, <span class="w">bekçi</span> and <span class="w">kâr</span> all have palatal <span class="ipa">[c]</span>.' }
+      { q: 'Which word contains it?', kind: 'word', opts: ['ekim', 'bekçi', 'saksı', 'kâr'], ans: 2 } ],
+    why: 'Syllable-final /k/ after a back vowel is plain, unaspirated <span class="ipa">[k]</span>: <span class="ipa">[sɑksɯ]</span>. <span class="w">ekim</span> and <span class="w">kâr</span> have <span class="ipa">[cʰ]</span>; <span class="w">bekçi</span> has <span class="ipa">[c]</span>.' }
 ];
 
 const RULES = [
-  'Fronted next to a light (palatal) /l/ or a palatal consonant in loanwords',
-  'Lowered to open-mid before a sonorant in the same (closed) syllable',
+  'Fronted next to /c/, /ɟ/ or the light /l/ phoneme',
+  'Lowered to open-mid before a liquid in a closed syllable, or before a word-final nasal',
   'Rounded by vowel harmony with the previous vowel'
 ];
 const ALLO = [
   { type: 'pick', title: 'kabul', focus: '/u/', steps: [
-      { q: 'Which allophone of /u/?', kind: 'ipa', opts: ['u', 'ʉ', 'y', 'ʊ'], ans: 1 },
+      { q: 'Which allophone of /u/?', kind: 'ipa', opts: ['u', 'u̟', 'y', 'ɯ'], ans: 1 },
       { q: 'Which rule applies?', kind: 'text', opts: RULES, ans: 0 } ],
-    why: 'In the loanword <span class="w">kabul</span>, /l/ is light (palatal), and it pulls /u/ forward to <span class="ipa">[ʉ]</span>: <span class="ipa">[kabʉl]</span>.' },
-  { type: 'pick', title: 'hâlâ', focus: '/a/', steps: [
-      { q: 'Which allophone of /a/?', kind: 'ipa', opts: ['a', 'ɑ', 'a̟', 'ɛ'], ans: 2 },
+    why: 'In <span class="w">kabul</span> the /l/ is the light /l/ phoneme, and /u/ before it is fronted: <span class="ipa">[kʰɑbu̟l]</span>.' },
+  { type: 'pick', title: 'hâlâ', focus: '/ɑ/', steps: [
+      { q: 'Which allophone of /ɑ/?', kind: 'ipa', opts: ['ɑ', 'ɑ̟', 'æ', 'ɛ'], ans: 1 },
       { q: 'Which rule applies?', kind: 'text', opts: RULES, ans: 0 } ],
-    why: 'The circumflex signals a light /l/ and a fronted vowel: /a/ is realized as fronted <span class="ipa">[a̟]</span> next to the light <span class="ipa">[l]</span>.' },
+    why: 'The vowel after the light /l/ is fronted: <span class="ipa">[hɑːlɑ̟ː]</span>. The first vowel is only long.' },
   { type: 'pick', title: 'ben', focus: '/e/', steps: [
       { q: 'Which allophone of /e/?', kind: 'ipa', opts: ['e', 'ɛ', 'æ', 'ə'], ans: 1 },
       { q: 'Which rule applies?', kind: 'text', opts: RULES, ans: 1 } ],
-    why: '/e/ is lowered to <span class="ipa">[ɛ]</span> before a sonorant (/n/) in the same syllable: <span class="ipa">[bɛn]</span>.' },
+    why: '/e/ is open-mid before a word-final nasal: <span class="ipa">[bɛn]</span>. Compare <span class="w">beni</span> <span class="ipa">[beni]</span>.' },
   { type: 'sort', q: 'Contains <span class="ipa">[ɛ]</span> (open-mid front unrounded)?', short: '[ɛ]', words: [
-      ['ben', 1, 'closed by /n/ → [ɛ]'], ['beni', 0, 'be.ni is an open syllable → [e]'], ['kel', 1, 'closed by /l/ → [ɛ]'],
-      ['keli', 0, 'ke.li is open → [e]'], ['tel', 1, 'closed by /l/ → [ɛ]'], ['ev', 0, '/v/ is not a sonorant → [e]'],
-      ['pencere', 1, 'pen- is closed by /n/ → [ɛ]'] ] },
-  { type: 'sort', q: 'Contains a <b>fronted</b> low back unrounded vowel?', short: 'fronted [a̟]', words: [
-      ['kâr', 1, 'â after palatal [c] is fronted'], ['kar', 0, 'velar [k], plain back [a]'], ['hâlâ', 1, 'â next to light [l] is fronted'],
-      ['hala', 0, 'native word: [ɫ] and back [a]'], ['lâl', 1, 'light [l], fronted â'], ['lal', 0, 'no circumflex: back [a]'],
-      ['âlâ', 1, 'light [l], fronted â'] ] },
-  { type: 'sort', q: 'Contains a <b>fronted</b> high back rounded vowel <span class="ipa">[ʉ]</span>?', short: 'fronted [ʉ]', words: [
-      ['ulvi', 1, 'loanword with light /l/ → [ʉ]'], ['kuzu', 0, 'native word, plain [u]'], ['kabul', 1, 'light /l/ fronts /u/ → [ʉ]'],
-      ['üslup', 1, 'üslûp: û after light /l/ is fronted'], ['lunapark', 1, 'loanword: light /l/ before /u/'], ['un', 0, 'native word, plain [u]'] ] },
-  { type: 'sort', q: 'Contains a <b>fronted</b> mid back rounded vowel <span class="ipa">[ɵ]</span>?', short: 'fronted [ɵ]', words: [
-      ['sol (sağ-sol)', 0, 'native word: [ɫ], plain [o]'], ['sol (nota)', 1, 'loanword with light /l/ → [ɵ]'], ['lop', 0, 'plain [o]'],
-      ['ot', 0, 'no light /l/: plain [o]'], ['kontrol', 1, 'French loan, light /l/ fronts /o/'], ['orman', 0, 'plain [o]'] ] },
-  { type: 'sort', q: 'Is /e/ realized as close-mid <span class="ipa">[e]</span> (not <span class="ipa">[ɛ]</span>)?', short: 'only [e]', words: [
-      ['ev', 1, 'closed by /v/, not a sonorant → [e]'], ['ben', 0, 'closed by /n/ → [ɛ]'], ['gel', 0, 'closed by /l/ → [ɛ]'],
-      ['bebek', 1, 'be.bek: no sonorant coda → [e] [e]'], ['elbise', 0, 'el- is closed by /l/ → [ɛ]'], ['telefon', 1, 'te.le.fon: open syllables → [e]'] ] }
+      ['ben', 1, 'before a word-final nasal → [bɛn]'], ['beni', 0, 'be.ni: no closed syllable → [e]'], ['kel', 1, 'closed by a liquid → [cʰɛl]'],
+      ['keli', 0, 'ke.li → [cʰeli]'], ['tel', 1, 'closed by a liquid → [tʰɛl]'], ['ev', 0, '/v/ is not a liquid or nasal → [e]'],
+      ['pencere', 0, 'listed exception on the slide: [e]'] ] },
+  { type: 'sort', q: 'Contains a <b>fronted</b> low back unrounded vowel <span class="ipa">[ɑ̟]</span>?', short: '[ɑ̟]', words: [
+      ['kâr', 1, 'after /c/ → [cʰɑ̟ɾ̥]'], ['kar', 0, 'after velar [kʰ] → plain [ɑ]'], ['hâlâ', 1, 'after light /l/ → [hɑːlɑ̟ː]'],
+      ['hala', 0, '[ɫ] with plain [ɑ]: [hɑɫɑ]'], ['lâl', 1, 'light /l/ → [lɑ̟l]'], ['lal', 1, 'light /l/, like lâl → [ɑ̟]'],
+      ['âlâ', 1, '[ɑːlɑ̟ː]'] ] },
+  { type: 'sort', q: 'Contains a <b>fronted</b> high back rounded vowel <span class="ipa">[u̟]</span>?', short: '[u̟]', words: [
+      ['ulvi', 1, '[u̟lviː]'], ['kuzu', 0, 'no light /l/ or /c/ → plain [u]'], ['kabul', 1, '[kʰɑbu̟l]'],
+      ['üslup', 1, '[yslu̟p]'], ['lunapark', 1, '[lu̟nɑpʰɑɾkʰ]'], ['un', 0, 'plain [u]'] ] },
+  { type: 'sort', q: 'Contains a <b>fronted</b> mid back rounded vowel <span class="ipa">[o̟]</span>?', short: '[o̟]', words: [
+      ['sol (sağ-sol)', 0, 'dark [ɫ]: [soɫ]'], ['sol (nota)', 1, 'light /l/: [so̟l]'], ['lop', 1, 'light /l/: [lo̟pʰ]'],
+      ['ot', 0, 'plain [o]: [otʰ]'], ['kontrol', 1, 'light /l/ fronts /o/'], ['orman', 0, 'plain [o]'] ] },
+  { type: 'sort', q: 'Is every /e/ realized as close-mid <span class="ipa">[e]</span> (no <span class="ipa">[ɛ]</span>)?', short: 'only [e]', words: [
+      ['ev', 1, '[ev]'], ['ben', 0, '[bɛn]'], ['gel', 0, 'closed by a liquid → [ɟɛl]'],
+      ['bebek', 1, '[bebecʰ]'], ['elbise', 1, 'like the exception el: [elbise]'], ['telefon', 1, 'open syllables → [e]'] ] }
 ];
 const SORT_CHECKS = {
-  2: 'ulvi and lunapark counted as having [ʉ] (light /l/ in loanwords); üslup counted via üslûp.',
-  3: 'lop counted as plain [o].',
-  4: 'elbise excluded because its first /e/ is [ɛ] (its last /e/ is [e]).'
+  4: 'gel counted as [ɟɛl] by the rule; the slide lists el, elli, belli, en and pencere as exceptions, but not gel.'
 };
 
 const BOSS = [
   { q: 'Which words have a <b>permissible word-final</b> consonant cluster?', kind: 'ipa',
-    opts: ['[iɣmɛnl]', '[alɛnɛŋk]', '[uʋukftʰ]', '[ʃaxatɾ̥]', '[nʧʰolz]'], ans: [1, 4],
-    why: 'Word-final clusters have at most two consonants with falling sonority: <span class="ipa">[ŋk]</span> (as in <span class="w">ahenk</span>) and <span class="ipa">[lz]</span> are fine. <span class="ipa">[nl]</span> and <span class="ipa">[tɾ̥]</span> rise in sonority; <span class="ipa">[kft]</span> has three consonants.',
-    check: '[lz] judged permissible. Also, your LaTeX \\t{atS} ties a+t; I showed it as [nʧʰolz]. Please confirm the intended form.' },
+    opts: ['[iɣmɛnl]', '[ɑlɛnɛŋk]', '[uʋukftʰ]', '[ʃɑxɑtɾ̥]', '[nʧʰolz]'], ans: [1, 4],
+    why: 'Word-final clusters have at most two consonants with falling sonority: nasal + stop <span class="ipa">[ŋk]</span> and liquid + fricative <span class="ipa">[lz]</span> are fine. <span class="ipa">[nl]</span> and <span class="ipa">[tɾ̥]</span> rise in sonority; <span class="ipa">[kft]</span> has three consonants.',
+    check: '[lz] judged permissible. Your LaTeX \\t{atS} ties a+t; I showed it as [nʧʰolz]. Please confirm the intended form.' },
   { q: 'Which words do <b>not</b> contain a velar consonant?', kind: 'word',
     opts: ['eşkiya', 'anne', 'tutku', 'ulvi', 'anka'], ans: [0, 1, 3],
-    why: 'In <span class="w">eşkiya</span>, /k/ before a front vowel is palatal <span class="ipa">[c]</span>. <span class="w">anne</span> and <span class="w">ulvi</span> have no velar. <span class="w">tutku</span> has <span class="ipa">[k]</span>, <span class="w">anka</span> has <span class="ipa">[ŋk]</span>.',
-    check: 'ulvi counted as having no velar. A velarized [ɫ] (if a student argues for one) is alveolar with a secondary articulation, not a velar.' },
+    why: 'In <span class="w">eşkiya</span>, /k/ before <span class="ipa">[i]</span> is palatal <span class="ipa">[c]</span>. <span class="w">anne</span> has no velar, and <span class="w">ulvi</span> has the light /l/: <span class="ipa">[u̟lviː]</span>. <span class="w">tutku</span> has <span class="ipa">[kʰ]</span>; <span class="w">anka</span> has <span class="ipa">[ŋkʰ]</span>.',
+    check: 'The standard spelling is eşkıya. With [ɯ] the /k/ would be velar and eşkıya would drop out of the answer.' },
   { q: 'Which words <b>start</b> with an alveopalatal sound?', kind: 'word',
     opts: ['cacık', 'kahin', 'tren', 'jandarma', 'çan'], ans: [0, 3, 4],
-    why: '<span class="w">cacık</span> <span class="ipa">[ʤ]</span>, <span class="w">jandarma</span> <span class="ipa">[ʒ]</span> and <span class="w">çan</span> <span class="ipa">[ʧ]</span> are alveopalatal. <span class="w">kâhin</span> starts with palatal <span class="ipa">[c]</span>; <span class="w">tren</span> with alveolar <span class="ipa">[t]</span>.' },
+    why: '<span class="w">cacık</span> <span class="ipa">[ʤ]</span>, <span class="w">jandarma</span> <span class="ipa">[ʒ]</span> and <span class="w">çan</span> <span class="ipa">[ʧʰ]</span> are alveopalatal. <span class="w">kâhin</span> starts with palatal <span class="ipa">[cʰ]</span>; <span class="w">tren</span> with dental <span class="ipa">[tʰ]</span>.' },
   { q: 'Which words have <b>no difference</b> between phonetic and phonemic transcription?', kind: 'word',
-    opts: ['ahenk', 'ekim', 'fıstıkçı', 'şahap', 'patates', 'arazi'], ans: [2, 5],
-    why: '<span class="w">fıstıkçı</span> and <span class="w">arazi</span> have no allophonic detail. <span class="w">ahenk</span> has <span class="ipa">[ɛ]</span>, <span class="ipa">[ŋ]</span> and final <span class="ipa">[kʰ]</span>; <span class="w">ekim</span> has palatal <span class="ipa">[c]</span>; <span class="w">şahap</span> has final <span class="ipa">[pʰ]</span>; <span class="w">patates</span> has initial <span class="ipa">[pʰ]</span>.',
-    check: 'Assumes stops after [s] and before a consonant (fıstıkçı) are unaspirated.' },
+    opts: ['ahenk', 'ekim', 'fıstıkçı', 'şahap', 'patates', 'arazi'], ans: [5],
+    why: 'Only <span class="w">arazi</span> <span class="ipa">[ɑɾɑzi]</span> has no allophonic detail. Stops and /ʧ/ are aspirated everywhere except syllable-finally, so <span class="w">fıstıkçı</span> has <span class="ipa">[tʰ]</span> and <span class="ipa">[ʧʰ]</span>, <span class="w">patates</span> has <span class="ipa">[pʰ]</span> and <span class="ipa">[tʰ]</span>, <span class="w">şahap</span> ends in <span class="ipa">[pʰ]</span>, <span class="w">ekim</span> has <span class="ipa">[cʰ]</span>, and <span class="w">ahenk</span> ends in <span class="ipa">[ɲcʰ]</span>.',
+    check: 'Under the course aspiration rule fıstıkçı also differs, so only arazi is left. If you intended two answers, one item may need changing.' },
   { q: 'Which words contain <b>only [−high]</b> sounds?', kind: 'word',
     opts: ['tren', 'kavak', 'özenle', 'çorap', 'yapay', 'elf'], ans: [0, 2, 5],
-    why: '[+high] covers high vowels and consonants with a raised tongue body: palatals, velars, alveopalatals and <span class="ipa">[j]</span>. <span class="w">kavak</span> has <span class="ipa">[k]</span>, <span class="w">çorap</span> has <span class="ipa">[ʧ]</span>, <span class="w">yapay</span> has <span class="ipa">[j]</span>.',
-    check: 'Assumes the light [l] in özenle and elf (velarized [ɫ] would be [+high]).' }
+    why: '[+high] covers high vowels and consonants with a raised tongue body: palatals, velars, alveopalatals and <span class="ipa">[j]</span>. <span class="w">kavak</span> has <span class="ipa">[kʰ]</span>, <span class="w">çorap</span> has <span class="ipa">[ʧʰ]</span>, <span class="w">yapay</span> has <span class="ipa">[j]</span>.',
+    check: 'The handouts do not define [±high] for consonants; this assumes the standard feature values.' }
 ];
 
 const LISTEN = [
-  { n: 1, w: 'kâğıt', a: ['caːɯtʰ'], alt: ['caɯtʰ', 'ca̟ːɯtʰ', 'ca̟ɯtʰ', 'caːɯt', 'caɯt'],
-    note: 'Palatal <span class="ipa">[c]</span> before <span class="w">â</span>; <span class="w">ğ</span> is not a consonant here, only vowel length; final <span class="ipa">[tʰ]</span> is aspirated.',
-    check: 'Accepts [a] with or without length, and final [t] without aspiration.' },
-  { n: 2, w: 'Mehmet kahve içer.', a: ['meçmet kaxve iʧɛɾ̥'], alt: ['meçmetʰ kaxve iʧɛɾ̥'],
-    note: '/h/ is <span class="ipa">[ç]</span> after a front vowel (<span class="w">Mehmet</span>) and <span class="ipa">[x]</span> after a back vowel (<span class="w">kahve</span>). <span class="ipa">[e]</span> in <span class="w">Mehmet</span>, <span class="ipa">[ɛ]</span> in <span class="w">içer</span> (closed by /r/), and final /r/ is devoiced.',
-    check: 'Accepts the final [t] of Mehmet with or without aspiration before kahve.' },
-  { n: 3, w: 'Ne yapıyorsun?', a: ['napɯjosun'], alt: ['nejapɯjosun', 'nɛjapɯjosun', 'napɯjoɾsun', 'nejapɯjoɾsun', 'nɛjapɯjoɾsun', 'napɯjon'],
-    note: 'In fast speech <span class="w">ne yap-</span> can merge into <span class="ipa">[nap]</span>, and the /r/ of <span class="w">-yor</span> drops before <span class="w">-sun</span>. Write the form you actually hear, not the spelling.',
-    check: 'From the spectrograms, Speaker B seems to say [nap-] and Speaker A may say [neja-]. Both are accepted, with or without /r/. Please listen and tell me what each speaker really says.' },
-  { n: 4, w: 'tavuk', a: ['tʰaʋukʰ'], alt: ['tʰavukʰ', 'taʋukʰ', 'tavukʰ'],
-    note: 'Aspirated stops at both edges; /v/ before rounded <span class="ipa">[u]</span> is <span class="ipa">[ʋ]</span>.',
+  { n: 1, w: 'kâğıt', a: ['cʰɑ̟ːɯtʰ'], alt: ['cʰɑ̟ɯtʰ', 'cʰɑ̟ːɯt', 'cʰɑ̟ɯt'],
+    note: '<span class="w">kâğıt</span> starts with the /c/ phoneme, which fronts the next vowel to <span class="ipa">[ɑ̟]</span>; <span class="w">ğ</span> only adds length; word-final /t/ is aspirated.',
+    check: 'Accepts the vowel with or without length, and final [t] without aspiration, because the recordings may differ.' },
+  { n: 2, w: 'Mehmet kahve içer.', a: ['mehmetʰ kʰɑxve iʧʰɛɾ̥'], alt: ['mehmet kʰɑxve iʧʰɛɾ̥'],
+    note: '/h/ is <span class="ipa">[h]</span> in <span class="w">Mehmet</span> (the <span class="ipa">[ç]</span> allophone needs an <span class="ipa">[i]</span>) and <span class="ipa">[x]</span> in <span class="w">kahve</span> (syllable-final after a back vowel). <span class="ipa">[ʧʰ]</span> is syllable-initial, <span class="ipa">[ɛ]</span> comes before /r/ in a closed syllable, and the final /r/ is devoiced.',
+    check: 'Accepts the final /t/ of Mehmet with or without aspiration before kahve.' },
+  { n: 3, w: 'Ne yapıyorsun?', a: ['nɑpʰɯjosun'], alt: ['nejɑpʰɯjosun', 'nɑpʰɯjoɾsun', 'nejɑpʰɯjoɾsun', 'nɑpʰɯjon'],
+    note: 'In fast speech <span class="w">ne yap-</span> can merge into <span class="ipa">[nɑpʰ]</span>, and the /r/ of <span class="w">-yor</span> drops before <span class="w">-sun</span>. Write the form you actually hear, not the spelling.',
+    check: 'From the spectrograms, Speaker B seems to say [nɑpʰ-] and Speaker A may say [nejɑ-]. Both are accepted, with or without /r/. Please listen and tell me what each speaker really says.' },
+  { n: 4, w: 'tavuk', a: ['tʰɑβukʰ'],
+    note: 'Aspirated stops at both edges; /v/ next to a rounded vowel is <span class="ipa">[β]</span>.',
     check: 'Speaker A\'s file has an extra short word just before tavuk (around 6.5 s). I could not tell what it is, so it is still in her clip. Tell me if I should cut it.' }
 ];
 const LEVELS = [
@@ -512,7 +513,7 @@ function renderHome() {
     <section class="hero">
       <span class="eyebrow">Problem Set 2 · Phonetics of Turkish</span>
       <h1>Sound <em>Lab</em></h1>
-      <p class="readout">[ses] · [sɛs] · [kabʉl] · [saxte] · [cyɸyɾ̥]</p>
+      <p class="readout">[kʰɑbu̟l] · [sɑxtʰe] · [cʰyɸyɾ̥] · [lɑ̟l] · [so̟l]</p>
       <p>Five levels built from the handout. Play solo, or split the class into teams; questions rotate between teams and the scoreboard sits at the top.</p>
     </section>
     <div class="setup">
@@ -629,7 +630,7 @@ function rSpot(st, it) {
 const segs = s => s.match(/.[̀-ͯʰ-˿]*/gu) || [];
 function norm(s) {
   return s.normalize('NFC').replace(/[\[\]\/\s.ˈˌ]/g, '')
-    .replace(/t͡ʃ|tʃ/g, 'ʧ').replace(/d͡ʒ|dʒ/g, 'ʤ').replace(/ɡ/g, 'g').replace(/ʼ/g, 'ʰ');
+    .replace(/r̥/g, 'ɾ̥').replace(/φ/g, 'ɸ').replace(/t͡ʃ|tʃ/g, 'ʧ').replace(/d͡ʒ|dʒ/g, 'ʤ').replace(/ɡ/g, 'g').replace(/ʼ/g, 'ʰ');
 }
 function align(a, b) {
   const n = a.length, m = b.length, dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
@@ -639,9 +640,9 @@ function align(a, b) {
   return { ma, mb };
 }
 const KEYS = [
-  ['Consonants', ['ʧ', 'ʤ', 'ʃ', 'ʒ', 'c', 'ɟ', 'ç', 'x', 'ɣ', 'ɫ', 'ɾ', 'ɸ', 'ʋ', 'ŋ']],
-  ['Vowels', ['ɯ', 'y', 'ø', 'œ', 'ɛ', 'ʉ', 'ɵ', 'a̟', 'ɑ', 'æ']],
-  ['Marks', ['ʰ', '̥', 'ː', '̟']]
+  ['Consonants', ['ʧ', 'ʤ', 'ʃ', 'ʒ', 'c', 'ɟ', 'ç', 'x', 'ɫ', 'ɾ', 'ɸ', 'β', 'ŋ', 'ɲ', 'ɱ', 'ɣ']],
+  ['Vowels', ['ɑ', 'ɯ', 'y', 'ø', 'ɛ']],
+  ['Marks', ['ʰ', '\u0325', 'ː', '\u031f']]
 ];
 function rTrans(st, it) {
   txBlock(st, it, `
