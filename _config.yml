@@ -220,6 +220,10 @@ defaults:
       path: "folder/turkish_surprisal_context_2026.pdf"
     values:
       sitemap: false
+  - scope:
+      path: "folder/tid_phonetic_reduction_2026.pdf"
+    values:
+      sitemap: false
 
 # Sass/SCSS
 sass:
