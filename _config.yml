@@ -211,6 +211,15 @@ defaults:
       layout: talk
       author_profile: true
       share: true
+  # Papers under review: shared by direct link only, kept out of sitemap.xml
+  - scope:
+      path: "folder/gloss_stitch_sign_2026.pdf"
+    values:
+      sitemap: false
+  - scope:
+      path: "folder/turkish_surprisal_context_2026.pdf"
+    values:
+      sitemap: false
 
 # Sass/SCSS
 sass:
