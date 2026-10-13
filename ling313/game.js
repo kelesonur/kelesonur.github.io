@@ -33,7 +33,7 @@ const WEEKS=[
 {id:'10–11',topic:'Verbal inflection',meetings:[{iso:'2026-11-23',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-24',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-25',time:'16:00–17:00',room:'NH304'},{iso:'2026-11-30',time:'16:00–17:00',room:'M1170'},{iso:'2026-12-01',time:'15:00–17:00',room:'TB360'},{iso:'2026-12-02',time:'16:00–17:00',room:'NH304'}]},
 {id:'12',topic:'Nominalization',meetings:[{iso:'2026-12-07',time:'16:00–17:00',room:'M1170'},{iso:'2026-12-08',time:'15:00–17:00',room:'TB360'},{iso:'2026-12-09',time:'16:00–17:00',room:'NH304'}]}
 ];
-const SCREENS=['home','start','practice','handout','play','break','results','library','edit','office'];
+const SCREENS=['home','start','practice','handout','lab','play','break','results','library','edit','office'];
 const KEY='ling313-phonology-en-v1';
 const EDIT_KEY='ling313-case-edits-v1';
 const ADMIN_KEY='ling313-admin-code-v1';
@@ -174,7 +174,7 @@ function resetDraft(){draft={answer:[],fields:[],reason:null,hint:false};}
 function syncAdminBtn(){const b=$('adminBtn');if(!b)return;b.setAttribute('aria-pressed',String(admin));b.textContent=admin?'Admin on':'Admin';b.classList.toggle('admin-on',admin);}
 function sectionNav(){
  const onBook=state.screen==='office';
- const onPs=['start','practice','handout','play','break','results','library','edit'].includes(state.screen);
+ const onPs=['start','practice','handout','lab','play','break','results','library','edit'].includes(state.screen);
  if(state.screen==='home')return '';
  return `<nav class="home-nav" aria-label="Sections"><button type="button" id="navBook" aria-pressed="${onBook}">Book appointment with TA</button><button type="button" id="navPs" aria-pressed="${onPs}">PS Material</button></nav>`;
 }
@@ -194,6 +194,7 @@ function render(){
  else if(state.screen==='start')startScreen();
  else if(state.screen==='practice')practiceScreen();
  else if(state.screen==='handout')handoutScreen();
+ else if(state.screen==='lab')labScreen();
  else if(state.screen==='break')breakScreen();
  else if(state.screen==='results')resultsScreen();
  else if(state.screen==='library')libraryScreen();
@@ -216,14 +217,14 @@ function classMeetingsHtml(meetings){
  return `<ul class="class-meetings">${meetings.map(m=>`<li>${esc(formatClassMeeting(m))}</li>`).join('')}</ul>`;
 }
 function weekPicker(){
- return `<section class="week-picker" aria-label="Choose weeks"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>`<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${state.weeks===w.id?'selected':''}">${weekLabel(w.id)}<small>${w.id==='1–2'?'Ready':'To be added'}</small></button>`).join('')}</div></section>`;
+ return `<section class="week-picker" aria-label="Choose weeks"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>`<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${state.weeks===w.id?'selected':''}">${weekLabel(w.id)}<small>${w.id==='1–2'||w.id==='3–4'?'Ready':'To be added'}</small></button>`).join('')}</div></section>`;
 }
 function bindWeekPicker(){
  document.querySelectorAll('[data-weeks]').forEach(button=>{
   button.onclick=()=>{
    if($('teamName'))state.team=$('teamName').value;
    state.weeks=button.dataset.weeks;
-   if(state.screen==='library'||state.screen==='edit'||state.screen==='handout'||state.screen==='practice')state.screen='start';
+   if(state.screen==='library'||state.screen==='edit'||state.screen==='handout'||state.screen==='practice'||state.screen==='lab')state.screen='start';
    save();render();
   };
  });
@@ -232,6 +233,13 @@ function bindWeekPicker(){
 function startScreen(){
  if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1–2';
  const meta=weekMeta(state.weeks);
+ if(state.weeks==='3–4'){
+  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING313 · PS</span><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p class="muted">${esc(meta.topic)}</p></div><section class="setup material-picker" aria-label="PS activities"><h2>Activities</h2><div class="mode-buttons material-choices"><button type="button" id="openHandout">PS Handout</button><button type="button" id="openLab">Sound Lab</button></div></section></section>`;
+  bindSectionNav();bindWeekPicker();
+  $('openHandout').onclick=()=>{state.screen='handout';save();render();focusMain();};
+  $('openLab').onclick=()=>{state.screen='lab';save();render();focusMain();};
+  return;
+ }
  if(state.weeks!=='1–2'){
   $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p>${esc(meta.topic)}</p><p class="muted">To be added.</p>${admin?`<div class="wide-actions"><button type="button" id="openLibrary">All questions</button></div>`:''}</section>`;
   bindSectionNav();bindWeekPicker();
@@ -260,8 +268,16 @@ function practiceScreen(){
 }
 
 function handoutScreen(){
- if(state.weeks!=='1–2'){state.screen='start';render();return;}
- $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Weeks 1–2</button><h1>PS Handout</h1></div><div class="embed-toolbar"><a class="primary" href="materials/ps1.pdf" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="PS Handout" src="materials/ps1.pdf#view=FitH"></iframe></section>`;
+ if(state.weeks!=='1–2'&&state.weeks!=='3–4'){state.screen='start';render();return;}
+ const file=state.weeks==='3–4'?'materials/ps2.pdf':'materials/ps1.pdf';
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← ${esc(weekLabel(state.weeks))}</button><h1>PS Handout</h1></div><div class="embed-toolbar"><a class="primary" href="${file}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="PS Handout" src="${file}#view=FitH"></iframe></section>`;
+ bindSectionNav();bindWeekPicker();
+ $('backPs').onclick=()=>{state.screen='start';save();render();focusMain();};
+}
+
+function labScreen(){
+ if(state.weeks!=='3–4'){state.screen='start';render();return;}
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Weeks 3–4</button><h1>Sound Lab</h1></div><div class="embed-toolbar"><a class="primary" href="games/sound-lab/index.html" target="_blank" rel="noopener noreferrer">Open lab</a></div><iframe class="material-frame game-frame" title="Sound Lab" src="games/sound-lab/index.html"></iframe></section>`;
  bindSectionNav();bindWeekPicker();
  $('backPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
