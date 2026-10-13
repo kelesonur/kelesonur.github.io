@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LING 313 Sound Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800;900&family=Figtree:wght@400;500;700;800&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+<style>
+/* Layout: a live "spectrogram" glows behind a single centered play column; levels sit on a 4-up grid with the boss round as a full-width band. Single dark theme by choice (a phonetics lab screen). */
+:root {
+  --ink: #120a1c;
+  --ink-2: #1c1029;
+  --panel: #241634;
+  --panel-2: #2e1d42;
+  --line: #43295a;
+  --fg: #f7ede2;
+  --muted: #bba8cb;
+  --plum: #8a2a7d;
+  --rose: #e0457b;
+  --ember: #f57d3c;
+  --gold: #fcd36a;
+  --good: #6fdcae;
+  --bad: #ff7482;
+  --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --ui: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ipa: "Gentium Book Plus", "Charis SIL", "Doulos SIL", "Noto Serif", "Times New Roman", serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--ink); color: var(--fg); font-family: var(--ui); font-size: 16px; line-height: 1.5; }
+#spec { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: .42; filter: blur(3px) saturate(1.15); }
+.shade { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--ink) 15%, transparent) 0%, color-mix(in srgb, var(--ink) 70%, transparent) 38%, var(--ink) 78%); }
+.app { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding-inline: 16px; padding-block: 14px 56px; }
+
+button { font: inherit; color: inherit; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.ipa { font-family: var(--ipa); }
+.w { font-family: var(--ipa); font-style: italic; }
+
+/* top bar */
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; justify-content: space-between; padding-block: 4px 18px; }
+.brand { display: flex; align-items: baseline; gap: 10px; cursor: pointer; background: none; border: 0; padding: 0; }
+.brand b { font-family: var(--display); font-weight: 900; font-size: 1.15rem; letter-spacing: .02em; }
+.brand span { color: var(--muted); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+.top-right { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.scores { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); font-size: .85rem; font-variant-numeric: tabular-nums; }
+.chip strong { font-family: var(--display); font-size: .8rem; }
+.chip.on { border-color: var(--gold); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 22%, transparent); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); cursor: pointer; font-weight: 700; font-size: .92rem; transition: transform .12s, background .12s, border-color .12s; }
+.btn:hover { background: var(--panel-2); border-color: var(--muted); }
+.btn:active { transform: translateY(1px); }
+.btn.primary { background: linear-gradient(135deg, var(--rose), var(--ember)); border-color: transparent; color: var(--ink); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; }
+.btn.small { padding: 6px 12px; font-size: .82rem; border-radius: 10px; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+
+/* home */
+.hero { padding-block: 28px 30px; display: grid; gap: 14px; }
+.eyebrow { font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+.hero h1 { margin: 0; font-family: var(--display); font-weight: 900; font-size: clamp(2.6rem, 9vw, 5.6rem); line-height: .95; letter-spacing: -.01em; text-wrap: balance; }
+.hero h1 em { font-style: normal; background: linear-gradient(90deg, var(--rose), var(--ember) 55%, var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero p { margin: 0; color: var(--muted); max-width: 60ch; font-size: 1.05rem; }
+.hero .readout { font-family: var(--ipa); font-size: 1.35rem; color: var(--fg); }
+.setup { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; padding: 16px; border-radius: 18px; background: color-mix(in srgb, var(--panel) 85%, transparent); border: 1px solid var(--line); margin-block-end: 26px; }
+.setup .lbl { font-weight: 800; font-size: .9rem; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.seg button { background: transparent; border: 0; padding: 8px 14px; cursor: pointer; font-weight: 700; font-size: .88rem; color: var(--muted); }
+.seg button.on { background: var(--fg); color: var(--ink); }
+.names { display: flex; flex-wrap: wrap; gap: 8px; }
+.names input { width: 120px; max-width: 100%; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--ink-2); color: var(--fg); font: inherit; font-size: .9rem; }
+
+.levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.lvl { position: relative; display: grid; grid-template-rows: auto auto 1fr auto; gap: 6px; text-align: left; padding: 18px; border-radius: 20px; background: color-mix(in srgb, var(--panel) 90%, transparent); border: 1px solid var(--line); cursor: pointer; min-height: 230px; overflow: hidden; transition: transform .18s, border-color .18s; }
+.lvl:hover { transform: translateY(-3px); border-color: var(--ember); }
+.lvl .glyph { font-family: var(--ipa); font-size: 3.4rem; line-height: 1; color: var(--gold); height: 74px; display: flex; align-items: center; }
+.lvl .n { font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.lvl h3 { margin: 0; font-family: var(--display); font-size: 1.05rem; font-weight: 800; }
+.lvl p { margin: 0; color: var(--muted); font-size: .9rem; }
+.lvl .meta { display: flex; justify-content: space-between; align-items: center; font-size: .8rem; color: var(--muted); padding-top: 8px; border-top: 1px dashed var(--line); }
+.stars { letter-spacing: 2px; color: var(--line); font-size: 1rem; }
+.stars .lit { color: var(--gold); }
+.lvl.boss { grid-column: 1 / -1; min-height: 0; grid-template-columns: auto 1fr auto; grid-template-rows: auto; align-items: center; gap: 22px;
+  background: linear-gradient(110deg, color-mix(in srgb, var(--plum) 55%, var(--panel)), var(--panel) 60%); }
+.lvl.boss .glyph { font-size: 4rem; height: auto; color: var(--fg); }
+.lvl.boss .meta { border: 0; padding: 0; flex-direction: column; align-items: flex-end; gap: 4px; }
+.lvl.wide { background: linear-gradient(90deg, var(--panel) 30%, color-mix(in srgb, var(--panel) 35%, transparent)), url("clips/b-2.png") right center / cover no-repeat, var(--panel); }
+.lvl.wide .glyph { color: var(--gold); }
+
+/* listening */
+.players { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.play { display: inline-flex; align-items: center; gap: 12px; padding: 14px 22px; border-radius: 999px; border: 2px solid var(--line); background: var(--ink-2); cursor: pointer; font-weight: 800; font-size: 1.05rem; transition: border-color .12s, transform .12s; }
+.play:hover { border-color: var(--ember); transform: translateY(-2px); }
+.play.on { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 14%, var(--ink-2)); }
+.bars { display: inline-flex; align-items: flex-end; gap: 3px; height: 20px; }
+.bars i { width: 4px; height: 6px; border-radius: 2px; background: var(--ember); }
+.play.on .bars i { animation: eq .5s ease-in-out infinite alternate; }
+.play.on .bars i:nth-child(2) { animation-delay: .12s; } .play.on .bars i:nth-child(3) { animation-delay: .24s; } .play.on .bars i:nth-child(4) { animation-delay: .06s; }
+@keyframes eq { from { height: 4px; } to { height: 20px; } }
+.specbox { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--ink); }
+.specbox img { display: block; width: 100%; height: clamp(120px, 24vw, 220px); object-fit: fill; }
+.specbox .ph { position: absolute; top: 0; bottom: 0; left: 0; width: 2px; background: var(--fg); box-shadow: 0 0 10px var(--gold); pointer-events: none; }
+.specbox .khz { position: absolute; left: 8px; font-size: .7rem; color: var(--muted); background: color-mix(in srgb, var(--ink) 70%, transparent); padding: 1px 6px; border-radius: 6px; }
+.specbox .top { top: 6px; } .specbox .bot { bottom: 6px; } .specbox .who { right: 8px; left: auto; top: 6px; color: var(--fg); }
+.footnote { color: var(--muted); font-size: .85rem; margin-top: 18px; max-width: 70ch; }
+
+/* play */
+.playhead { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; justify-content: space-between; }
+.playhead h2 { margin: 2px 0 0; font-family: var(--display); font-size: clamp(1.2rem, 3.4vw, 1.7rem); font-weight: 800; }
+.turn { padding: 8px 14px; border-radius: 999px; background: var(--gold); color: var(--ink); font-weight: 800; font-size: .88rem; }
+.progress { display: flex; gap: 5px; margin-block: 16px 14px; }
+.progress i { flex: 1; height: 6px; border-radius: 3px; background: var(--line); }
+.progress i.done { background: var(--ember); }
+.progress i.now { background: var(--gold); }
+.stage { position: relative; padding: clamp(18px, 4vw, 34px); border-radius: 24px; background: color-mix(in srgb, var(--panel) 92%, transparent); border: 1px solid var(--line); min-height: 280px; display: grid; gap: 22px; align-content: start; }
+.q { margin: 0; font-size: clamp(1.05rem, 2.6vw, 1.3rem); font-weight: 700; text-wrap: balance; max-width: 62ch; }
+.q .sub { display: block; font-weight: 500; color: var(--muted); font-size: .92rem; margin-top: 4px; }
+.big-word { font-family: var(--ipa); font-style: italic; font-size: clamp(2.6rem, 8vw, 4.4rem); line-height: 1.05; }
+
+/* spot the error */
+.tokens { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; padding-block: 10px; }
+.tok { font-family: var(--ipa); font-size: clamp(2rem, 7vw, 3.6rem); min-width: 1.4em; padding: 6px 10px 10px; border-radius: 14px; border: 2px solid transparent; background: var(--ink-2); cursor: pointer; line-height: 1.1; transition: transform .12s, border-color .12s, background .12s; }
+.tok:hover { border-color: var(--muted); transform: translateY(-2px); }
+.tok.brk { background: transparent; color: var(--muted); }
+.tok.good { border-color: var(--good); background: color-mix(in srgb, var(--good) 20%, var(--ink-2)); }
+.tok.bad { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 18%, var(--ink-2)); animation: shake .35s; }
+.tok.reveal { border-color: var(--gold); border-style: dashed; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.row.center { justify-content: center; }
+
+/* transcription */
+.tx { display: grid; gap: 14px; }
+.tx-input { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 16px; background: var(--ink-2); border: 2px solid var(--line); }
+.tx-input:focus-within { border-color: var(--gold); }
+.tx-input .br { font-family: var(--ipa); font-size: 2rem; color: var(--muted); }
+.tx-input input { flex: 1; min-width: 0; background: transparent; border: 0; color: var(--fg); font-family: var(--ipa); font-size: clamp(1.6rem, 5vw, 2.2rem); padding: 4px 0; outline: none; }
+.kbd { display: grid; gap: 8px; }
+.kbd .grp { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.kbd .grp span { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); width: 84px; }
+.key { font-family: var(--ipa); font-size: 1.35rem; min-width: 44px; height: 44px; padding: 0 8px; border-radius: 10px; border: 1px solid var(--line); background: var(--ink-2); cursor: pointer; }
+.key:hover { border-color: var(--gold); }
+.key.wide { font-family: var(--ui); font-size: .85rem; font-weight: 700; padding: 0 12px; }
+.diff { font-family: var(--ipa); font-size: 1.9rem; display: flex; flex-wrap: wrap; gap: 2px; }
+.diff b { font-weight: 400; padding: 0 3px; border-radius: 6px; }
+.diff .ok { color: var(--good); }
+.diff .miss { background: color-mix(in srgb, var(--bad) 30%, transparent); color: var(--fg); }
+.diff .need { background: color-mix(in srgb, var(--gold) 30%, transparent); }
+.hint { color: var(--muted); font-size: .92rem; }
+
+/* choices */
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.opts.text { grid-template-columns: 1fr; }
+.opt { padding: 16px 14px; border-radius: 16px; border: 2px solid var(--line); background: var(--ink-2); cursor: pointer; text-align: center; transition: transform .12s, border-color .12s; }
+.opt:hover { border-color: var(--ember); transform: translateY(-2px); }
+.opt.ipa { font-family: var(--ipa); font-size: 2.3rem; line-height: 1.1; }
+.opt.word { font-family: var(--ipa); font-style: italic; font-size: 1.6rem; }
+.opt.text { text-align: left; font-size: 1rem; font-weight: 600; }
+.opt.good { border-color: var(--good); background: color-mix(in srgb, var(--good) 20%, var(--ink-2)); }
+.opt.bad { border-color: var(--bad); opacity: .55; animation: shake .35s; }
+.opt[disabled] { cursor: default; transform: none; }
+.steps { display: flex; gap: 8px; font-size: .8rem; color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.steps b { color: var(--gold); }
+.locked { font-family: var(--ipa); font-size: 1.3rem; color: var(--good); }
+
+/* sorter */
+.sorter { display: grid; gap: 18px; }
+.card-zone { height: 130px; display: grid; place-items: center; position: relative; }
+.wcard { font-family: var(--ipa); font-style: italic; font-size: clamp(2.2rem, 7vw, 3.4rem); padding: 14px 30px; border-radius: 18px; background: var(--fg); color: var(--ink); box-shadow: 0 14px 40px -12px color-mix(in srgb, var(--rose) 70%, transparent); animation: drop .35s cubic-bezier(.2,1.4,.4,1); transition: transform .35s ease-in, opacity .35s; }
+.wcard.goL { transform: translate(-140%, 60px) rotate(-14deg) scale(.6); opacity: 0; }
+.wcard.goR { transform: translate(140%, 60px) rotate(14deg) scale(.6); opacity: 0; }
+.bins { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.bin { padding: 16px; border-radius: 18px; border: 2px dashed var(--line); background: var(--ink-2); cursor: pointer; text-align: center; display: grid; gap: 6px; min-height: 120px; align-content: start; transition: border-color .12s; }
+.bin:hover { border-color: var(--gold); }
+.bin .bt { font-weight: 800; }
+.bin .bk { font-size: .75rem; color: var(--muted); }
+.bin .pile { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
+.bin .pile i { font-family: var(--ipa); font-size: .95rem; padding: 2px 8px; border-radius: 8px; background: var(--panel-2); }
+.bin .pile i.y { box-shadow: inset 0 -2px 0 var(--good); }
+.bin .pile i.n { box-shadow: inset 0 -2px 0 var(--bad); }
+.toast { min-height: 1.6em; text-align: center; font-size: .95rem; }
+.toast.ok { color: var(--good); } .toast.no { color: var(--bad); }
+
+/* boss */
+.timer { height: 10px; border-radius: 5px; background: var(--line); overflow: hidden; }
+.timer i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, var(--rose), var(--ember), var(--gold)); transform-origin: left; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.tile { position: relative; padding: 22px 12px; border-radius: 16px; border: 0; cursor: pointer; font-size: 1.7rem; color: var(--ink); font-family: var(--ipa); font-weight: 700; transition: transform .12s, filter .12s, box-shadow .12s; }
+.tile:nth-child(6n+1) { background: var(--rose); }
+.tile:nth-child(6n+2) { background: var(--ember); }
+.tile:nth-child(6n+3) { background: var(--gold); }
+.tile:nth-child(6n+4) { background: var(--good); }
+.tile:nth-child(6n+5) { background: #b48cf2; }
+.tile:nth-child(6n+6) { background: #f2a3c4; }
+.tile .k { position: absolute; top: 6px; left: 10px; font-family: var(--ui); font-size: .72rem; font-weight: 800; opacity: .6; }
+.tile.word { font-style: italic; }
+.tile.sel { transform: scale(.96); box-shadow: 0 0 0 4px var(--fg), 0 0 0 7px var(--ink); }
+.tile.dim { filter: grayscale(.85) brightness(.55); }
+.tile .mk { position: absolute; top: 6px; right: 10px; font-family: var(--ui); font-size: 1rem; font-weight: 900; }
+
+/* feedback */
+.fb { margin-top: 14px; padding: 16px 18px; border-radius: 18px; background: var(--panel); border: 1px solid var(--line); border-left: 6px solid var(--good); display: grid; gap: 6px; animation: rise .3s ease-out; }
+.fb.no { border-left-color: var(--bad); }
+.fb.mid { border-left-color: var(--gold); }
+.fb .ft { font-weight: 800; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.fb .pts { font-family: var(--display); font-size: .9rem; color: var(--gold); }
+.fb p { margin: 0; color: var(--fg); max-width: 75ch; }
+.fb .ipa, .fb .w { font-size: 1.1em; }
+.actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; }
+
+/* results */
+.results { text-align: center; padding-block: 40px; display: grid; gap: 16px; justify-items: center; }
+.results h2 { margin: 0; font-family: var(--display); font-size: clamp(2rem, 7vw, 3.4rem); }
+.results .stars { font-size: 2.6rem; letter-spacing: 8px; }
+.results .big { font-family: var(--display); font-size: 1.4rem; color: var(--gold); font-variant-numeric: tabular-nums; }
+.board { display: grid; gap: 8px; width: min(420px, 100%); }
+.board div { display: flex; justify-content: space-between; padding: 10px 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.board div:first-child { border-color: var(--gold); }
+
+/* answer key */
+.keyp { position: fixed; inset: 0; z-index: 10; background: color-mix(in srgb, var(--ink) 80%, transparent); backdrop-filter: blur(6px); overflow-y: auto; padding-inline: 16px; padding-block: 24px; }
+.keyp .inner { max-width: 820px; margin: 0 auto; background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: clamp(18px, 4vw, 32px); display: grid; gap: 18px; }
+.keyp h2 { margin: 0; font-family: var(--display); font-size: 1.4rem; }
+.keyp h3 { margin: 0; font-size: 1rem; color: var(--gold); letter-spacing: .04em; }
+.keyp .intro { color: var(--muted); margin: 0; max-width: 70ch; }
+.kl { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.kl li { display: grid; grid-template-columns: minmax(90px, auto) 1fr; gap: 4px 14px; padding: 8px 10px; border-radius: 10px; background: var(--ink-2); }
+.kl li > :first-child { font-family: var(--ipa); font-style: italic; }
+.kl .a { min-width: 0; }
+.kl .a .ipa { font-size: 1.1em; }
+.flag { grid-column: 1 / -1; font-size: .84rem; color: var(--ink); background: var(--gold); border-radius: 8px; padding: 4px 10px; }
+.flag::before { content: "CHECK  "; font-weight: 800; letter-spacing: .08em; }
+
+@keyframes shake { 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes drop { from { opacity: 0; transform: translateY(-30px) scale(.9); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+@media (max-width: 560px) {
+  .lvl.boss { grid-template-columns: 1fr; }
+  .lvl.boss .meta { align-items: flex-start; }
+  .kbd .grp span { width: 100%; }
+  .bins { gap: 8px; }
+  .kl li { grid-template-columns: 1fr; }
+}
+</style>
+
+<canvas id="spec" aria-hidden="true"></canvas>
+<div class="shade" aria-hidden="true"></div>
+<div class="app">
+  <header class="top">
+    <button class="brand" data-act="home" aria-label="Back to level map"><b>Sound Lab</b><span>LING 313.02 · PS 2</span></button>
+    <div class="top-right">
+      <div class="scores" id="scores"></div>
+      <button class="btn small ghost" id="soundBtn" data-act="sound">Sound on</button>
+      <button class="btn small" data-act="key">Answer key</button>
+    </div>
+  </header>
+  <main id="view"></main>
+</div>
+<div class="keyp" id="keyPanel" hidden></div>
+
+<script>
+/* ============ DATA ============ */
+const SPOT = [
+  { label: 'a', tokens: ['/', 'd', 'i', 'ɾ̥', 's', 'e', 'kʰ', '/'], wrong: [0, 3, 6, 7], correct: false,
+    expl: 'The slashes mark a <b>phonemic</b> transcription. Devoicing (<span class="ipa">[ɾ̥]</span>) and aspiration (<span class="ipa">[kʰ]</span>) are allophonic details, so they only belong in a phonetic transcription in square brackets.',
+    key: 'Wrong: allophonic detail ([ɾ̥], [kʰ]) inside phonemic slashes.' },
+  { label: 'b', tokens: ['[', 'tʰ', 'o', 'n', 'o', 'kʰ', ']'], wrong: [], correct: true,
+    expl: 'Transcribed correctly. Voiceless stops are aspirated word-initially and word-finally, so both <span class="ipa">[tʰ]</span> and <span class="ipa">[kʰ]</span> are expected.',
+    key: 'Correct.', check: 'tonok is not a Turkish word, so I treated it as a well-formed nonce form.' },
+  { label: 'c', tokens: ['[', 's', 'tʰ', 'a', 'ɹ', 'b', 'a', 'k', 's', ']'], wrong: [2, 4], correct: false,
+    expl: '<span class="ipa">[ɹ]</span> is the English approximant; Turkish /r/ is a tap <span class="ipa">[ɾ]</span>. A stop right after <span class="ipa">[s]</span> is also not aspirated, so <span class="ipa">[tʰ]</span> is wrong too. Bonus: canonical Turkish has no word-initial cluster like /st/.',
+    key: 'Wrong: [ɹ] is not a Turkish sound; [tʰ] after [s] is not aspirated (also #st cluster).', check: 'The game accepts a tap on either [ɹ] or [tʰ].' },
+  { label: 'd', tokens: ['[', 'ɫ', 'a', 'ɸ', 'e', 'b', 'e', 's', 'i', ']'], wrong: [3], correct: false,
+    expl: '<span class="ipa">[ɸ]</span> is the allophone of /f/ next to rounded vowels, as in <span class="w">küfür</span>. Here /f/ sits between <span class="ipa">[a]</span> and <span class="ipa">[e]</span>, so it stays <span class="ipa">[f]</span>.',
+    key: 'Wrong: [ɸ] only appears next to rounded vowels.' }
+];
+
+const TRANS = [
+  { w: 'vücut', a: ['ʋyʤutʰ'], alt: ['vyʤutʰ'], note: '/v/ next to a rounded vowel is <span class="ipa">[ʋ]</span>; word-final /t/ is aspirated.', check: 'Accepts [v] as well as [ʋ].' },
+  { w: 'cetvel', a: ['ʤetvɛl'], note: '<span class="w">cet-</span> is closed by /t/ (not a sonorant), so <span class="ipa">[e]</span>; <span class="w">-vel</span> is closed by /l/, so <span class="ipa">[ɛ]</span>.' },
+  { w: 'küfür', a: ['cyɸyɾ̥'], note: 'Palatal <span class="ipa">[c]</span> before a front vowel, <span class="ipa">[ɸ]</span> between rounded vowels, final /r/ devoiced.' },
+  { w: 'sergüzeşt', a: ['sɛɾɟyzeʃtʰ'], alt: ['sɛɾɟyzeʃt'], note: '<span class="w">ser-</span> is closed by /r/, so <span class="ipa">[ɛ]</span>; palatal <span class="ipa">[ɟ]</span> before <span class="ipa">[y]</span>; final /t/ aspirated.', check: 'Accepts final [t] without aspiration after [ʃ].' },
+  { w: 'rüzgar', a: ['ɾyzɟaɾ̥'], alt: ['ɾyzɟa̟ɾ̥'], note: 'Palatal <span class="ipa">[ɟ]</span> before /a/ (older spelling <span class="w">rüzgâr</span>); final /r/ devoiced.', check: 'Accepts a fronted [a̟] after [ɟ].' },
+  { w: 'volkan', a: ['ʋoɫkan'], alt: ['voɫkan'], note: '<span class="ipa">[ʋ]</span> before rounded <span class="ipa">[o]</span>; /l/ after a back vowel is velarized <span class="ipa">[ɫ]</span>.', check: 'Accepts [v] as well as [ʋ].' },
+  { w: 'bencil', a: ['bɛnʤil'], note: '<span class="w">ben-</span> is closed by /n/, so <span class="ipa">[ɛ]</span>; light <span class="ipa">[l]</span> after <span class="ipa">[i]</span>.' },
+  { w: 'bekçi', a: ['becʧi'], alt: ['bekʧi'], note: '/k/ after a front vowel is palatal <span class="ipa">[c]</span>.', check: 'Accepts velar [k] too.' },
+  { w: 'sahte', a: ['saxte'], note: '/h/ after a back vowel and before a consonant is <span class="ipa">[x]</span>.' },
+  { w: 'tercih', a: ['tʰɛɾʤiç'], alt: ['tɛɾʤiç'], note: 'Initial <span class="ipa">[tʰ]</span>; <span class="w">ter-</span> is closed by /r/, so <span class="ipa">[ɛ]</span>; final /h/ after <span class="ipa">[i]</span> is <span class="ipa">[ç]</span>.', check: 'Accepts initial [t] without aspiration.' }
+];
+
+const MATCH = [
+  { title: 'voiceless velar fricative', steps: [
+      { q: 'Which symbol?', kind: 'ipa', opts: ['ç', 'x', 'ɣ', 'h'], ans: 1 },
+      { q: 'Which word contains it?', kind: 'word', opts: ['hasta', 'sahte', 'tercih', 'ahenk'], ans: 1 } ],
+    why: '<span class="ipa">[x]</span> is the allophone of /h/ after a back vowel before a consonant: <span class="w">sa[x]te</span>. <span class="w">hasta</span> and <span class="w">ahenk</span> have <span class="ipa">[h]</span>; <span class="w">tercih</span> ends in <span class="ipa">[ç]</span>.' },
+  { title: 'velarized lateral approximant', steps: [
+      { q: 'Which symbol?', kind: 'ipa', opts: ['l', 'ʎ', 'ɫ', 'ɾ'], ans: 2 },
+      { q: 'Which word contains it?', kind: 'word', opts: ['bencil', 'kontrol', 'lâl', 'volkan'], ans: 3 } ],
+    why: '/l/ next to a back vowel in native words is velarized: <span class="w">vo[ɫ]kan</span>. The other three have light <span class="ipa">[l]</span>.' },
+  { title: 'voiceless bilabial fricative', steps: [
+      { q: 'Which symbol?', kind: 'ipa', opts: ['f', 'β', 'θ', 'ɸ'], ans: 3 },
+      { q: 'Which word contains it?', kind: 'word', opts: ['kafa', 'küfür', 'elf', 'fıstıkçı'], ans: 1 } ],
+    why: '/f/ between rounded vowels becomes <span class="ipa">[ɸ]</span>: <span class="w">kü[ɸ]ür</span>.' },
+  { title: 'voiceless velar oral stop', steps: [
+      { q: 'Which symbol?', kind: 'ipa', opts: ['c', 'k', 'g', 'q'], ans: 1 },
+      { q: 'Which word contains it?', kind: 'word', opts: ['ekim', 'bekçi', 'tutku', 'kâr'], ans: 2 } ],
+    why: '/k/ next to back vowels is velar: <span class="w">tut[k]u</span>. <span class="w">ekim</span>, <span class="w">bekçi</span> and <span class="w">kâr</span> all have palatal <span class="ipa">[c]</span>.' }
+];
+
+const RULES = [
+  'Fronted next to a light (palatal) /l/ or a palatal consonant in loanwords',
+  'Lowered to open-mid before a sonorant in the same (closed) syllable',
+  'Rounded by vowel harmony with the previous vowel'
+];
+const ALLO = [
+  { type: 'pick', title: 'kabul', focus: '/u/', steps: [
+      { q: 'Which allophone of /u/?', kind: 'ipa', opts: ['u', 'ʉ', 'y', 'ʊ'], ans: 1 },
+      { q: 'Which rule applies?', kind: 'text', opts: RULES, ans: 0 } ],
+    why: 'In the loanword <span class="w">kabul</span>, /l/ is light (palatal), and it pulls /u/ forward to <span class="ipa">[ʉ]</span>: <span class="ipa">[kabʉl]</span>.' },
+  { type: 'pick', title: 'hâlâ', focus: '/a/', steps: [
+      { q: 'Which allophone of /a/?', kind: 'ipa', opts: ['a', 'ɑ', 'a̟', 'ɛ'], ans: 2 },
+      { q: 'Which rule applies?', kind: 'text', opts: RULES, ans: 0 } ],
+    why: 'The circumflex signals a light /l/ and a fronted vowel: /a/ is realized as fronted <span class="ipa">[a̟]</span> next to the light <span class="ipa">[l]</span>.' },
+  { type: 'pick', title: 'ben', focus: '/e/', steps: [
+      { q: 'Which allophone of /e/?', kind: 'ipa', opts: ['e', 'ɛ', 'æ', 'ə'], ans: 1 },
+      { q: 'Which rule applies?', kind: 'text', opts: RULES, ans: 1 } ],
+    why: '/e/ is lowered to <span class="ipa">[ɛ]</span> before a sonorant (/n/) in the same syllable: <span class="ipa">[bɛn]</span>.' },
+  { type: 'sort', q: 'Contains <span class="ipa">[ɛ]</span> (open-mid front unrounded)?', short: '[ɛ]', words: [
+      ['ben', 1, 'closed by /n/ → [ɛ]'], ['beni', 0, 'be.ni is an open syllable → [e]'], ['kel', 1, 'closed by /l/ → [ɛ]'],
+      ['keli', 0, 'ke.li is open → [e]'], ['tel', 1, 'closed by /l/ → [ɛ]'], ['ev', 0, '/v/ is not a sonorant → [e]'],
+      ['pencere', 1, 'pen- is closed by /n/ → [ɛ]'] ] },
+  { type: 'sort', q: 'Contains a <b>fronted</b> low back unrounded vowel?', short: 'fronted [a̟]', words: [
+      ['kâr', 1, 'â after palatal [c] is fronted'], ['kar', 0, 'velar [k], plain back [a]'], ['hâlâ', 1, 'â next to light [l] is fronted'],
+      ['hala', 0, 'native word: [ɫ] and back [a]'], ['lâl', 1, 'light [l], fronted â'], ['lal', 0, 'no circumflex: back [a]'],
+      ['âlâ', 1, 'light [l], fronted â'] ] },
+  { type: 'sort', q: 'Contains a <b>fronted</b> high back rounded vowel <span class="ipa">[ʉ]</span>?', short: 'fronted [ʉ]', words: [
+      ['ulvi', 1, 'loanword with light /l/ → [ʉ]'], ['kuzu', 0, 'native word, plain [u]'], ['kabul', 1, 'light /l/ fronts /u/ → [ʉ]'],
+      ['üslup', 1, 'üslûp: û after light /l/ is fronted'], ['lunapark', 1, 'loanword: light /l/ before /u/'], ['un', 0, 'native word, plain [u]'] ] },
+  { type: 'sort', q: 'Contains a <b>fronted</b> mid back rounded vowel <span class="ipa">[ɵ]</span>?', short: 'fronted [ɵ]', words: [
+      ['sol (sağ-sol)', 0, 'native word: [ɫ], plain [o]'], ['sol (nota)', 1, 'loanword with light /l/ → [ɵ]'], ['lop', 0, 'plain [o]'],
+      ['ot', 0, 'no light /l/: plain [o]'], ['kontrol', 1, 'French loan, light /l/ fronts /o/'], ['orman', 0, 'plain [o]'] ] },
+  { type: 'sort', q: 'Is /e/ realized as close-mid <span class="ipa">[e]</span> (not <span class="ipa">[ɛ]</span>)?', short: 'only [e]', words: [
+      ['ev', 1, 'closed by /v/, not a sonorant → [e]'], ['ben', 0, 'closed by /n/ → [ɛ]'], ['gel', 0, 'closed by /l/ → [ɛ]'],
+      ['bebek', 1, 'be.bek: no sonorant coda → [e] [e]'], ['elbise', 0, 'el- is closed by /l/ → [ɛ]'], ['telefon', 1, 'te.le.fon: open syllables → [e]'] ] }
+];
+const SORT_CHECKS = {
+  2: 'ulvi and lunapark counted as having [ʉ] (light /l/ in loanwords); üslup counted via üslûp.',
+  3: 'lop counted as plain [o].',
+  4: 'elbise excluded because its first /e/ is [ɛ] (its last /e/ is [e]).'
+};
+
+const BOSS = [
+  { q: 'Which words have a <b>permissible word-final</b> consonant cluster?', kind: 'ipa',
+    opts: ['[iɣmɛnl]', '[alɛnɛŋk]', '[uʋukftʰ]', '[ʃaxatɾ̥]', '[nʧʰolz]'], ans: [1, 4],
+    why: 'Word-final clusters have at most two consonants with falling sonority: <span class="ipa">[ŋk]</span> (as in <span class="w">ahenk</span>) and <span class="ipa">[lz]</span> are fine. <span class="ipa">[nl]</span> and <span class="ipa">[tɾ̥]</span> rise in sonority; <span class="ipa">[kft]</span> has three consonants.',
+    check: '[lz] judged permissible. Also, your LaTeX \\t{atS} ties a+t; I showed it as [nʧʰolz]. Please confirm the intended form.' },
+  { q: 'Which words do <b>not</b> contain a velar consonant?', kind: 'word',
+    opts: ['eşkiya', 'anne', 'tutku', 'ulvi', 'anka'], ans: [0, 1, 3],
+    why: 'In <span class="w">eşkiya</span>, /k/ before a front vowel is palatal <span class="ipa">[c]</span>. <span class="w">anne</span> and <span class="w">ulvi</span> have no velar. <span class="w">tutku</span> has <span class="ipa">[k]</span>, <span class="w">anka</span> has <span class="ipa">[ŋk]</span>.',
+    check: 'ulvi counted as having no velar. A velarized [ɫ] (if a student argues for one) is alveolar with a secondary articulation, not a velar.' },
+  { q: 'Which words <b>start</b> with an alveopalatal sound?', kind: 'word',
+    opts: ['cacık', 'kahin', 'tren', 'jandarma', 'çan'], ans: [0, 3, 4],
+    why: '<span class="w">cacık</span> <span class="ipa">[ʤ]</span>, <span class="w">jandarma</span> <span class="ipa">[ʒ]</span> and <span class="w">çan</span> <span class="ipa">[ʧ]</span> are alveopalatal. <span class="w">kâhin</span> starts with palatal <span class="ipa">[c]</span>; <span class="w">tren</span> with alveolar <span class="ipa">[t]</span>.' },
+  { q: 'Which words have <b>no difference</b> between phonetic and phonemic transcription?', kind: 'word',
+    opts: ['ahenk', 'ekim', 'fıstıkçı', 'şahap', 'patates', 'arazi'], ans: [2, 5],
+    why: '<span class="w">fıstıkçı</span> and <span class="w">arazi</span> have no allophonic detail. <span class="w">ahenk</span> has <span class="ipa">[ɛ]</span>, <span class="ipa">[ŋ]</span> and final <span class="ipa">[kʰ]</span>; <span class="w">ekim</span> has palatal <span class="ipa">[c]</span>; <span class="w">şahap</span> has final <span class="ipa">[pʰ]</span>; <span class="w">patates</span> has initial <span class="ipa">[pʰ]</span>.',
+    check: 'Assumes stops after [s] and before a consonant (fıstıkçı) are unaspirated.' },
+  { q: 'Which words contain <b>only [−high]</b> sounds?', kind: 'word',
+    opts: ['tren', 'kavak', 'özenle', 'çorap', 'yapay', 'elf'], ans: [0, 2, 5],
+    why: '[+high] covers high vowels and consonants with a raised tongue body: palatals, velars, alveopalatals and <span class="ipa">[j]</span>. <span class="w">kavak</span> has <span class="ipa">[k]</span>, <span class="w">çorap</span> has <span class="ipa">[ʧ]</span>, <span class="w">yapay</span> has <span class="ipa">[j]</span>.',
+    check: 'Assumes the light [l] in özenle and elf (velarized [ɫ] would be [+high]).' }
+];
+
+const LISTEN = [
+  { n: 1, w: 'kâğıt', a: ['caːɯtʰ'], alt: ['caɯtʰ', 'ca̟ːɯtʰ', 'ca̟ɯtʰ', 'caːɯt', 'caɯt'],
+    note: 'Palatal <span class="ipa">[c]</span> before <span class="w">â</span>; <span class="w">ğ</span> is not a consonant here, only vowel length; final <span class="ipa">[tʰ]</span> is aspirated.',
+    check: 'Accepts [a] with or without length, and final [t] without aspiration.' },
+  { n: 2, w: 'Mehmet kahve içer.', a: ['meçmet kaxve iʧɛɾ̥'], alt: ['meçmetʰ kaxve iʧɛɾ̥'],
+    note: '/h/ is <span class="ipa">[ç]</span> after a front vowel (<span class="w">Mehmet</span>) and <span class="ipa">[x]</span> after a back vowel (<span class="w">kahve</span>). <span class="ipa">[e]</span> in <span class="w">Mehmet</span>, <span class="ipa">[ɛ]</span> in <span class="w">içer</span> (closed by /r/), and final /r/ is devoiced.',
+    check: 'Accepts the final [t] of Mehmet with or without aspiration before kahve.' },
+  { n: 3, w: 'Ne yapıyorsun?', a: ['napɯjosun'], alt: ['nejapɯjosun', 'nɛjapɯjosun', 'napɯjoɾsun', 'nejapɯjoɾsun', 'nɛjapɯjoɾsun', 'napɯjon'],
+    note: 'In fast speech <span class="w">ne yap-</span> can merge into <span class="ipa">[nap]</span>, and the /r/ of <span class="w">-yor</span> drops before <span class="w">-sun</span>. Write the form you actually hear, not the spelling.',
+    check: 'From the spectrograms, Speaker B seems to say [nap-] and Speaker A may say [neja-]. Both are accepted, with or without /r/. Please listen and tell me what each speaker really says.' },
+  { n: 4, w: 'tavuk', a: ['tʰaʋukʰ'], alt: ['tʰavukʰ', 'taʋukʰ', 'tavukʰ'],
+    note: 'Aspirated stops at both edges; /v/ before rounded <span class="ipa">[u]</span> is <span class="ipa">[ʋ]</span>.',
+    check: 'Speaker A\'s file has an extra short word just before tavuk (around 6.5 s). I could not tell what it is, so it is still in her clip. Tell me if I should cut it.' }
+];
+const LEVELS = [
+  { id: 'listen', n: 1, name: 'Listening Lab', ex: 'Exercise 1', glyph: '♪', blurb: 'Two speakers, four recordings. Write only what you hear. The real spectrogram is one click away.', items: LISTEN, type: 'listen', wide: true },
+  { id: 'spot', n: 2, name: 'Spot the Error', ex: 'Exercise 2', glyph: '[ɸ]?', blurb: 'Tap the segment that breaks Turkish phonetics.', items: SPOT, type: 'spot' },
+  { id: 'trans', n: 3, name: 'Transcription Race', ex: 'Exercise 4', glyph: '[ ʤ ]', blurb: 'Type it with the IPA keyboard. Two tries per word.', items: TRANS, type: 'trans' },
+  { id: 'match', n: 4, name: 'Articulation Match', ex: 'Exercise 5', glyph: 'x ɫ', blurb: 'Description to symbol, symbol to word.', items: MATCH, type: 'pick' },
+  { id: 'allo', n: 5, name: 'Allophone Sorter', ex: 'Exercises 6 & 7', glyph: 'e ~ ɛ', blurb: 'Name the allophone, then sort words into bins.', items: ALLO, type: 'mixed' },
+  { id: 'boss', n: 5, name: 'Boss Round', ex: 'Exercise 3', glyph: '★', blurb: 'Timed multi-select. Pick every right word, then lock in. Speed earns a bonus.', items: BOSS, type: 'boss', boss: true }
+];
+const PTS = { spot: 150, trans: 150, pick: 200, word: 25, boss: 300 };
+function maxFor(lv) {
+  return lv.items.reduce((s, it) => {
+    if (lv.type === 'spot') return s + PTS.spot;
+    if (lv.type === 'trans' || lv.type === 'listen') return s + PTS.trans;
+    if (lv.type === 'boss') return s + PTS.boss;
+    if (it.type === 'sort') return s + it.words.length * PTS.word;
+    return s + PTS.pick;
+  }, 0);
+}
+
+/* ============ STATE ============ */
+const DEFAULT_NAMES = ['Team A', 'Team B', 'Team C', 'Team D'];
+let state = { mode: 1, names: DEFAULT_NAMES.slice(), teams: [{ name: 'You', score: 0 }], turn: 0, done: {}, sound: true, level: null, idx: 0, levelPts: 0 };
+
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const view = $('#view');
+let timers = [];
+function clearTimers() {
+  timers.forEach(t => { clearInterval(t); clearTimeout(t); }); timers = [];
+  if (typeof liveAudio !== 'undefined') { liveAudio.forEach(a => { try { a.pause(); } catch (e) {} }); liveAudio = []; }
+}
+let keyHandler = null;
+document.addEventListener('keydown', e => { if (keyHandler && $('#keyPanel').hidden) keyHandler(e); });
+
+/* ============ SOUND ============ */
+let actx = null;
+function tone(freqs, dur = 0.11, type = 'triangle') {
+  if (!state.sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    freqs.forEach((f, i) => {
+      const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + i * dur * 0.85;
+      o.type = type; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.12, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g).connect(actx.destination); o.start(t); o.stop(t + dur + 0.02);
+    });
+  } catch (e) {}
+}
+const sGood = () => tone([523, 659, 784]);
+const sBad = () => tone([233, 175], 0.16, 'sawtooth');
+const sTick = () => tone([880], 0.05, 'sine');
+
+/* ============ SPECTROGRAM ============ */
+const spec = (() => {
+  const cv = $('#spec'), cx = cv.getContext('2d');
+  const W = 320, H = 160; cv.width = W; cv.height = H;
+  const stops = [[18,10,28],[52,14,78],[138,42,125],[224,69,123],[245,125,60],[252,211,106],[255,246,214]];
+  const lut = [];
+  for (let k = 0; k < 256; k++) {
+    const x = k / 255 * (stops.length - 1), i = Math.floor(x), f = x - i;
+    const a = stops[i], b = stops[Math.min(i + 1, stops.length - 1)];
+    lut.push(`rgb(${(a[0]+(b[0]-a[0])*f)|0},${(a[1]+(b[1]-a[1])*f)|0},${(a[2]+(b[2]-a[2])*f)|0})`);
+  }
+  cx.fillStyle = lut[0]; cx.fillRect(0, 0, W, H);
+  let t = 0, energy = 0, col = 0;
+  const g = (y, c, w) => Math.exp(-((y - c) ** 2) / (2 * w * w));
+  function column() {
+    t += 0.035; col++;
+    const syl = Math.sin(t * 2.1) * 0.5 + 0.5;
+    const env = Math.max(0, Math.sin(t * 2.1)) ** 0.7 * (0.7 + 0.3 * Math.sin(t * 0.31));
+    const f1 = H * (0.84 - 0.08 * Math.sin(t * 0.9)), f2 = H * (0.58 - 0.18 * Math.sin(t * 0.63 + 1)), f3 = H * (0.32 - 0.07 * Math.sin(t * 1.1 + 2));
+    const fric = env < 0.08 && Math.sin(t * 0.77) > 0.2;
+    const pulse = col % 3 === 0 ? 1 : 0.82;
+    for (let y = 0; y < H; y++) {
+      let v = env * (g(y, f1, 7) + 0.8 * g(y, f2, 6) + 0.6 * g(y, f3, 6)) * (0.78 + 0.22 * Math.sin(y * 1.4)) * pulse;
+      v += env * 0.18 * (y / H);
+      if (fric && y < H * 0.5) v += Math.random() * 0.45;
+      v += Math.random() * 0.06 + energy * 0.35 * Math.random() * (1 - y / H * 0.3);
+      cx.fillStyle = lut[Math.min(255, (v * 210) | 0)];
+      cx.fillRect(W - 1, y, 1, 1);
+    }
+    energy *= 0.97;
+    return syl;
+  }
+  function step() { cx.drawImage(cv, -1, 0); column(); }
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  for (let i = 0; i < W; i++) step();
+  if (!reduce) {
+    const loop = () => { if (!document.hidden) { step(); } requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  }
+  return { burst(n = 1) { energy = Math.min(1.6, energy + n); } };
+})();
+
+/* ============ SCORES ============ */
+function setTeams(n) {
+  state.mode = n;
+  state.teams = n === 1 ? [{ name: 'You', score: 0 }] : state.names.slice(0, n).map(name => ({ name, score: 0 }));
+  state.turn = 0; renderScores();
+}
+function renderScores() {
+  $('#scores').innerHTML = state.teams.map((tm, i) =>
+    `<span class="chip ${state.level && state.mode > 1 && i === state.turn ? 'on' : ''}">${esc(tm.name)} <strong>${tm.score}</strong></span>`).join('');
+}
+function award(p) {
+  if (p <= 0) return;
+  state.teams[state.turn].score += p; state.levelPts += p; renderScores();
+}
+
+/* ============ HOME ============ */
+function starsFor(lv) {
+  const d = state.done[lv.id]; if (!d) return 0;
+  const pct = d / maxFor(lv); return pct >= 0.8 ? 3 : pct >= 0.5 ? 2 : 1;
+}
+const starHTML = n => `<span class="stars">${[0,1,2].map(i => `<span class="${i < n ? 'lit' : ''}">★</span>`).join('')}</span>`;
+
+function renderHome() {
+  clearTimers(); keyHandler = null; state.level = null; renderScores();
+  const seg = [1, 2, 3, 4].map(n => `<button data-mode="${n}" class="${state.mode === n ? 'on' : ''}">${n === 1 ? 'Solo' : n + ' teams'}</button>`).join('');
+  const names = state.mode > 1 ? `<div class="names">${state.names.slice(0, state.mode).map((nm, i) => `<input id="team-${i}" aria-label="Team ${i + 1} name" value="${esc(nm)}" maxlength="16">`).join('')}</div>` : '';
+  view.innerHTML = `
+    <section class="hero">
+      <span class="eyebrow">Problem Set 2 · Phonetics of Turkish</span>
+      <h1>Sound <em>Lab</em></h1>
+      <p class="readout">[ses] · [sɛs] · [kabʉl] · [saxte] · [cyɸyɾ̥]</p>
+      <p>Five levels built from the handout. Play solo, or split the class into teams; questions rotate between teams and the scoreboard sits at the top.</p>
+    </section>
+    <div class="setup">
+      <span class="lbl">Who's playing?</span>
+      <div class="seg" role="group" aria-label="Number of teams">${seg}</div>
+      ${names}
+      <button class="btn small ghost" data-act="reset">Reset scores</button>
+    </div>
+    <div class="levels">
+      ${LEVELS.map(lv => `
+        <button class="lvl ${lv.boss ? 'boss' : ''} ${lv.wide ? 'boss wide' : ''}" data-level="${lv.id}">
+          <div class="glyph">${lv.glyph}</div>
+          <div><div class="n">${lv.boss ? 'Final' : 'Level ' + lv.n} · ${lv.ex}</div><h3>${lv.name}</h3></div>
+          <p>${lv.blurb}</p>
+          <div class="meta"><span>${lv.items.length} ${lv.type === 'mixed' ? 'rounds' : 'items'} · ${maxFor(lv)} pts</span>${starHTML(starsFor(lv))}</div>
+        </button>`).join('')}
+    </div>
+    <p class="footnote">Open <b>Answer key</b> to see every answer. Items marked CHECK are judgment calls to confirm before class.</p>`;
+  view.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { setTeams(+b.dataset.mode); renderHome(); });
+  view.querySelectorAll('.names input').forEach((inp, i) => inp.oninput = () => {
+    state.names[i] = inp.value || DEFAULT_NAMES[i]; if (state.teams[i]) state.teams[i].name = state.names[i]; renderScores();
+  });
+  view.querySelectorAll('[data-level]').forEach(b => b.onclick = () => startLevel(b.dataset.level));
+}
+
+/* ============ PLAY SHELL ============ */
+function startLevel(id) {
+  state.level = LEVELS.find(l => l.id === id); state.idx = 0; state.levelPts = 0;
+  renderQuestion();
+}
+function renderQuestion() {
+  clearTimers(); keyHandler = null;
+  const lv = state.level, it = lv.items[state.idx];
+  renderScores();
+  const prog = lv.items.map((_, i) => `<i class="${i < state.idx ? 'done' : i === state.idx ? 'now' : ''}"></i>`).join('');
+  view.innerHTML = `
+    <section class="play">
+      <div class="playhead">
+        <div><span class="eyebrow">${lv.boss ? 'Final' : 'Level ' + lv.n} · ${lv.ex} · ${state.idx + 1}/${lv.items.length}</span><h2>${lv.name}</h2></div>
+        <div class="row">
+          ${state.mode > 1 ? `<span class="turn">${esc(state.teams[state.turn].name)}'s turn</span>` : ''}
+          <button class="btn small ghost" data-act="home">All levels</button>
+        </div>
+      </div>
+      <div class="progress">${prog}</div>
+      <div class="stage" id="stage"></div>
+      <div id="fbWrap"></div>
+      <div class="actions"><button class="btn primary" id="nextBtn" hidden>${state.idx === lv.items.length - 1 ? 'Finish level' : 'Next'} →</button></div>
+    </section>`;
+  $('#nextBtn').onclick = next;
+  const st = $('#stage');
+  const type = lv.type === 'mixed' ? it.type : lv.type;
+  ({ listen: rListen, spot: rSpot, trans: rTrans, pick: rPick, sort: rSort, boss: rBoss })[type](st, it);
+}
+function feedback(kind, title, pts, html) {
+  const w = $('#fbWrap');
+  w.innerHTML = `<div class="fb ${kind}" role="status"><div class="ft"><span>${title}</span>${pts != null ? `<span class="pts">+${pts}</span>` : ''}</div>${html ? `<p>${html}</p>` : ''}</div>`;
+  const nb = $('#nextBtn'); nb.hidden = false; nb.focus({ preventScroll: true });
+  w.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  if (kind === 'ok') { sGood(); spec.burst(1); } else if (kind === 'no') sBad(); else spec.burst(0.4);
+}
+function next() {
+  if (state.mode > 1) state.turn = (state.turn + 1) % state.teams.length;
+  if (state.idx < state.level.items.length - 1) { state.idx++; renderQuestion(); }
+  else finishLevel();
+}
+function finishLevel() {
+  clearTimers(); keyHandler = null;
+  const lv = state.level; const max = maxFor(lv);
+  state.done[lv.id] = Math.max(state.done[lv.id] || 0, state.levelPts);
+  const n = starsFor(lv);
+  const nextLv = LEVELS[LEVELS.indexOf(lv) + 1];
+  const board = state.teams.map((t, i) => ({ ...t, i })).sort((a, b) => b.score - a.score);
+  state.level = null; renderScores();
+  view.innerHTML = `
+    <section class="results">
+      <span class="eyebrow">${lv.ex} cleared</span>
+      <h2>${lv.name}</h2>
+      ${starHTML(n)}
+      <div class="big">${state.levelPts} / ${max} pts this level</div>
+      <div class="board">${board.map(t => `<div><span>${esc(t.name)}</span><b>${t.score}</b></div>`).join('')}</div>
+      <div class="row center">
+        <button class="btn ghost" data-act="home">All levels</button>
+        ${nextLv ? `<button class="btn primary" id="goNext">${nextLv.boss ? 'Boss round' : 'Level ' + nextLv.n}: ${nextLv.name} →</button>` : ''}
+      </div>
+    </section>`;
+  spec.burst(1.5); tone([523, 659, 784, 1047], 0.14);
+  if (nextLv) $('#goNext').onclick = () => startLevel(nextLv.id);
+}
+
+/* ============ LEVEL 1: SPOT ============ */
+function rSpot(st, it) {
+  let tries = 0, over = false;
+  st.innerHTML = `
+    <p class="q">Is this transcription correct? If not, tap the wrong part.<span class="sub">Canonical standard Turkish. First try: ${PTS.spot} pts, second try: ${PTS.spot / 2}.</span></p>
+    <div class="tokens">${it.tokens.map((t, i) => `<button class="tok ${/^[\[\]\/]$/.test(t) ? 'brk' : ''}" data-i="${i}" aria-label="segment ${esc(t)}">${t}</button>`).join('')}</div>
+    <div class="row center"><button class="btn" id="okBtn">✓ Transcribed correctly</button></div>`;
+  const toks = [...st.querySelectorAll('.tok')];
+  const finish = (good) => {
+    over = true; st.querySelectorAll('button').forEach(b => b.disabled = true);
+    it.wrong.forEach(i => toks[i].classList.add(good ? 'good' : 'reveal'));
+    const p = good ? (tries === 0 ? PTS.spot : PTS.spot / 2) : 0; award(p);
+    feedback(good ? 'ok' : 'no', good ? (tries === 0 ? 'Spot on!' : 'Got it on the second try') : 'Out of tries', good ? p : null, it.expl);
+  };
+  const miss = (el) => { tries++; if (el) el.classList.add('bad'); sBad(); if (tries >= 2) finish(false); };
+  toks.forEach((b, i) => b.onclick = () => {
+    if (over) return;
+    if (!it.correct && it.wrong.includes(i)) { b.classList.add('good'); finish(true); } else miss(b);
+  });
+  $('#okBtn').onclick = () => { if (over) return; it.correct ? finish(true) : miss($('#okBtn')); };
+}
+
+/* ============ LEVEL 2: TRANSCRIBE ============ */
+const segs = s => s.match(/.[̀-ͯʰ-˿]*/gu) || [];
+function norm(s) {
+  return s.normalize('NFC').replace(/[\[\]\/\s.ˈˌ]/g, '')
+    .replace(/t͡ʃ|tʃ/g, 'ʧ').replace(/d͡ʒ|dʒ/g, 'ʤ').replace(/ɡ/g, 'g').replace(/ʼ/g, 'ʰ');
+}
+function align(a, b) {
+  const n = a.length, m = b.length, dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  const ma = new Set(), mb = new Set(); let i = 0, j = 0;
+  while (i < n && j < m) { if (a[i] === b[j]) { ma.add(i); mb.add(j); i++; j++; } else if (dp[i + 1][j] >= dp[i][j + 1]) i++; else j++; }
+  return { ma, mb };
+}
+const KEYS = [
+  ['Consonants', ['ʧ', 'ʤ', 'ʃ', 'ʒ', 'c', 'ɟ', 'ç', 'x', 'ɣ', 'ɫ', 'ɾ', 'ɸ', 'ʋ', 'ŋ']],
+  ['Vowels', ['ɯ', 'y', 'ø', 'œ', 'ɛ', 'ʉ', 'ɵ', 'a̟', 'ɑ', 'æ']],
+  ['Marks', ['ʰ', '̥', 'ː', '̟']]
+];
+function rTrans(st, it) {
+  txBlock(st, it, `
+    <p class="q">Transcribe using phonetic symbols.<span class="sub">Type letters on your keyboard; use the keys below for IPA. Enter checks. Two tries.</span></p>
+    <div class="big-word">${it.w}</div>`, it.w);
+}
+function txBlock(st, it, head, label, onDone) {
+  let tries = 0, over = false;
+  st.innerHTML = head + `
+    <div class="tx">
+      <div class="tx-input"><span class="br">[</span><input id="txIn" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Your transcription of ${label}"><span class="br">]</span></div>
+      <div class="kbd">${KEYS.map(([lab, ks]) => `<div class="grp"><span>${lab}</span>${ks.map(k => `<button class="key" data-k="${k}" aria-label="insert ${k}">${/[̀-ͯ]/.test(k) ? '◌' + k : k}</button>`).join('')}${lab === 'Marks' ? '<button class="key wide" data-k="BS">⌫ Delete</button>' : ''}</div>`).join('')}</div>
+      <div id="txOut" class="hint"></div>
+      <div class="row"><button class="btn primary" id="chk">Check</button><button class="btn ghost" id="give">Show answer</button></div>
+    </div>`;
+  const inp = $('#txIn'), out = $('#txOut');
+  if (!onDone) setTimeout(() => inp.focus({ preventScroll: true }), 50);
+  st.querySelectorAll('[data-k]').forEach(b => b.onclick = () => {
+    if (over) return;
+    const k = b.dataset.k, s = inp.selectionStart ?? inp.value.length, e = inp.selectionEnd ?? s;
+    if (k === 'BS') {
+      const before = inp.value.slice(0, s); const sg = segs(before); const cut = s === e ? (sg.length ? sg[sg.length - 1].length : 0) : 0;
+      inp.value = inp.value.slice(0, s - cut) + inp.value.slice(e); inp.setSelectionRange(s - cut, s - cut);
+    } else { inp.value = inp.value.slice(0, s) + k + inp.value.slice(e); inp.setSelectionRange(s + k.length, s + k.length); }
+    inp.focus(); sTick();
+  });
+  const canon = it.a[0], canonN = norm(canon);
+  const showDiff = (typed, reveal) => {
+    const A = segs(norm(typed)), B = segs(canonN), { ma, mb } = align(A, B);
+    let html = `<div class="diff" aria-label="your answer">[${A.map((s, i) => `<b class="${ma.has(i) ? 'ok' : 'miss'}">${s}</b>`).join('')}]</div>`;
+    if (reveal) html += `<div class="diff" aria-label="target">[${B.map((s, j) => `<b class="${mb.has(j) ? 'ok' : 'need'}">${s}</b>`).join('')}]</div>`;
+    return html;
+  };
+  const done = (good, typed) => {
+    over = true; inp.disabled = true; st.querySelectorAll('.kbd button, #chk, #give').forEach(b => b.disabled = true);
+    const p = good ? (tries === 0 ? PTS.trans : PTS.trans / 2) : 0; award(p);
+    const isAlt = good && !it.a.map(norm).includes(norm(typed));
+    out.innerHTML = good && !isAlt ? `<div class="diff">[${segs(canonN).map(s => `<b class="ok">${s}</b>`).join('')}]</div>` : showDiff(typed, true);
+    const extra = isAlt ? ` Accepted. The model answer is <span class="ipa">[${canon}]</span>.` : (!good ? ` Target: <span class="ipa">[${canon}]</span>.` : '');
+    const lead = onDone ? `<span class="w">${it.w}</span> <span class="ipa">[${canon}]</span>. ` : '';
+    if (onDone) onDone();
+    feedback(good ? 'ok' : 'no', good ? (tries === 0 ? 'Perfect transcription!' : 'Fixed it!') : 'Not this time', good ? p : null, lead + it.note + (onDone ? (isAlt ? ' Your variant is accepted.' : '') : extra));
+  };
+  const check = () => {
+    if (over) return;
+    const v = inp.value.trim(); if (!v) { inp.focus(); return; }
+    const ok = [...it.a, ...(it.alt || [])].map(norm).includes(norm(v));
+    if (ok) return done(true, v);
+    tries++; sBad();
+    if (tries >= 2) return done(false, v);
+    out.innerHTML = showDiff(v, false) + `<p class="hint">Red segments don't match. One more try.</p>`;
+    inp.focus();
+  };
+  $('#chk').onclick = check;
+  $('#give').onclick = () => { if (!over) { tries = 2; done(false, inp.value); } };
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); check(); } });
+}
+
+/* ============ LISTENING (Ex 1) ============ */
+let liveAudio = [];
+function rListen(st, it) {
+  const voices = { a: new Audio(`clips/a-${it.n}.mp3`), b: new Audio(`clips/b-${it.n}.mp3`) };
+  Object.values(voices).forEach(a => { a.preload = 'auto'; liveAudio.push(a); });
+  let rate = 1, cur = null, raf = 0;
+  const head = `
+    <p class="q">Recording ${it.n}. Write only what you hear.<span class="sub">Exercise 1. Two speakers say the same thing. Play them as often as you like, then type what you hear. Two tries.</span></p>
+    <div class="players">
+      <button class="play" data-v="a" aria-label="Play speaker A"><span class="bars"><i></i><i></i><i></i><i></i></span>Speaker A</button>
+      <button class="play" data-v="b" aria-label="Play speaker B"><span class="bars"><i></i><i></i><i></i><i></i></span>Speaker B</button>
+      <div class="row">
+        <button class="btn small ghost" id="rateBtn">Speed 1×</button>
+        <button class="btn small ghost" id="specBtn">Show spectrogram</button>
+      </div>
+    </div>
+    <div class="specbox" id="specbox" hidden>
+      <img id="specImg" src="clips/a-${it.n}.png" alt="Spectrogram of the recording, 0 to 8 kHz">
+      <i class="ph" id="ph"></i><span class="khz top">8 kHz</span><span class="khz bot">0</span><span class="khz who" id="who">Speaker A</span>
+    </div>`;
+  const showSpec = () => { $('#specbox').hidden = false; $('#specBtn').textContent = 'Hide spectrogram'; };
+  txBlock(st, it, head, 'recording ' + it.n, showSpec);
+  const ph = $('#ph'), img = $('#specImg');
+  const tick = () => { if (cur && cur.duration) ph.style.left = (cur.currentTime / cur.duration * 100) + '%'; if (cur && !cur.paused) raf = requestAnimationFrame(tick); };
+  st.querySelectorAll('.play').forEach(b => b.onclick = () => {
+    const v = b.dataset.v, a = voices[v];
+    Object.values(voices).forEach(x => { x.pause(); });
+    st.querySelectorAll('.play').forEach(x => x.classList.remove('on'));
+    img.src = `clips/${v}-${it.n}.png`; $('#who').textContent = 'Speaker ' + v.toUpperCase();
+    cur = a; a.currentTime = 0; a.playbackRate = rate; a.preservesPitch = true;
+    b.classList.add('on'); spec.burst(0.3);
+    const p = a.play(); if (p && p.catch) p.catch(() => b.classList.remove('on'));
+    cancelAnimationFrame(raf); raf = requestAnimationFrame(tick);
+    a.onended = () => { b.classList.remove('on'); ph.style.left = '100%'; };
+  });
+  $('#rateBtn').onclick = () => { rate = rate === 1 ? 0.75 : rate === 0.75 ? 0.5 : 1; $('#rateBtn').textContent = `Speed ${rate}×`; };
+  $('#specBtn').onclick = () => { const box = $('#specbox'); box.hidden = !box.hidden; $('#specBtn').textContent = box.hidden ? 'Show spectrogram' : 'Hide spectrogram'; };
+}
+
+/* ============ PICK (Level 3 + Ex 6) ============ */
+function rPick(st, it) {
+  let step = 0, tries = 0, earned = 0, over = false;
+  const isAllo = !!it.focus;
+  const head = isAllo
+    ? `<p class="q">Focus on ${it.focus} in this word.<span class="sub">Exercise 6. Two steps: the allophone, then the rule.</span></p><div class="big-word">${it.title}</div>`
+    : `<p class="q">Find the symbol, then a Turkish word that contains it.<span class="sub">Exercise 5. 100 pts per step on the first try.</span></p><div class="big-word" style="font-style:normal;font-family:var(--display);font-size:clamp(1.4rem,4.4vw,2.3rem)">${it.title}</div>`;
+  st.innerHTML = head + `<div id="stepArea"></div>`;
+  const area = $('#stepArea');
+  const draw = () => {
+    const s = it.steps[step]; tries = 0;
+    const prev = step > 0 ? `<div class="locked">✓ <span class="ipa">[${it.steps[0].opts[it.steps[0].ans]}]</span></div>` : '';
+    area.innerHTML = `<div class="steps">Step <b>${step + 1}</b>/${it.steps.length}</div>${prev}<p class="q" style="margin-top:6px">${s.q}</p>
+      <div class="opts ${s.kind === 'text' ? 'text' : ''}">${s.opts.map((o, i) => `<button class="opt ${s.kind}" data-i="${i}">${s.kind === 'ipa' ? '[' + o + ']' : o}</button>`).join('')}</div>`;
+    const btns = [...area.querySelectorAll('.opt')];
+    btns.forEach((b, i) => b.onclick = () => {
+      if (over || b.disabled) return;
+      if (i === s.ans) {
+        b.classList.add('good'); const p = tries === 0 ? 100 : 50; earned += p; sGood(); spec.burst(0.5);
+        btns.forEach(x => x.disabled = true);
+        if (step < it.steps.length - 1) { timers.push(setTimeout(() => { step++; draw(); }, 650)); } else end();
+      } else {
+        b.classList.add('bad'); b.disabled = true; tries++; sBad();
+        if (tries >= 2) { btns[s.ans].classList.add('good'); btns.forEach(x => x.disabled = true);
+          if (step < it.steps.length - 1) { timers.push(setTimeout(() => { step++; draw(); }, 1100)); } else end(); }
+      }
+    });
+  };
+  const end = () => { over = true; award(earned); const kind = earned >= 200 ? 'ok' : earned > 0 ? 'mid' : 'no';
+    feedback(kind, earned >= 200 ? 'Both steps right!' : earned > 0 ? 'Partly there' : 'Out of tries', earned, it.why); };
+  draw();
+}
+
+/* ============ SORT (Ex 7) ============ */
+function rSort(st, it) {
+  let k = 0, right = 0, busy = false;
+  const order = it.words.map((_, i) => i);
+  st.innerHTML = `
+    <p class="q">${it.q}<span class="sub">Exercise 7. Sort each word into a bin. Keyboard: ← and →. ${PTS.word} pts per word.</span></p>
+    <div class="sorter">
+      <div class="card-zone" id="cz"></div>
+      <div class="toast" id="toast" aria-live="polite"></div>
+      <div class="bins">
+        <button class="bin" data-b="1"><span class="bt">Yes, it has ${it.short}</span><span class="bk">← key</span><span class="pile" id="pile1"></span></button>
+        <button class="bin" data-b="0"><span class="bt">No</span><span class="bk">→ key</span><span class="pile" id="pile0"></span></button>
+      </div>
+    </div>`;
+  const cz = $('#cz'), toast = $('#toast');
+  const show = () => { const [w] = it.words[order[k]]; cz.innerHTML = `<div class="wcard" id="wc">${w}</div>`; };
+  const choose = (b) => {
+    if (busy || k >= order.length) return; busy = true;
+    const [w, ans, why] = it.words[order[k]]; const ok = (+b === ans);
+    if (ok) { right++; award(PTS.word); sGood(); spec.burst(0.35); } else sBad();
+    toast.className = 'toast ' + (ok ? 'ok' : 'no'); toast.innerHTML = `${ok ? '✓' : '✗'} <span class="w">${w}</span>: ${why}`;
+    $('#wc').classList.add(+b === 1 ? 'goL' : 'goR');
+    $('#pile' + ans).insertAdjacentHTML('beforeend', `<i class="${ok ? 'y' : 'n'}">${w}</i>`);
+    renderScores();
+    timers.push(setTimeout(() => { busy = false; k++; if (k < order.length) show(); else end(); }, 900));
+  };
+  st.querySelectorAll('.bin').forEach(b => b.onclick = () => choose(b.dataset.b));
+  keyHandler = e => { if (e.key === 'ArrowLeft') { e.preventDefault(); choose(1); } if (e.key === 'ArrowRight') { e.preventDefault(); choose(0); } };
+  const end = () => {
+    keyHandler = null; cz.innerHTML = `<div class="big-word" style="font-style:normal;font-family:var(--display);font-size:2rem">${right}/${order.length}</div>`;
+    st.querySelectorAll('.bin').forEach(b => b.disabled = true);
+    const p = right * PTS.word; const all = right === order.length;
+    feedback(all ? 'ok' : right >= order.length / 2 ? 'mid' : 'no', all ? 'Clean sweep!' : `${right} of ${order.length} sorted correctly`, p,
+      'The bins now show where each word belongs (green line = you sorted it right).');
+    state.levelPts += 0;
+  };
+  show();
+}
+
+/* ============ BOSS (Ex 3) ============ */
+function rBoss(st, it) {
+  const LIMIT = 40; let left = LIMIT, over = false; const sel = new Set();
+  st.innerHTML = `
+    <p class="q">${it.q}<span class="sub">Select all that apply (keys 1–${it.opts.length}), then lock in. Enter locks in.</span></p>
+    <div class="row" style="justify-content:space-between"><span class="eyebrow" id="secs">${LIMIT}s</span><span class="hint">Perfect answer + time left = bonus</span></div>
+    <div class="timer"><i id="bar"></i></div>
+    <div class="tiles">${it.opts.map((o, i) => `<button class="tile ${it.kind === 'word' ? 'word' : ''}" data-i="${i}" aria-pressed="false"><span class="k">${i + 1}</span>${o}</button>`).join('')}</div>
+    <div class="row center"><button class="btn primary" id="lock">Lock in</button></div>`;
+  const tiles = [...st.querySelectorAll('.tile')];
+  const toggle = i => { if (over) return; sel.has(i) ? sel.delete(i) : sel.add(i); tiles[i].classList.toggle('sel', sel.has(i)); tiles[i].setAttribute('aria-pressed', sel.has(i)); sTick(); };
+  tiles.forEach((t, i) => t.onclick = () => toggle(i));
+  const lock = () => {
+    if (over) return; over = true; clearTimers(); keyHandler = null;
+    const T = it.ans.length; let c = 0, w = 0;
+    tiles.forEach((t, i) => {
+      t.disabled = true; const isAns = it.ans.includes(i), picked = sel.has(i);
+      if (isAns && picked) c++; if (!isAns && picked) w++;
+      if (!isAns) t.classList.add('dim');
+      t.insertAdjacentHTML('beforeend', `<span class="mk">${isAns ? (picked ? '✓' : '○') : (picked ? '✗' : '')}</span>`);
+    });
+    const perfect = c === T && w === 0;
+    const base = Math.round(Math.max(0, c - w) / T * 200), bonus = perfect ? Math.round(left / LIMIT * 100) : 0;
+    award(base + bonus);
+    feedback(perfect ? 'ok' : base > 0 ? 'mid' : 'no', perfect ? `Perfect! +${bonus} speed bonus` : `${c} of ${T} found${w ? `, ${w} wrong pick${w > 1 ? 's' : ''}` : ''}`, base + bonus,
+      it.why + ' <span class="hint">(○ = missed answer)</span>');
+  };
+  $('#lock').onclick = lock;
+  keyHandler = e => { const n = parseInt(e.key, 10); if (n >= 1 && n <= it.opts.length) toggle(n - 1); if (e.key === 'Enter') { e.preventDefault(); lock(); } };
+  const bar = $('#bar'), secs = $('#secs'); const t0 = performance.now();
+  timers.push(setInterval(() => {
+    left = Math.max(0, LIMIT - (performance.now() - t0) / 1000);
+    bar.style.transform = `scaleX(${left / LIMIT})`; secs.textContent = Math.ceil(left) + 's';
+    if (left <= 0) lock();
+  }, 100));
+}
+
+/* ============ ANSWER KEY ============ */
+function renderKey() {
+  const li = (q, a, check) => `<li><span>${q}</span><span class="a">${a}</span>${check ? `<span class="flag">${check}</span>` : ''}</li>`;
+  const ipa = s => `<span class="ipa">${s}</span>`;
+  const p = $('#keyPanel');
+  p.innerHTML = `<div class="inner" role="dialog" aria-label="Answer key">
+    <div class="row" style="justify-content:space-between"><h2>Answer key</h2><button class="btn small" data-act="closekey">Close</button></div>
+    <p class="intro">This is the key the game scores against. I drafted it from canonical descriptions of Turkish phonetics. Lines marked CHECK are judgment calls; tell me what to change and I will update the game.</p>
+    <h3>Exercise 1 · Listening</h3><ul class="kl">${LISTEN.map(l => li(l.w, ipa('[' + l.a[0] + ']') + (l.alt ? ` <span class="hint">also accepted: ${l.alt.map(x => ipa('[' + x + ']')).join(', ')}</span>` : ''), l.check)).join('')}</ul>
+    <h3>Exercise 2 · Spot the Error</h3><ul class="kl">${SPOT.map(s => li(ipa(s.tokens.join('')), s.key, s.check)).join('')}</ul>
+    <h3>Exercise 3 · Boss Round</h3><ul class="kl">${BOSS.map(b => li(b.q.replace(/<[^>]+>/g, ''), b.ans.map(i => b.kind === 'ipa' ? ipa(b.opts[i]) : `<span class="w">${b.opts[i]}</span>`).join(', '), b.check)).join('')}</ul>
+    <h3>Exercise 4 · Transcription</h3><ul class="kl">${TRANS.map(t => li(t.w, ipa('[' + t.a[0] + ']') + (t.alt ? ` <span class="hint">also accepted: ${t.alt.map(x => ipa('[' + x + ']')).join(', ')}</span>` : ''), t.check)).join('')}</ul>
+    <h3>Exercise 5 · Articulation</h3><ul class="kl">${MATCH.map(m => li(m.title, ipa('[' + m.steps[0].opts[m.steps[0].ans] + ']') + ' · <span class="w">' + m.steps[1].opts[m.steps[1].ans] + '</span>')).join('')}</ul>
+    <h3>Exercise 6 · Allophones</h3><ul class="kl">${ALLO.filter(a => a.type === 'pick').map(a => li(a.title + ' ' + a.focus, ipa('[' + a.steps[0].opts[a.steps[0].ans] + ']') + ' · ' + a.steps[1].opts[a.steps[1].ans])).join('')}</ul>
+    <h3>Exercise 7 · Sorting</h3><ul class="kl">${ALLO.filter(a => a.type === 'sort').map((a, i) => li(a.short, a.words.filter(w => w[1]).map(w => `<span class="w">${w[0]}</span>`).join(', '), SORT_CHECKS[i])).join('')}</ul>
+  </div>`;
+  p.hidden = false; p.querySelector('[data-act="closekey"]').focus();
+}
+
+/* ============ GLOBAL ACTIONS ============ */
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-act]'); if (!a) return;
+  const act = a.dataset.act;
+  if (act === 'home') renderHome();
+  if (act === 'key') renderKey();
+  if (act === 'closekey') $('#keyPanel').hidden = true;
+  if (act === 'reset') { state.teams.forEach(t => t.score = 0); state.done = {}; state.turn = 0; renderHome(); }
+  if (act === 'sound') { state.sound = !state.sound; a.textContent = state.sound ? 'Sound on' : 'Sound off'; }
+});
+$('#keyPanel').addEventListener('click', e => { if (e.target.id === 'keyPanel') e.currentTarget.hidden = true; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#keyPanel').hidden = true; });
+
+/* ============ BOOT (keeps scores across live updates) ============ */
+function start(data) {
+  if (data && data.teams) { state.mode = data.mode; state.names = data.names; state.teams = data.teams; state.done = data.done || {}; state.sound = data.sound !== false; }
+  $('#soundBtn').textContent = state.sound ? 'Sound on' : 'Sound off';
+  renderHome();
+}
+window.claude?.hot?.snapshot?.(() => ({ mode: state.mode, names: state.names, teams: state.teams, done: state.done, sound: state.sound }));
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+</script>
+
+</html>

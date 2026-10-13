@@ -263,6 +263,7 @@ dialog form p{font-size:15px;color:#d5e4f4}
 .embed-toolbar a.primary{display:inline-block;width:auto;text-decoration:none}
 .material-frame{width:100%;border:1px solid var(--line);border-radius:12px;background:#0b1830}
 .pdf-frame{min-height:min(78vh,820px);height:78vh}
+.game-frame{min-height:min(85vh,900px);height:85vh}
 
 /* Course assistant chat (floating; does not restyle home/header) */
 .ling313-chat{position:fixed;right:18px;bottom:18px;z-index:40;font-family:'Times New Roman',Times,serif}
