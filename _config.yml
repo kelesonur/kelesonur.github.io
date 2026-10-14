@@ -224,6 +224,10 @@ defaults:
       path: "folder/tid_phonetic_reduction_2026.pdf"
     values:
       sitemap: false
+  - scope:
+      path: "folder/OnurKeles_CV_multimodal.pdf"
+    values:
+      sitemap: false
 
 # Sass/SCSS
 sass:
