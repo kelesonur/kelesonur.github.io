@@ -159,7 +159,7 @@ My research sits at the intersection of cognitive science and NLP, investigating
 
 <div class="paper-card">
   <div class="paper-card-thumb thumb-contain">
-    <a href="/images/papers/tid_reduction_fig.jpg"><img src="/images/papers/tid_reduction_fig.jpg" alt="Signing space"></a>
+    <a href="/images/papers/tid_handpos_fig.jpg"><img src="/images/papers/tid_handpos_fig.jpg" alt="Average hand positions for introduced, maintained, and re-introduced nominals"></a>
   </div>
   <div class="paper-card-body">
     <p class="paper-title">Phonetic reduction and referential accessibility in Turkish Sign Language</p>
