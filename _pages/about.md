@@ -147,13 +147,13 @@ My research sits at the intersection of cognitive science and NLP, investigating
 
 <div class="paper-card">
   <div class="paper-card-thumb thumb-contain">
-    <a href="/images/papers/surprisal_fig.jpg"><img src="/images/papers/surprisal_fig.jpg" alt="Context length and reading-time prediction"></a>
+    <a href="/images/papers/metu_context_fig.jpg"><img src="/images/papers/metu_context_fig.jpg" alt="Context length and model size in Turkish reading"></a>
   </div>
   <div class="paper-card-body">
-    <p class="paper-title">How much context does LM surprisal need to predict reading times?</p>
-    <p class="paper-authors">with Kayhan, S. A., Bektaş Yüksel, S., &amp; Dinçtopal Deniz, N.</p>
-    <div class="paper-venue-row"><span class="badge badge-progress">In progress</span></div>
-    <p class="paper-abstract">Using eye movements of 57 Turkish readers and six language models, we compare surprisal computed from the previous word, the current sentence, and the full passage. Most of the predictive value comes from the current sentence; earlier sentences add little, mainly for total reading time and for readers with higher comprehension.</p>
+    <p class="paper-title">Interaction of Model Size, Context Length and Text Genre on Turkish Language Models' Prediction of Human Reading</p>
+    <p class="paper-authors"><strong>Keleş, O.</strong>, Bektaş Yüksel, S., Kayhan, S. A., Budan, F., Deveci, İ. B., &amp; Dinçtopal Deniz, N.</p>
+    <div class="paper-venue-row"><span class="badge badge-chapter">1st National Psycholinguistics Symposium, METU 2026</span><span class="badge badge-progress">In progress</span></div>
+    <p class="paper-abstract">Using the Turkish MultiplEYE eye-tracking data (57 readers, 10 passages from four genres), we test how context length, model size, and text genre shape how well language-model surprisal explains reading. Full preceding context fit reading times best, and the smaller Kanarya model (750M) fit better than the larger one (2B), most clearly for rare words. Readers re-read institutional texts the most but understood all genres equally well, and readers whose later reading times tracked surprisal more closely answered more comprehension questions correctly.</p>
   </div>
 </div>
 
