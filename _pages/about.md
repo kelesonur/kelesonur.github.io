@@ -26,7 +26,7 @@ My research sits at the intersection of cognitive science and NLP, investigating
 <div class="home-news">
 <h2>News</h2>
 <ul class="news-list">
-  <li><span class="news-date">Apr 2026</span><span class="news-dot"></span><span>Paper accepted at <strong>ACL 2026 (Main)</strong>: <em>The Visual Iconicity Challenge</em> — evaluating VLMs on sign language form–meaning mapping. <a href="https://arxiv.org/abs/2510.08482">[arXiv]</a></span></li>
+  <li><span class="news-date">Apr 2026</span><span class="news-dot"></span><span>Paper accepted at <strong>ACL 2026 (Main)</strong>: <em>The Visual Iconicity Challenge</em> — evaluating VLMs on sign language form–meaning mapping. <a href="https://aclanthology.org/2026.acl-long.1907/">[Paper]</a> <a href="https://arxiv.org/abs/2510.08482">[arXiv]</a></span></li>
   <li><span class="news-date">Mar 2026</span><span class="news-dot"></span><span>Two poster presentations at <strong>HSP 2026</strong> (Boston, US): agentive iconicity in VLMs <a href="https://hsp2026.org/abstracts/submission_381.pdf">[Abstract]</a> &amp; NPI processing in L2 Turkish <a href="https://hsp2026.org/posters/upload_224.pdf">[Poster]</a>.</span></li>
   <li><span class="news-date">Oct 2025</span><span class="news-dot"></span><span>Book chapter published in <em>Empirical Insights into Language and Cognition</em> (Nobel Akademik Yayıncılık). <a href="https://kelesonur.github.io/folder/Empirical%20Insights%20into%20Language%20and%20Cognition.pdf">[PDF]</a></span></li>
   <li><span class="news-date">Sep 2025</span><span class="news-dot"></span><span>Invited talk at <strong>Max Planck Institute for Psycholinguistics</strong>: <em>Iconicity in visual communication: From silent gestures and signs to vision–language models</em>. <a href="https://kelesonur.github.io/folder/mpi_onur2025.pdf">[Slides]</a></span></li>
@@ -43,16 +43,17 @@ My research sits at the intersection of cognitive science and NLP, investigating
 
 <div class="paper-card">
   <div class="paper-card-thumb">
-    <a href="https://arxiv.org/abs/2510.08482"><img src="/images/papers/vic_fig.jpg" alt="Visual Iconicity Challenge figure"></a>
+    <a href="https://aclanthology.org/2026.acl-long.1907/"><img src="/images/papers/vic_fig.jpg" alt="Visual Iconicity Challenge figure"></a>
   </div>
   <div class="paper-card-body">
-    <p class="paper-title"><a href="https://arxiv.org/abs/2510.08482">The Visual Iconicity Challenge: Evaluating Vision–Language Models on Sign Language Form–Meaning Mapping</a></p>
+    <p class="paper-title"><a href="https://aclanthology.org/2026.acl-long.1907/">The Visual Iconicity Challenge: Evaluating Vision–Language Models on Sign Language Form–Meaning Mapping</a></p>
     <p class="paper-authors"><strong>Keleş, O.</strong>, Özyürek, A., Ortega, G., Gökgöz, K., &amp; Ghaleb, E.</p>
     <div class="paper-venue-row">
       <span class="badge badge-acl">ACL 2026 (Main)</span>
       <span class="badge badge-arxiv">arXiv:2510.08482</span>
     </div>
     <div class="paper-links">
+      <a href="https://aclanthology.org/2026.acl-long.1907/">ACL Anthology</a>
       <a href="https://arxiv.org/abs/2510.08482">arXiv</a>
     </div>
   </div>
@@ -127,4 +128,44 @@ My research sits at the intersection of cognitive science and NLP, investigating
 </div>
 
 <p style="font-size:.88em; margin-top:.8em;"><a href="/publications/">→ See all publications</a></p>
+</div>
+
+<div class="home-papers">
+<h2>Work in Progress</h2>
+
+<div class="paper-card">
+  <div class="paper-card-thumb thumb-contain">
+    <a href="/images/papers/gss_fig.jpg"><img src="/images/papers/gss_fig.jpg" alt="Turkish-to-TİD generation pipeline"></a>
+  </div>
+  <div class="paper-card-body">
+    <p class="paper-title">Sign language generation for Turkish Sign Language with LLMs</p>
+    <p class="paper-authors">with Inan, M. &amp; Gökgöz, K.</p>
+    <div class="paper-venue-row"><span class="badge badge-progress">In progress</span></div>
+    <p class="paper-abstract">A modular pipeline that turns Turkish text into Turkish Sign Language (TİD): LLMs translate Turkish into TİD glosses, linguistic modules handle spatial agreement and unknown or ambiguous glosses, and dictionary clips are stitched into poses that drive a 3D avatar. Larger fine-tuned open LLMs outperform prompted closed models on BLEU, chrF, and ROUGE, and Deaf and expert signers evaluate the resulting videos.</p>
+  </div>
+</div>
+
+<div class="paper-card">
+  <div class="paper-card-thumb thumb-contain">
+    <a href="/images/papers/surprisal_fig.jpg"><img src="/images/papers/surprisal_fig.jpg" alt="Context length and reading-time prediction"></a>
+  </div>
+  <div class="paper-card-body">
+    <p class="paper-title">How much context does LM surprisal need to predict reading times?</p>
+    <p class="paper-authors">with Kayhan, S. A., Bektaş Yüksel, S., &amp; Dinçtopal Deniz, N.</p>
+    <div class="paper-venue-row"><span class="badge badge-progress">In progress</span></div>
+    <p class="paper-abstract">Using eye movements of 57 Turkish readers and six language models, we compare surprisal computed from the previous word, the current sentence, and the full passage. Most of the predictive value comes from the current sentence; earlier sentences add little, mainly for total reading time and for readers with higher comprehension.</p>
+  </div>
+</div>
+
+<div class="paper-card">
+  <div class="paper-card-thumb thumb-contain">
+    <a href="/images/papers/tid_reduction_fig.jpg"><img src="/images/papers/tid_reduction_fig.jpg" alt="Signing space"></a>
+  </div>
+  <div class="paper-card-body">
+    <p class="paper-title">Phonetic reduction and referential accessibility in Turkish Sign Language</p>
+    <p class="paper-authors">with Dinçtopal Deniz, N. &amp; Gökgöz, K.</p>
+    <div class="paper-venue-row"><span class="badge badge-progress">In progress</span></div>
+    <p class="paper-abstract">Using pose estimation on narratives from 28 deaf signers, we ask whether discourse context shapes how signs are articulated. Signs that introduce a referent are longer, move more, and use more signing space than later mentions, and they shrink gradually as the referent becomes more accessible.</p>
+  </div>
+</div>
 </div>
