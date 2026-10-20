@@ -130,10 +130,21 @@ dialog::backdrop{background:#000b}
 .week-picker{margin:0 0 24px}
 .week-picker h2{font-size:20px;margin:0 0 12px}
 .week-options{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
-.week-options button{text-align:left;padding:12px;font-size:14px}
+.week-options button{text-align:left;padding:12px;font-size:14px;position:relative;overflow:hidden}
 .week-options small{display:block;font-size:12px;font-weight:400;color:var(--muted);margin-top:4px}
-.week-options .selected{border-color:var(--bosphorus);background:#1a3d66}
-.week-options .selected small{color:var(--bosphorus)}
+.week-options button.quiet{background:var(--bg);border-color:#15243d;color:#6e849e;box-shadow:none}
+.week-options button.quiet small{color:#4c627c}
+.week-options button.quiet:hover:not(:disabled){background:#101e36;border-color:#1c3050;color:#8aa3bf}
+.week-options button.quiet.selected{background:#101e36;border-color:#3a5578;color:#d5e2f0}
+.week-options button.quiet.selected small{color:#8aa3bf}
+.week-options button.live{background:linear-gradient(165deg,#2458a4 0%,#1a457f 48%,#163a6c 100%);border-color:#9fd4f0;color:#f7fbff;box-shadow:0 0 0 1px rgba(140,200,234,.28),0 0 16px rgba(140,200,234,.2);animation:week-glow 3.8s ease-in-out infinite}
+.week-options button.live small{color:#d7eef9}
+.week-options button.live::after{content:'';position:absolute;inset:-20% -40%;background:linear-gradient(115deg,transparent 36%,rgba(244,248,252,.22) 48%,transparent 60%);transform:translateX(-70%);animation:week-sheen 5.2s ease-in-out infinite;pointer-events:none}
+.week-options button.live:hover:not(:disabled){background:linear-gradient(165deg,#2c68bc 0%,#1e5296 48%,#1a457f 100%);border-color:#c5e8f8}
+.week-options button.live.selected{background:linear-gradient(165deg,#3a78c8 0%,#245ea8 55%,#1c4e90 100%);border-color:#d4f0fb;box-shadow:0 0 0 1px rgba(212,240,251,.7),0 0 26px rgba(140,200,234,.45)}
+.week-options button.live.selected small{color:#fff}
+@keyframes week-glow{0%,100%{box-shadow:0 0 0 1px rgba(140,200,234,.22),0 0 10px rgba(140,200,234,.12)}50%{box-shadow:0 0 0 1px rgba(180,224,246,.7),0 0 22px rgba(140,200,234,.4)}}
+@keyframes week-sheen{0%,58%{transform:translateX(-70%)}100%{transform:translateX(70%)}}
 .week-empty{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:36px 28px}
 .week-empty h1{font-size:36px;letter-spacing:-1px}
 .week-empty p{color:var(--muted);font-size:18px}
@@ -171,7 +182,7 @@ dialog form p{font-size:15px;color:#d5e4f4}
  .edit-row{grid-template-columns:1fr}
  .library-head{align-items:start}
 }
-@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;animation:none!important}}
 @media print{header,.wide-actions,.case-actions{display:none}body{background:white;color:black}.results{max-width:none}.result-score,.result-grid strong{color:black}details{break-inside:avoid;background:white}details>*{display:block}}
 
 .office{max-width:720px;margin:0 auto}
@@ -253,6 +264,7 @@ dialog form p{font-size:15px;color:#d5e4f4}
 .material-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
 .material-head h1{margin:0;font-size:clamp(24px,3vw,36px)}
 .embed-toolbar{display:flex;gap:10px;margin-bottom:12px}
+.embed-toolbar a.primary{display:inline-block;width:auto;text-decoration:none}
 .material-frame{width:100%;border:1px solid var(--line);border-radius:12px;background:#0b1830}
 .pdf-frame{min-height:min(78vh,820px);height:78vh}
 .game-frame{min-height:min(85vh,900px);height:85vh}
