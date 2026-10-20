@@ -4,7 +4,7 @@ const WEEKS=[
 {id:'2',topic:'Constituency, trees, and rules',readings:'Carnie ch. 3',ready:false,meetings:[{iso:'2026-09-29',time:'13:00–15:00',room:'M2152'},{iso:'2026-09-30',time:'11:00–13:00',room:'M1171'}]},
 {id:'3',topic:'Structural relations',readings:'Carnie ch. 4',ready:true,meetings:[{iso:'2026-10-06',time:'13:00–15:00',room:'M2152'},{iso:'2026-10-07',time:'11:00–13:00',room:'M1171'}]},
 {id:'4',topic:'Binding theory; X-bar theory',readings:'Carnie ch. 5–6',ready:false,meetings:[{iso:'2026-10-13',time:'13:00–15:00',room:'M2152'},{iso:'2026-10-14',time:'11:00–13:00',room:'M1171'}]},
-{id:'5',topic:'Extending X-bar theory to functional categories',readings:'Carnie ch. 7',ready:false,meetings:[{iso:'2026-10-20',time:'13:00–15:00',room:'M2152'},{iso:'2026-10-21',time:'11:00–13:00',room:'M1171'}]},
+{id:'5',topic:'Extending X-bar theory to functional categories',readings:'Carnie ch. 7',ready:true,meetings:[{iso:'2026-10-20',time:'13:00–15:00',room:'M2152'},{iso:'2026-10-21',time:'11:00–13:00',room:'M1171'}]},
 {id:'6',topic:'Constraining X-bar: theta theory',readings:'Carnie ch. 8',ready:false,meetings:[{iso:'2026-10-27',time:'13:00–15:00',room:'M2152'},{iso:'2026-10-28',time:'11:00–13:00',room:'M1171'}]},
 {id:'7',topic:'Midterm 1; auxiliaries and functional categories',readings:'Carnie ch. 9',ready:false,meetings:[{iso:'2026-11-03',time:'13:00–15:00',room:'M2152'},{iso:'2026-11-04',time:'11:00–13:00',room:'M1171'}]},
 {id:'8',topic:'Head-to-head movement',readings:'Carnie ch. 10',ready:false,meetings:[{iso:'2026-11-10',time:'13:00–15:00',room:'M2152'},{iso:'2026-11-11',time:'11:00–13:00',room:'M1171'}]},
@@ -19,6 +19,9 @@ const WEEK_ITEMS={
 '3':[
 {id:'handout',title:'PS Handout',kind:'pdf',file:'materials/ps1.pdf'},
 {id:'game',title:'Constituent or Impostor?',kind:'html',file:'games/constituent-or-impostor.html'}
+],
+'5':[
+{id:'handout',title:'PS Handout',kind:'pdf',file:'materials/ps2.pdf'}
 ]
 };
 const SCREENS=['home','start','material','office'];
@@ -149,7 +152,7 @@ function render(){
 function focusMain(){window.scrollTo({top:0,behavior:'instant'});const h=$('app').querySelector('h1,h2');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
 
 function weekPicker(){
- return `<section class="week-picker" aria-label="Choose week"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>`<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${state.weeks===w.id?'selected':''}">${weekLabel(w.id)}<small>${w.ready?'Ready':'To be added'}</small></button>`).join('')}</div></section>`;
+ return `<section class="week-picker" aria-label="Choose week"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>{const live=weekItems(w.id).length;const cls=[live?'live':'quiet',state.weeks===w.id?'selected':''].filter(Boolean).join(' ');return `<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${cls}">${weekLabel(w.id)}<small>${live?'Ready':'To be added'}</small></button>`;}).join('')}</div></section>`;
 }
 function bindWeekPicker(){
  document.querySelectorAll('[data-weeks]').forEach(button=>{
@@ -176,7 +179,7 @@ function classMeetingsHtml(meetings){
  return `<ul class="class-meetings">${meetings.map(m=>`<li>${esc(formatClassMeeting(m))}</li>`).join('')}</ul>`;
 }
 function weekDetails(meta){
- return `<div class="week-meta">${classMeetingsHtml(meta.meetings)}<p class="week-topic">${esc(meta.topic)}</p>${meta.readings?`<p class="week-readings">${esc(meta.readings)}</p>`:''}</div>`;
+ return `<div class="week-meta">${classMeetingsHtml(meta.meetings)}</div>`;
 }
 
 function weekItems(id){return WEEK_ITEMS[id]||[];}
