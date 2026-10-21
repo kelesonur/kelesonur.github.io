@@ -5,7 +5,7 @@ const WEEKS=[
 {id:'2',dates:'Sep 30–Oct 1',topic:'Preparing for data collection, sampling; Data collection methods',readings:'P&S Ch. 5 (Buchstaller and Khattab). P&S Ch. 3 (Schütze and Sprouse, Judgment data). Optional: P&S Ch. 6 (Surveys and interviews).',ready:false,ps:'none',meetings:[{iso:'2026-09-30',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-01',time:'12:00–14:00',room:'HHZ08'}]},
 {id:'3',dates:'Oct 7–8',topic:'Designing experiments and data collection methods',readings:'P&S Ch. 7 (Abbuhl, Gass, and Mackey). P&S Ch. 8 (Kaiser).',ready:true,meetings:[{iso:'2026-10-07',time:'10:00–11:00',note:'PS'},{iso:'2026-10-07',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-08',time:'12:00–14:00',room:'HHZ08'}]},
 {id:'4',dates:'Oct 14–15',topic:'Working with data: intro to statistics, descriptive statistics, probability and sample means',readings:'G&W Chs. 1–4 and 6. J Ch. 1.',ready:true,meetings:[{iso:'2026-10-14',time:'10:00–11:00',note:'PS'},{iso:'2026-10-14',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-15',time:'12:00–14:00',room:'HHZ08'}]},
-{id:'5',dates:'Oct 21–22',topic:'Inferential statistics: hypothesis testing, intro to the t-statistic',readings:'G&W Chs. 5, 7–9. J Ch. 2, §2.3.',ready:false,meetings:[{iso:'2026-10-21',time:'10:00–11:00',note:'PS'},{iso:'2026-10-21',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-22',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'5',dates:'Oct 21–22',topic:'Inferential statistics: hypothesis testing, intro to the t-statistic',readings:'G&W Chs. 5, 7–9. J Ch. 2, §2.3.',ready:true,meetings:[{iso:'2026-10-21',time:'10:00–11:00',note:'PS'},{iso:'2026-10-21',time:'12:00–14:00',room:'M1200'},{iso:'2026-10-22',time:'12:00–14:00',room:'HHZ08'}]},
 {id:'6',dates:'Oct 28–29',topic:'Oct 28, 12–1 pm: practicum on R. Oct 29: holiday',readings:'',ready:false,meetings:[{iso:'2026-10-28',time:'12:00–13:00',room:'M1200',note:'PS, R practicum'},{iso:'2026-10-29',note:'holiday'}]},
 {id:'7',dates:'Nov 4–5',topic:'Two samples: independent samples t-test, related samples t-test. First exam',readings:'G&W Chs. 10–11. J Ch. 3, §3.1.',ready:false,meetings:[{iso:'2026-11-04',time:'10:00–11:00',note:'PS'},{iso:'2026-11-04',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-05',time:'12:00–14:00',room:'HHZ08'}]},
 {id:'8',dates:'Nov 11–12',topic:'Multiple samples: ANOVA (GLM 1). Optional factorial ANOVA',readings:'G&W Ch. 12 and Ch. 14. J Ch. 4, §§4.1–4.2.',ready:false,meetings:[{iso:'2026-11-11',time:'10:00–11:00',note:'PS'},{iso:'2026-11-11',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-12',time:'12:00–14:00',room:'HHZ08'}]},
@@ -27,6 +27,9 @@ const WEEK_ITEMS={
 '4':[
 {id:'handout',title:'PS Handout',kind:'pdf',file:'materials/week4/judgment-design.pdf'},
 {id:'rq',title:'From RQ to Design',kind:'html',file:'games/rq-to-design.html'}
+],
+'5':[
+{id:'handout',title:'PS Handout',kind:'pdf',file:'materials/week5/ps3.pdf'}
 ]
 };
 const SCREENS=['home','start','material','office'];
