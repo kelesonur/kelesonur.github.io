@@ -280,9 +280,20 @@ function handoutScreen(){
  const files={'1–2':'materials/ps1.pdf','3–4':'materials/ps2.pdf','4–5':'materials/ps4.pdf'};
  const file=files[state.weeks];
  if(!file){state.screen='start';render();return;}
- $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← ${esc(weekLabel(state.weeks))}</button><h1>PS Handout</h1></div><div class="embed-toolbar"><a class="primary" href="${file}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="PS Handout" src="${file}#view=FitH"></iframe></section>`;
+ const key=state.weeks==='4–5'?'materials/ps4-key.pdf':'';
+ const toolbar=key
+  ?`<div class="embed-toolbar"><a class="primary" id="openPdf" href="${file}" target="_blank" rel="noopener noreferrer">Open PDF</a><button type="button" id="keyToggle" class="key-toggle" aria-pressed="false"><span class="key-switch" aria-hidden="true"><span></span></span>Answer key</button></div><div class="pdf-stage" id="pdfStage"><iframe class="material-frame pdf-frame" title="PS Handout" src="${file}#view=FitH"></iframe><iframe class="material-frame pdf-frame key-sheet" title="Answer key" src="${key}#view=FitH"></iframe></div>`
+  :`<div class="embed-toolbar"><a class="primary" href="${file}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="PS Handout" src="${file}#view=FitH"></iframe>`;
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← ${esc(weekLabel(state.weeks))}</button><h1>PS Handout</h1></div>${toolbar}</section>`;
  bindSectionNav();bindWeekPicker();
  $('backPs').onclick=()=>{state.screen='start';save();render();focusMain();};
+ if($('keyToggle'))$('keyToggle').onclick=()=>{
+  const on=$('keyToggle').getAttribute('aria-pressed')!=='true';
+  $('keyToggle').setAttribute('aria-pressed',String(on));
+  $('pdfStage').classList.toggle('revealed',on);
+  $('openPdf').href=on?key:file;
+  $('openPdf').textContent=on?'Open answer key':'Open PDF';
+ };
 }
 
 function listenScreen(){
