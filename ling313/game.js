@@ -27,11 +27,10 @@ const BASE_CASES=[
 const WEEKS=[
 {id:'1–2',topic:'Sound inventory',meetings:[{iso:'2026-09-21',time:'16:00–17:00',room:'M1170'},{iso:'2026-09-22',time:'15:00–17:00',room:'TB360'},{iso:'2026-09-23',time:'16:00–17:00',room:'NH304'},{iso:'2026-09-28',time:'16:00–17:00',room:'M1170'},{iso:'2026-09-29',time:'15:00–17:00',room:'TB360'},{iso:'2026-09-30',time:'16:00–17:00',room:'NH304'}]},
 {id:'3–4',topic:'Length & phonotactics',meetings:[{iso:'2026-10-05',time:'16:00–17:00',room:'M1170'},{iso:'2026-10-06',time:'15:00–17:00',room:'TB360'},{iso:'2026-10-07',time:'16:00–17:00',room:'NH304'},{iso:'2026-10-12',time:'16:00–17:00',room:'M1170'},{iso:'2026-10-13',time:'15:00–17:00',room:'TB360'},{iso:'2026-10-14',time:'16:00–17:00',room:'NH304'}]},
-{id:'4–5',topic:'Alternations & processes',meetings:[{iso:'2026-10-12',time:'16:00–17:00',room:'M1170'},{iso:'2026-10-13',time:'15:00–17:00',room:'TB360'},{iso:'2026-10-14',time:'16:00–17:00',room:'NH304'},{iso:'2026-10-19',time:'16:00–17:00',room:'M1170'},{iso:'2026-10-20',time:'15:00–17:00',room:'TB360'},{iso:'2026-10-21',time:'16:00–17:00',room:'NH304'}]},
-{id:'6–7',topic:'Stress & morphology',meetings:[{iso:'2026-10-26',time:'16:00–17:00',room:'M1170'},{iso:'2026-10-27',time:'15:00–17:00',room:'TB360'},{iso:'2026-10-28',time:'16:00–17:00',room:'NH304'},{iso:'2026-11-02',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-03',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-04',time:'16:00–17:00',room:'NH304'}]},
-{id:'8–9',topic:'Word formation',meetings:[{iso:'2026-11-09',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-10',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-11',time:'16:00–17:00',room:'NH304'},{iso:'2026-11-16',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-17',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-18',time:'16:00–17:00',room:'NH304'}]},
-{id:'10–11',topic:'Verbal inflection',meetings:[{iso:'2026-11-23',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-24',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-25',time:'16:00–17:00',room:'NH304'},{iso:'2026-11-30',time:'16:00–17:00',room:'M1170'},{iso:'2026-12-01',time:'15:00–17:00',room:'TB360'},{iso:'2026-12-02',time:'16:00–17:00',room:'NH304'}]},
-{id:'12',topic:'Nominalization',meetings:[{iso:'2026-12-07',time:'16:00–17:00',room:'M1170'},{iso:'2026-12-08',time:'15:00–17:00',room:'TB360'},{iso:'2026-12-09',time:'16:00–17:00',room:'NH304'}]}
+{id:'5–6',topic:'Alternations & processes',meetings:[{iso:'2026-10-19',time:'16:00–17:00',room:'M1170'},{iso:'2026-10-20',time:'15:00–17:00',room:'TB360'},{iso:'2026-10-21',time:'16:00–17:00',room:'NH304'},{iso:'2026-10-26',time:'16:00–17:00',room:'M1170'},{iso:'2026-10-27',time:'15:00–17:00',room:'TB360'},{iso:'2026-10-28',time:'16:00–17:00',room:'NH304'}]},
+{id:'7–8',topic:'Stress & morphology',meetings:[{iso:'2026-11-02',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-03',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-04',time:'16:00–17:00',room:'NH304'},{iso:'2026-11-09',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-10',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-11',time:'16:00–17:00',room:'NH304'}]},
+{id:'9–10',topic:'Word formation',meetings:[{iso:'2026-11-16',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-17',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-18',time:'16:00–17:00',room:'NH304'},{iso:'2026-11-23',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-24',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-25',time:'16:00–17:00',room:'NH304'}]},
+{id:'11–12',topic:'Verbal inflection; nominalization',meetings:[{iso:'2026-11-30',time:'16:00–17:00',room:'M1170'},{iso:'2026-12-01',time:'15:00–17:00',room:'TB360'},{iso:'2026-12-02',time:'16:00–17:00',room:'NH304'},{iso:'2026-12-07',time:'16:00–17:00',room:'M1170'},{iso:'2026-12-08',time:'15:00–17:00',room:'TB360'},{iso:'2026-12-09',time:'16:00–17:00',room:'NH304'}]}
 ];
 const SCREENS=['home','start','practice','handout','lab','listen','play','break','results','library','edit','office'];
 const KEY='ling313-phonology-en-v1';
@@ -217,7 +216,7 @@ function classMeetingsHtml(meetings){
  if(!meetings||!meetings.length)return '';
  return `<ul class="class-meetings">${meetings.map(m=>`<li>${esc(formatClassMeeting(m))}</li>`).join('')}</ul>`;
 }
-function weekReady(id){return id==='1–2'||id==='3–4'||id==='4–5';}
+function weekReady(id){return id==='1–2'||id==='3–4'||id==='5–6';}
 function weekPicker(){
  return `<section class="week-picker" aria-label="Choose weeks"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>{const live=weekReady(w.id);const cls=[live?'live':'quiet',state.weeks===w.id?'selected':''].filter(Boolean).join(' ');return `<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${cls}">${weekLabel(w.id)}<small>${live?'Ready':'To be added'}</small></button>`;}).join('')}</div></section>`;
 }
@@ -235,7 +234,7 @@ function bindWeekPicker(){
 function startScreen(){
  if(!WEEKS.some(w=>w.id===state.weeks))state.weeks='1–2';
  const meta=weekMeta(state.weeks);
- if(state.weeks==='4–5'){
+ if(state.weeks==='5–6'){
   $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING313 · PS</span><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p class="muted">${esc(meta.topic)}</p></div><section class="setup material-picker" aria-label="PS activities"><h2>Activities</h2><div class="mode-buttons material-choices"><button type="button" id="openHandout">PS Handout</button><button type="button" id="openListen">Listening Lab</button></div></section></section>`;
   bindSectionNav();bindWeekPicker();
   $('openHandout').onclick=()=>{state.screen='handout';save();render();focusMain();};
@@ -277,10 +276,10 @@ function practiceScreen(){
 }
 
 function handoutScreen(){
- const files={'1–2':'materials/ps1.pdf','3–4':'materials/ps2.pdf','4–5':'materials/ps4.pdf'};
+ const files={'1–2':'materials/ps1.pdf','3–4':'materials/ps2.pdf','5–6':'materials/ps4.pdf'};
  const file=files[state.weeks];
  if(!file){state.screen='start';render();return;}
- const key=state.weeks==='4–5'?'materials/ps4-key.pdf':'';
+ const key=state.weeks==='5–6'?'materials/ps4-key.pdf':'';
  const toolbar=key
   ?`<div class="embed-toolbar"><a class="primary" id="openPdf" href="${file}" target="_blank" rel="noopener noreferrer">Open PDF</a><button type="button" id="keyToggle" class="key-toggle" aria-pressed="false"><span class="key-switch" aria-hidden="true"><span></span></span>Answer key</button></div><div class="pdf-stage" id="pdfStage"><iframe class="material-frame pdf-frame" title="PS Handout" src="${file}#view=FitH"></iframe><iframe class="material-frame pdf-frame key-sheet" title="Answer key" src="${key}#view=FitH"></iframe></div>`
   :`<div class="embed-toolbar"><a class="primary" href="${file}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="PS Handout" src="${file}#view=FitH"></iframe>`;
@@ -297,8 +296,8 @@ function handoutScreen(){
 }
 
 function listenScreen(){
- if(state.weeks!=='4–5'){state.screen='start';render();return;}
- $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Weeks 4–5</button><h1>Listening Lab</h1></div><div class="embed-toolbar"><a class="primary" href="games/listening-lab/index.html" target="_blank" rel="noopener noreferrer">Open lab</a></div><iframe class="material-frame game-frame" title="Listening Lab" src="games/listening-lab/index.html"></iframe></section>`;
+ if(state.weeks!=='5–6'){state.screen='start';render();return;}
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Weeks 5–6</button><h1>Listening Lab</h1></div><div class="embed-toolbar"><a class="primary" href="games/listening-lab/index.html" target="_blank" rel="noopener noreferrer">Open lab</a></div><iframe class="material-frame game-frame" title="Listening Lab" src="games/listening-lab/index.html"></iframe></section>`;
  bindSectionNav();bindWeekPicker();
  $('backPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }

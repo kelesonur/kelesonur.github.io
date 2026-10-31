@@ -128,7 +128,7 @@ dialog::backdrop{background:#000b}
 .wide-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
 .week-picker{margin:0 0 24px}
 .week-picker h2{font-size:20px;margin:0 0 12px}
-.week-options{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+.week-options{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
 .week-options button{text-align:left;padding:12px;font-size:14px;position:relative;overflow:hidden}
 .week-options small{display:block;font-size:12px;font-weight:400;color:var(--muted);margin-top:4px}
 .week-options button.quiet{background:var(--bg);border-color:#15243d;color:#6e849e;box-shadow:none}

@@ -1,13 +1,13 @@
 'use strict';
 const COURSE_ID='101';
 const WEEKS=[
-{id:'1–2',topic:'Introduction & Phonetics (Genetti ch. 1–2)',ready:true,meetings:[{iso:'2026-09-21',time:'13:00–15:00',room:'NH002'},{iso:'2026-09-23',time:'13:00–15:00',room:'EF116'},{iso:'2026-09-28',time:'13:00–15:00',room:'NH002'},{iso:'2026-09-30',time:'13:00–15:00',room:'EF116'}]},
-{id:'3–4',topic:'Phonology; Morphology begins (Genetti ch. 3–4). Assignment 1.',ready:true,meetings:[{iso:'2026-10-05',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-07',time:'13:00–15:00',room:'EF116'},{iso:'2026-10-12',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-14',time:'13:00–15:00',room:'EF116'}]},
-{id:'4–5',topic:'Morphology (Genetti ch. 4). Mid-term #1?',ready:false,meetings:[{iso:'2026-10-12',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-14',time:'13:00–15:00',room:'EF116'},{iso:'2026-10-19',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-21',time:'13:00–15:00',room:'EF116'}]},
-{id:'6–7',topic:'Syntax (Genetti ch. 5–6; Fromkin ch. 3 part 1). Assignment 2.',ready:false,meetings:[{iso:'2026-10-26',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-28',note:'no class (Republic Day)'},{iso:'2026-11-02',time:'13:00–15:00',room:'NH002'},{iso:'2026-11-04',time:'13:00–15:00',room:'EF116'}]},
-{id:'8–9',topic:'Syntax & Semantics (Fromkin ch. 3–4). Assignment 3. Mid-term #2?',ready:false,meetings:[{iso:'2026-11-09',time:'13:00–15:00',room:'NH002'},{iso:'2026-11-11',time:'13:00–15:00',room:'EF116'},{iso:'2026-11-16',time:'13:00–15:00',room:'NH002'},{iso:'2026-11-18',time:'13:00–15:00',room:'EF116'}]},
-{id:'10–11',topic:'Pragmatics, Sociolinguistics, Discourse, Acquisition (Genetti ch. 8–11, 14). Assignment 4.',ready:false,meetings:[{iso:'2026-11-22'},{iso:'2026-11-25',time:'13:00–15:00',room:'EF116'},{iso:'2026-11-30',time:'13:00–15:00',room:'NH002'},{iso:'2026-12-02',time:'13:00–15:00',room:'EF116'}]},
-{id:'12',topic:'Language Change & review (Genetti ch. 12–13). Final TBA.',ready:false,meetings:[{iso:'2026-12-07',time:'13:00–15:00',room:'NH002'},{iso:'2026-12-09',time:'13:00–15:00',room:'EF116'}]}
+{id:'1–2',meetings:[{iso:'2026-09-21',time:'13:00–15:00',room:'NH002'},{iso:'2026-09-23',time:'13:00–15:00',room:'EF116'},{iso:'2026-09-28',time:'13:00–15:00',room:'NH002'},{iso:'2026-09-30',time:'13:00–15:00',room:'EF116'}]},
+{id:'3–4',meetings:[{iso:'2026-10-05',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-07',time:'13:00–15:00',room:'EF116'},{iso:'2026-10-12',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-14',time:'13:00–15:00',room:'EF116'}]},
+{id:'4–5',revision:true,meetings:[{iso:'2026-10-12',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-14',time:'13:00–15:00',room:'EF116'},{iso:'2026-10-19',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-21',time:'13:00–15:00',room:'EF116'}]},
+{id:'5–6',meetings:[{iso:'2026-10-19',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-21',time:'13:00–15:00',room:'EF116'},{iso:'2026-10-26',time:'13:00–15:00',room:'NH002'},{iso:'2026-10-28',note:'no class (Republic Day)'}]},
+{id:'7–8',meetings:[{iso:'2026-11-02',time:'13:00–15:00',room:'NH002'},{iso:'2026-11-04',time:'13:00–15:00',room:'EF116'},{iso:'2026-11-09',time:'13:00–15:00',room:'NH002'},{iso:'2026-11-11',time:'13:00–15:00',room:'EF116'}]},
+{id:'9–10',meetings:[{iso:'2026-11-16',time:'13:00–15:00',room:'NH002'},{iso:'2026-11-18',time:'13:00–15:00',room:'EF116'},{iso:'2026-11-23',time:'13:00–15:00',room:'NH002'},{iso:'2026-11-25',time:'13:00–15:00',room:'EF116'}]},
+{id:'11–12',meetings:[{iso:'2026-11-30',time:'13:00–15:00',room:'NH002'},{iso:'2026-12-02',time:'13:00–15:00',room:'EF116'},{iso:'2026-12-07',time:'13:00–15:00',room:'NH002'},{iso:'2026-12-09',time:'13:00–15:00',room:'EF116'}]}
 ];
 const PS12_ITEMS=[
 {id:'handout',title:'PS Handout',blurb:'Slides for weeks 1–2.',kind:'pdf',file:'materials/ps1.pdf'},
@@ -89,7 +89,7 @@ function thisWeekBookings(){
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clone=v=>JSON.parse(JSON.stringify(v));
-const weekLabel=id=>id==='12'?`Week ${id}`:`Weeks ${id}`;
+const weekLabel=id=>`Weeks ${id}`;
 const weekMeta=id=>WEEKS.find(w=>w.id===id)||WEEKS[0];
 
 let storageOK=true,admin=false;
@@ -162,8 +162,13 @@ function classMeetingsHtml(meetings){
  if(!meetings||!meetings.length)return '';
  return `<ul class="class-meetings">${meetings.map(m=>`<li>${esc(formatClassMeeting(m))}</li>`).join('')}</ul>`;
 }
+function weekBadge(w){
+ if(weekItems(w.id).length)return 'Ready';
+ if(w.revision)return 'Midterm revision';
+ return 'To be added';
+}
 function weekPicker(){
- return `<section class="week-picker" aria-label="Choose weeks"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>`<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${state.weeks===w.id?'selected':''}">${weekLabel(w.id)}<small>${w.ready?'Ready':'To be added'}</small></button>`).join('')}</div></section>`;
+ return `<section class="week-picker" aria-label="Choose weeks"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>{const live=weekItems(w.id).length;const cls=[live?'live':'quiet',state.weeks===w.id?'selected':''].filter(Boolean).join(' ');return `<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${cls}">${weekLabel(w.id)}<small>${weekBadge(w)}</small></button>`;}).join('')}</div></section>`;
 }
 function bindWeekPicker(){
  document.querySelectorAll('[data-weeks]').forEach(button=>{
@@ -182,11 +187,12 @@ function startScreen(){
  const meta=weekMeta(state.weeks);
  const items=weekItems(state.weeks);
  if(!items.length){
-  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p>${esc(meta.topic)}</p><p class="muted">To be added.</p></section>`;
+  const empty=meta.revision?'Midterm revision.':'To be added.';
+  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p class="muted">${empty}</p></section>`;
   bindSectionNav();bindWeekPicker();
   return;
  }
- $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING101 · PS</span><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p class="muted">${esc(meta.topic)}</p></div><section class="setup material-picker" aria-label="PS activities"><h2>Activities</h2><div class="mode-buttons material-choices">${items.map(item=>`<button type="button" data-material="${esc(item.id)}">${esc(item.title)}<small>${esc(item.blurb)}</small></button>`).join('')}</div>${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section></section>`;
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING101 · PS</span><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}</div><section class="setup material-picker" aria-label="PS activities"><h2>Activities</h2><div class="mode-buttons material-choices">${items.map(item=>`<button type="button" data-material="${esc(item.id)}">${esc(item.title)}<small>${esc(item.blurb)}</small></button>`).join('')}</div>${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section></section>`;
  bindSectionNav();bindWeekPicker();
  document.querySelectorAll('[data-material]').forEach(btn=>{
   btn.onclick=()=>{state.material=btn.dataset.material;state.screen='material';render();focusMain();};
