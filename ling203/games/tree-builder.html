@@ -1,0 +1,2831 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Tree Builder</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Red+Hat+Text:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&display=swap">
+<style>
+/* Layout: a notebook sheet. Sentence strip and graph-paper tree canvas on the left,
+   a dock with the caption and controls on the right (desktop) or pinned to the bottom (phone). */
+:root {
+  --paper: #EEF2F4;
+  --sheet: #FFFFFF;
+  --grid: #E5EBEF;
+  --ink: #17202A;
+  --ink-2: #46525D;
+  --ink-3: #7A8691;
+  --line: #CAD3DA;
+  --edge: #8C98A3;
+  --accent: #1D4B73;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E1EAF3;
+  --focus: #0A66D1;
+  --ok: #17734A;
+  --ok-soft: #E3F2EA;
+  --err: #BE2A1E;
+  --err-soft: #FBEAE8;
+  --hint: #8A6200;
+  --hint-soft: #FFF3D4;
+  --shadow: 0 -6px 18px rgba(23, 32, 42, 0.08);
+  /* category colors (Okabe-Ito based, darkened for text on white) */
+  --c-C: #A63D7A;
+  --c-T: #C04A00;
+  --c-V: #0068A8;
+  --c-D: #007A55;
+  --c-N: #A35E00;
+  --c-P: #736D00;
+  --c-A: #2683BA;
+  --c-Adv: #6A589E;
+  --f-display: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
+  --f-tree: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
+  --f-ui: "Red Hat Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0F1316; --sheet: #161B20; --grid: #1F262D; --ink: #E5EAEE; --ink-2: #A7B2BB; --ink-3: #6C7883;
+    --line: #2D363F; --edge: #5F6B76; --accent: #8DB8E6; --accent-ink: #0F1316; --accent-soft: #1D2B39; --focus: #6FB1FF;
+    --ok: #5CCB92; --ok-soft: #14271D; --err: #FF7B6E; --err-soft: #2E1715; --hint: #F0C35A; --hint-soft: #2B2412;
+    --shadow: 0 -6px 18px rgba(0, 0, 0, 0.45);
+    --c-C: #E58FC1; --c-T: #F2843E; --c-V: #56A8EC; --c-D: #34C79A; --c-N: #F0AA3C; --c-P: #E0D65C; --c-A: #92D2F6; --c-Adv: #B4A6E3;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0F1316; --sheet: #161B20; --grid: #1F262D; --ink: #E5EAEE; --ink-2: #A7B2BB; --ink-3: #6C7883;
+  --line: #2D363F; --edge: #5F6B76; --accent: #8DB8E6; --accent-ink: #0F1316; --accent-soft: #1D2B39; --focus: #6FB1FF;
+  --ok: #5CCB92; --ok-soft: #14271D; --err: #FF7B6E; --err-soft: #2E1715; --hint: #F0C35A; --hint-soft: #2B2412;
+  --shadow: 0 -6px 18px rgba(0, 0, 0, 0.45);
+  --c-C: #E58FC1; --c-T: #F2843E; --c-V: #56A8EC; --c-D: #34C79A; --c-N: #F0AA3C; --c-P: #E0D65C; --c-A: #92D2F6; --c-Adv: #B4A6E3;
+  color-scheme: dark;
+}
+
+.k-C { --cc: var(--c-C); } .k-T { --cc: var(--c-T); } .k-V { --cc: var(--c-V); } .k-D { --cc: var(--c-D); }
+.k-N { --cc: var(--c-N); } .k-P { --cc: var(--c-P); } .k-A { --cc: var(--c-A); } .k-Adv { --cc: var(--c-Adv); }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--paper); color: var(--ink); font-family: var(--f-ui); font-size: 16px; line-height: 1.45; margin: 0; }
+.app {
+  max-width: 1280px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 14px 0;
+  display: flex; flex-direction: column; gap: 12px;
+}
+button, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+em { font-family: var(--f-tree); font-style: italic; }
+
+/* ---------- header ---------- */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; }
+.brand { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.brand h1 { font-family: var(--f-display); font-weight: 600; font-size: 1.65rem; letter-spacing: -0.01em; margin: 0; line-height: 1.1; text-wrap: balance; }
+.brand .sub { margin: 0; color: var(--ink-2); font-size: 0.875rem; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; background: var(--sheet); overflow: hidden; align-items: stretch; }
+.seg button { border: 0; background: transparent; min-height: 44px; min-width: 44px; padding: 0 14px; cursor: pointer; border-left: 1px solid var(--line); }
+.seg button:first-of-type { border-left: 0; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.seg button:disabled { color: var(--ink-3); cursor: not-allowed; }
+.seg-label { display: inline-flex; align-items: center; padding: 0 10px 0 12px; color: var(--ink-2); font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; border-right: 1px solid var(--line); }
+.picker { display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1 1 260px; }
+.picker select { min-height: 44px; flex: 1 1 auto; min-width: 0; max-width: 360px; border: 1px solid var(--line); border-radius: 8px; background: var(--sheet); padding: 0 10px; }
+.iconbtn { min-height: 44px; min-width: 44px; border: 1px solid var(--line); border-radius: 8px; background: var(--sheet); cursor: pointer; font-size: 1.15rem; line-height: 1; }
+.progress { display: flex; align-items: center; gap: 8px; color: var(--ink-2); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
+.dots { display: flex; gap: 5px; flex-wrap: wrap; }
+.dot { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid var(--ink-3); background: transparent; }
+.dot.done { background: var(--ok); border-color: var(--ok); }
+.dot.cur { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- guides ---------- */
+.guides { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 10px; }
+details.guide { background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; }
+details.guide summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; padding: 0 14px; font-size: 0.8125rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-2); list-style: none; }
+details.guide summary::-webkit-details-marker { display: none; }
+details.guide summary::before { content: "+"; display: inline-block; width: 1.2em; font-family: var(--f-mono); color: var(--ink-3); }
+details.guide[open] summary::before { content: "\2212"; }
+.howto { margin: 0; padding: 0 14px 4px 34px; font-size: 0.9375rem; color: var(--ink); display: flex; flex-direction: column; gap: 3px; }
+.howto li { padding-left: 2px; }
+.howto li::marker { color: var(--ink-3); font-family: var(--f-mono); font-size: 0.8125rem; }
+.howto .tg { font-size: 0.95rem; }
+.guide-note { margin: 6px 14px 12px; font-size: 0.875rem; color: var(--ink-2); border-top: 1px dashed var(--line); padding-top: 8px; }
+.legend { padding: 0 14px 12px; display: flex; flex-direction: column; gap: 8px; font-size: 0.8125rem; color: var(--ink-2); }
+.legend-cats { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.legend-cats span { display: inline-flex; align-items: baseline; gap: 5px; }
+.legend-cats b { color: var(--cc); font-family: var(--f-tree); font-weight: 700; font-size: 1rem; }
+.legend-levels { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; }
+.lv2 { font-family: var(--f-tree); font-weight: 700; font-size: 1.1rem; color: var(--c-V); }
+.lv1 { font-family: var(--f-tree); font-weight: 600; font-size: 1rem; color: var(--c-V); }
+.lv0 { font-family: var(--f-tree); font-weight: 400; font-size: 0.875rem; color: var(--c-V); }
+
+/* ---------- work area ---------- */
+.work { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-items: start; }
+.stage { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.eyebrow { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+.strip { background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; }
+.strip-head { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; justify-content: space-between; }
+.focus { font-size: 0.875rem; color: var(--ink-2); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch; }
+.chip { min-height: 44px; min-width: 40px; padding: 4px 11px; border-radius: 6px; border: 1.5px solid var(--line); background: var(--sheet); display: inline-flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; transition: background-color 0.3s ease, border-color 0.3s ease; }
+.chip .w { font-family: var(--f-tree); font-style: italic; font-size: 1.125rem; color: var(--ink-2); }
+.chip .t { font-family: var(--f-tree); font-size: 0.75rem; font-weight: 700; color: var(--cc); min-height: 0.9em; }
+.chip.lit { border-color: var(--cc); background: color-mix(in srgb, var(--cc) 12%, var(--sheet)); }
+.chip.lit .w { color: var(--ink); }
+.chip-end { align-self: center; font-family: var(--f-tree); font-size: 1.125rem; color: var(--ink-2); }
+
+.canvas-wrap { background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+.canvas-tools { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px; border-bottom: 1px solid var(--line); align-items: center; }
+.canvas-tools .spacer { flex: 1 1 auto; }
+.canvas-tools .tool-note { font-size: 0.8125rem; color: var(--ink-3); padding-left: 6px; }
+.tbtn { min-height: 44px; min-width: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--sheet); cursor: pointer; font-size: 0.9375rem; }
+.tbtn:disabled { color: var(--ink-3); cursor: not-allowed; }
+.canvas {
+  overflow: auto; max-height: min(64vh, 680px); min-height: 220px; position: relative;
+  background-color: var(--sheet);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px; background-attachment: local;
+  -webkit-overflow-scrolling: touch;
+}
+#svg { display: block; margin: 0 auto; }
+.rel-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 8px 12px; border-top: 1px solid var(--line); font-size: 0.8125rem; color: var(--ink-2); align-items: center; }
+.rel-legend svg { vertical-align: middle; margin-right: 4px; }
+.rel-legend .rl { stroke: var(--ink); stroke-width: 2; fill: none; }
+
+.bracket-box { background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.bracket { font-family: var(--f-mono); font-size: 0.875rem; line-height: 1.7; overflow-wrap: anywhere; color: var(--ink-2); }
+.bracket .bk { color: var(--cc); }
+.bracket .leaf { white-space: nowrap; }
+.bracket .bl { font-weight: 500; font-size: 0.75rem; vertical-align: -0.15em; }
+.bracket em { color: var(--ink); font-family: var(--f-tree); font-size: 1rem; }
+.bracket .loose { color: var(--ink-3); font-family: var(--f-tree); font-style: italic; font-size: 1rem; }
+
+/* ---------- dock ---------- */
+.dock {
+  position: sticky; bottom: 0; z-index: 5;
+  margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--sheet); border-top: 1px solid var(--line); box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 8px; max-height: 52vh; overflow-y: auto;
+}
+.feedback { font-size: 0.9375rem; min-height: 4.4em; padding: 8px 10px; border-radius: 6px; background: var(--paper); color: var(--ink); }
+.feedback .k { display: block; font-size: 0.6875rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 1px; font-variant-numeric: tabular-nums; }
+.feedback.ok { background: var(--ok-soft); } .feedback.ok .k { color: var(--ok); }
+.feedback.err { background: var(--err-soft); } .feedback.err .k { color: var(--err); }
+.feedback.hint { background: var(--hint-soft); } .feedback.hint .k { color: var(--hint); }
+.feedback .rule { display: block; margin-top: 3px; color: var(--ink-2); font-size: 0.875rem; }
+.tg { font-family: var(--f-tree); font-weight: 700; color: var(--cc); font-style: normal; }
+.row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.row-label { width: 100%; font-size: 0.8125rem; color: var(--ink-2); }
+.btn { min-height: 44px; min-width: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--sheet); cursor: pointer; font-size: 0.9375rem; }
+.btn:disabled { color: var(--ink-3); border-style: dashed; cursor: not-allowed; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.btn.primary:disabled { background: var(--sheet); color: var(--ink-3); border-color: var(--line); font-weight: 400; }
+.btn.play { min-width: 92px; }
+.btn.cat { font-family: var(--f-tree); font-weight: 700; font-size: 1.0625rem; color: var(--cc); border-color: color-mix(in srgb, var(--cc) 45%, var(--line)); }
+.btn.cat:disabled { color: var(--ink-3); }
+.speed { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.speed .seg button { padding: 0 12px; font-size: 0.875rem; }
+.speed-label { font-size: 0.8125rem; color: var(--ink-2); }
+.tray { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(44px, 1fr); gap: 4px; overflow-x: auto; }
+.tray-col { display: grid; grid-template-rows: repeat(3, 44px); gap: 4px; }
+.tray .btn { padding: 0 2px; min-width: 44px; width: 100%; font-size: 0.9375rem; }
+.keys { font-size: 0.8125rem; color: var(--ink-3); }
+.notice { font-size: 0.8125rem; color: var(--ink-3); padding-bottom: 12px; }
+
+/* ---------- SVG tree ---------- */
+#svg text { text-anchor: middle; font-family: var(--f-tree); }
+#svg .lbl { fill: var(--cc); font-size: 15px; font-weight: 400; }
+#svg .b1 .lbl { font-size: 17px; font-weight: 600; }
+#svg .b2 .lbl { font-size: 19px; font-weight: 700; }
+#svg .word { fill: var(--ink); font-style: italic; font-size: 17px; }
+#svg .word.null { font-style: normal; fill: var(--ink-2); }
+#svg .stem { stroke: var(--cc, var(--edge)); stroke-width: 1.25; }
+#svg .spec-edge { stroke: var(--ink-3); stroke-width: 1.2; stroke-dasharray: 3 4; }
+#svg .spec-lbl { fill: var(--ink-3); font-style: italic; font-size: 14px; }
+#svg .fadein { animation: fadein 0.4s ease-out backwards; animation-delay: calc(var(--pop, 0.4s) * 0.5); }
+@keyframes fadein { from { opacity: 0; } }
+#svg .edge { stroke: var(--edge); stroke-width: 1.4; stroke-linecap: round; fill: none; }
+#svg .edge.proj { stroke: var(--cc); stroke-width: 2.4; }
+#svg .glow { fill: color-mix(in srgb, var(--cc) 16%, var(--sheet)); stroke: var(--cc); stroke-width: 1.5; }
+#svg .glow-outer { fill: none; stroke: var(--cc); stroke-width: 7; stroke-opacity: 0.18; }
+#svg .nd[data-head] { cursor: pointer; }
+#svg .hit { fill: none; pointer-events: all; }
+#svg .nd { outline: none; }
+#svg .nd:focus-visible .hitring { stroke: var(--focus); stroke-width: 3; }
+#svg .hitring { fill: none; stroke: none; }
+#svg .slot .box { fill: var(--sheet); stroke: var(--ink-3); stroke-width: 1.3; stroke-dasharray: 4 3; }
+#svg .slot.filled .box { stroke-dasharray: none; stroke: var(--ink-2); }
+#svg .slot.filled .lbl { fill: var(--ink); }
+#svg .slot.right .box { fill: color-mix(in srgb, var(--cc) 12%, var(--sheet)); stroke: color-mix(in srgb, var(--cc) 60%, var(--sheet)); stroke-dasharray: none; }
+#svg .slot.right .lbl { fill: var(--cc); }
+#svg .slot.wrong .box { fill: var(--err-soft); stroke: var(--err); stroke-width: 2.4; }
+#svg .slot.flag .box { stroke: var(--hint); stroke-width: 2.6; stroke-dasharray: none; }
+#svg .slot.active .box { stroke: var(--accent); stroke-width: 3.2; stroke-dasharray: none; }
+#svg .slot:focus-visible .box { stroke: var(--focus); stroke-width: 3.2; }
+#svg .slot { cursor: pointer; outline: none; }
+#svg .rel { fill: none; stroke: var(--ink); stroke-width: 2; }
+#svg .rel.adj { stroke-dasharray: 7 4; }
+#svg .rel.spec { stroke-dasharray: 1.5 4; stroke-linecap: round; stroke-width: 2.6; }
+#svg .rel-head { fill: none; stroke: var(--cc); stroke-width: 3; }
+#svg .rel-tag { fill: var(--ink-2); font-family: var(--f-ui); font-size: 11px; letter-spacing: 0.04em; }
+/* watch animation: lines draw downward, then labels pop in */
+#svg .draw { stroke-dasharray: 1; stroke-dashoffset: 0; animation: draw var(--draw, 0.55s) ease-out backwards; }
+#svg .pop { animation: pop 0.3s ease-out backwards; animation-delay: var(--pop, 0.4s); transform-box: fill-box; transform-origin: 50% 0%; }
+@keyframes draw { from { stroke-dashoffset: 1; } }
+@keyframes pop { from { opacity: 0; transform: translateY(-6px) scale(0.92); } }
+
+/* ---------- responsive ---------- */
+@media (min-width: 1000px) {
+  .work { grid-template-columns: minmax(0, 1fr) 360px; }
+  .canvas { max-height: calc(100vh - 150px); }
+  .dock {
+    position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); bottom: auto;
+    margin: 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; box-shadow: none;
+    max-height: calc(100vh - 24px); grid-row: 1; grid-column: 2;
+  }
+  .stage { grid-column: 1; grid-row: 1; }
+  .app { padding-block: 18px 24px; }
+}
+@media (max-width: 760px) {
+  .guides { display: flex; flex-wrap: wrap; }
+  .guides details.guide { flex: 1 1 140px; min-width: 0; }
+  .guides details.guide[open] { flex-basis: 100%; }
+  .guides details.guide summary { padding: 0 10px; letter-spacing: 0.02em; text-transform: none; font-size: 0.9375rem; }
+  .feedback { min-height: 0; padding: 6px 10px; }
+  .dock { gap: 6px; padding-top: 8px; }
+  .keys { display: none; }
+  .top { gap: 8px; }
+  .brand h1 { font-size: 1.4rem; }
+  .brand .sub { font-size: 0.8125rem; }
+  .canvas { max-height: 50vh; }
+}
+@media (max-width: 440px) {
+  .controls { width: 100%; gap: 8px; }
+  .seg-label { display: none; }
+  .seg.levels button::before { content: "L"; }
+  .picker { flex-basis: 100%; }
+  .brand h1 { font-size: 1.3rem; }
+  .seg button { padding: 0 11px; }
+  .btn { padding: 0 11px; }
+  .btn.play { min-width: 80px; }
+  .canvas-tools .tbtn { padding: 0 9px; }
+  .canvas-tools .tool-note { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+
+<div class="app" id="app">
+  <header class="top">
+    <div class="brand">
+      <h1>Tree Builder</h1>
+      <p class="sub">LING 203 · X-bar trees with CP, TP and DP</p>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Mode">
+        <button type="button" id="mode-watch" data-act="mode" data-mode="watch" data-key="mode-watch" aria-pressed="true">Watch</button>
+        <button type="button" id="mode-fill" data-act="mode" data-mode="fill" data-key="mode-fill" aria-pressed="false">Fill the shape</button>
+      </div>
+      <div class="seg levels" role="group" aria-label="Level">
+        <span class="seg-label">Level</span>
+        <button type="button" id="lv-1" data-act="level" data-level="1" data-key="lv1" aria-label="Level 1" aria-pressed="true">1</button>
+        <button type="button" id="lv-2" data-act="level" data-level="2" data-key="lv2" aria-label="Level 2" aria-pressed="false">2</button>
+        <button type="button" id="lv-3" data-act="level" data-level="3" data-key="lv3" aria-label="Level 3" aria-pressed="false">3</button>
+      </div>
+      <div class="picker">
+        <button type="button" class="iconbtn" id="prev" data-act="prev" data-key="prev" aria-label="Previous sentence">‹</button>
+        <select id="pick" aria-label="Sentence"></select>
+        <button type="button" class="iconbtn" id="next" data-act="nexts" data-key="nexts" aria-label="Next sentence">›</button>
+      </div>
+      <div class="progress"><div class="dots" id="dots" aria-hidden="true"></div><span id="progress-text"></span></div>
+    </div>
+  </header>
+
+  <section class="guides" aria-label="Guides">
+    <details class="guide" id="howto" open>
+      <summary>How to draw top-down</summary>
+      <ol class="howto">
+        <li>Start with <span class="tg k-C">CP</span>. Every clause is <span class="tg k-C">CP</span> &gt; <span class="tg k-C">C′</span> &gt; <span class="tg k-C">C</span> + <span class="tg k-T">TP</span>.</li>
+        <li>Then <span class="tg k-T">TP</span> &gt; subject <span class="tg k-D">DP</span> + <span class="tg k-T">T′</span>, and <span class="tg k-T">T′</span> &gt; <span class="tg k-T">T</span> + <span class="tg k-V">VP</span>.</li>
+        <li>Expand each node left to right, top to bottom, until every head has a word or Ø.</li>
+      </ol>
+      <p class="guide-note">This tool uses null T: when there is no auxiliary or modal, T is Ø with a tense feature, Ø[+past] or Ø[−past], and the verb keeps the tense ending.</p>
+    </details>
+    <details class="guide" id="legend" open>
+      <summary>Color key</summary>
+      <div class="legend">
+        <div class="legend-cats">
+          <span class="k-C"><b>C</b>complementizer</span>
+          <span class="k-T"><b>T</b>tense, modal</span>
+          <span class="k-D"><b>D</b>determiner</span>
+          <span class="k-N"><b>N</b>noun</span>
+          <span class="k-V"><b>V</b>verb</span>
+          <span class="k-A"><b>A</b>adjective</span>
+          <span class="k-Adv"><b>Adv</b>adverb</span>
+          <span class="k-P"><b>P</b>preposition</span>
+        </div>
+        <div class="legend-levels">
+          <span><span class="lv2">VP</span> phrase</span>
+          <span><span class="lv1">V′</span> bar level</span>
+          <span><span class="lv0">V</span> head, word below</span>
+          <span>Colored lines join one projection. Grey lines join a phrase to a different head.</span>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <main class="work">
+    <section class="stage" aria-label="Sentence and tree">
+      <div class="strip">
+        <div class="strip-head">
+          <span class="eyebrow" id="strip-title">Sentence</span>
+          <span class="focus" id="focus-line"></span>
+        </div>
+        <div class="chips" id="chips"></div>
+      </div>
+      <div class="canvas-wrap">
+        <div class="canvas-tools">
+          <span class="tool-note" id="tool-note"></span>
+          <span class="spacer"></span>
+          <button type="button" class="tbtn" id="zoom-out" data-act="zoom-out" data-key="zoom-out" aria-label="Zoom out">−</button>
+          <button type="button" class="tbtn" id="zoom-in" data-act="zoom-in" data-key="zoom-in" aria-label="Zoom in">+</button>
+          <button type="button" class="tbtn" id="fit" data-act="fit" data-key="fit">Fit</button>
+          <button type="button" class="tbtn" id="clear" data-act="clear" data-key="clear" hidden>Clear labels</button>
+        </div>
+        <div class="canvas" id="canvas"><svg id="svg" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Tree canvas"></svg></div>
+        <div class="rel-legend" id="rel-legend" hidden>
+          <span><svg width="26" height="10" aria-hidden="true"><line class="rl" x1="1" y1="5" x2="25" y2="5"/></svg>complement</span>
+          <span><svg width="26" height="10" aria-hidden="true"><line class="rl" x1="1" y1="5" x2="25" y2="5" stroke-dasharray="7 4"/></svg>adjunct</span>
+          <span><svg width="26" height="10" aria-hidden="true"><line class="rl" x1="2" y1="5" x2="25" y2="5" stroke-dasharray="1.5 4" stroke-linecap="round" stroke-width="2.6"/></svg>specifier</span>
+          <span id="rel-text"></span>
+        </div>
+      </div>
+      <div class="bracket-box">
+        <span class="eyebrow">Bracket notation</span>
+        <div class="bracket" id="bracket"></div>
+      </div>
+    </section>
+
+    <aside class="dock" id="dock" aria-label="Controls">
+      <div id="feedback" class="feedback" aria-live="polite"></div>
+      <div id="ctx"></div>
+      <div id="util" class="row"></div>
+    </aside>
+  </main>
+  <p class="notice" id="notice" hidden></p>
+</div>
+
+<script id="sentence-bank">
+const SENTENCES = [
+ {
+  "id": "l1-1",
+  "level": 1,
+  "text": "Elif likes Tarkan.",
+  "words": [
+   "Elif",
+   "likes",
+   "Tarkan"
+  ],
+  "focus": "Ø C, Ø T, names with Ø D as subject and object",
+  "tree": {
+   "cat": "CP",
+   "kids": [
+    {
+     "cat": "C'",
+     "kids": [
+      {
+       "cat": "C",
+       "null": true
+      },
+      {
+       "cat": "TP",
+       "kids": [
+        {
+         "cat": "DP",
+         "kids": [
+          {
+           "cat": "D'",
+           "kids": [
+            {
+             "cat": "D",
+             "null": true
+            },
+            {
+             "cat": "NP",
+             "kids": [
+              {
+               "cat": "N'",
+               "kids": [
+                {
+                 "cat": "N",
+                 "w": 0
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "cat": "T'",
+         "kids": [
+          {
+           "cat": "T",
+           "null": true,
+           "feat": "−past"
+          },
+          {
+           "cat": "VP",
+           "kids": [
+            {
+             "cat": "V'",
+             "kids": [
+              {
+               "cat": "V",
+               "w": 1
+              },
+              {
+               "cat": "DP",
+               "kids": [
+                {
+                 "cat": "D'",
+                 "kids": [
+                  {
+                   "cat": "D",
+                   "null": true
+                  },
+                  {
+                   "cat": "NP",
+                   "kids": [
+                    {
+                     "cat": "N'",
+                     "kids": [
+                      {
+                       "cat": "N",
+                       "w": 2
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "l1-2",
+  "level": 1,
+  "text": "Emre will visit İzmir.",
+  "words": [
+   "Emre",
+   "will",
+   "visit",
+   "İzmir"
+  ],
+  "focus": "modal will in T, place name as object DP",
+  "tree": {
+   "cat": "CP",
+   "kids": [
+    {
+     "cat": "C'",
+     "kids": [
+      {
+       "cat": "C",
+       "null": true
+      },
+      {
+       "cat": "TP",
+       "kids": [
+        {
+         "cat": "DP",
+         "kids": [
+          {
+           "cat": "D'",
+           "kids": [
+            {
+             "cat": "D",
+             "null": true
+            },
+            {
+             "cat": "NP",
+             "kids": [
+              {
+               "cat": "N'",
+               "kids": [
+                {
+                 "cat": "N",
+                 "w": 0
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "cat": "T'",
+         "kids": [
+          {
+           "cat": "T",
+           "w": 1
+          },
+          {
+           "cat": "VP",
+           "kids": [
+            {
+             "cat": "V'",
+             "kids": [
+              {
+               "cat": "V",
+               "w": 2
+              },
+              {
+               "cat": "DP",
+               "kids": [
+                {
+                 "cat": "D'",
+                 "kids": [
+                  {
+                   "cat": "D",
+                   "null": true
+                  },
+                  {
+                   "cat": "NP",
+                   "kids": [
+                    {
+                     "cat": "N'",
+                     "kids": [
+                      {
+                       "cat": "N",
+                       "w": 3
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "l1-3",
+  "level": 1,
+  "text": "Zeynep might buy a newspaper.",
+  "words": [
+   "Zeynep",
+   "might",
+   "buy",
+   "a",
+   "newspaper"
+  ],
+  "focus": "modal might in T, object DP with overt D a",
+  "tree": {
+   "cat": "CP",
+   "kids": [
+    {
+     "cat": "C'",
+     "kids": [
+      {
+       "cat": "C",
+       "null": true
+      },
+      {
+       "cat": "TP",
+       "kids": [
+        {
+         "cat": "DP",
+         "kids": [
+          {
+           "cat": "D'",
+           "kids": [
+            {
+             "cat": "D",
+             "null": true
+            },
+            {
+             "cat": "NP",
+             "kids": [
+              {
+               "cat": "N'",
+               "kids": [
+                {
+                 "cat": "N",
+                 "w": 0
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "cat": "T'",
+         "kids": [
+          {
+           "cat": "T",
+           "w": 1
+          },
+          {
+           "cat": "VP",
+           "kids": [
+            {
+             "cat": "V'",
+             "kids": [
+              {
+               "cat": "V",
+               "w": 2
+              },
+              {
+               "cat": "DP",
+               "kids": [
+                {
+                 "cat": "D'",
+                 "kids": [
+                  {
+                   "cat": "D",
+                   "w": 3
+                  },
+                  {
+                   "cat": "NP",
+                   "kids": [
+                    {
+                     "cat": "N'",
+                     "kids": [
+                      {
+                       "cat": "N",
+                       "w": 4
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "l1-4",
+  "level": 1,
+  "text": "Kerem watched the match.",
+  "words": [
+   "Kerem",
+   "watched",
+   "the",
+   "match"
+  ],
+  "focus": "Ø T with a past-tense verb (no affix lowering), object DP with overt D the",
+  "tree": {
+   "cat": "CP",
+   "kids": [
+    {
+     "cat": "C'",
+     "kids": [
+      {
+       "cat": "C",
+       "null": true
+      },
+      {
+       "cat": "TP",
+       "kids": [
+        {
+         "cat": "DP",
+         "kids": [
+          {
+           "cat": "D'",
+           "kids": [
+            {
+             "cat": "D",
+             "null": true
+            },
+            {
+             "cat": "NP",
+             "kids": [
+              {
+               "cat": "N'",
+               "kids": [
+                {
+                 "cat": "N",
+                 "w": 0
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "cat": "T'",
+         "kids": [
+          {
+           "cat": "T",
+           "null": true,
+           "feat": "+past"
+          },
+          {
+           "cat": "VP",
+           "kids": [
+            {
+             "cat": "V'",
+             "kids": [
+              {
+               "cat": "V",
+               "w": 1
+              },
+              {
+               "cat": "DP",
+               "kids": [
+                {
+                 "cat": "D'",
+                 "kids": [
+                  {
+                   "cat": "D",
+                   "w": 2
+                  },
+                  {
+                   "cat": "NP",
+                   "kids": [
+                    {
+                     "cat": "N'",
+                     "kids": [
+                      {
+                       "cat": "N",
+                       "w": 3
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "l2-1",
+  "level": 2,
+  "text": "İrem bought a warm simit.",
+  "words": [
+   "İrem",
+   "bought",
+   "a",
+   "warm",
+   "simit"
+  ],
+  "focus": "AP adjunct before a noun: extra N′ above N′–N",
+  "tree": {
+   "cat": "CP",
+   "kids": [
+    {
+     "cat": "C'",
+     "kids": [
+      {
+       "cat": "C",
+       "null": true
+      },
+      {
+       "cat": "TP",
+       "kids": [
+        {
+         "cat": "DP",
+         "kids": [
+          {
+           "cat": "D'",
+           "kids": [
+            {
+             "cat": "D",
+             "null": true
+            },
+            {
+             "cat": "NP",
+             "kids": [
+              {
+               "cat": "N'",
+               "kids": [
+                {
+                 "cat": "N",
+                 "w": 0
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "cat": "T'",
+         "kids": [
+          {
+           "cat": "T",
+           "null": true,
+           "feat": "+past"
+          },
+          {
+           "cat": "VP",
+           "kids": [
+            {
+             "cat": "V'",
+             "kids": [
+              {
+               "cat": "V",
+               "w": 1
+              },
+              {
+               "cat": "DP",
+               "kids": [
+                {
+                 "cat": "D'",
+                 "kids": [
+                  {
+                   "cat": "D",
+                   "w": 2
+                  },
+                  {
+                   "cat": "NP",
+                   "kids": [
+                    {
+                     "cat": "N'",
+                     "kids": [
+                      {
+                       "cat": "AP",
+                       "kids": [
+                        {
+                         "cat": "A'",
+                         "kids": [
+                          {
+                           "cat": "A",
+                           "w": 3
+                          }
+                         ]
+                        }
+                       ]
+                      },
+                      {
+                       "cat": "N'",
+                       "kids": [
+                        {
+                         "cat": "N",
+                         "w": 4
+                        }
+                       ]
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "l2-2",
+  "level": 2,
+  "text": "Kerem will draw a map of Bursa.",
+  "words": [
+   "Kerem",
+   "will",
+   "draw",
+   "a",
+   "map",
+   "of",
+   "Bursa"
+  ],
+  "focus": "of-PP as complement of N (sister of N), modal in T",
+  "tree": {
+   "cat": "CP",
+   "kids": [
+    {
+     "cat": "C'",
+     "kids": [
+      {
+       "cat": "C",
+       "null": true
+      },
+      {
+       "cat": "TP",
+       "kids": [
+        {
+         "cat": "DP",
+         "kids": [
+          {
+           "cat": "D'",
+           "kids": [
+            {
+             "cat": "D",
+             "null": true
+            },
+            {
+             "cat": "NP",
+             "kids": [
+              {
+               "cat": "N'",
+               "kids": [
+                {
+                 "cat": "N",
+                 "w": 0
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "cat": "T'",
+         "kids": [
+          {
+           "cat": "T",
+           "w": 1
+          },
+          {
+           "cat": "VP",
+           "kids": [
+            {
+             "cat": "V'",
+             "kids": [
+              {
+               "cat": "V",
+               "w": 2
+              },
+              {
+               "cat": "DP",
+               "kids": [
+                {
+                 "cat": "D'",
+                 "kids": [
+                  {
+                   "cat": "D",
+                   "w": 3
+                  },
+                  {
+                   "cat": "NP",
+                   "kids": [
+                    {
+                     "cat": "N'",
+                     "kids": [
+                      {
+                       "cat": "N",
+                       "w": 4
+                      },
+                      {
+                       "cat": "PP",
+                       "kids": [
+                        {
+                         "cat": "P'",
+                         "kids": [
+                          {
+                           "cat": "P",
+                           "w": 5
+                          },
+                          {
+                           "cat": "DP",
+                           "kids": [
+                            {
+                             "cat": "D'",
+                             "kids": [
+                              {
+                               "cat": "D",
+                               "null": true
+                              },
+                              {
+                               "cat": "NP",
+                               "kids": [
+                                {
+                                 "cat": "N'",
+                                 "kids": [
+                                  {
+                                   "cat": "N",
+                                   "w": 6
+                                  }
+                                 ]
+                                }
+                               ]
+                              }
+                             ]
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "l2-4",
+  "level": 2,
+  "text": "Deniz jogs with Elif after work.",
+  "words": [
+   "Deniz",
+   "jogs",
+   "with",
+   "Elif",
+   "after",
+   "work"
+  ],
+  "focus": "two PP adjuncts stacked on V′, same side; the first PP attaches lower",
+  "tree": {
+   "cat": "CP",
+   "kids": [
+    {
+     "cat": "C'",
+     "kids": [
+      {
+       "cat": "C",
+       "null": true
+      },
+      {
+       "cat": "TP",
+       "kids": [
+        {
+         "cat": "DP",
+         "kids": [
+          {
+           "cat": "D'",
+           "kids": [
+            {
+             "cat": "D",
+             "null": true
+            },
+            {
+             "cat": "NP",
+             "kids": [
+              {
+               "cat": "N'",
+               "kids": [
+                {
+                 "cat": "N",
+                 "w": 0
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "cat": "T'",
+         "kids": [
+          {
+           "cat": "T",
+           "null": true,
+           "feat": "−past"
+          },
+          {
+           "cat": "VP",
+           "kids": [
+            {
+             "cat": "V'",
+             "kids": [
+              {
+               "cat": "V'",
+               "kids": [
+                {
+                 "cat": "V'",
+                 "kids": [
+                  {
+                   "cat": "V",
+                   "w": 1
+                  }
+                 ]
+                },
+                {
+                 "cat": "PP",
+                 "kids": [
+                  {
+                   "cat": "P'",
+                   "kids": [
+                    {
+                     "cat": "P",
+                     "w": 2
+                    },
+                    {
+                     "cat": "DP",
+                     "kids": [
+                      {
+                       "cat": "D'",
+                       "kids": [
+                        {
+                         "cat": "D",
+                         "null": true
+                        },
+                        {
+                         "cat": "NP",
+                         "kids": [
+                          {
+                           "cat": "N'",
+                           "kids": [
+                            {
+                             "cat": "N",
+                             "w": 3
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "cat": "PP",
+               "kids": [
+                {
+                 "cat": "P'",
+                 "kids": [
+                  {
+                   "cat": "P",
+                   "w": 4
+                  },
+                  {
+                   "cat": "DP",
+                   "kids": [
+                    {
+                     "cat": "D'",
+                     "kids": [
+                      {
+                       "cat": "D",
+                       "null": true
+                      },
+                      {
+                       "cat": "NP",
+                       "kids": [
+                        {
+                         "cat": "N'",
+                         "kids": [
+                          {
+                           "cat": "N",
+                           "w": 5
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "l3-1",
+  "level": 3,
+  "text": "Elif hopes that Deniz will win the race.",
+  "words": [
+   "Elif",
+   "hopes",
+   "that",
+   "Deniz",
+   "will",
+   "win",
+   "the",
+   "race"
+  ],
+  "focus": "that-CP as complement of V; modal in the embedded T",
+  "tree": {
+   "cat": "CP",
+   "kids": [
+    {
+     "cat": "C'",
+     "kids": [
+      {
+       "cat": "C",
+       "null": true
+      },
+      {
+       "cat": "TP",
+       "kids": [
+        {
+         "cat": "DP",
+         "kids": [
+          {
+           "cat": "D'",
+           "kids": [
+            {
+             "cat": "D",
+             "null": true
+            },
+            {
+             "cat": "NP",
+             "kids": [
+              {
+               "cat": "N'",
+               "kids": [
+                {
+                 "cat": "N",
+                 "w": 0
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "cat": "T'",
+         "kids": [
+          {
+           "cat": "T",
+           "null": true,
+           "feat": "−past"
+          },
+          {
+           "cat": "VP",
+           "kids": [
+            {
+             "cat": "V'",
+             "kids": [
+              {
+               "cat": "V",
+               "w": 1
+              },
+              {
+               "cat": "CP",
+               "kids": [
+                {
+                 "cat": "C'",
+                 "kids": [
+                  {
+                   "cat": "C",
+                   "w": 2
+                  },
+                  {
+                   "cat": "TP",
+                   "kids": [
+                    {
+                     "cat": "DP",
+                     "kids": [
+                      {
+                       "cat": "D'",
+                       "kids": [
+                        {
+                         "cat": "D",
+                         "null": true
+                        },
+                        {
+                         "cat": "NP",
+                         "kids": [
+                          {
+                           "cat": "N'",
+                           "kids": [
+                            {
+                             "cat": "N",
+                             "w": 3
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    },
+                    {
+                     "cat": "T'",
+                     "kids": [
+                      {
+                       "cat": "T",
+                       "w": 4
+                      },
+                      {
+                       "cat": "VP",
+                       "kids": [
+                        {
+                         "cat": "V'",
+                         "kids": [
+                          {
+                           "cat": "V",
+                           "w": 5
+                          },
+                          {
+                           "cat": "DP",
+                           "kids": [
+                            {
+                             "cat": "D'",
+                             "kids": [
+                              {
+                               "cat": "D",
+                               "w": 6
+                              },
+                              {
+                               "cat": "NP",
+                               "kids": [
+                                {
+                                 "cat": "N'",
+                                 "kids": [
+                                  {
+                                   "cat": "N",
+                                   "w": 7
+                                  }
+                                 ]
+                                }
+                               ]
+                              }
+                             ]
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "l3-2",
+  "level": 3,
+  "text": "Zeynep wants Kerem to feed the dog.",
+  "words": [
+   "Zeynep",
+   "wants",
+   "Kerem",
+   "to",
+   "feed",
+   "the",
+   "dog"
+  ],
+  "focus": "non-finite CP complement: to in T, the embedded subject in Spec,TP, an empty embedded C",
+  "tree": {
+   "cat": "CP",
+   "kids": [
+    {
+     "cat": "C'",
+     "kids": [
+      {
+       "cat": "C",
+       "null": true
+      },
+      {
+       "cat": "TP",
+       "kids": [
+        {
+         "cat": "DP",
+         "kids": [
+          {
+           "cat": "D'",
+           "kids": [
+            {
+             "cat": "D",
+             "null": true
+            },
+            {
+             "cat": "NP",
+             "kids": [
+              {
+               "cat": "N'",
+               "kids": [
+                {
+                 "cat": "N",
+                 "w": 0
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "cat": "T'",
+         "kids": [
+          {
+           "cat": "T",
+           "null": true,
+           "feat": "−past"
+          },
+          {
+           "cat": "VP",
+           "kids": [
+            {
+             "cat": "V'",
+             "kids": [
+              {
+               "cat": "V",
+               "w": 1
+              },
+              {
+               "cat": "CP",
+               "kids": [
+                {
+                 "cat": "C'",
+                 "kids": [
+                  {
+                   "cat": "C",
+                   "null": true
+                  },
+                  {
+                   "cat": "TP",
+                   "kids": [
+                    {
+                     "cat": "DP",
+                     "kids": [
+                      {
+                       "cat": "D'",
+                       "kids": [
+                        {
+                         "cat": "D",
+                         "null": true
+                        },
+                        {
+                         "cat": "NP",
+                         "kids": [
+                          {
+                           "cat": "N'",
+                           "kids": [
+                            {
+                             "cat": "N",
+                             "w": 2
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    },
+                    {
+                     "cat": "T'",
+                     "kids": [
+                      {
+                       "cat": "T",
+                       "w": 3,
+                       "feat": "−tense"
+                      },
+                      {
+                       "cat": "VP",
+                       "kids": [
+                        {
+                         "cat": "V'",
+                         "kids": [
+                          {
+                           "cat": "V",
+                           "w": 4
+                          },
+                          {
+                           "cat": "DP",
+                           "kids": [
+                            {
+                             "cat": "D'",
+                             "kids": [
+                              {
+                               "cat": "D",
+                               "w": 5
+                              },
+                              {
+                               "cat": "NP",
+                               "kids": [
+                                {
+                                 "cat": "N'",
+                                 "kids": [
+                                  {
+                                   "cat": "N",
+                                   "w": 6
+                                  }
+                                 ]
+                                }
+                               ]
+                              }
+                             ]
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "l3-3",
+  "level": 3,
+  "text": "That Beşiktaş won surprised Onur.",
+  "words": [
+   "That",
+   "Beşiktaş",
+   "won",
+   "surprised",
+   "Onur"
+  ],
+  "focus": "sentential subject: a that-CP in Spec,TP",
+  "tree": {
+   "cat": "CP",
+   "kids": [
+    {
+     "cat": "C'",
+     "kids": [
+      {
+       "cat": "C",
+       "null": true
+      },
+      {
+       "cat": "TP",
+       "kids": [
+        {
+         "cat": "CP",
+         "kids": [
+          {
+           "cat": "C'",
+           "kids": [
+            {
+             "cat": "C",
+             "w": 0
+            },
+            {
+             "cat": "TP",
+             "kids": [
+              {
+               "cat": "DP",
+               "kids": [
+                {
+                 "cat": "D'",
+                 "kids": [
+                  {
+                   "cat": "D",
+                   "null": true
+                  },
+                  {
+                   "cat": "NP",
+                   "kids": [
+                    {
+                     "cat": "N'",
+                     "kids": [
+                      {
+                       "cat": "N",
+                       "w": 1
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "cat": "T'",
+               "kids": [
+                {
+                 "cat": "T",
+                 "null": true,
+                 "feat": "+past"
+                },
+                {
+                 "cat": "VP",
+                 "kids": [
+                  {
+                   "cat": "V'",
+                   "kids": [
+                    {
+                     "cat": "V",
+                     "w": 2
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "cat": "T'",
+         "kids": [
+          {
+           "cat": "T",
+           "null": true,
+           "feat": "+past"
+          },
+          {
+           "cat": "VP",
+           "kids": [
+            {
+             "cat": "V'",
+             "kids": [
+              {
+               "cat": "V",
+               "w": 3
+              },
+              {
+               "cat": "DP",
+               "kids": [
+                {
+                 "cat": "D'",
+                 "kids": [
+                  {
+                   "cat": "D",
+                   "null": true
+                  },
+                  {
+                   "cat": "NP",
+                   "kids": [
+                    {
+                     "cat": "N'",
+                     "kids": [
+                      {
+                       "cat": "N",
+                       "w": 4
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "l3-4",
+  "level": 3,
+  "text": "Kerem heard that Ayşe believes that Emre lost the keys.",
+  "words": [
+   "Kerem",
+   "heard",
+   "that",
+   "Ayşe",
+   "believes",
+   "that",
+   "Emre",
+   "lost",
+   "the",
+   "keys"
+  ],
+  "focus": "two levels of embedding: a that-CP inside a that-CP",
+  "tree": {
+   "cat": "CP",
+   "kids": [
+    {
+     "cat": "C'",
+     "kids": [
+      {
+       "cat": "C",
+       "null": true
+      },
+      {
+       "cat": "TP",
+       "kids": [
+        {
+         "cat": "DP",
+         "kids": [
+          {
+           "cat": "D'",
+           "kids": [
+            {
+             "cat": "D",
+             "null": true
+            },
+            {
+             "cat": "NP",
+             "kids": [
+              {
+               "cat": "N'",
+               "kids": [
+                {
+                 "cat": "N",
+                 "w": 0
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "cat": "T'",
+         "kids": [
+          {
+           "cat": "T",
+           "null": true,
+           "feat": "+past"
+          },
+          {
+           "cat": "VP",
+           "kids": [
+            {
+             "cat": "V'",
+             "kids": [
+              {
+               "cat": "V",
+               "w": 1
+              },
+              {
+               "cat": "CP",
+               "kids": [
+                {
+                 "cat": "C'",
+                 "kids": [
+                  {
+                   "cat": "C",
+                   "w": 2
+                  },
+                  {
+                   "cat": "TP",
+                   "kids": [
+                    {
+                     "cat": "DP",
+                     "kids": [
+                      {
+                       "cat": "D'",
+                       "kids": [
+                        {
+                         "cat": "D",
+                         "null": true
+                        },
+                        {
+                         "cat": "NP",
+                         "kids": [
+                          {
+                           "cat": "N'",
+                           "kids": [
+                            {
+                             "cat": "N",
+                             "w": 3
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    },
+                    {
+                     "cat": "T'",
+                     "kids": [
+                      {
+                       "cat": "T",
+                       "null": true,
+                       "feat": "−past"
+                      },
+                      {
+                       "cat": "VP",
+                       "kids": [
+                        {
+                         "cat": "V'",
+                         "kids": [
+                          {
+                           "cat": "V",
+                           "w": 4
+                          },
+                          {
+                           "cat": "CP",
+                           "kids": [
+                            {
+                             "cat": "C'",
+                             "kids": [
+                              {
+                               "cat": "C",
+                               "w": 5
+                              },
+                              {
+                               "cat": "TP",
+                               "kids": [
+                                {
+                                 "cat": "DP",
+                                 "kids": [
+                                  {
+                                   "cat": "D'",
+                                   "kids": [
+                                    {
+                                     "cat": "D",
+                                     "null": true
+                                    },
+                                    {
+                                     "cat": "NP",
+                                     "kids": [
+                                      {
+                                       "cat": "N'",
+                                       "kids": [
+                                        {
+                                         "cat": "N",
+                                         "w": 6
+                                        }
+                                       ]
+                                      }
+                                     ]
+                                    }
+                                   ]
+                                  }
+                                 ]
+                                },
+                                {
+                                 "cat": "T'",
+                                 "kids": [
+                                  {
+                                   "cat": "T",
+                                   "null": true,
+                                   "feat": "+past"
+                                  },
+                                  {
+                                   "cat": "VP",
+                                   "kids": [
+                                    {
+                                     "cat": "V'",
+                                     "kids": [
+                                      {
+                                       "cat": "V",
+                                       "w": 7
+                                      },
+                                      {
+                                       "cat": "DP",
+                                       "kids": [
+                                        {
+                                         "cat": "D'",
+                                         "kids": [
+                                          {
+                                           "cat": "D",
+                                           "w": 8
+                                          },
+                                          {
+                                           "cat": "NP",
+                                           "kids": [
+                                            {
+                                             "cat": "N'",
+                                             "kids": [
+                                              {
+                                               "cat": "N",
+                                               "w": 9
+                                              }
+                                             ]
+                                            }
+                                           ]
+                                          }
+                                         ]
+                                        }
+                                       ]
+                                      }
+                                     ]
+                                    }
+                                   ]
+                                  }
+                                 ]
+                                }
+                               ]
+                              }
+                             ]
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+];
+</script>
+<script>
+(function () {
+  'use strict';
+
+  /* ================= constants ================= */
+  var CATS = ['C', 'T', 'D', 'N', 'V', 'A', 'Adv', 'P'];
+  var PRIME = '′', NULL = 'Ø';
+  var GAP = 54, TOP = 30, WORD_DY = 30, PAD = 20;
+  var RM = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+  var STORE_KEY = 'ling203-tree-builder-v1';
+  var SPEEDS = { slow: { ms: 3200, draw: 0.9 }, normal: { ms: 2000, draw: 0.55 }, fast: { ms: 1000, draw: 0.3 } };
+  var AUX = ['has', 'had', 'have'];
+  var CAT_NOUN = { V: 'verb', N: 'noun', P: 'preposition', A: 'adjective', Adv: 'adverb', D: 'determiner', T: 'T', C: 'C' };
+  var RULE_TAG = {
+    T: 'Modals and auxiliaries like <em>can</em> and <em>will</em> sit in T.',
+    C: 'Words that introduce a clause, like <em>that</em> and <em>if</em>, sit in C.',
+    D: 'Determiners like <em>the</em> and <em>a</em> sit in D. The possessive <em>’s</em> sits in D too.',
+    N: 'Nouns and names head NPs.',
+    V: 'Main verbs head VPs.',
+    A: 'Adjectives describe nouns and head APs.',
+    Adv: 'Adverbs describe how or when something happens and head AdvPs.',
+    P: 'Prepositions like <em>in</em>, <em>on</em> and <em>of</em> head PPs.'
+  };
+  var NULL_T = 'This tool uses null T: when there is no auxiliary or modal, T is Ø with a tense feature, Ø[+past] or Ø[−past], and the verb keeps the tense ending.';
+
+  /* ================= helpers ================= */
+  function $(s) { return document.querySelector(s); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function parseLabel(l) {
+    if (l.slice(-1) === "'" || l.slice(-1) === PRIME) return { cat: l.slice(0, -1), bar: 1 };
+    if (l === 'P') return { cat: 'P', bar: 0 };
+    if (l.length > 1 && l.slice(-1) === 'P') return { cat: l.slice(0, -1), bar: 2 };
+    return { cat: l, bar: 0 };
+  }
+  function lab(cat, bar) { return bar === 2 ? cat + 'P' : bar === 1 ? cat + PRIME : cat; }
+  function L(cat, bar) { return '<span class="tg k-' + cat + '">' + lab(cat, bar || 0) + '</span>'; }
+  function em(t) { return '<em>' + esc(t) + '</em>'; }
+  function art(cat) { return (cat === 'A' || cat === 'Adv' || cat === 'N') ? 'an' : 'a'; }
+  function cap(s) { return s.replace(/^the /, 'The '); }
+  function joinWords(arr) { return arr.reduce(function (acc, t) { return acc && !/^['’]/.test(t) ? acc + ' ' + t : acc + t; }, ''); }
+
+  /* ================= bank preparation ================= */
+  function prepSentence(s) {
+    var errors = [], nodes = [], leaves = [], wordLeaf = [];
+    if (!s || !Array.isArray(s.words) || !s.tree || !s.id) return { errors: ['entry needs id, words and tree'] };
+    function walk(n, parent, depth) {
+      if (!n || typeof n.cat !== 'string') { errors.push('node without cat'); return -1; }
+      var pl = parseLabel(n.cat), id = nodes.length;
+      if (CATS.indexOf(pl.cat) < 0) errors.push('unknown label ' + n.cat);
+      var g = { id: id, label: lab(pl.cat, pl.bar), cat: pl.cat, bar: pl.bar, parent: parent, kids: [], depth: depth,
+        isNull: n.null === true, feat: n.feat || null, w: Number.isInteger(n.w) ? n.w : null, span: [], x: 0, y: 0, slotW: 0, leafIdx: -1 };
+      nodes.push(g);
+      var kids = Array.isArray(n.kids) ? n.kids : [];
+      if (kids.length) {
+        if (pl.bar === 0) errors.push('head ' + n.cat + ' has children');
+        if (kids.length > 2) errors.push(n.cat + ' has more than 2 children');
+        kids.forEach(function (k) { var kid = walk(k, id, depth + 1); if (kid >= 0) g.kids.push(kid); });
+      } else {
+        if (pl.bar !== 0) errors.push('phrase ' + n.cat + ' has no children');
+        if (!g.isNull && g.w === null) errors.push('leaf ' + n.cat + ' has no word index');
+        if (g.w !== null) {
+          if (g.w < 0 || g.w >= s.words.length) errors.push('word index ' + g.w + ' out of range');
+          else if (wordLeaf[g.w] !== undefined) errors.push('word ' + g.w + ' used twice');
+          else wordLeaf[g.w] = id;
+        }
+        g.leafIdx = leaves.length; leaves.push(id);
+      }
+      return id;
+    }
+    walk(s.tree, null, 0);
+    for (var i = 0; i < s.words.length; i++) if (wordLeaf[i] === undefined) errors.push('word ' + i + ' (' + s.words[i] + ') is not in the tree');
+    for (var j = nodes.length - 1; j >= 0; j--) {
+      var g = nodes[j];
+      if (!g.kids.length) { g.span = g.w !== null ? [g.w] : []; continue; }
+      var sp = [], same = false;
+      g.kids.forEach(function (k) { sp = sp.concat(nodes[k].span); if (nodes[k].cat === g.cat && nodes[k].bar <= g.bar) same = true; });
+      g.span = sp.sort(function (a, b) { return a - b; });
+      if (!same) errors.push(g.label + ' has no daughter of the same category');
+    }
+    if (nodes.length && nodes[0].label !== 'CP') errors.push('root is not CP');
+    var maxDepth = 0; nodes.forEach(function (g) { maxDepth = Math.max(maxDepth, g.depth); });
+    /* display layer: every XP without a specifier gets an empty "Spec" daughter on the left.
+       Gold data stays unchanged; spec nodes get ids after the gold ids. */
+    var specs = [], dk = {};
+    nodes.forEach(function (g) {
+      var k = g.kids.slice();
+      if (g.bar === 2 && g.kids.length === 1) {
+        var sp = { id: nodes.length + specs.length, isSpec: true, parent: g.id, depth: g.depth + 1, label: 'Spec', cat: g.cat, bar: -1, kids: [], x: 0, y: 0, slotW: 0 };
+        specs.push(sp); k.unshift(sp.id);
+      }
+      dk[g.id] = k;
+    });
+    var dleaves = [];
+    (function rec(id) { var ks = id < nodes.length ? dk[id] : []; if (!ks.length) dleaves.push(id); else ks.forEach(rec); })(0);
+    return { s: s, nodes: nodes, leaves: leaves, wordLeaf: wordLeaf, errors: errors, maxDepth: maxDepth,
+      specs: specs, dk: dk, dleaves: dleaves,
+      all: function (id) { return id < nodes.length ? nodes[id] : specs[id - nodes.length]; },
+      expand: nodes.filter(function (g) { return g.kids.length > 0; }) };
+  }
+
+  var BANK = [], SKIPPED = [];
+  (typeof SENTENCES !== 'undefined' && Array.isArray(SENTENCES) ? SENTENCES : []).forEach(function (s) {
+    var G;
+    try { G = prepSentence(s); } catch (e) { G = { errors: [String(e)] }; }
+    if (G.errors.length) { console.warn('Tree Builder: skipped sentence', s && s.id, G.errors); SKIPPED.push(s && s.id); }
+    else { BANK.push(G); G.s.level = G.s.level || 1; }
+  });
+
+  /* ================= measuring + top-down layout ================= */
+  var mctx = document.createElement('canvas').getContext('2d');
+  var FAM = 'Georgia, serif';
+  function tw(text, font) { mctx.font = font; return mctx.measureText(text).width; }
+  function labelW(label, bar) { return tw(label, (bar === 2 ? '700 19px ' : bar === 1 ? '600 17px ' : '400 15px ') + FAM); }
+  function wordW(t) { return tw(t, 'italic 400 17px ' + FAM); }
+  function wordOf(G, g) { return g.isNull ? (g.feat ? NULL + '[' + g.feat + ']' : NULL) : G.s.words[g.w] + (g.feat ? '[' + g.feat + ']' : ''); }
+
+  /* x: one column per leaf in sentence order, parents centered over daughters.
+     y: depth from the root, so the drawing grows downward; each word sits right under its head. */
+  function layout(G) {
+    var x = PAD, N = G.nodes;
+    G.dleaves.forEach(function (id) {
+      var g = G.all(id);
+      var w = g.isSpec ? specW() + 16 : Math.max(48, wordW(wordOf(G, g)) + 22, labelW(g.label, 0) + 22);
+      g.slotW = w; g.x = x + w / 2; x += w;
+    });
+    G.width = Math.ceil(x + PAD);
+    for (var i = N.length - 1; i >= 0; i--) {
+      var g = N[i], ks = G.dk[g.id];
+      if (ks.length) g.x = (G.all(ks[0]).x + G.all(ks[ks.length - 1]).x) / 2;
+    }
+    N.concat(G.specs).forEach(function (g) { g.y = TOP + g.depth * GAP; });
+    G.baseY = TOP + G.maxDepth * GAP + WORD_DY;
+    G.height = Math.ceil(G.baseY + 38);
+  }
+  function specW() { return tw('Spec', 'italic 400 14px ' + FAM); }
+  /* y of a head's word: right under the head, or on one common baseline when aligned */
+  function wordY(G, g) { return S.aligned ? G.baseY : g.y + WORD_DY; }
+  function layoutAll() {
+    FAM = getComputedStyle(document.documentElement).getPropertyValue('--f-tree').trim() || 'Georgia, serif';
+    BANK.forEach(layout);
+  }
+
+  /* ================= storage ================= */
+  var P = { done: {}, last: null, speed: 'normal' };
+  try { var raw = localStorage.getItem(STORE_KEY); if (raw) { var pp = JSON.parse(raw); if (pp && typeof pp === 'object') { P.done = pp.done || {}; P.last = pp.last || null; if (SPEEDS[pp.speed]) P.speed = pp.speed; } } } catch (e) { /* storage unavailable */ }
+  function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(P)); } catch (e) { /* ignore */ } }
+  function markDone(id) { P.done[id] = P.done[id] || {}; P.done[id].f = 1; save(); }
+  function isDone(id) { return !!(P.done[id] || {}).f; }
+
+  /* ================= state ================= */
+  var S = { level: 1, mode: 'watch', idx: 0, zoom: 1, autoFit: true, relPin: null, relHover: null,
+    step: 0, playing: false, timer: null, animate: false, fill: {}, msg: null, aligned: false, aligning: false };
+  function cur() { return BANK[S.idx]; }
+  function F() {
+    var id = cur().s.id;
+    if (!S.fill[id]) S.fill[id] = { labels: {}, active: null, done: false, flag: {} };
+    return S.fill[id];
+  }
+  function levelList(lv) { var out = []; BANK.forEach(function (G, i) { if (G.s.level === lv) out.push(i); }); return out; }
+  function setMsg(kind, html, rule, title) { S.msg = { kind: kind, html: html, rule: rule || '', title: title || '' }; }
+
+  /* ================= descriptions ================= */
+  function spanWords(G, g) { return joinWords(g.span.map(function (i) { return G.s.words[i]; })); }
+  function dG(G, g) {
+    if (g.bar === 0) return g.isNull ? 'the empty ' + L(g.cat, 0) : 'the ' + L(g.cat, 0) + ' ' + em(G.s.words[g.w]);
+    return 'the ' + L(g.cat, g.bar) + ' ' + em(spanWords(G, g));
+  }
+  function headOf(G, g) {
+    while (g.kids.length) {
+      var next = null;
+      g.kids.forEach(function (k) { var c = G.nodes[k]; if (c.cat === g.cat && c.bar < g.bar && !next) next = c; });
+      if (!next) g.kids.forEach(function (k) { var c = G.nodes[k]; if (c.cat === g.cat && c.bar === g.bar && !next) next = c; });
+      if (!next) return null;
+      g = next;
+    }
+    return g;
+  }
+  function isName(G, np) {
+    var h = headOf(G, np);
+    if (!h || h.isNull) return false;
+    var w = G.s.words[h.w];
+    return w.charAt(0) !== w.charAt(0).toLocaleLowerCase('tr');
+  }
+  function phraseName(G, g) { return L(g.cat, g.bar) + ' ' + em(spanWords(G, g)); }
+
+  /* ================= watch captions ================= */
+  function captionStart() { return 'Start at the top. Every clause is a ' + L('C', 2) + ', the main clause too.'; }
+  function caption(G, g) {
+    var kids = g.kids.map(function (k) { return G.nodes[k]; }), X = g.cat;
+    if (g.bar === 2) {
+      if (kids.length === 1) {
+        var first = G.expand.filter(function (e) { return e.bar === 2 && e.kids.length === 1 && e.cat === X; })[0] === g;
+        var emptyLine = first ? ' The specifier of ' + L(X, 2) + ' is empty here, so ' + L(X, 2) + ' has an empty Spec and ' + L(X, 1) + '.'
+          : ' Empty Spec again, then ' + L(X, 1) + '.';
+        if (X === 'C') return g.id === 0
+          ? 'The main clause is a ' + L('C', 2) + '.' + emptyLine
+          : 'The embedded clause ' + em(spanWords(G, g)) + ' is a ' + L('C', 2) + ' too.' + emptyLine;
+        if (X === 'D') return 'No possessor in ' + em(spanWords(G, g)) + '.' + emptyLine;
+        return 'The ' + phraseName(G, g) + ' has no specifier.' + emptyLine;
+      }
+      var bar1 = kids.filter(function (k) { return k.cat === X && k.bar === 1; })[0], spec = kids.filter(function (k) { return k !== bar1; })[0];
+      if (X === 'T') {
+        if (spec.cat === 'C') return 'The subject is a whole clause: the ' + phraseName(G, spec) + ' sits in Spec,TP. ' + L('T', 1) + ' holds the rest of the sentence.';
+        return 'The subject ' + phraseName(G, spec) + ' sits in Spec,TP: daughter of ' + L('T', 2) + ', sister of ' + L('T', 1) + '.';
+      }
+      if (X === 'D') return 'The possessor ' + phraseName(G, spec) + ' sits in Spec,DP. ' + L('D', 1) + ' holds ' + em(spanWords(G, bar1)) + '.';
+      return cap(dG(G, spec)) + ' is the specifier of ' + L(X, 2) + ': daughter of ' + L(X, 2) + ', sister of ' + L(X, 1) + '.';
+    }
+    /* bar level */
+    if (kids.length === 1) {
+      var h0 = kids[0];
+      if (h0.bar === 0) return 'The ' + CAT_NOUN[X] + ' ' + em(wordOf(G, h0)) + ' takes no complement, so ' + L(X, 1) + ' has only the head ' + L(X) + '.';
+      return L(X, 1) + ' goes down to ' + L(h0.cat, h0.bar) + '.';
+    }
+    var head = kids.filter(function (k) { return k.bar === 0 && k.cat === X; })[0];
+    if (head) {
+      var comp = kids.filter(function (k) { return k !== head; })[0], hw = wordOf(G, head), cw = em(spanWords(G, comp));
+      switch (X) {
+        case 'C':
+          if (head.isNull) return g.parent === 0
+            ? L('C', 1) + ' has the head ' + L('C') + ' and the complement ' + L('T', 2) + '. In a main clause, C is ' + NULL + '.'
+            : L('C', 1) + ' has the head ' + L('C') + ' and the complement ' + L('T', 2) + ' ' + cw + '. This embedded clause has no that, if or for, so C is ' + NULL + '.';
+          return em(hw) + ' heads the ' + (g.parent === 0 || G.nodes[g.parent].parent !== null ? 'embedded ' : '') + L('C', 2) + '. The ' + L('T', 2) + ' ' + cw + ' is the complement of C.';
+        case 'T':
+          if (head.isNull) return L('T', 1) + ' has the head ' + L('T') + ' and the complement ' + L('V', 2) + ' ' + cw + '. No modal or auxiliary, so T is ' + wordOf(G, head) + ': the feature [' + head.feat + '] matches the ' + (head.feat === '+past' ? 'past' : 'present') + ' tense of the verb.';
+          if (G.s.words[head.w].toLowerCase() === 'to') return L('T', 1) + ' has the head ' + L('T') + ' (here ' + em(hw) + ', the only T a non-finite clause allows) and the complement ' + L('V', 2) + ' ' + cw + '. The clause is [−tense], so the verb ' + em(G.s.words[comp.span[0]]) + ' is bare.';
+          return L('T', 1) + ' has the head ' + L('T') + ' (here the ' + (AUX.indexOf(hw.toLowerCase()) >= 0 ? 'auxiliary' : 'modal') + ' ' + em(hw) + ') and the complement ' + L('V', 2) + ' ' + cw + '.';
+        case 'D':
+          if (head.isNull) return L('D') + ' heads the ' + L('D', 2) + '. ' + (isName(G, comp) ? 'A name gets an empty D.' : 'A bare noun gets an empty D.') + ' The ' + L('N', 2) + ' ' + cw + ' is the complement of D.';
+          if (/^['’]s$/.test(hw)) return 'The possessive ' + em(hw) + ' heads the ' + L('D', 2) + '. The ' + L('N', 2) + ' ' + cw + ' is the complement of D: sister of D.';
+          return 'The determiner ' + em(hw) + ' heads the ' + L('D', 2) + '. The ' + L('N', 2) + ' ' + cw + ' is the complement of D: sister of D.';
+        case 'V':
+          if (comp.cat === 'C') return 'The clause ' + cw + ' is a ' + L('C', 2) + ' complement of the verb ' + em(hw) + ': sister of V.';
+          if (comp.cat === 'D') return 'The object ' + L('D', 2) + ' ' + cw + ' is the complement of the verb ' + em(hw) + ': sister of V.';
+          return 'The ' + phraseName(G, comp) + ' is the complement of the verb ' + em(hw) + ': sister of V.';
+        case 'N': return cw + ' is the complement of the noun ' + em(hw) + ': sister of N.';
+        case 'P': return 'The ' + phraseName(G, comp) + ' is the complement of the preposition ' + em(hw) + ': sister of P.';
+        default: return 'The ' + phraseName(G, comp) + ' is the complement of the ' + CAT_NOUN[X] + ' ' + em(hw) + ': sister of ' + L(X) + '.';
+      }
+    }
+    var lower = kids.filter(function (k) { return k.cat === X && k.bar === 1; })[0], adj = kids.filter(function (k) { return k !== lower; })[0];
+    if (lower && adj) {
+      return em(spanWords(G, adj)) + ' is an adjunct, so the ' + L(adj.cat, adj.bar) + ' gets a new ' + L(X, 1) + ' on top of the ' + L(X, 1) + ' ' + em(spanWords(G, lower)) + '. Each adjunct gets a new ' + L(X, 1) + '.';
+    }
+    return L(X, 1) + ' has two daughters: ' + kids.map(function (k) { return dG(G, k); }).join(' and ') + '.';
+  }
+
+  /* ================= watch control ================= */
+  function totalSteps(G) { return G.expand.length + 1; }
+  function watchDone() { return S.step >= cur().expand.length; }
+  function setStep(k, animate) {
+    var G = cur();
+    S.step = Math.max(0, Math.min(G.expand.length, k));
+    S.animate = !!animate && !RM.matches;
+    if (!watchDone()) { S.relPin = null; S.aligned = false; }
+    render();
+    S.animate = false;
+    scrollToStep();
+  }
+  function stopPlay() { S.playing = false; clearTimeout(S.timer); S.timer = null; }
+  function tick() {
+    if (!S.playing) return;
+    if (watchDone()) { stopPlay(); render(); return; }
+    setStep(S.step + 1, true);
+    if (watchDone()) { stopPlay(); render(); return; }
+    S.timer = setTimeout(tick, SPEEDS[P.speed].ms);
+  }
+  function play() {
+    if (watchDone()) { S.step = 0; S.aligned = false; }
+    S.playing = true; render();
+    clearTimeout(S.timer);
+    S.timer = setTimeout(tick, S.step === 0 ? 700 : 250);
+  }
+  function scrollToStep() {
+    if (S.mode !== 'watch') return;
+    var G = cur(), cv = $('#canvas'), g = S.step ? G.expand[S.step - 1] : G.nodes[0];
+    var ys = [g.y], xs = [g.x];
+    G.dk[g.id].forEach(function (k) { var c = G.all(k); if (S.step) { ys.push(c.y + (c.bar === 0 ? WORD_DY : 0)); xs.push(c.x); } });
+    var z = S.zoom, top = Math.min.apply(null, ys) * z - 30, bot = Math.max.apply(null, ys) * z + 40;
+    var left = Math.min.apply(null, xs) * z - 40, right = Math.max.apply(null, xs) * z + 40;
+    var st = cv.scrollTop, sl = cv.scrollLeft, ch = cv.clientHeight, cw = cv.clientWidth;
+    if (top < st || bot > st + ch) st = Math.max(0, top - ch * 0.25);
+    if (left < sl || right > sl + cw) sl = Math.max(0, (left + right) / 2 - cw / 2);
+    if (st !== cv.scrollTop || sl !== cv.scrollLeft) cv.scrollTo({ top: st, left: sl, behavior: RM.matches ? 'auto' : 'smooth' });
+  }
+
+  /* ================= fill mode ================= */
+  function fillState(G, f) {
+    var right = 0, wrong = 0, empty = 0;
+    G.nodes.forEach(function (g) { var l = f.labels[g.id]; if (!l) empty++; else if (l === g.label) right++; else wrong++; });
+    return { right: right, wrong: wrong, empty: empty, total: G.nodes.length };
+  }
+  function fillReason(G, g, chosen) {
+    var c = parseLabel(chosen);
+    if (g.bar === 0 && !g.isNull && c.cat !== g.cat) {
+      var r = RULE_TAG[g.cat];
+      if (g.cat === 'V' && c.cat === 'T') r = NULL_T;
+      if (g.cat === 'C' && c.cat === 'D' && g.w === 0) r = 'There are two finite verbs. Which one belongs to the subject clause?';
+      return { t: em(G.s.words[g.w]) + ' is not ' + art(c.cat) + ' ' + L(c.cat) + ' here.', r: r };
+    }
+    if (c.cat === g.cat) {
+      if (g.bar === 0) return { t: 'Right category. This node sits right above the word, so the label is the head level.' };
+      if (g.bar === 1) return { t: 'Right category. This node is between the head and the phrase, so use the bar level.' };
+      return { t: 'Right category. This node is the top of the projection, so use the phrase level.' };
+    }
+    if (g.bar === 0 && g.isNull) return { t: 'Wrong category. Look at the phrase above this ' + NULL + ': the empty head has the category of that phrase.' };
+    return { t: 'Wrong category. Every node in a projection has the category of the head. Follow the line down to the head.' };
+  }
+  /* top-down (pre-order) order = node ids */
+  function nextEmpty(G, f, after) {
+    var n = G.nodes.length;
+    for (var k = 1; k <= n; k++) { var g = G.nodes[(after + k) % n]; if (!f.labels[g.id]) return g; }
+    for (var j = 0; j < n; j++) if (f.labels[j] !== G.nodes[j].label) return G.nodes[j];
+    return null;
+  }
+  function ensureActive() {
+    var G = cur(), f = F();
+    if (f.active === null && !f.done) { var g = nextEmpty(G, f, -1); if (g) f.active = g.id; }
+  }
+  function placeLabel(label) {
+    var G = cur(), f = F();
+    if (f.active === null || f.done) return;
+    var g = G.nodes[f.active], pl = parseLabel(label);
+    label = lab(pl.cat, pl.bar);
+    f.labels[g.id] = label; delete f.flag[g.id];
+    if (label === g.label) {
+      var st = fillState(G, f);
+      if (st.right === st.total) {
+        f.done = true; f.active = null; markDone(G.s.id);
+        setMsg('ok', 'Every label is right. The tree is complete.', 'Tap any head to see the complement, adjuncts and specifier.', 'Complete');
+        return;
+      }
+      setMsg('ok', L(g.cat, g.bar) + ' is right. ' + st.right + ' of ' + st.total + ' labels done.', '', 'Good');
+      var nx = nextEmpty(G, f, g.id);
+      f.active = nx ? nx.id : null;
+    } else {
+      var rs = fillReason(G, g, label);
+      setMsg('err', rs.t, rs.r, 'Not yet');
+    }
+  }
+  function checkAll() {
+    var G = cur(), f = F(), st = fillState(G, f);
+    f.flag = {};
+    G.nodes.forEach(function (g) { if (!f.labels[g.id]) f.flag[g.id] = true; });
+    setMsg(st.wrong ? 'err' : 'info', st.right + ' of ' + st.total + ' labels are right. ' + st.wrong + ' wrong, ' + st.empty + ' empty.', st.empty ? 'Empty slots are outlined in yellow.' : '', 'Check');
+  }
+  function revealOne() {
+    var G = cur(), f = F();
+    var g = G.nodes.filter(function (n) { return f.labels[n.id] !== n.label; })[0];
+    if (!g) return;
+    f.active = g.id;
+    placeLabel(g.label);
+    if (!f.done) setMsg('hint', 'Revealed one label: ' + L(g.cat, g.bar) + (g.bar === 0 ? ' above ' + em(wordOf(G, g)) : ' over ' + em(spanWords(G, g))) + '.', '', 'Reveal');
+  }
+  function fillIntro() { setMsg('info', 'Every label is hidden. Work top-down: the outlined slot is ready, so pick a label from the tray. Tap any other slot to switch.', 'Start with CP at the top.', 'Fill the shape'); }
+
+  /* ================= relations ================= */
+  function relations(G, hid) {
+    var h = G.nodes[hid], out = [], c = h;
+    while (c.parent !== null && c.bar < 2) {
+      var p = G.nodes[c.parent];
+      if (p.cat !== h.cat) break;
+      if (p.kids.length === 2) {
+        var o = G.nodes[p.kids[0] === c.id ? p.kids[1] : p.kids[0]];
+        out.push({ id: o.id, type: p.bar === 2 ? 'spec' : (c.bar === 0 ? 'comp' : 'adj') });
+      }
+      c = p;
+    }
+    return out;
+  }
+  function bbox(G, id) {
+    var b = { x0: 1e9, x1: -1e9, y0: 1e9, y1: -1e9 };
+    (function rec(i) {
+      var g = G.all(i), hw = g.isSpec ? specW() / 2 + 6 : g.bar === 0 ? g.slotW / 2 - 4 : labelW(g.label, g.bar) / 2 + 8;
+      b.x0 = Math.min(b.x0, g.x - hw); b.x1 = Math.max(b.x1, g.x + hw);
+      b.y0 = Math.min(b.y0, g.y - 20); b.y1 = Math.max(b.y1, g.bar === 0 ? wordY(G, g) + 9 : g.y + 12);
+      if (!g.isSpec) G.dk[g.id].forEach(rec);
+    })(id);
+    return b;
+  }
+  var REL_NAME = { comp: 'complement', adj: 'adjunct', spec: 'specifier' };
+  function relSVG(G, hid) {
+    var h = G.nodes[hid], s = '';
+    relations(G, hid).forEach(function (r) {
+      var b = bbox(G, r.id);
+      s += '<rect class="rel ' + r.type + '" x="' + (b.x0 - 3) + '" y="' + (b.y0 - 3) + '" width="' + (b.x1 - b.x0 + 6) + '" height="' + (b.y1 - b.y0 + 6) + '" rx="8"/>';
+      s += '<text class="rel-tag" x="' + ((b.x0 + b.x1) / 2) + '" y="' + (b.y1 + 16) + '">' + REL_NAME[r.type] + '</text>';
+    });
+    var lw = Math.max(labelW(h.label, 0), wordW(wordOf(G, h)));
+    s += '<rect class="rel-head k-' + h.cat + '" x="' + (h.x - lw / 2 - 8) + '" y="' + (h.y - 17) + '" width="' + (lw + 16) + '" height="' + (wordY(G, h) - h.y + 26) + '" rx="6"/>';
+    return s;
+  }
+  function relText(G, hid) {
+    var h = G.nodes[hid], rs = relations(G, hid);
+    var name = h.isNull ? 'The empty ' + L(h.cat) : 'The ' + L(h.cat) + ' ' + em(G.s.words[h.w]);
+    if (!rs.length) return name + ' has no complement, adjunct or specifier.';
+    return name + '. ' + rs.map(function (r) { return REL_NAME[r.type].charAt(0).toUpperCase() + REL_NAME[r.type].slice(1) + ': ' + dG(G, G.nodes[r.id]) + '.'; }).join(' ');
+  }
+  function relAvailable() { return S.mode === 'watch' ? watchDone() : true; }
+  function drawRel() {
+    var G = cur(), layer = document.getElementById('rel-layer'), legend = $('#rel-legend');
+    var id = S.relHover !== null ? S.relHover : S.relPin;
+    if (!relAvailable()) id = null;
+    if (!layer) return;
+    layer.innerHTML = id !== null ? relSVG(G, id) : '';
+    legend.hidden = id === null;
+    $('#rel-text').innerHTML = id !== null ? relText(G, id) : '';
+  }
+
+  /* ================= SVG rendering ================= */
+  function edgeCoords(p, c) { return [p.x, p.y + (p.bar === 2 ? 11 : 10), c.x, c.y - (c.isSpec || c.bar === 0 ? 14 : c.bar === 1 ? 16 : 18)]; }
+  function line(e, cls, extra) { return '<line class="' + cls + '" x1="' + e[0] + '" y1="' + e[1] + '" x2="' + e[2] + '" y2="' + e[3] + '"' + (extra || '') + '/>'; }
+
+  function headParts(G, g) {
+    var wy = wordY(G, g);
+    return '<line class="stem" data-hy="' + g.y + '" x1="' + g.x + '" y1="' + (g.y + 9) + '" x2="' + g.x + '" y2="' + (wy - 15) + '"/>' +
+      '<text class="word' + (g.isNull ? ' null' : '') + '" data-hy="' + g.y + '" x="' + g.x + '" y="' + wy + '">' + esc(wordOf(G, g)) + '</text>';
+  }
+  function specSVG(sp, extra) {
+    return '<g class="specnode k-' + sp.cat + (extra || '') + '"><text class="spec-lbl" x="' + sp.x + '" y="' + (sp.y + 5) + '">Spec</text></g>';
+  }
+  function edgeSVG(G, p, c, fresh) {
+    if (c.isSpec) return line(edgeCoords(p, c), 'edge spec-edge' + (fresh ? ' fadein' : ''));
+    var same = c.cat === p.cat;
+    return line(edgeCoords(p, c), 'edge' + (same ? ' proj k-' + p.cat : '') + (fresh ? ' draw' : ''), fresh ? ' pathLength="1"' : '');
+  }
+
+  function svgWatch(G) {
+    var vis = new Set([0]), expanded = new Set(), curNode = S.step ? G.expand[S.step - 1] : G.nodes[0];
+    for (var i = 0; i < S.step; i++) { var e = G.expand[i]; expanded.add(e.id); G.dk[e.id].forEach(function (k) { vis.add(k); }); }
+    var sp = SPEEDS[P.speed], edges = '', nodes = '', glow = '';
+    var fresh = S.animate && S.step > 0 ? curNode.id : -1, done = watchDone();
+    vis.forEach(function (id) {
+      var g = G.all(id);
+      if (g.isSpec) { nodes += specSVG(g, g.parent === fresh ? ' pop' : ''); return; }
+      if (expanded.has(g.id)) G.dk[g.id].forEach(function (k) { edges += edgeSVG(G, g, G.all(k), g.id === fresh); });
+      var isNew = g.parent === fresh, label = g.label, lw = labelW(label, g.bar), head = done && g.bar === 0;
+      var s = '<g class="nd k-' + g.cat + ' b' + g.bar + (isNew ? ' pop' : '') + '"' + (head ? ' data-head="' + g.id + '" data-key="h' + g.id + '" tabindex="0" role="button" aria-label="' + esc('Head ' + label + ' ' + wordOf(G, g) + ': show relations') + '"' : '') + '>';
+      if (head) {
+        var bw = Math.max(lw, wordW(wordOf(G, g))) + 14, hh = wordY(G, g) - g.y + 30;
+        s += '<rect class="hit" x="' + (g.x - Math.max(24, bw / 2)) + '" y="' + (g.y - 20) + '" width="' + Math.max(48, bw) + '" height="' + hh + '"/>';
+        s += '<rect class="hitring" x="' + (g.x - bw / 2) + '" y="' + (g.y - 16) + '" width="' + bw + '" height="' + (hh - 6) + '" rx="6"/>';
+      }
+      s += '<text class="lbl" x="' + g.x + '" y="' + (g.y + (g.bar === 2 ? 6.5 : g.bar === 1 ? 6 : 5)) + '">' + label + '</text>';
+      if (g.bar === 0) s += headParts(G, g);
+      nodes += s + '</g>';
+    });
+    if (!done || S.step === 0) {
+      var gw = labelW(curNode.label, curNode.bar) + 18, gh = curNode.bar === 2 ? 32 : 30;
+      glow = '<g class="k-' + curNode.cat + '"><rect class="glow-outer" x="' + (curNode.x - gw / 2 - 3) + '" y="' + (curNode.y - gh / 2 - 4) + '" width="' + (gw + 6) + '" height="' + (gh + 6) + '" rx="9"/>' +
+        '<rect class="glow" x="' + (curNode.x - gw / 2) + '" y="' + (curNode.y - gh / 2 - 1) + '" width="' + gw + '" height="' + gh + '" rx="7"/></g>';
+    }
+    return '<g style="--draw:' + sp.draw + 's;--pop:' + (sp.draw * 0.75).toFixed(2) + 's">' + glow + '<g>' + edges + '</g><g id="rel-layer"></g><g>' + nodes + '</g></g>';
+  }
+
+  function svgFill(G) {
+    var f = F(), edges = '', nodes = '';
+    function right(g) { return f.labels[g.id] === g.label; }
+    G.specs.forEach(function (sp) { nodes += specSVG(sp, ''); });
+    G.nodes.forEach(function (g) {
+      G.dk[g.id].forEach(function (k) {
+        var c = G.all(k);
+        if (c.isSpec) { edges += line(edgeCoords(g, c), 'edge spec-edge'); return; }
+        var same = c.cat === g.cat && right(g) && right(c);
+        edges += line(edgeCoords(g, c), 'edge' + (same ? ' proj k-' + g.cat : ''));
+      });
+      var l = f.labels[g.id], st = !l ? 'empty' : (l === g.label ? 'right' : 'wrong');
+      var pl = l ? parseLabel(l) : null, shown = pl ? lab(pl.cat, pl.bar) : '';
+      var bw = Math.max(46, shown ? labelW(shown, pl.bar) + 18 : 46), bh = 28;
+      var cls = 'slot' + (st === 'right' ? ' right k-' + g.cat : '') + (st === 'wrong' ? ' wrong filled' : '') + (f.active === g.id ? ' active' : '') + (f.flag[g.id] ? ' flag' : '');
+      var headAttr = (g.bar === 0 && st === 'right') ? ' data-head="' + g.id + '"' : '';
+      var what = g.bar === 0 ? 'head above ' + wordOf(G, g) : 'node over ' + spanWords(G, g);
+      var s = '<g class="' + cls + '" data-gid="' + g.id + '" data-key="g' + g.id + '"' + headAttr + ' tabindex="0" role="button" aria-label="' + esc(what + (l ? ', labeled ' + shown + (st === 'right' ? ', right' : ', wrong') : ', empty')) + '">';
+      s += '<rect class="hit" x="' + (g.x - Math.max(24, bw / 2)) + '" y="' + (g.y - 22) + '" width="' + Math.max(48, bw) + '" height="44"/>';
+      s += '<rect class="box" x="' + (g.x - bw / 2) + '" y="' + (g.y - bh / 2 - 1) + '" width="' + bw + '" height="' + bh + '" rx="5"/>';
+      if (shown) s += '<g class="k-' + pl.cat + ' b' + pl.bar + '"><text class="lbl" x="' + g.x + '" y="' + (g.y + 6) + '">' + shown + '</text></g>';
+      s += '</g>';
+      if (g.bar === 0) s += '<g class="k-' + (st === 'right' ? g.cat : 'none') + '">' + headParts(G, g) + '</g>';
+      nodes += s;
+    });
+    return '<g>' + edges + '</g><g id="rel-layer"></g><g>' + nodes + '</g>';
+  }
+
+  /* animate every word (and the head line above it) between "under the head" and one common baseline */
+  function toggleAlign() {
+    var G = cur(), target = !S.aligned;
+    if (RM.matches || S.aligning) { S.aligned = target; render(); return; }
+    S.aligning = true;
+    var els = Array.prototype.slice.call(document.querySelectorAll('#svg [data-hy]'));
+    var t0 = null, dur = 750;
+    function yFor(hy, t) { var a = hy + WORD_DY, bY = G.baseY; return target ? a + (bY - a) * t : bY + (a - bY) * t; }
+    function frame(ts) {
+      if (t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur), e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+      els.forEach(function (el) {
+        var y = yFor(+el.getAttribute('data-hy'), e);
+        if (el.tagName.toLowerCase() === 'line') el.setAttribute('y2', y - 15); else el.setAttribute('y', y);
+      });
+      if (p < 1) requestAnimationFrame(frame);
+      else { S.aligning = false; S.aligned = target; render(); }
+    }
+    document.getElementById('rel-layer').innerHTML = '';
+    requestAnimationFrame(frame);
+  }
+
+  function applyZoom() {
+    var G = cur(), svg = $('#svg');
+    svg.setAttribute('viewBox', '0 0 ' + G.width + ' ' + G.height);
+    svg.setAttribute('width', Math.round(G.width * S.zoom));
+    svg.setAttribute('height', Math.round(G.height * S.zoom));
+  }
+  function autoZoom() { var G = cur(), cw = $('#canvas').clientWidth - 4; S.zoom = G.width > cw ? Math.max(0.6, cw / G.width) : 1; }
+  function fitZoom() { var G = cur(), cw = $('#canvas').clientWidth - 4; S.zoom = Math.max(0.3, Math.min(1.25, cw / G.width)); }
+
+  /* ================= bracket ================= */
+  function brGold(G, id) {
+    var g = G.nodes[id];
+    if (!g.kids.length) return '<span class="bk leaf k-' + g.cat + '">[<span class="bl">' + g.label + '</span> ' + (g.isNull ? wordOf(G, g) : em(wordOf(G, g))) + ']</span>';
+    return '<span class="bk k-' + g.cat + '">[<span class="bl">' + g.label + '</span> ' + g.kids.map(function (k) { return brGold(G, k); }).join(' ') + ']</span>';
+  }
+  function bracketHTML(G) {
+    if (S.mode === 'watch') return watchDone() ? brGold(G, 0) : '<span class="loose">The bracket notation appears when the drawing is finished.</span>';
+    return F().done ? brGold(G, 0) : '<span class="loose">Finish the labels to see the bracket notation.</span>';
+  }
+
+  /* ================= dock ================= */
+  function b(act, label, o) {
+    o = o || {};
+    return '<button type="button" class="btn ' + (o.cls || '') + '" data-act="' + act + '" data-key="' + (o.key || act) + '"' +
+      (o.data || '') + (o.disabled ? ' disabled' : '') + (o.aria ? ' aria-label="' + esc(o.aria) + '"' : '') + (o.pressed !== undefined ? ' aria-pressed="' + o.pressed + '"' : '') + '>' + label + '</button>';
+  }
+  function alignBtn() { return b('align', S.aligned ? 'Words under heads' : 'Align words at the bottom', { key: 'align', pressed: S.aligned }); }
+  function renderDock(G) {
+    var fb = $('#feedback'), ctx = '', util = '';
+    if (S.mode === 'watch') {
+      var done = watchDone(), n = totalSteps(G);
+      var txt = S.step === 0 ? captionStart() : caption(G, G.expand[S.step - 1]);
+      fb.className = 'feedback' + (done ? ' ok' : '');
+      fb.innerHTML = '<span class="k" id="step-count">Step ' + (S.step + 1) + ' of ' + n + (done ? ' · finished' : '') + '</span>' + txt +
+        (done ? '<span class="rule">The tree is finished. Tap any head to see the complement, adjuncts and specifier.</span>' : '');
+      ctx = '<div class="row">' +
+        b('back', '‹ Back', { disabled: S.step === 0, aria: 'Step back' }) +
+        b('play', S.playing ? 'Pause' : (done ? 'Replay' : 'Play'), { cls: 'primary play', key: 'play' }) +
+        b('fwd', 'Next ›', { disabled: done, aria: 'Step forward' }) +
+        b('restart', 'Restart', { disabled: S.step === 0 && !S.playing }) + '</div>';
+      ctx += '<div class="speed" style="margin-top:6px"><span class="speed-label">Speed</span><div class="seg" role="group" aria-label="Speed">' +
+        ['slow', 'normal', 'fast'].map(function (sp) { return '<button type="button" data-act="speed" data-speed="' + sp + '" data-key="sp-' + sp + '" aria-pressed="' + (P.speed === sp) + '">' + sp.charAt(0).toUpperCase() + sp.slice(1) + '</button>'; }).join('') +
+        '</div><span class="keys">Keys: space plays or pauses, arrows step.</span></div>';
+      if (done) util = b('tofill', 'Now fill the shape', { cls: 'primary' }) + alignBtn();
+    } else {
+      var f = F(), m = S.msg || { kind: 'info', html: '', title: '' };
+      fb.className = 'feedback ' + m.kind;
+      fb.innerHTML = '<span class="k">' + esc(m.title || 'Fill the shape') + '</span>' + m.html + (m.rule ? '<span class="rule">' + m.rule + '</span>' : '');
+      if (f.done) {
+        ctx = '<div class="row">' + b('next', 'Next sentence', { cls: 'primary' }) + b('towatch', 'Watch again') + alignBtn() + '</div>';
+      } else {
+        var present = [];
+        G.nodes.forEach(function (g) { if (present.indexOf(g.cat) < 0) present.push(g.cat); });
+        var extra = ['P', 'A', 'Adv', 'C', 'N', 'V', 'D', 'T'].filter(function (c) { return present.indexOf(c) < 0; }).slice(0, Math.max(0, Math.min(2, 7 - present.length)));
+        var cols = CATS.filter(function (c) { return present.indexOf(c) >= 0 || extra.indexOf(c) >= 0; });
+        var act = f.active !== null ? G.nodes[f.active] : null;
+        ctx = '<div class="row-label">' + (act ? 'Label for the node ' + (act.bar === 0 ? 'above ' + em(wordOf(G, act)) : 'over ' + em(spanWords(G, act))) : 'Tap a slot in the tree, then pick a label.') + '</div>';
+        ctx += '<div class="tray">' + cols.map(function (c) {
+          return '<div class="tray-col">' + [2, 1, 0].map(function (bar) {
+            var dl = bar === 1 ? c + "'" : bar === 2 ? c + 'P' : c;
+            return b('label', lab(c, bar), { cls: 'cat k-' + c, key: 'lab-' + dl, data: ' data-label="' + esc(dl) + '"', disabled: !act, aria: 'Label ' + lab(c, bar) });
+          }).join('') + '</div>';
+        }).join('') + '</div>';
+        util = b('check', 'Check all') + b('reveal', 'Reveal one');
+      }
+    }
+    $('#ctx').innerHTML = ctx;
+    $('#util').innerHTML = util;
+    $('#util').hidden = !util;
+  }
+
+  /* ================= main render ================= */
+  function renderHeader(G) {
+    $('#mode-watch').setAttribute('aria-pressed', S.mode === 'watch');
+    $('#mode-fill').setAttribute('aria-pressed', S.mode === 'fill');
+    [1, 2, 3].forEach(function (lv) { var el = $('#lv-' + lv); el.setAttribute('aria-pressed', S.level === lv); el.disabled = !levelList(lv).length; });
+    var list = levelList(S.level);
+    $('#pick').innerHTML = list.map(function (i, k) {
+      var s = BANK[i].s;
+      return '<option value="' + i + '"' + (i === S.idx ? ' selected' : '') + '>' + (k + 1) + '. ' + esc(s.text) + (isDone(s.id) ? ' · done' : '') + '</option>';
+    }).join('');
+    $('#dots').innerHTML = list.map(function (i) { return '<span class="dot' + (isDone(BANK[i].s.id) ? ' done' : '') + (i === S.idx ? ' cur' : '') + '"></span>'; }).join('');
+    var nDone = list.filter(function (i) { return isDone(BANK[i].s.id); }).length;
+    $('#progress-text').textContent = nDone + ' of ' + list.length + ' filled';
+    $('#strip-title').textContent = 'Level ' + S.level + ' · Sentence ' + (list.indexOf(S.idx) + 1) + ' of ' + list.length;
+    $('#focus-line').textContent = G.s.focus ? 'Practice: ' + G.s.focus : '';
+    $('#clear').hidden = S.mode !== 'fill';
+    $('#tool-note').textContent = S.mode === 'watch' ? 'Drawing grows top-down' : 'Fill top-down, CP first';
+  }
+  function renderChips(G) {
+    var lit = {};
+    if (S.mode === 'watch') {
+      var vis = new Set([0]);
+      for (var i = 0; i < S.step; i++) G.expand[i].kids.forEach(function (k) { vis.add(k); });
+      G.s.words.forEach(function (w, wi) { if (vis.has(G.wordLeaf[wi])) lit[wi] = true; });
+    } else {
+      var f = F();
+      G.s.words.forEach(function (w, wi) { var g = G.nodes[G.wordLeaf[wi]]; if (f.labels[g.id] === g.label) lit[wi] = true; });
+    }
+    $('#chips').innerHTML = G.s.words.map(function (word, wi) {
+      var g = G.nodes[G.wordLeaf[wi]];
+      return '<span class="chip' + (lit[wi] ? ' lit k-' + g.cat : '') + '"><span class="w">' + esc(word) + '</span><span class="t">' + (lit[wi] ? g.label : ' ') + '</span></span>';
+    }).join('') + '<span class="chip-end" aria-hidden="true">' + esc((G.s.text.match(/[.!?]$/) || [''])[0]) + '</span>';
+  }
+  function render() {
+    if (!BANK.length) return;
+    var ae = document.activeElement, key = ae && ae.getAttribute ? ae.getAttribute('data-key') : null;
+    var G = cur();
+    renderHeader(G);
+    renderChips(G);
+    applyZoom();
+    $('#svg').innerHTML = S.mode === 'watch' ? svgWatch(G) : svgFill(G);
+    drawRel();
+    $('#bracket').innerHTML = bracketHTML(G);
+    renderDock(G);
+    if (key) {
+      var el = document.querySelector('[data-key="' + key + '"]');
+      if (el && el !== document.activeElement && !el.disabled) { try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } }
+    }
+  }
+
+  /* ================= navigation ================= */
+  function goTo(idx) {
+    stopPlay();
+    S.idx = idx; S.level = BANK[idx].s.level; S.relPin = null; S.relHover = null; S.step = 0; S.aligned = false;
+    S.autoFit = true;
+    autoZoom();
+    if (S.mode === 'fill') { ensureActive(); if (!F().done && !Object.keys(F().labels).length) fillIntro(); else S.msg = null; }
+    P.last = { id: cur().s.id, mode: S.mode }; save();
+    render();
+    var cv = $('#canvas'); cv.scrollTo(0, 0);
+  }
+  function stepSentence(d) { var list = levelList(S.level), pos = list.indexOf(S.idx); goTo(list[(pos + d + list.length) % list.length]); }
+  function nextUnsolved() {
+    var list = levelList(S.level), pos = list.indexOf(S.idx);
+    for (var k = 1; k <= list.length; k++) { var i = list[(pos + k) % list.length]; if (!isDone(BANK[i].s.id)) return goTo(i); }
+    var lv = S.level + 1;
+    while (lv <= 3 && !levelList(lv).length) lv++;
+    if (lv <= 3) return goTo(levelList(lv)[0]);
+    stepSentence(1);
+  }
+  function setMode(m) {
+    stopPlay();
+    S.mode = m; S.relPin = null; S.aligned = false;
+    if (m === 'fill') { ensureActive(); if (!F().done && !Object.keys(F().labels).length) fillIntro(); else S.msg = null; }
+    else S.step = 0;
+    P.last = { id: cur().s.id, mode: S.mode }; save();
+    render();
+    $('#canvas').scrollTo(0, 0);
+  }
+
+  /* ================= events ================= */
+  function onAct(el) {
+    var act = el.getAttribute('data-act'), f;
+    switch (act) {
+      case 'mode': setMode(el.getAttribute('data-mode')); return;
+      case 'level': { var lv = +el.getAttribute('data-level'), list = levelList(lv); if (list.length) { var un = list.filter(function (i) { return !isDone(BANK[i].s.id); })[0]; goTo(un !== undefined ? un : list[0]); } return; }
+      case 'prev': stepSentence(-1); return;
+      case 'nexts': stepSentence(1); return;
+      case 'next': nextUnsolved(); return;
+      case 'play': if (S.playing) { stopPlay(); render(); } else play(); return;
+      case 'back': stopPlay(); setStep(S.step - 1, false); return;
+      case 'fwd': stopPlay(); setStep(S.step + 1, true); return;
+      case 'restart': stopPlay(); setStep(0, false); return;
+      case 'speed': P.speed = el.getAttribute('data-speed'); save(); break;
+      case 'align': toggleAlign(); return;
+      case 'tofill': setMode('fill'); return;
+      case 'towatch': setMode('watch'); return;
+      case 'zoom-in': S.zoom = Math.min(2.5, S.zoom * 1.2); S.autoFit = false; applyZoom(); return;
+      case 'zoom-out': S.zoom = Math.max(0.3, S.zoom / 1.2); S.autoFit = false; applyZoom(); return;
+      case 'fit': fitZoom(); S.autoFit = true; applyZoom(); return;
+      case 'clear': S.aligned = false; S.fill[cur().s.id] = { labels: {}, active: null, done: false, flag: {} }; ensureActive(); setMsg('info', 'Cleared all labels. Start again with CP at the top.', '', 'Cleared'); S.relPin = null; break;
+      case 'label': placeLabel(el.getAttribute('data-label')); break;
+      case 'check': checkAll(); break;
+      case 'reveal': revealOne(); break;
+      default: return;
+    }
+    render();
+  }
+  function onSvg(target) {
+    var el = target.closest('[data-head],[data-gid]');
+    if (!el) return;
+    if (el.hasAttribute('data-head') && relAvailable()) {
+      var hid = +el.getAttribute('data-head');
+      S.relPin = S.relPin === hid ? null : hid;
+    }
+    if (S.mode === 'fill' && el.hasAttribute('data-gid') && !F().done) F().active = +el.getAttribute('data-gid');
+    render();
+  }
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-act]');
+    if (el && !el.disabled) { onAct(el); return; }
+    if (e.target.closest('#svg')) onSvg(e.target);
+  });
+  $('#svg').addEventListener('keydown', function (e) {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('[data-head],[data-gid]')) { e.preventDefault(); e.stopPropagation(); onSvg(e.target); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (S.mode !== 'watch' || e.altKey || e.ctrlKey || e.metaKey) return;
+    var t = e.target, tag = t && t.tagName;
+    if (tag === 'SELECT' || tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if (e.key === ' ' || e.key === 'Spacebar') {
+      if (tag === 'BUTTON' || tag === 'SUMMARY') return;
+      e.preventDefault(); if (S.playing) { stopPlay(); render(); } else play();
+    } else if (e.key === 'ArrowRight') { e.preventDefault(); stopPlay(); setStep(S.step + 1, true); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); stopPlay(); setStep(S.step - 1, false); }
+  });
+  $('#svg').addEventListener('pointerover', function (e) {
+    if (e.pointerType === 'touch' || !relAvailable()) return;
+    var el = e.target.closest('[data-head]'), id = el ? +el.getAttribute('data-head') : null;
+    if (id !== S.relHover) { S.relHover = id; drawRel(); }
+  });
+  $('#svg').addEventListener('pointerleave', function () { if (S.relHover !== null) { S.relHover = null; drawRel(); } });
+  $('#pick').addEventListener('change', function (e) { goTo(+e.target.value); });
+  var rt;
+  window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (S.autoFit && BANK.length) { autoZoom(); applyZoom(); } }, 120); });
+
+  /* ================= boot ================= */
+  if (!BANK.length) {
+    $('#feedback').innerHTML = '<span class="k">No sentences</span>The sentence bank is empty or every entry failed the check. See the console for details.';
+    return;
+  }
+  if (window.matchMedia && window.matchMedia('(max-width: 760px)').matches) { $('#howto').open = false; $('#legend').open = false; }
+  layoutAll();
+  if (SKIPPED.length) { var nt = $('#notice'); nt.hidden = false; nt.textContent = SKIPPED.length + ' sentence(s) in the bank failed the check and are hidden: ' + SKIPPED.join(', ') + '.'; }
+  var start = levelList(1)[0];
+  if (start === undefined) start = 0;
+  if (P.last && P.last.id) { BANK.forEach(function (G, i) { if (G.s.id === P.last.id) start = i; }); if (P.last.mode === 'fill') S.mode = 'fill'; }
+  goTo(start);
+  if (S.mode === 'watch' && !RM.matches) play();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layoutAll(); if (S.autoFit) autoZoom(); render(); });
+
+  /* read-only hook for automated checks */
+  window.__treeBuilder = {
+    bank: function () { return BANK.map(function (G) { return { id: G.s.id, level: G.s.level, words: G.s.words, nodes: G.nodes.map(function (g) { return { id: g.id, label: g.label, cat: g.cat, bar: g.bar, parent: g.parent, kids: g.kids, isNull: g.isNull, w: g.w }; }) }; }); },
+    current: function () { var G = cur(); return { id: G.s.id, mode: S.mode, step: S.step, total: totalSteps(G), done: watchDone(), playing: S.playing, fillDone: F().done, active: F().active, aligned: S.aligned, specs: G.specs.length }; }
+  };
+})();
+</script>
+
+</body>
+</html>

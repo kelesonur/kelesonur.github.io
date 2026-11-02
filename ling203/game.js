@@ -12,7 +12,11 @@ const WEEK_ITEMS={
 {id:'game',title:'Constituent or Impostor?',kind:'html',file:'games/constituent-or-impostor.html'}
 ],
 '4–5':[
-{id:'handout',title:'PS Handout',kind:'pdf',file:'materials/ps2.pdf'}
+{id:'handout',title:'PS Handout',kind:'pdf',file:'materials/ps2.pdf',key:'materials/ps2-key.pdf'}
+],
+'6–7':[
+{id:'game',title:'Tree Builder',kind:'html',file:'games/tree-builder.html'},
+{id:'key',title:'Answer key',kind:'pdf',file:'materials/tree-builder-key.pdf'}
 ]
 };
 const SCREENS=['home','start','material','office'];
@@ -196,12 +200,22 @@ function materialScreen(){
  const item=items.find(i=>i.id===state.material)||items[0];
  if(!item){state.screen='start';startScreen();return;}
  const html=item.kind==='html';
+ const key=item.key||'';
  const body=html
   ?`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open game</a></div><iframe class="material-frame game-frame" title="${esc(item.title)}" src="${esc(item.file)}"></iframe>`
+  :key
+  ?`<div class="embed-toolbar"><a class="primary" id="openPdf" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open PDF</a><button type="button" id="keyToggle" class="key-toggle" aria-pressed="false"><span class="key-switch" aria-hidden="true"><span></span></span>Answer key</button></div><div class="pdf-stage" id="pdfStage"><iframe class="material-frame pdf-frame" title="${esc(item.title)}" src="${esc(item.file)}#view=FitH"></iframe><iframe class="material-frame pdf-frame key-sheet" title="Answer key" src="${esc(key)}#view=FitH"></iframe></div>`
   :`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="${esc(item.title)}" src="${esc(item.file)}#view=FitH"></iframe>`;
  $('app').innerHTML=sectionNav()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← ${esc(weekLabel(state.weeks))}</button><h1>${esc(item.title)}</h1></div>${body}</section>`;
  bindSectionNav();
  $('backPs').onclick=()=>{state.screen='start';state.material=null;save();render();focusMain();};
+ if($('keyToggle'))$('keyToggle').onclick=()=>{
+  const on=$('keyToggle').getAttribute('aria-pressed')!=='true';
+  $('keyToggle').setAttribute('aria-pressed',String(on));
+  $('pdfStage').classList.toggle('revealed',on);
+  $('openPdf').href=on?key:item.file;
+  $('openPdf').textContent=on?'Open answer key':'Open PDF';
+ };
 }
 
 async function hashCode(text){
