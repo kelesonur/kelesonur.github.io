@@ -15,8 +15,7 @@ const WEEK_ITEMS={
 {id:'handout',title:'PS Handout',kind:'pdf',file:'materials/ps2.pdf',key:'materials/ps2-key.pdf'}
 ],
 '6–7':[
-{id:'game',title:'Tree Builder',kind:'html',file:'games/tree-builder.html'},
-{id:'key',title:'Answer key',kind:'pdf',file:'materials/tree-builder-key.pdf'}
+{id:'game',title:'Tree Builder',kind:'html',file:'games/tree-builder.html'}
 ]
 };
 const SCREENS=['home','start','material','office'];
