@@ -19,6 +19,10 @@ const WEEK_ITEMS={
 '3–4':[
 {id:'handout',title:'PS Handout',blurb:'October 7 handout.',kind:'pdf',file:'materials/ps2.pdf'},
 {id:'phoneme',title:'Phoneme or Allophone?',blurb:'Phonology practice.',kind:'html',file:'games/phoneme-or-allophone.html'}
+],
+'5–6':[
+{id:'handout',title:'PS Handout',blurb:'Word classes and syntax.',kind:'pdf',file:'materials/ps3.pdf'},
+{id:'constituent',title:'Constituent or Impostor?',blurb:'Constituency practice.',kind:'html',file:'games/constituent-or-impostor.html'}
 ]
 };
 const SCREENS=['home','start','material','office'];
