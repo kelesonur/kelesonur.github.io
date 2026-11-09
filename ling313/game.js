@@ -216,7 +216,7 @@ function classMeetingsHtml(meetings){
  if(!meetings||!meetings.length)return '';
  return `<ul class="class-meetings">${meetings.map(m=>`<li>${esc(formatClassMeeting(m))}</li>`).join('')}</ul>`;
 }
-function weekReady(id){return id==='1–2'||id==='3–4'||id==='5–6';}
+function weekReady(id){return id==='1–2'||id==='3–4'||id==='5–6'||id==='7–8';}
 function weekPicker(){
  return `<section class="week-picker" aria-label="Choose weeks"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>{const live=weekReady(w.id);const cls=[live?'live':'quiet',state.weeks===w.id?'selected':''].filter(Boolean).join(' ');return `<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${cls}">${weekLabel(w.id)}<small>${live?'Ready':'To be added'}</small></button>`;}).join('')}</div></section>`;
 }
@@ -248,6 +248,12 @@ function startScreen(){
   $('openLab').onclick=()=>{state.screen='lab';save();render();focusMain();};
   return;
  }
+ if(state.weeks==='7–8'){
+  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING313 · PS</span><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p class="muted">${esc(meta.topic)}</p></div><section class="setup material-picker" aria-label="PS activities"><h2>Activities</h2><div class="mode-buttons material-choices"><button type="button" id="openHandout">PS Handout</button></div></section></section>`;
+  bindSectionNav();bindWeekPicker();
+  $('openHandout').onclick=()=>{state.screen='handout';save();render();focusMain();};
+  return;
+ }
  if(state.weeks!=='1–2'){
   $('app').innerHTML=sectionNav()+weekPicker()+`<section class="week-empty" aria-live="polite"><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p>${esc(meta.topic)}</p><p class="muted">To be added.</p>${admin?`<div class="wide-actions"><button type="button" id="openLibrary">All questions</button></div>`:''}</section>`;
   bindSectionNav();bindWeekPicker();
@@ -276,7 +282,7 @@ function practiceScreen(){
 }
 
 function handoutScreen(){
- const files={'1–2':'materials/ps1.pdf','3–4':'materials/ps2.pdf','5–6':'materials/ps4.pdf'};
+ const files={'1–2':'materials/ps1.pdf','3–4':'materials/ps2.pdf','5–6':'materials/ps4.pdf','7–8':'materials/midterm-review.pdf'};
  const file=files[state.weeks];
  if(!file){state.screen='start';render();return;}
  const key=state.weeks==='5–6'?'materials/ps4-key.pdf':'';
