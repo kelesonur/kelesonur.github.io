@@ -285,7 +285,8 @@ function handoutScreen(){
  const files={'1–2':'materials/ps1.pdf','3–4':'materials/ps2.pdf','5–6':'materials/ps4.pdf','7–8':'materials/midterm-review.pdf'};
  const file=files[state.weeks];
  if(!file){state.screen='start';render();return;}
- const key=state.weeks==='5–6'?'materials/ps4-key.pdf':'';
+ const keys={'5–6':'materials/ps4-key.pdf','7–8':'materials/midterm-review-key.pdf'};
+ const key=keys[state.weeks]||'';
  const toolbar=key
   ?`<div class="embed-toolbar"><a class="primary" id="openPdf" href="${file}" target="_blank" rel="noopener noreferrer">Open PDF</a><button type="button" id="keyToggle" class="key-toggle" aria-pressed="false"><span class="key-switch" aria-hidden="true"><span></span></span>Answer key</button></div><div class="pdf-stage" id="pdfStage"><iframe class="material-frame pdf-frame" title="PS Handout" src="${file}#view=FitH"></iframe><iframe class="material-frame pdf-frame key-sheet" title="Answer key" src="${key}#view=FitH"></iframe></div>`
   :`<div class="embed-toolbar"><a class="primary" href="${file}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="PS Handout" src="${file}#view=FitH"></iframe>`;
