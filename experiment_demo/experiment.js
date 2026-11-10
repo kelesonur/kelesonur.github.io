@@ -191,26 +191,54 @@ const T = [];
 /* welcome and consent */
 BS = "welcome";
 T.push(instr(`<h3>Deneye hoş geldiniz</h3>
-  <p>Bu deneyde, Tobi adlı yuvarlak bir karakterin dünyasında kullanılan küçük bir işaret dili öğreneceksiniz. Bu dilde, Tobi’nin yaptığı değişiklikler için işaretler var. Deneyin bazı bölümlerinde işaretleri kameraya doğru yapmanız istenecek. Deneyin sonunda başka bir katılımcıyla birlikte kısa bir oyun oynayacaksınız.</p>
-  <p><b>Lütfen deney boyunca not almayın.</b></p>
+  <p>Bu deneyde, Tobi adlı yuvarlak bir karakterin dünyasında kullanılan küçük bir işaret dili öğreneceksiniz. Bu dilde, Tobi’nin yaptığı değişiklikler için işaretler var.</p>
+  <p>Deney dört bölümden oluşur:</p>
+  <ol>
+    <li>İşaretleri öğrenme ve alıştırma.</li>
+    <li>Animasyonları işaretleme ve iki işaretli mesajlar.</li>
+    <li>Başka bir odadaki eşinizle birlikte bir iletişim oyunu.</li>
+    <li>Birkaç kısa soru.</li>
+  </ol>
+  <p>Deneyin bazı bölümlerinde işaretleri kameraya doğru yapacaksınız. Deney, ortada kısa bir ara ile birlikte yaklaşık 60 dakika sürer.</p>
+  <p><b>Lütfen deney boyunca not almayın ve kimseyle konuşmayın.</b> Bir sorunuz olursa deneyi yürüten araştırmacıya sorabilirsiniz.</p>
   <p>Devam etmek için “İleri” düğmesine tıklayın.</p>`));
-T.push(instr(`<h3>Bilgilendirilmiş onam</h3>
-  <p>Bu çalışma, insanların yeni bir dili nasıl öğrendiğini ve kullandığını incelemektedir. Araştırmacı: Onur Keleş, Boğaziçi Üniversitesi.</p>
-  <p>Aşağıdaki düğmeye tıklayarak şunları onaylamış olursunuz:</p>
-  <ul>
-    <li>18 yaşından büyüğüm.</li>
-    <li>Bu çalışmaya gönüllü olarak katılıyorum ve istediğim zaman ayrılabilirim.</li>
-    <li>Deney sırasında yüzümün ve ellerimin video kaydının alınmasını kabul ediyorum.</li>
-    <li>Kayıtlar yalnızca araştırma amacıyla kullanılacak ve üçüncü kişilerle paylaşılmayacaktır.</li>
-  </ul>`, "Katılmayı kabul ediyorum"));
+T.push(L({type: jsPsychSurveyHtmlForm, button_label: "Katılmayı kabul ediyorum",
+  html: `<div class="instr form consent"><h3>Katılımcı Bilgilendirme ve Onam Formu</h3>
+  <p><b>Bu belge ne işe yarar?</b> Bu belge, araştırmanın ne olduğunu, sizden ne istendiğini, haklarınızı ve verilerinizle ne yapılacağını açıklar. Lütfen dikkatle okuyun.</p>
+  <p><b>Araştırmacılar.</b> Bu çalışma, Boğaziçi Üniversitesi Dilbilim Bölümü doktora öğrencisi Onur Keleş tarafından, Dr. Kadir Gökgöz danışmanlığında yürütülmektedir.</p>
+  <p><b>Araştırmanın amacı.</b> Bu çalışma, insanların yeni bir dili nasıl öğrendiğini ve bu dili başka biriyle iletişim kurmak için nasıl kullandığını incelemektedir.</p>
+  <p><b>Kimler katılabilir?</b> En az 18 yaşında olan, anadili Türkçe olan ve normal ya da düzeltilmiş (gözlük veya lens ile) görmeye sahip kişiler katılabilir.</p>
+  <p><b>Sizden ne istenecek?</b> Bilgisayarda bir dizi işaret öğrenecek, bu işaretleri kameraya doğru yapacak ve kısa animasyonlarla ilgili seçimler yapacaksınız. Ardından başka bir odadaki bir katılımcıyla, işaretleri kullanarak bir iletişim oyunu oynayacaksınız. En sonda dil geçmişinizle ilgili birkaç soru yanıtlayacaksınız. Deney yaklaşık 60 dakika sürer.</p>
+  <p><b>Video kayıtları.</b> Deneyin bazı bölümlerinde yüzünüz, elleriniz ve üst bedeniniz kameraya kaydedilecektir. Kayıtlar, yaptığınız işaretleri incelemek için kullanılacaktır. Ses kaydı alınmayacaktır. İletişim oyununda, oyundaki eşiniz kayıtlarınızı oyun sırasında görecektir.</p>
+  <p><b>Katılım karşılığı.</b> Deneyi tamamlayan katılımcılar, ilgili LING kodlu derste kullanılmak üzere iki ders kredisi alacaktır.</p>
+  <p><b>Riskler ve yararlar.</b> Bu çalışmaya katılmanın bilinen bir riski yoktur. Kendinizi yorgun hissederseniz ara verebilirsiniz. Ders kredisi dışında size doğrudan bir yararı yoktur, ancak dilin nasıl öğrenildiğine dair bilgimize katkıda bulunacaksınız.</p>
+  <p><b>Verilerin gizliliği ve kullanımı.</b> Verileriniz 6698 sayılı Kişisel Verilerin Korunması Kanunu’na uygun olarak işlenecektir. Verilerinizde adınız yerine bir katılımcı numarası kullanılacaktır. Video kayıtları ve kişisel bilgileriniz, şifreli ve parola korumalı ortamlarda saklanacak ve yalnızca araştırma ekibi tarafından görülebilecektir. Video kayıtları, çalışma tamamlandıktan sonra en fazla beş yıl saklanacak ve ardından silinecektir. Kimlik bilgileri çıkarılmış veriler (örneğin cevaplarınız ve işaretlerin kodlamaları) tez, bilimsel yayın ve sunumlarda kullanılabilir ve açık bilim platformlarında (örneğin OSF) diğer araştırmacılarla paylaşılabilir. Video kayıtlarınız, aşağıda ayrıca izin vermediğiniz sürece paylaşılmayacaktır.</p>
+  <p><b>Gönüllü katılım ve çekilme hakkı.</b> Katılımınız tamamen gönüllüdür. İstediğiniz zaman, herhangi bir neden göstermeden deneyden ayrılabilirsiniz. Deneyden ayrılırsanız verileriniz silinecektir. Deneyden sonra verilerinizin silinmesini isterseniz, katılım tarihinizden sonraki iki hafta içinde bize yazabilirsiniz. Bu tarihten sonra veriler kimlik bilgileri çıkarılarak işlendiği için silinemeyebilir.</p>
+  <p><b>İletişim.</b> Sorularınız için: Onur Keleş, <a href="mailto:onur.keles1@bogazici.edu.tr">onur.keles1@bogazici.edu.tr</a>. Bu çalışma etik kurul değerlendirmesine sunulmuştur. Etik kurul adı ve onay numarası: [eklenecek].</p>
+  <p><b>Onay.</b> Lütfen aşağıdaki maddeleri işaretleyin. <span class="req">*</span> ile gösterilen maddeler zorunludur.</p>
+  <div class="checks">
+    <label><input type="checkbox" name="read" required> Yukarıdaki bilgileri okudum ve anladım. <span class="req">*</span></label>
+    <label><input type="checkbox" name="eligible" required> En az 18 yaşındayım ve anadilim Türkçe. <span class="req">*</span></label>
+    <label><input type="checkbox" name="video" required> Video kaydı alınmasını ve oyundaki eşimin kayıtlarımı oyun sırasında görmesini kabul ediyorum. <span class="req">*</span></label>
+    <label><input type="checkbox" name="voluntary" required> Çalışmaya gönüllü olarak katılıyorum ve istediğim zaman ayrılabileceğimi biliyorum. <span class="req">*</span></label>
+  </div>
+  <p>İsteğe bağlı: Video kayıtlarımdan kısa kesitlerin bilimsel sunum ve yayınlarda gösterilmesine izin veriyorum. <span class="req">*</span></p>
+  <div class="radios"><label><input type="radio" name="clips" value="evet" required> Evet</label><label><input type="radio" name="clips" value="hayir"> Hayır</label></div>
+  <p>Bu sorudaki cevabınız, deneye katılımınızı etkilemez.</p>
+  </div>`}));
 
 /* camera */
 BS = "camera";
 T.push(L({type: BTN, stimulus: `<div class="instr"><h3>Kamera</h3>
   <p>Deneyin bazı bölümlerinde işaretleri kameraya doğru yapacaksınız. Hazır olduğunuzda boşluk tuşuna basın ya da “Kaydı başlat” düğmesine tıklayın. Kısa bir geri sayımdan sonra kayıt başlar. İşareti bitirdiğinizde yine boşluk tuşuna basın ya da “Kaydı durdur” düğmesine tıklayın.</p>
-  <p>Kamerayı açmak için aşağıdaki düğmeye tıklayın. Tarayıcınız izin isterse lütfen izin verin.</p></div>`,
+  <p>Kamerayı açmak için aşağıdaki düğmeye tıklayın.</p></div>`,
   choices: ["Kamerayı aç"], button_html: plainBtn, on_finish: () => { openCam(); }}));
-T.push(L({type: BTN, stimulus: `<div class="instr"><p>Kendinizi aşağıda görüyor olmalısınız. Lütfen yüzünüzün, ellerinizin ve kollarınızın görüntüde olduğundan emin olun.</p></div><div class="pair"><figure>${CAM_BOX}</figure></div>`,
+T.push(L({type: BTN, stimulus: `<div class="instr"><p>Kendinizi aşağıda görüyor olmalısınız.</p>
+  <ul>
+    <li><b>Konum:</b> Yüzünüz, elleriniz ve kollarınız görüntüde olmalı. Kollarınızı yanlara açtığınızda elleriniz görüntüden çıkmamalı.</li>
+    <li><b>Işık:</b> Yüzünüz ve elleriniz iyi aydınlanmış olmalı ve üzerlerinde gölge olmamalı.</li>
+    <li>Doğru konumu bulduktan sonra sandalyenizi kameraya yaklaştırmayın veya uzaklaştırmayın.</li>
+  </ul></div><div class="pair"><figure>${CAM_BOX}</figure></div>`,
   choices: ["İleri"], button_html: plainBtn, on_load: attachCam}));
 
 /* sign learning: every sign, long and short version, then copy */
@@ -318,7 +346,8 @@ T.push(instr(`<h3>Eşinizle oyun</h3>
   <p>Bu oyunda eşinizle sırayla iki rol alacaksınız.</p>
   <p><b>Anlatıcı</b> olduğunuzda bir animasyon göreceksiniz. Bu animasyonu, eşiniz onu seçebilecek şekilde kameraya doğru işaretleyin.</p>
   <p><b>Seçici</b> olduğunuzda eşinizin kaydını izleyeceksiniz. Ardından dört animasyon arasından eşinizin anlattığı animasyonu seçeceksiniz.</p>
-  <p>Her turdan sonra ikiniz de doğru animasyonu ve seçilen animasyonu göreceksiniz. Her doğru seçim için takımınız bir puan kazanır.</p>`));
+  <p>Her turdan sonra ikiniz de doğru animasyonu ve seçilen animasyonu göreceksiniz. Her doğru seçim için takımınız bir puan kazanır.</p>
+  <p>Elinizden geleni yapın. İletişimin işe yaradığı durumlar kadar aksadığı durumlar da bizim için ilginçtir.</p>`));
 T.push(timed('<p class="wait">Eşiniz bekleniyor…</p>', 2500));
 function gameOptions(P, Q, tm, competitor) {
   const opts = [{key: "target", evs: anim2(P, Q, tm)}];

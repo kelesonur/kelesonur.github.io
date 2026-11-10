@@ -191,26 +191,54 @@ const T = [];
 /* welcome and consent */
 BS = "welcome";
 T.push(instr(`<h3>Welcome to the experiment</h3>
-  <p>In this experiment, you will learn a small sign language used in the world of Tobi, a round character. The language has signs for the changes that Tobi makes. In some parts of the experiment, you will be asked to make the signs to the camera. At the end, you will play a short game with another participant.</p>
-  <p><b>Please do not take any notes during the experiment.</b></p>
+  <p>In this experiment, you will learn a small sign language used in the world of Tobi, a round character. The language has signs for the changes that Tobi makes.</p>
+  <p>The experiment has four parts:</p>
+  <ol>
+    <li>Learning and practicing the signs.</li>
+    <li>Signing animations and two-sign messages.</li>
+    <li>A communication game with a partner in another room.</li>
+    <li>A few short questions.</li>
+  </ol>
+  <p>In some parts of the experiment, you will make signs to the camera. The experiment takes about 60 minutes, with a short break in the middle.</p>
+  <p><b>Please do not take any notes and do not talk to anyone during the experiment.</b> If you have a question, you can ask the experimenter.</p>
   <p>Click “Next” to continue.</p>`));
-T.push(instr(`<h3>Consent</h3>
-  <p>This study looks at how people learn and use a new language. Researcher: Onur Keleş, Boğaziçi University.</p>
-  <p>Clicking the button below indicates that:</p>
-  <ul>
-    <li>I am 18 years of age or older.</li>
-    <li>I take part voluntarily and I can withdraw at any time.</li>
-    <li>I agree that my face and hands will be video recorded during the experiment.</li>
-    <li>I understand that the recordings will be used for research only and will not be shared with third parties.</li>
-  </ul>`, "Yes, I consent to participate"));
+T.push(L({type: jsPsychSurveyHtmlForm, button_label: "Yes, I consent to participate",
+  html: `<div class="instr form consent"><h3>Participant Information and Consent Form</h3>
+  <p><b>What is this document for?</b> This document explains what the study is about, what you will be asked to do, your rights, and what will happen to your data. Please read it carefully.</p>
+  <p><b>Researchers.</b> This study is carried out by Onur Keleş, a PhD student in the Department of Linguistics at Boğaziçi University, under the supervision of Dr. Kadir Gökgöz.</p>
+  <p><b>Purpose of the study.</b> This study looks at how people learn a new language and how they use it to communicate with someone else.</p>
+  <p><b>Who can take part?</b> People who are at least 18 years old, are native speakers of Turkish, and have normal or corrected-to-normal vision (with glasses or contact lenses).</p>
+  <p><b>What will you be asked to do?</b> On a computer, you will learn a set of signs, make these signs to a camera, and make choices about short animations. Then you will play a communication game with another participant in another room, using the signs. At the end, you will answer a few questions about your language background. The experiment takes about 60 minutes.</p>
+  <p><b>Video recordings.</b> In some parts of the experiment, your face, hands and upper body will be recorded by a camera. The recordings will be used to study the signs you make. No audio will be recorded. In the communication game, your partner will see your recordings during the game.</p>
+  <p><b>Compensation.</b> Participants who complete the experiment will receive two course credits toward the relevant LING course.</p>
+  <p><b>Risks and benefits.</b> There are no known risks in taking part in this study. If you feel tired, you can take a break. Apart from the course credits, there is no direct benefit to you, but you will add to our knowledge of how language is learned.</p>
+  <p><b>Confidentiality and use of data.</b> Your data will be processed in accordance with the Turkish Personal Data Protection Law No. 6698 (KVKK). A participant number will be used in your data instead of your name. Video recordings and personal information will be stored in encrypted, password-protected locations and will be seen only by the research team. Video recordings will be kept for at most five years after the study ends and will then be deleted. Data with identifying information removed (for example, your answers and codings of the signs) may be used in a thesis, scientific publications and presentations, and may be shared with other researchers on open science platforms (for example, OSF). Your video recordings will not be shared unless you give separate permission below.</p>
+  <p><b>Voluntary participation and right to withdraw.</b> Your participation is voluntary. You can stop the experiment at any time, without giving a reason. If you stop, your data will be deleted. If you want your data deleted after the experiment, you can write to us within two weeks of your participation. After that date, your data may not be deletable, because it will have been processed without identifying information.</p>
+  <p><b>Contact.</b> For questions: Onur Keleş, <a href="mailto:onur.keles1@bogazici.edu.tr">onur.keles1@bogazici.edu.tr</a>. This study has been submitted for ethics review. Ethics committee and approval number: [to be added].</p>
+  <p><b>Consent.</b> Please tick the statements below. Statements marked with <span class="req">*</span> are required.</p>
+  <div class="checks">
+    <label><input type="checkbox" name="read" required> I have read and understood the information above. <span class="req">*</span></label>
+    <label><input type="checkbox" name="eligible" required> I am at least 18 years old and a native speaker of Turkish. <span class="req">*</span></label>
+    <label><input type="checkbox" name="video" required> I agree to be video recorded, and to my partner seeing my recordings during the game. <span class="req">*</span></label>
+    <label><input type="checkbox" name="voluntary" required> I take part voluntarily, and I know that I can withdraw at any time. <span class="req">*</span></label>
+  </div>
+  <p>Optional: I allow short clips from my video recordings to be shown in scientific presentations and publications. <span class="req">*</span></p>
+  <div class="radios"><label><input type="radio" name="clips" value="yes" required> Yes</label><label><input type="radio" name="clips" value="no"> No</label></div>
+  <p>Your answer to this question does not affect your participation.</p>
+  </div>`}));
 
 /* camera */
 BS = "camera";
 T.push(L({type: BTN, stimulus: `<div class="instr"><h3>Camera</h3>
   <p>In some parts of the experiment, you will make signs to the camera. When you are ready, press the space bar or click “Start recording”. Recording starts after a short countdown. When you have finished signing, press the space bar again or click “Stop recording”.</p>
-  <p>Click the button below to turn on the camera. If your browser asks for permission, please allow it.</p></div>`,
+  <p>Click the button below to turn on the camera.</p></div>`,
   choices: ["Turn on camera"], button_html: plainBtn, on_finish: () => { openCam(); }}));
-T.push(L({type: BTN, stimulus: `<div class="instr"><p>You should see yourself below. Please make sure that your face, hands and arms are in the picture.</p></div><div class="pair"><figure>${CAM_BOX}</figure></div>`,
+T.push(L({type: BTN, stimulus: `<div class="instr"><p>You should see yourself below.</p>
+  <ul>
+    <li><b>Position:</b> Your face, hands and arms should be in the picture. When you move your arms out to the sides, your hands should stay in the picture.</li>
+    <li><b>Lighting:</b> Your face and hands should be well lit, with no shadows on them.</li>
+    <li>Once you have found the right position, do not move your chair closer to or further from the camera.</li>
+  </ul></div><div class="pair"><figure>${CAM_BOX}</figure></div>`,
   choices: ["Next"], button_html: plainBtn, on_load: attachCam}));
 
 /* sign learning: every sign, long and short version, then copy */
@@ -318,7 +346,8 @@ T.push(instr(`<h3>Game with your partner</h3>
   <p>In this game, you and your partner will take turns in two roles.</p>
   <p>When you are the <b>director</b>, you will see an animation. Sign it to the camera so that your partner can pick it out.</p>
   <p>When you are the <b>matcher</b>, you will watch your partner’s recording. Then you will choose the animation your partner described from four animations.</p>
-  <p>After each round, you will both see the correct animation and the chosen animation. Your team gets one point for each correct choice.</p>`));
+  <p>After each round, you will both see the correct animation and the chosen animation. Your team gets one point for each correct choice.</p>
+  <p>Just do your best. We are interested in places where communication breaks down as well as where it succeeds.</p>`));
 T.push(timed('<p class="wait">Waiting for your partner…</p>', 2500));
 function gameOptions(P, Q, tm, competitor) {
   const opts = [{key: "target", evs: anim2(P, Q, tm)}];
