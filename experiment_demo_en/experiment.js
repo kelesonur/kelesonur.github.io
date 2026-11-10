@@ -1,26 +1,24 @@
 /* Demo session: learning, communication and simultaneity in a small sign system.
- * Stimuli are drawn on canvas (draw.js). Webcam recordings stay in the browser
+ * Recorded clips (clips/) where available, otherwise the drawn signer (draw.js). Webcam recordings stay in the browser
  * and are not uploaded. */
 "use strict";
 
 /* ---------------- basic data ---------------- */
 const EV = ["rise", "turn", "swell", "pulse"];
-const MAPS = [
-  {rise: "index", turn: "spread", swell: "fist", pulse: "flat"},
-  {rise: "spread", turn: "flat", swell: "index", pulse: "fist"}
-];
+/* the demo uses one fixed mapping between events and handshapes (counterbalanced in the study) */
+const DEMO_MAP = {rise: "index", turn: "flat", swell: "fist", pulse: "claw"};
 const TRAINED = [["rise", "turn"], ["rise", "swell"], ["turn", "pulse"], ["swell", "pulse"]];
 const UNTRAINED = [["rise", "pulse"], ["turn", "swell"]];
 const TIM = {DUR: {P: 0.5, Q: 1.0}, SEQ: {P: 0.5, Q: 3.3}};
 
 const params = new URLSearchParams(location.search);
 const CONGRUENT = !/^(i|inc|incongruent|uyumsuz)$/i.test(params.get("lang") || "");
-const MAP = MAPS[Math.random() < 0.5 ? 0 : 1];
+const MAP = DEMO_MAP;
 
 const rnd = a => a[Math.floor(Math.random() * a.length)];
 function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 const other = tm => tm === "DUR" ? "SEQ" : "DUR";
-const orient = pr => Math.random() < 0.5 ? pr.slice() : [pr[1], pr[0]];
+const orient = pr => pr.includes("rise") ? ["rise", pr.find(e => e !== "rise")] : (Math.random() < 0.5 ? pr.slice() : [pr[1], pr[0]]);
 /* the language: which timing each form means */
 const meaning = form => (form === "HOLD") === CONGRUENT ? "DUR" : "SEQ";
 const formFor = tm => meaning("HOLD") === tm ? "HOLD" : "LIN";
@@ -29,11 +27,30 @@ const anim2 = (P, Q, tm) => [{ev: P, t0: TIM[tm].P, dur: 2}, {ev: Q, t0: TIM[tm]
 const clip2 = (form, P, Q) => ({type: form === "HOLD" ? "hold" : "lin", P, Q});
 
 /* ---------------- drawing on the page ---------------- */
+/* ---------------- recorded sign videos ----------------
+ * Clips recorded so far; any other combination falls back to the drawn signer.
+ * Keys use handshapes: single_<hs>, hold_<held>_<other>, lin_<first>_<second>. */
+const CLIP_DIR = "../experiment_demo/clips/";
+const VIDS = {
+  single_index: 3.3, single_flat: 3.33, single_fist: 3.27, single_claw: 3.3,
+  hold_index_flat: 7.97, hold_index_fist: 8.0, hold_index_claw: 7.97,
+  lin_index_flat: 7.9, lin_index_fist: 7.93, lin_index_claw: 7.97
+};
+function vidKey(clip) {
+  if (!clip) return null;
+  const k = clip.type === "single" ? `single_${MAP[clip.X]}` : `${clip.type}_${MAP[clip.P]}_${MAP[clip.Q]}`;
+  return k in VIDS ? k : null;
+}
+const clipMs = clip => { const k = vidKey(clip); return k ? Math.round(VIDS[k] * 1000) : Math.round((clip && clip.dur || SIGN_DUR) * 1000); };
+
 const SIGN_DUR = 4.0, ANIM_DUR = 4.8;
-function playSign(cv, clip, opt) { const tr = makeTracks(clip, MAP); play(cv, (c, w, h, t) => drawSigner(c, w, h, tr, t), clip.dur || SIGN_DUR, opt); }
+function playSign(el, clip, opt) {
+  if (el && el.tagName === "VIDEO") { el.loop = !!(opt && opt.loop); el.currentTime = 0; el.play().catch(() => {}); return; }
+  const tr = makeTracks(clip, MAP); play(el, (c, w, h, t) => drawSigner(c, w, h, tr, t), clip.dur || SIGN_DUR, opt);
+}
 function playAnim(cv, evs, opt) { play(cv, (c, w, h, t) => drawEvents(c, w, h, evs, t), ANIM_DUR, opt); }
 const LOOP = {loop: true, pause: 0.8};
-const SIGN_CV = id => `<canvas class="sg" id="${id}" data-w="320" data-h="320"></canvas>`;
+const SIGN_CV = (id, clip) => { const k = vidKey(clip); return k ? `<video class="sv" id="${id}" muted playsinline preload="auto"><source src="${CLIP_DIR}${k}.mp4" type="video/mp4"><source src="${CLIP_DIR}${k}.webm" type="video/webm"></video>` : `<canvas class="sg" id="${id}" data-w="320" data-h="320"></canvas>`; };
 const ANIM_CV = id => `<canvas class="an" id="${id}" data-w="320" data-h="246"></canvas>`;
 const $ = id => document.getElementById(id);
 
@@ -137,7 +154,7 @@ function recScreen(title, left, enableAfter) {
     }
   });
 }
-const leftSign = clip => ({html: SIGN_CV("cvL"), start: () => playSign($("cvL"), clip, LOOP)});
+const leftSign = clip => ({html: SIGN_CV("cvL", clip), start: () => playSign($("cvL"), clip, LOOP)});
 const leftAnim = evs => ({html: ANIM_CV("cvL"), start: () => playAnim($("cvL"), evs, LOOP)});
 
 /* sign an animation to the webcam (free production, production test) */
@@ -208,7 +225,8 @@ function chooseTiming(form, P, Q, feedback) {
   const opts = shuffle(["DUR", "SEQ"]).map(tm => ({key: tm, evs: anim2(P, Q, tm)}));
   const target = meaning(form);
   let chosen = null;
-  const msg = timed(`<div class="stage">${SIGN_CV("cvS")}</div>`, 4200, () => playSign($("cvS"), clip2(form, P, Q)));
+  const clip = clip2(form, P, Q);
+  const msg = timed(`<div class="stage">${SIGN_CV("cvS", clip)}</div>`, clipMs(clip) + 200, () => playSign($("cvS"), clip));
   const tl = [readyKey(), seqChoice("Which animation does this message show better?", opts, msg, 1, c => { chosen = c; }, true)];
   if (feedback) tl.push(L({type: KB, choices: "NO_KEYS",
     trial_duration: () => chosen === target ? 2000 : 5000,
@@ -285,11 +303,12 @@ T.push(instr(`<h3>Learning the signs</h3>
   <p><b>Try to learn the signs as well as you can.</b> You will need to recognize them in the rest of the experiment.</p>`));
 shuffle(EV).forEach(e => {
   T.push(L({type: BTN,
-    stimulus: `<div class="pair"><figure>${SIGN_CV("cvS")}</figure><figure>${ANIM_CV("cvA")}</figure></div>`,
+    stimulus: `<div class="pair"><figure>${SIGN_CV("cvS", {type: "single", X: e})}</figure><figure>${ANIM_CV("cvA")}</figure></div>`,
     choices: ["Next"], button_html: plainBtn, enable_button_after: 4500,
     on_load: () => {
-      const tr = {dom: trSingle(MAP[e], 0.5).concat(trSingle(MAP[e], 2.4).slice(1)), non: []};
-      play($("cvS"), (c, w, h, t) => drawSigner(c, w, h, tr, t), 3.9, {loop: true, pause: 0.6});
+      if (vidKey({type: "single", X: e})) playSign($("cvS"), {type: "single", X: e}, LOOP);
+      else { const tr = {dom: trSingle(MAP[e], 0.5).concat(trSingle(MAP[e], 2.4).slice(1)), non: []};
+      play($("cvS"), (c, w, h, t) => drawSigner(c, w, h, tr, t), 3.9, {loop: true, pause: 0.6}); }
       play($("cvA"), (c, w, h, t) => drawEvents(c, w, h, [{ev: e, t0: 0.3, dur: 2}, {ev: e, t0: 2.9, dur: 1}], t), 4.1, {loop: true, pause: 0.6});
     }}));
   T.push(recScreen("Now make the sign yourself.", leftSign({type: "single", X: e, dur: 2.0})));
@@ -304,7 +323,7 @@ shuffle(EV).forEach(e => {
   const ab = animButtons(opts);
   let chosen = null;
   T.push(readyKey());
-  T.push(timed(`<div class="stage">${SIGN_CV("cvS")}</div>`, 2400, () => playSign($("cvS"), {type: "single", X: e, dur: 2.4})));
+  T.push(timed(`<div class="stage">${SIGN_CV("cvS", {type: "single", X: e})}</div>`, Math.max(2400, clipMs({type: "single", X: e})), () => playSign($("cvS"), {type: "single", X: e, dur: 2.4})));
   T.push(L({type: BTN, stimulus: '<p class="q">Which change does this sign name?</p>',
     choices: ab.choices, button_html: ab.button_html, button_layout: "flex", on_load: ab.start,
     on_finish: d => { chosen = opts[d.response] ? opts[d.response].key : null; }}));
@@ -343,7 +362,7 @@ T.push(instr(`<h3>Learning the messages</h3>
   const prs = shuffle(TRAINED);
   shuffle(["HOLD", "LIN"]).forEach((form, i) => {
     const [P, Q] = orient(prs[i]), clip = clip2(form, P, Q), evs = anim2(P, Q, meaning(form));
-    T.push(L({type: BTN, stimulus: `<div class="pair"><figure>${SIGN_CV("cvS")}</figure><figure>${ANIM_CV("cvA")}</figure></div>`,
+    T.push(L({type: BTN, stimulus: `<div class="pair"><figure>${SIGN_CV("cvS", clip)}</figure><figure>${ANIM_CV("cvA")}</figure></div>`,
       choices: ["Next"], button_html: plainBtn, enable_button_after: 5000,
       on_load: () => { playSign($("cvS"), clip, LOOP); playAnim($("cvA"), evs, LOOP); }}));
     T.push(recScreen("Now make the message yourself.", leftSign(clip)));
@@ -425,7 +444,7 @@ function gameFeedback(title, opts, chosenKey) {
     let chosen = null;
     T.push(timed('<p class="wait">Round 2. You are the matcher.</p>', 2000));
     T.push(timed('<p class="wait">Your partner is signing…</p>', 3000));
-    const msg = timed(`<div class="frame">Your partner’s message</div><div class="stage">${SIGN_CV("cvS")}</div>`, 4200, () => playSign($("cvS"), clip2(formFor(tm), P, Q)));
+    const msg = timed(`<div class="frame">Your partner’s message</div><div class="stage">${SIGN_CV("cvS", clip2(formFor(tm), P, Q))}</div>`, clipMs(clip2(formFor(tm), P, Q)) + 200, () => playSign($("cvS"), clip2(formFor(tm), P, Q)));
     T.push(seqChoice("Which animation did your partner describe?", opts, msg, Infinity, c => { chosen = c; }));
     T.push(gameFeedback("Your choice", opts, () => chosen));
   }
