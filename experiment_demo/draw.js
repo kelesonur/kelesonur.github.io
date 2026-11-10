@@ -237,6 +237,16 @@ function drawHand(ctx, x, y, shape, mirror, k, ang, colors) {
     const parts = [wrist, palm].concat(xs.map((bx, i) => G.finger(bx * 0.9, BY, ang5[i], len[i], FW)));
     parts.push(G.finger(11.5, -15, 1.0, 26, 9));
     G.union(ctx, parts, C.skin, C.line, lw);
+  } else if (shape === "claw") {
+    // spread fingers bent at the middle joints: shorter fingers with a fold line
+    const ang5 = [-0.4, -0.13, 0.12, 0.36];
+    const parts = [wrist, palm].concat(xs.map((bx, i) => G.finger(bx * 0.9, BY, ang5[i], len[i] * 0.62, FW + 0.6)));
+    parts.push(G.finger(11.5, -15, 1.0, 22, 9));
+    G.union(ctx, parts, C.skin, C.line, lw);
+    xs.forEach((bx, i) => {
+      const L1 = len[i] * 0.34, a = ang5[i], cx = bx * 0.9 + Math.sin(a) * L1, cy = BY - Math.cos(a) * L1;
+      line([cx - 3, cy + 0.5, cx + 3, cy - 0.5]);
+    });
   } else if (shape === "index") {
     G.union(ctx, [wrist, palm, G.finger(xs[3], BY, 0, len[3] + 1, FW)], C.skin, C.line, lw);
     [0, 1, 2].forEach(i => G.solid(ctx, curled(i), C.skin, C.line, lw));
