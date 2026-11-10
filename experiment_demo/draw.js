@@ -20,20 +20,22 @@ function drawEvents(ctx,w,h,evs,t){
   const s=Math.min(w/260,h/200);const cx=w/2,cy=h*0.64;const r=29*s;
   let dy=0,rot=0,sc=1,glow=0;
   for(const e of evs){const u=(t-e.t0)/e.dur;if(u<=0||u>=1)continue;
-    if(e.ev==="rise")dy=-60*s*Math.sin(Math.PI*u);
+    /* each change ramps in over 0.3 s, stays fully on, and ramps out over 0.3 s */
+    const r=Math.min(0.5,0.3/e.dur);const env=u<r?ease(u/r):u>1-r?ease((1-u)/r):1;
+    if(e.ev==="rise")dy=-60*s*env;
     if(e.ev==="turn")rot=2*Math.PI*ease(u);
-    if(e.ev==="swell")sc=1+0.55*Math.sin(Math.PI*u);
-    if(e.ev==="pulse")glow=Math.sin(Math.PI*u);}
+    if(e.ev==="swell")sc=1+0.55*env;
+    if(e.ev==="pulse")glow=env;}
   /* home position: thin dashed ring */
   ctx.setLineDash([4*s,4*s]);ctx.strokeStyle="#bbbbbb";ctx.lineWidth=1.2*s;
   ctx.beginPath();ctx.arc(cx,cy,r,0,2*Math.PI);ctx.stroke();ctx.setLineDash([]);
   const x=cx,y=cy+dy,R=r*sc;
-  /* pulse: short rays, and the disk turns from grey to white */
-  if(glow>0.02){ctx.strokeStyle="#222222";ctx.globalAlpha=glow;ctx.lineWidth=2*s;ctx.lineCap="round";
+  /* pulse: yellow rays, and the disk turns from grey to yellow */
+  if(glow>0.02){ctx.strokeStyle="#e0a000";ctx.globalAlpha=glow;ctx.lineWidth=3*s;ctx.lineCap="round";
     for(let k=0;k<8;k++){const a=k*Math.PI/4;ctx.beginPath();ctx.moveTo(x+Math.cos(a)*(R+6*s),y+Math.sin(a)*(R+6*s));ctx.lineTo(x+Math.cos(a)*(R+15*s),y+Math.sin(a)*(R+15*s));ctx.stroke();}
     ctx.globalAlpha=1;}
-  const g=Math.round(200+55*glow);
-  ctx.fillStyle=`rgb(${g},${g},${g})`;ctx.strokeStyle="#222222";ctx.lineWidth=1.8*s;
+  const mix=(a,b)=>Math.round(a+(b-a)*glow);
+  ctx.fillStyle=`rgb(${mix(200,255)},${mix(200,214)},${mix(200,64)})`;ctx.strokeStyle="#222222";ctx.lineWidth=1.8*s;
   ctx.beginPath();ctx.arc(x,y,R,0,2*Math.PI);ctx.fill();ctx.stroke();
   /* face: two fixed dot eyes; they only move with the disk (turn rotates them), never change */
   ctx.fillStyle="#222222";
