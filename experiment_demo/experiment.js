@@ -104,7 +104,7 @@ function timed(html, ms, onload) {
 
 /* recording screen: left panel (sign or animation, looping), camera on the right.
  * The participant starts the recording (a short countdown lets the hands come
- * back into view) and stops it with the button or the space bar. */
+ * back into view) and stops it, with the buttons or the space bar. */
 function recScreen(title, left, enableAfter) {
   return L({
     type: KB, choices: "NO_KEYS",
@@ -114,21 +114,25 @@ function recScreen(title, left, enableAfter) {
       if (left) left.start();
       attachCam();
       const cd = $("cd"), bStart = $("recStart"), bStop = $("recStop");
-      let recording = false;
-      later(() => { bStart.disabled = false; }, enableAfter || 0);
-      const stop = () => {
-        if (!recording) return;
-        recording = false; jsPsych.finishTrial({recorded: true});
-      };
-      const onKey = e => { if (e.code === "Space") { e.preventDefault(); stop(); } };
-      bStart.addEventListener("click", () => {
-        bStart.hidden = true;
+      let state = "wait";  /* wait, ready, countdown, recording */
+      later(() => { bStart.disabled = false; state = "ready"; }, enableAfter || 0);
+      const start = () => {
+        if (state !== "ready") return;
+        state = "countdown"; bStart.hidden = true;
         [3, 2, 1].forEach((n, i) => later(() => { cd.textContent = n; }, i * 1000));
         later(() => {
-          cd.innerHTML = '<span class="dot"></span>Kayıt'; startRecorder(); recording = true;
-          bStop.hidden = false; REC_KEY = onKey; document.addEventListener("keydown", onKey);
+          cd.innerHTML = '<span class="dot"></span>Kayıt'; startRecorder(); state = "recording";
+          bStop.hidden = false;
         }, 3000);
-      });
+      };
+      const stop = () => {
+        if (state !== "recording") return;
+        state = "done"; jsPsych.finishTrial({recorded: true});
+      };
+      /* the space bar starts the recording and then stops it */
+      REC_KEY = e => { if (e.code === "Space") { e.preventDefault(); if (state === "ready") start(); else stop(); } };
+      document.addEventListener("keydown", REC_KEY);
+      bStart.addEventListener("click", start);
       bStop.addEventListener("click", stop);
     }
   });
@@ -203,7 +207,7 @@ T.push(instr(`<h3>Bilgilendirilmiş onam</h3>
 /* camera */
 BS = "camera";
 T.push(L({type: BTN, stimulus: `<div class="instr"><h3>Kamera</h3>
-  <p>Deneyin bazı bölümlerinde işaretleri kameraya doğru yapacaksınız. Hazır olduğunuzda “Kaydı başlat” düğmesine tıklayın. Kısa bir geri sayımdan sonra kayıt başlar. İşareti bitirdiğinizde “Kaydı durdur” düğmesine tıklayın ya da boşluk tuşuna basın.</p>
+  <p>Deneyin bazı bölümlerinde işaretleri kameraya doğru yapacaksınız. Hazır olduğunuzda boşluk tuşuna basın ya da “Kaydı başlat” düğmesine tıklayın. Kısa bir geri sayımdan sonra kayıt başlar. İşareti bitirdiğinizde yine boşluk tuşuna basın ya da “Kaydı durdur” düğmesine tıklayın.</p>
   <p>Kamerayı açmak için aşağıdaki düğmeye tıklayın. Tarayıcınız izin isterse lütfen izin verin.</p></div>`,
   choices: ["Kamerayı aç"], button_html: plainBtn, on_finish: () => { openCam(); }}));
 T.push(L({type: BTN, stimulus: `<div class="instr"><p>Kendinizi aşağıda görüyor olmalısınız. Lütfen yüzünüzün, ellerinizin ve kollarınızın görüntüde olduğundan emin olun.</p></div><div class="pair"><figure>${CAM_BOX}</figure></div>`,
