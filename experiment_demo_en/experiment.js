@@ -11,7 +11,7 @@ const MAPS = [
 ];
 const TRAINED = [["rise", "turn"], ["rise", "swell"], ["turn", "pulse"], ["swell", "pulse"]];
 const UNTRAINED = [["rise", "pulse"], ["turn", "swell"]];
-const TIM = {DUR: {P: 1.35, Q: 1.85}, SEQ: {P: 0.60, Q: 3.10}};
+const TIM = {DUR: {P: 0.5, Q: 1.0}, SEQ: {P: 0.5, Q: 3.3}};
 
 const params = new URLSearchParams(location.search);
 const CONGRUENT = !/^(i|inc|incongruent|uyumsuz)$/i.test(params.get("lang") || "");
@@ -164,24 +164,60 @@ function startFeedbackCanvases(opts) {
   document.querySelectorAll(".fbbtn canvas").forEach(cv => playAnim(cv, opts[+cv.dataset.i].evs, LOOP));
 }
 
+/* ready screen: the trial starts when the participant presses the space bar */
+function readyKey() {
+  return L({type: KB, stimulus: '<p class="wait">Press the space bar when you are ready.</p>', choices: [" "]});
+}
+
+/* message, then a choice among animations that play one after the other.
+ * On the first view the answer buttons work only after every animation has
+ * played once. "Watch again" shows the message and the animations again
+ * (maxReplay times). store(key, replays) receives the answer. */
+function seqChoice(q, opts, msgTrial, maxReplay, store, big) {
+  const k = BS;
+  let views = 0, replays = 0;
+  const gap = 400, step = ANIM_DUR * 1000 + gap;
+  const choose = L({type: BTN, stimulus: `<p class="q">${q}</p>`,
+    choices: () => opts.map(o => o.key).concat(["replay"]), button_layout: "flex",
+    button_html: (c, i) => c === "replay"
+      ? `<div class="replay-row"${replays < maxReplay ? "" : " hidden"}><button class="jspsych-btn">Watch again</button></div>`
+      : `<button class="jspsych-btn anim-btn${big ? " big" : ""}"><canvas data-w="320" data-h="246" data-i="${i}"></canvas></button>`,
+    on_load: () => {
+      const btns = [...document.querySelectorAll(".anim-btn")], cvs = btns.map(b => b.querySelector("canvas"));
+      const all = [...document.querySelectorAll("#jspsych-html-button-response-btngroup button")];
+      cvs.forEach(cv => still(cv, (c, w, h) => drawEvents(c, w, h, [], 0)));
+      if (views === 0) all.forEach(b => { b.disabled = true; });
+      cvs.forEach((cv, i) => later(() => {
+        btns.forEach(b => b.classList.remove("playing")); btns[i].classList.add("playing");
+        play(cv, (c, w, h, t) => drawEvents(c, w, h, opts[i].evs, t), ANIM_DUR);
+      }, i * step));
+      later(() => { btns.forEach(b => b.classList.remove("playing")); all.forEach(b => { b.disabled = false; }); }, cvs.length * step);
+    },
+    on_finish: d => {
+      views++;
+      const keys = opts.map(o => o.key).concat(["replay"]), c = keys[d.response];
+      if (c === "replay") { replays++; d.replay = true; return; }
+      d.replay = false; store(c, replays);
+    }});
+  return {timeline: [msgTrial, choose],
+    loop_function: data => { const last = data.values().slice(-1)[0]; return !SKIP[k] && !!(last && last.replay); }};
+}
+
 /* two-sign clip, then a DUR and a SEQ animation of the same two events */
 function chooseTiming(form, P, Q, feedback) {
   const opts = shuffle(["DUR", "SEQ"]).map(tm => ({key: tm, evs: anim2(P, Q, tm)}));
   const target = meaning(form);
   let chosen = null;
-  const ab = animButtons(opts, true);
-  const tl = [
-    timed('<p class="wait">Get ready.</p>', 1000),
-    timed(`<div class="stage">${SIGN_CV("cvS")}</div>`, 4200, () => playSign($("cvS"), clip2(form, P, Q))),
-    L({type: BTN, stimulus: '<p class="q">Which animation does this message show better?</p>',
-      choices: ab.choices, button_html: ab.button_html, button_layout: "flex", on_load: ab.start,
-      on_finish: d => { chosen = opts[d.response] ? opts[d.response].key : null; }})
-  ];
+  const msg = timed(`<div class="stage">${SIGN_CV("cvS")}</div>`, 4200, () => playSign($("cvS"), clip2(form, P, Q)));
+  const tl = [readyKey(), seqChoice("Which animation does this message show better?", opts, msg, 1, c => { chosen = c; }, true)];
   if (feedback) tl.push(L({type: KB, choices: "NO_KEYS",
-    trial_duration: () => chosen === target ? 2000 : 4000,
+    trial_duration: () => chosen === target ? 2000 : 5000,
     stimulus: () => `<p class="q">Which animation does this message show better?</p><div class="jspsych-btn-group-flex">${feedbackButtons(opts, target, chosen, true)}</div>` +
       (chosen === target ? '<p class="fbk ok">Correct!</p>' : '<p class="fbk bad">Incorrect.</p>'),
-    on_load: () => startFeedbackCanvases(opts)}));
+    /* the correct animation plays once more; the other one stays still */
+    on_load: () => opts.forEach((o, i) => { const cv = document.querySelector(`.fbbtn canvas[data-i="${i}"]`);
+      if (o.key === target) play(cv, (c, w, h, t) => drawEvents(c, w, h, o.evs, t), ANIM_DUR);
+      else still(cv, (c, w, h) => drawEvents(c, w, h, [], 0)); })}));
   return tl;
 }
 
@@ -267,7 +303,7 @@ shuffle(EV).forEach(e => {
   const opts = shuffle(EV).map(x => ({key: x, evs: [{ev: x, t0: 0.6, dur: 2}]}));
   const ab = animButtons(opts);
   let chosen = null;
-  T.push(timed('<p class="wait">Get ready.</p>', 1000));
+  T.push(readyKey());
   T.push(timed(`<div class="stage">${SIGN_CV("cvS")}</div>`, 2400, () => playSign($("cvS"), {type: "single", X: e, dur: 2.4})));
   T.push(L({type: BTN, stimulus: '<p class="q">Which change does this sign name?</p>',
     choices: ab.choices, button_html: ab.button_html, button_layout: "flex", on_load: ab.start,
@@ -386,14 +422,11 @@ function gameFeedback(title, opts, chosenKey) {
   {
     const [P, Q] = orient(prs[1]), tm = rnd(["DUR", "SEQ"]);
     const opts = gameOptions(P, Q, tm, true);
-    const ab = animButtons(opts);
     let chosen = null;
     T.push(timed('<p class="wait">Round 2. You are the matcher.</p>', 2000));
     T.push(timed('<p class="wait">Your partner is signing…</p>', 3000));
-    T.push(timed(`<div class="frame">Your partner’s message</div><div class="stage">${SIGN_CV("cvS")}</div>`, 4200, () => playSign($("cvS"), clip2(formFor(tm), P, Q))));
-    T.push(L({type: BTN, stimulus: '<p class="q">Which animation did your partner describe?</p>',
-      choices: ab.choices, button_html: ab.button_html, button_layout: "flex", on_load: ab.start,
-      on_finish: d => { chosen = opts[d.response] ? opts[d.response].key : null; }}));
+    const msg = timed(`<div class="frame">Your partner’s message</div><div class="stage">${SIGN_CV("cvS")}</div>`, 4200, () => playSign($("cvS"), clip2(formFor(tm), P, Q)));
+    T.push(seqChoice("Which animation did your partner describe?", opts, msg, Infinity, c => { chosen = c; }));
     T.push(gameFeedback("Your choice", opts, () => chosen));
   }
 }
