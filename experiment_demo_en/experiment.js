@@ -104,7 +104,7 @@ function timed(html, ms, onload) {
 
 /* recording screen: left panel (sign or animation, looping), camera on the right.
  * The participant starts the recording (a short countdown lets the hands come
- * back into view) and stops it with the button or the space bar. */
+ * back into view) and stops it, with the buttons or the space bar. */
 function recScreen(title, left, enableAfter) {
   return L({
     type: KB, choices: "NO_KEYS",
@@ -114,21 +114,25 @@ function recScreen(title, left, enableAfter) {
       if (left) left.start();
       attachCam();
       const cd = $("cd"), bStart = $("recStart"), bStop = $("recStop");
-      let recording = false;
-      later(() => { bStart.disabled = false; }, enableAfter || 0);
-      const stop = () => {
-        if (!recording) return;
-        recording = false; jsPsych.finishTrial({recorded: true});
-      };
-      const onKey = e => { if (e.code === "Space") { e.preventDefault(); stop(); } };
-      bStart.addEventListener("click", () => {
-        bStart.hidden = true;
+      let state = "wait";  /* wait, ready, countdown, recording */
+      later(() => { bStart.disabled = false; state = "ready"; }, enableAfter || 0);
+      const start = () => {
+        if (state !== "ready") return;
+        state = "countdown"; bStart.hidden = true;
         [3, 2, 1].forEach((n, i) => later(() => { cd.textContent = n; }, i * 1000));
         later(() => {
-          cd.innerHTML = '<span class="dot"></span>Recording'; startRecorder(); recording = true;
-          bStop.hidden = false; REC_KEY = onKey; document.addEventListener("keydown", onKey);
+          cd.innerHTML = '<span class="dot"></span>Recording'; startRecorder(); state = "recording";
+          bStop.hidden = false;
         }, 3000);
-      });
+      };
+      const stop = () => {
+        if (state !== "recording") return;
+        state = "done"; jsPsych.finishTrial({recorded: true});
+      };
+      /* the space bar starts the recording and then stops it */
+      REC_KEY = e => { if (e.code === "Space") { e.preventDefault(); if (state === "ready") start(); else stop(); } };
+      document.addEventListener("keydown", REC_KEY);
+      bStart.addEventListener("click", start);
       bStop.addEventListener("click", stop);
     }
   });
@@ -203,7 +207,7 @@ T.push(instr(`<h3>Consent</h3>
 /* camera */
 BS = "camera";
 T.push(L({type: BTN, stimulus: `<div class="instr"><h3>Camera</h3>
-  <p>In some parts of the experiment, you will make signs to the camera. When you are ready, click “Start recording”. Recording starts after a short countdown. When you have finished signing, click “Stop recording” or press the space bar.</p>
+  <p>In some parts of the experiment, you will make signs to the camera. When you are ready, press the space bar or click “Start recording”. Recording starts after a short countdown. When you have finished signing, press the space bar again or click “Stop recording”.</p>
   <p>Click the button below to turn on the camera. If your browser asks for permission, please allow it.</p></div>`,
   choices: ["Turn on camera"], button_html: plainBtn, on_finish: () => { openCam(); }}));
 T.push(L({type: BTN, stimulus: `<div class="instr"><p>You should see yourself below. Please make sure that your face, hands and arms are in the picture.</p></div><div class="pair"><figure>${CAM_BOX}</figure></div>`,
