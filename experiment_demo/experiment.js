@@ -39,10 +39,13 @@ const $ = id => document.getElementById(id);
 
 /* ---------------- skipping sections ---------------- */
 const SKIP = {};
-let CUR = null, BS = null, TIMERS = [], RECORDER = null, SCORE = 0;
+let CUR = null, BS = null, TIMERS = [], RECORDER = null, SCORE = 0, REC_KEY = null;
 const skipBtn = $("skip");
 function later(fn, t) { TIMERS.push(setTimeout(fn, t)); }
-function cleanup() { stopAll(); TIMERS.forEach(clearTimeout); TIMERS = []; stopRecorder(); }
+function cleanup() {
+  stopAll(); TIMERS.forEach(clearTimeout); TIMERS = []; stopRecorder();
+  if (REC_KEY) { document.removeEventListener("keydown", REC_KEY); REC_KEY = null; }
+}
 /* every trial belongs to the section that is being built when it is added */
 function L(trial) {
   const k = BS, os = trial.on_start, of = trial.on_finish;
@@ -99,34 +102,43 @@ function timed(html, ms, onload) {
   return L({type: KB, stimulus: html, choices: "NO_KEYS", trial_duration: ms, on_load: () => { onload && onload(); }});
 }
 
-/* recording screen: left panel (sign or animation, looping), camera on the right,
- * countdown 3-2-1, then recording for recMs, then the trial ends by itself */
-function recScreen(title, left, recMs) {
+/* recording screen: left panel (sign or animation, looping), camera on the right.
+ * The participant starts the recording (a short countdown lets the hands come
+ * back into view) and stops it with the button or the space bar. */
+function recScreen(title, left, enableAfter) {
   return L({
     type: KB, choices: "NO_KEYS",
-    stimulus: () => `<div class="frame">${title}</div><div class="pair">${left ? `<figure>${left.html}</figure>` : ""}<figure>${CAM_BOX}</figure></div><p class="cd" id="cd">&nbsp;</p>`,
+    stimulus: () => `<div class="frame">${title}</div><div class="pair">${left ? `<figure>${left.html}</figure>` : ""}<figure>${CAM_BOX}</figure></div>` +
+      `<p class="cd" id="cd">&nbsp;</p><div><button class="jspsych-btn" id="recStart" disabled>Kaydı başlat</button><button class="jspsych-btn" id="recStop" hidden>Kaydı durdur</button></div>`,
     on_load: () => {
       if (left) left.start();
       attachCam();
-      const cd = $("cd");
-      [3, 2, 1].forEach((n, i) => later(() => { cd.textContent = n; }, i * 1000));
-      later(() => { cd.innerHTML = '<span class="dot"></span>Kayıt'; startRecorder(); }, 3000);
-      later(() => { stopRecorder(); cd.innerHTML = "&nbsp;"; jsPsych.finishTrial({recorded: true}); }, 3000 + recMs);
+      const cd = $("cd"), bStart = $("recStart"), bStop = $("recStop");
+      let recording = false;
+      later(() => { bStart.disabled = false; }, enableAfter || 0);
+      const stop = () => {
+        if (!recording) return;
+        recording = false; jsPsych.finishTrial({recorded: true});
+      };
+      const onKey = e => { if (e.code === "Space") { e.preventDefault(); stop(); } };
+      bStart.addEventListener("click", () => {
+        bStart.hidden = true;
+        [3, 2, 1].forEach((n, i) => later(() => { cd.textContent = n; }, i * 1000));
+        later(() => {
+          cd.innerHTML = '<span class="dot"></span>Kayıt'; startRecorder(); recording = true;
+          bStop.hidden = false; REC_KEY = onKey; document.addEventListener("keydown", onKey);
+        }, 3000);
+      });
+      bStop.addEventListener("click", stop);
     }
   });
 }
 const leftSign = clip => ({html: SIGN_CV("cvL"), start: () => playSign($("cvL"), clip, LOOP)});
 const leftAnim = evs => ({html: ANIM_CV("cvL"), start: () => playAnim($("cvL"), evs, LOOP)});
 
-/* watch an animation, then press the button when ready to sign it */
-function watchAnim(title, evs, btn) {
-  return L({type: BTN, stimulus: `<div class="frame">${title}</div><div class="stage" style="height:auto">${ANIM_CV("cvA")}</div>`,
-    choices: [btn || "Hazırım"], button_html: plainBtn, enable_button_after: 4800,
-    on_load: () => playAnim($("cvA"), evs, LOOP)});
-}
 /* sign an animation to the webcam (free production, production test) */
 function signAnim(evs) {
-  return [watchAnim("Bu animasyonu izleyin.", evs), recScreen("Şimdi animasyonu kameraya doğru işaretleyin.", leftAnim(evs), 6000)];
+  return [recScreen("Bu animasyonu kameraya doğru işaretleyin.", leftAnim(evs), 4800)];
 }
 
 /* choose among animation buttons; opts = [{key, evs}]; returns the chosen key through store */
@@ -175,7 +187,7 @@ const T = [];
 /* welcome and consent */
 BS = "welcome";
 T.push(instr(`<h3>Deneye hoş geldiniz</h3>
-  <p>Bu deneyde, Tobi adlı yuvarlak bir karakterin yaptığı değişiklikleri anlatan küçük bir işaret dili öğreneceksiniz. Deneyin bazı bölümlerinde işaretleri kameraya doğru yapmanız istenecek. Deneyin sonunda başka bir katılımcıyla birlikte kısa bir oyun oynayacaksınız.</p>
+  <p>Bu deneyde, Tobi adlı yuvarlak bir karakterin dünyasında kullanılan küçük bir işaret dili öğreneceksiniz. Bu dilde, Tobi’nin yaptığı değişiklikler için işaretler var. Deneyin bazı bölümlerinde işaretleri kameraya doğru yapmanız istenecek. Deneyin sonunda başka bir katılımcıyla birlikte kısa bir oyun oynayacaksınız.</p>
   <p><b>Lütfen deney boyunca not almayın.</b></p>
   <p>Devam etmek için “İleri” düğmesine tıklayın.</p>`));
 T.push(instr(`<h3>Bilgilendirilmiş onam</h3>
@@ -191,7 +203,7 @@ T.push(instr(`<h3>Bilgilendirilmiş onam</h3>
 /* camera */
 BS = "camera";
 T.push(L({type: BTN, stimulus: `<div class="instr"><h3>Kamera</h3>
-  <p>Deneyin bazı bölümlerinde işaretleri kameraya doğru yapacaksınız. Kayıt her seferinde geri sayımdan sonra kendiliğinden başlar ve kendiliğinden durur. Böylece iki eliniz de serbest kalır.</p>
+  <p>Deneyin bazı bölümlerinde işaretleri kameraya doğru yapacaksınız. Hazır olduğunuzda “Kaydı başlat” düğmesine tıklayın. Kısa bir geri sayımdan sonra kayıt başlar. İşareti bitirdiğinizde “Kaydı durdur” düğmesine tıklayın ya da boşluk tuşuna basın.</p>
   <p>Kamerayı açmak için aşağıdaki düğmeye tıklayın. Tarayıcınız izin isterse lütfen izin verin.</p></div>`,
   choices: ["Kamerayı aç"], button_html: plainBtn, on_finish: () => { openCam(); }}));
 T.push(L({type: BTN, stimulus: `<div class="instr"><p>Kendinizi aşağıda görüyor olmalısınız. Lütfen yüzünüzün, ellerinizin ve kollarınızın görüntüde olduğundan emin olun.</p></div><div class="pair"><figure>${CAM_BOX}</figure></div>`,
@@ -212,7 +224,7 @@ shuffle(EV).forEach(e => {
       play($("cvS"), (c, w, h, t) => drawSigner(c, w, h, tr, t), 3.9, {loop: true, pause: 0.6});
       play($("cvA"), (c, w, h, t) => drawEvents(c, w, h, [{ev: e, t0: 0.3, dur: 2}, {ev: e, t0: 2.9, dur: 1}], t), 4.1, {loop: true, pause: 0.6});
     }}));
-  T.push(recScreen("Şimdi işareti siz yapın.", leftSign({type: "single", X: e, dur: 2.0}), 3000));
+  T.push(recScreen("Şimdi işareti siz yapın.", leftSign({type: "single", X: e, dur: 2.0})));
 });
 
 /* identification with feedback: one block, each sign once */
@@ -238,7 +250,7 @@ shuffle(EV).forEach(e => {
 BS = "free";
 T.push(instr(`<h3>Animasyonları işaretleme</h3>
   <p>Şimdi Tobi’nin iki değişiklik yaptığı animasyonlar göreceksiniz. Her animasyonu, öğrendiğiniz işaretlerle kameraya doğru anlatın. İşaretleri bilen biri, sizin kaydınızı izleyerek bu animasyonu benzer animasyonlar arasından seçebilmeli.</p>
-  <p>Animasyonu izledikten sonra “Hazırım” düğmesine tıklayın. Geri sayımdan sonra kayıt başlayacak ve kendiliğinden duracak.</p>`));
+  <p>Animasyonu izledikten sonra kaydı başlatın. Bitirdiğinizde kaydı durdurun.</p>`));
 {
   const prs = shuffle(TRAINED.concat(UNTRAINED));
   shuffle(["DUR", "SEQ"]).forEach((tm, i) => { const [P, Q] = orient(prs[i]); T.push(...signAnim(anim2(P, Q, tm))); });
@@ -266,7 +278,7 @@ T.push(instr(`<h3>Mesajları öğrenme</h3>
     T.push(L({type: BTN, stimulus: `<div class="pair"><figure>${SIGN_CV("cvS")}</figure><figure>${ANIM_CV("cvA")}</figure></div>`,
       choices: ["İleri"], button_html: plainBtn, enable_button_after: 5000,
       on_load: () => { playSign($("cvS"), clip, LOOP); playAnim($("cvA"), evs, LOOP); }}));
-    T.push(recScreen("Şimdi mesajı siz yapın.", leftSign(clip), 4500));
+    T.push(recScreen("Şimdi mesajı siz yapın.", leftSign(clip)));
   });
   shuffle(["HOLD", "LIN"]).forEach((form, i) => { const [P, Q] = orient(prs[2 + i]); T.push(...chooseTiming(form, P, Q, true)); });
 }
@@ -284,7 +296,7 @@ T.push(instr(`<h3>Mesajları anlama</h3>
 /* phase 1: production test */
 BS = "production";
 T.push(instr(`<h3>Animasyonları işaretleme</h3>
-  <p>Şimdi yine animasyonları kameraya doğru işaretleyeceksiniz. Animasyonu izledikten sonra “Hazırım” düğmesine tıklayın.</p>`));
+  <p>Şimdi yine animasyonları kameraya doğru işaretleyeceksiniz. Animasyonu izledikten sonra kaydı başlatın. Bitirdiğinizde kaydı durdurun.</p>`));
 {
   const tms = shuffle(["DUR", "SEQ"]);
   [rnd(TRAINED), rnd(UNTRAINED)].forEach((pr, i) => { const [P, Q] = orient(pr); T.push(...signAnim(anim2(P, Q, tms[i]))); });
@@ -333,8 +345,7 @@ function gameFeedback(title, opts, chosenKey) {
     const [P, Q] = orient(prs[0]), tm = rnd(["DUR", "SEQ"]);
     const opts = gameOptions(P, Q, tm, false);
     T.push(timed('<p class="wait">Tur 1. Siz anlatıcısınız.</p>', 2000));
-    T.push(watchAnim("Bu animasyonu eşinize anlatın.", anim2(P, Q, tm)));
-    T.push(recScreen("Şimdi animasyonu kameraya doğru işaretleyin.", leftAnim(anim2(P, Q, tm)), 6000));
+    T.push(recScreen("Bu animasyonu eşinize anlatın.", leftAnim(anim2(P, Q, tm)), 4800));
     T.push(timed('<p class="wait">Eşiniz seçim yapıyor…</p>', 3000));
     T.push(gameFeedback("Eşiniz bir animasyon seçti.", opts, () => "target"));
   }
