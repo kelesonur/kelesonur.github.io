@@ -294,7 +294,7 @@ T.push(L({type: BTN, stimulus: `<div class="instr"><p>Kendinizi aşağıda gör�
 /* sign learning: every sign, long and short version, then copy */
 BS = "learning";
 T.push(instr(`<h3>İşaretleri öğrenme</h3>
-  <p>Tobi dört farklı değişiklik yapabiliyor. Her değişikliğin bir işareti var. Şimdi her işareti, anlattığı değişiklikle birlikte göreceksiniz. Her değişikliği iki hâliyle göreceksiniz: önce uzun süren hâlini, sonra kısa süren hâlini.</p>
+  <p>Tobi dört farklı değişiklik yapabiliyor. Her değişikliğin bir işareti var. Şimdi her işareti, anlattığı değişiklikle birlikte göreceksiniz. Her değişikliği iki kez göreceksiniz.</p>
   <p>Her işareti gördükten sonra, işareti kameraya doğru siz de yapacaksınız.</p>
   <p><b>İşaretleri olabildiğince iyi öğrenmeye çalışın.</b> Deneyin geri kalanında bu işaretleri tanımanız gerekecek.</p>`));
 shuffle(EV).forEach(e => {

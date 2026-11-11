@@ -294,7 +294,7 @@ T.push(L({type: BTN, stimulus: `<div class="instr"><p>You should see yourself be
 /* sign learning: every sign, long and short version, then copy */
 BS = "learning";
 T.push(instr(`<h3>Learning the signs</h3>
-  <p>Tobi can make four different changes. Each change has a sign. You will now see each sign together with the change it names. You will see each change in two versions: first a long one, then a short one.</p>
+  <p>Tobi can make four different changes. Each change has a sign. You will now see each sign together with the change it names. You will see each change twice.</p>
   <p>After you see each sign, you will make the sign yourself to the camera.</p>
   <p><b>Try to learn the signs as well as you can.</b> You will need to recognize them in the rest of the experiment.</p>`));
 shuffle(EV).forEach(e => {
