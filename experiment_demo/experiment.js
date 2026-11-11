@@ -1,5 +1,5 @@
 /* Demo session: learning, communication and simultaneity in a small sign system.
- * Recorded clips (clips/) where available, otherwise the drawn signer (draw.js). Webcam recordings stay in the browser
+ * Signs are shown by the drawn signer (draw.js). Webcam recordings stay in the browser
  * and are not uploaded. */
 "use strict";
 
@@ -28,14 +28,10 @@ const clip2 = (form, P, Q) => ({type: form === "HOLD" ? "hold" : "lin", P, Q});
 
 /* ---------------- drawing on the page ---------------- */
 /* ---------------- recorded sign videos ----------------
- * Clips recorded so far; any other combination falls back to the drawn signer.
+ * Optional recorded clips; none are used now, so every sign is shown by the drawn signer.
  * Keys use handshapes: single_<hs>, hold_<held>_<other>, lin_<first>_<second>. */
 const CLIP_DIR = "../experiment_demo/clips/";
-const VIDS = {
-  single_index: 3.3, single_flat: 3.33, single_fist: 3.27, single_claw: 3.3,
-  hold_index_flat: 7.97, hold_index_fist: 8.0, hold_index_claw: 7.97,
-  lin_index_flat: 7.9, lin_index_fist: 7.93, lin_index_claw: 7.97
-};
+const VIDS = {};
 function vidKey(clip) {
   if (!clip) return null;
   const k = clip.type === "single" ? `single_${MAP[clip.X]}` : `${clip.type}_${MAP[clip.P]}_${MAP[clip.Q]}`;
