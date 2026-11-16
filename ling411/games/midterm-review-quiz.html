@@ -158,46 +158,116 @@ header.top h1 { font-size: clamp(1.3rem, 2.4vw, 1.7rem); }
 
 <script>
 const QUESTIONS = [
-  { q: 'A native speaker of English rates <i>The horse raced past the barn fell</i> as 2 on a 1–7 scale. Which statement is most accurate?',
-    a: ['The sentence is ungrammatical in English.',
-        'The rating is a reported perception of acceptability, which can reflect processing difficulty as well as grammar.',
-        'The rating is a direct measure of the speaker’s grammar.',
-        'The rating cannot be used as data because it comes from one speaker.'],
-    c: 1, e: 'Acceptability is a speaker’s response; grammaticality is a theoretical property. This garden-path sentence is grammatical but hard to process.' },
-  { q: 'Participants see two sentences at a time and choose the one that sounds better. What is the main limitation of this task?',
-    a: ['It cannot detect a difference between two conditions.',
-        'Participants may not feel that the steps on the scale are equal.',
-        'It says little about how large the difference is or where the sentences fall on the acceptability scale.',
-        'Participants tend to repeat the same whole numbers.'],
-    c: 2, e: 'Forced choice has good power for two conditions but tells us little about size. Unequal steps is a Likert problem; repeating whole numbers is a magnitude estimation problem.' },
-  { q: '<i>Do Turkish–Kurdish bilingual children and Turkish monolingual children differ in the length of the stories they tell in a picture-book task?</i> This question calls for:',
-    a: ['correlational research', 'causal-comparative (ex post facto) research', 'experimental research', 'quasi-experimental research'],
-    c: 1, e: 'The groups already differ (bilingual vs. monolingual). The researcher does not manipulate the independent variable.' },
-  { q: 'A “Turkish morphological awareness test” has 20 items, and all of them test the plural suffix <i>-lAr</i>. Its weakest property is its:',
-    a: ['external validity', 'test–retest reliability', 'internal validity', 'content validity'],
-    c: 3, e: 'The items do not cover a representative sample of the domain (morphology).' },
-  { q: 'Two annotators mark 40 possible intonational breaks in a recording. They agree on 36 of them. The interrater reliability is:',
-    a: ['36%, so the data should be re-scored', '40%, so the data should be re-scored', '90%, so the data were scored reliably', '111%, so there is a calculation error'],
-    c: 2, e: '36 / 40 × 100 = 90%.' },
-  { q: 'Under the U.S. definition of a “human subject”, which of these is <b>not</b> a human subject?',
-    a: ['a speaker you interview and record', 'an online participant who gives acceptability ratings',
-        'a poet who died in 1900, whose published poems you analyse', 'a living person whose identifiable private messages you collect'],
-    c: 2, e: 'A human subject is a living individual from whom data are obtained through interaction, or about whom identifiable private information is obtained.' },
-  { q: 'Members of a Laz-speaking community help choose the research questions, design the materials, and co-author the papers. This is:',
-    a: ['research <i>with</i> the community (empowering research)', 'research <i>on</i> the community (positivist research)',
-        'research <i>on and for</i> the community (advocacy research)', 'using speakers as informants'],
-    c: 0, e: 'Knowledge is co-created and the research agenda is negotiated with the community.' },
-  { q: 'A study concludes that a new training method improves vowel discrimination. In reality, the method has no effect. The researcher has made:',
-    a: ['a Type I error', 'a Type II error', 'a correct decision', 'a power error'],
-    c: 0, e: 'Rejecting a true H₀ is a Type I error (a false positive).' },
-  { q: 'All else being equal, which change <b>increases</b> the power of a hypothesis test?',
-    a: ['lowering α from .05 to .01', 'increasing the sample size from 20 to 40',
-        'using a two-tailed test instead of a one-tailed test', 'more variability in the scores'],
-    c: 1, e: 'A larger n gives a smaller standard error. The other three changes all reduce power.' },
-  { q: 'Lexical decision times in a population are positively skewed, with μ = 600 ms and σ = 120 ms. For samples of n = 36, the distribution of sample means is:',
-    a: ['positively skewed, with standard error 120', 'positively skewed, with standard error 20',
-        'about normal, with standard error 3.33', 'about normal, with standard error 20'],
-    c: 3, e: 'Central limit theorem: with n ≥ 30 the distribution of M is about normal. σ<sub>M</sub> = 120 / √36 = 20.' }
+ {
+  "q": "A speaker rates ‘The horse raced past the barn fell’ as 2/7. What does this rating show?",
+  "a": [
+   "The sentence is ungrammatical",
+   "Perceived acceptability (grammar + processing)",
+   "A direct measure of the speaker's grammar",
+   "Nothing: it comes from one speaker"
+  ],
+  "c": 1,
+  "e": "Acceptability is a speaker’s response; grammaticality is a theoretical property. This garden-path sentence is grammatical but hard to process."
+ },
+ {
+  "q": "Task: pick the better of two sentences (forced choice). What is its main limitation?",
+  "a": [
+   "Can't detect a difference between 2 conditions",
+   "Scale steps may not feel equal",
+   "Says little about the size of the difference",
+   "People reuse the same whole numbers"
+  ],
+  "c": 2,
+  "e": "Forced choice has good power for two conditions but tells us little about size. Unequal steps is a Likert problem; reusing whole numbers is a magnitude estimation problem."
+ },
+ {
+  "q": "Do bilingual and monolingual children differ in story length? This question calls for:",
+  "a": [
+   "Correlational research",
+   "Causal-comparative research",
+   "Experimental research",
+   "Quasi-experimental research"
+  ],
+  "c": 1,
+  "e": "The groups already differ (bilingual vs. monolingual). The researcher does not manipulate the independent variable."
+ },
+ {
+  "q": "A morphological awareness test has 20 items, all on plural -lAr. Its weakest property?",
+  "a": [
+   "External validity",
+   "Test-retest reliability",
+   "Internal validity",
+   "Content validity"
+  ],
+  "c": 3,
+  "e": "The items do not cover a representative sample of the domain (morphology)."
+ },
+ {
+  "q": "2 annotators mark 40 intonational breaks and agree on 36. Interrater reliability?",
+  "a": [
+   "36%: re-score the data",
+   "40%: re-score the data",
+   "90%: reliably scored",
+   "111%: calculation error"
+  ],
+  "c": 2,
+  "e": "36 / 40 × 100 = 90%."
+ },
+ {
+  "q": "Which is NOT a human subject under the U.S. definition?",
+  "a": [
+   "A speaker you interview and record",
+   "An online participant rating sentences",
+   "A poet who died in 1900 (published poems)",
+   "A living person whose private messages you collect"
+  ],
+  "c": 2,
+  "e": "A human subject is a living individual from whom data are obtained through interaction, or about whom identifiable private information is obtained."
+ },
+ {
+  "q": "Laz speakers help choose the RQs, design materials and co-author papers. This is:",
+  "a": [
+   "Research WITH the community",
+   "Research ON the community",
+   "Research ON and FOR the community",
+   "Using speakers as informants"
+  ],
+  "c": 0,
+  "e": "Knowledge is co-created and the agenda is negotiated with the community (empowering research)."
+ },
+ {
+  "q": "A study says a training works, but in reality it has no effect. This is a:",
+  "a": [
+   "Type I error",
+   "Type II error",
+   "Correct decision",
+   "Power error"
+  ],
+  "c": 0,
+  "e": "Rejecting a true H₀ is a Type I error (a false positive)."
+ },
+ {
+  "q": "All else being equal, which change INCREASES statistical power?",
+  "a": [
+   "Alpha from .05 to .01",
+   "Sample size from 20 to 40",
+   "Two-tailed instead of one-tailed",
+   "More variability in the scores"
+  ],
+  "c": 1,
+  "e": "A larger n gives a smaller standard error. The other three changes all reduce power."
+ },
+ {
+  "q": "Skewed RT population: mean 600 ms, SD 120 ms. Means of samples with n = 36 are:",
+  "a": [
+   "Skewed, standard error 120",
+   "Skewed, standard error 20",
+   "About normal, standard error 3.33",
+   "About normal, standard error 20"
+  ],
+  "c": 3,
+  "e": "Central limit theorem: with n ≥ 30 the distribution of M is about normal. σ<sub>M</sub> = 120 / √36 = 20."
+ }
 ];
 
 const SHAPES = [
