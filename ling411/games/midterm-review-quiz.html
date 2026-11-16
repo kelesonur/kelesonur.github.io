@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LING 411 Midterm Review Quiz</title>
+<link rel="icon" type="image/svg+xml" href="../stats.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* A projectable quiz game in the style of Kahoot. Class mode: teams answer by holding up a colour/shape,
+   the host reveals and marks which teams were right. Solo mode: a student clicks the answers. */
+:root {
+  --bg: #F4F7F9; --surface: #FFFFFF; --ink: #18212C; --muted: #566273; --line: #D3DBE2;
+  --accent: #2B59C3; --accent-ink: #FFFFFF; --good: #237A5B; --bad: #B3362F;
+  --a: #E21B3C; --b: #1368CE; --c: #C88A00; --d: #26890C;
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root {
+  --bg: #11161C; --surface: #19212A; --ink: #E5EAF0; --muted: #9AA6B4; --line: #2C3743;
+  --accent: #82A6F4; --accent-ink: #0E1520; --good: #6FD1A8; --bad: #F08A80; color-scheme: dark; } }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 1.15rem; line-height: 1.45; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 18px 22px 40px; min-height: 100vh; display: flex; flex-direction: column; gap: 18px; }
+h1, h2, h3 { font-family: var(--f-display); margin: 0; line-height: 1.15; text-wrap: balance; }
+p { margin: 0; }
+.eyebrow { font-family: var(--f-mono); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.muted { color: var(--muted); }
+button { font: inherit; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+header.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+header.top .title { display: flex; flex-direction: column; gap: 2px; }
+header.top h1 { font-size: clamp(1.3rem, 2.4vw, 1.7rem); }
+.tools { display: flex; gap: 8px; }
+.icon-btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-weight: 600; font-size: .95rem; }
+
+.btn { font-weight: 700; padding: 11px 22px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; font-size: 1.05rem; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn:disabled { opacity: .45; cursor: default; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: clamp(18px, 3vw, 32px); }
+
+/* ---------- setup ---------- */
+.setup { display: grid; gap: 22px; max-width: 760px; margin: 4vh auto 0; width: 100%; }
+.setup h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.mode { text-align: left; border: 2px solid var(--line); border-radius: 12px; padding: 14px 16px; background: var(--bg); color: var(--ink); cursor: pointer; display: grid; gap: 4px; }
+.mode[aria-pressed="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+.mode strong { font-family: var(--f-display); font-size: 1.2rem; }
+.teams { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+.team-row { display: flex; gap: 6px; }
+.team-row input { flex: 1; min-width: 0; font: inherit; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+.team-row button { border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 8px; width: 38px; cursor: pointer; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.row label { font-weight: 600; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; background: var(--surface); color: var(--ink); padding: 7px 14px; cursor: pointer; font-weight: 600; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.howto { font-size: 1rem; color: var(--muted); }
+
+/* ---------- question ---------- */
+.qhead { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.progress { font-family: var(--f-mono); font-weight: 600; color: var(--muted); white-space: nowrap; }
+.timer { position: relative; width: 84px; height: 84px; flex: none; }
+.timer svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.timer circle { fill: none; stroke-width: 9; }
+.timer .track { stroke: var(--line); }
+.timer .bar { stroke: var(--accent); stroke-linecap: round; transition: stroke .3s; }
+.timer.low .bar { stroke: var(--a); }
+.timer .num { position: absolute; inset: 0; display: grid; place-items: center; font: 800 1.9rem var(--f-display); }
+.question { font-family: var(--f-display); font-weight: 700; font-size: clamp(1.5rem, 3.3vw, 2.4rem); line-height: 1.25; text-align: center; padding: clamp(18px, 3vw, 34px); text-wrap: pretty; }
+.question i { font-weight: 500; }
+.answers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; align-content: start; }
+.ans { position: relative; display: flex; align-items: center; gap: 16px; padding: 18px 20px; min-height: 104px; border-radius: 12px; border: 0; color: #fff; text-align: left; font-weight: 600; font-size: clamp(1.05rem, 2vw, 1.4rem); line-height: 1.3; box-shadow: inset 0 -5px 0 rgba(0,0,0,.18); transition: opacity .3s, transform .3s, filter .3s; }
+.ans .shape { width: 44px; height: 44px; flex: none; }
+.ans .letter { font: 800 1rem var(--f-mono); opacity: .85; flex: none; }
+.ans[data-k="0"] { background: var(--a); } .ans[data-k="1"] { background: var(--b); }
+.ans[data-k="2"] { background: var(--c); } .ans[data-k="3"] { background: var(--d); }
+.solo .ans { cursor: pointer; } .solo .ans:hover { filter: brightness(1.08); }
+.answers.revealed .ans:not(.correct) { opacity: .28; filter: grayscale(.6); }
+.answers.revealed .ans.correct { transform: scale(1.02); }
+.ans .tick { margin-left: auto; font-size: 2rem; display: none; }
+.answers.revealed .ans.correct .tick { display: block; }
+.ans.picked { outline: 5px solid var(--ink); outline-offset: 3px; }
+
+.reveal-panel { display: grid; gap: 12px; padding: 16px 22px; }
+.is-revealed .question { font-size: clamp(1.05rem, 2vw, 1.45rem); padding: 12px 20px; }
+.is-revealed .ans { min-height: 56px; padding: 8px 16px; font-size: clamp(.95rem, 1.6vw, 1.1rem); }
+.is-revealed .ans .shape { width: 28px; height: 28px; }
+.is-revealed .ans .tick { font-size: 1.5rem; }
+.explain { font-size: 1.15rem; border-left: 5px solid var(--good); padding: 8px 14px; background: color-mix(in srgb, var(--good) 10%, var(--surface)); border-radius: 6px; }
+.verdict { font: 800 1.5rem var(--f-display); }
+.verdict.ok { color: var(--good); } .verdict.no { color: var(--bad); }
+.mark-label { font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 2px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 8px 16px; font-weight: 700; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--good); border-color: var(--good); color: #fff; }
+.actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.kbd { font-family: var(--f-mono); font-size: .85rem; color: var(--muted); }
+
+/* ---------- scoreboard ---------- */
+.board { display: grid; gap: 10px; max-width: 900px; width: 100%; margin: 0 auto; }
+.board h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); text-align: center; margin-bottom: 8px; }
+.brow { display: grid; grid-template-columns: 2.4rem minmax(120px, 220px) 1fr auto; align-items: center; gap: 12px; }
+.brow .rank { font: 800 1.4rem var(--f-display); color: var(--muted); text-align: right; }
+.brow .name { font-weight: 700; font-size: 1.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.brow .track { height: 40px; background: var(--line); border-radius: 8px; overflow: hidden; }
+.brow .fill { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 8px; transition: width .9s cubic-bezier(.2,.8,.2,1); }
+.brow .pts { font: 800 1.35rem var(--f-mono); min-width: 6.5ch; text-align: right; }
+.brow .delta { font: 600 .95rem var(--f-mono); color: var(--good); }
+.brow .streak { font-size: .9rem; color: var(--c); font-weight: 700; }
+
+/* ---------- podium ---------- */
+.podium { display: flex; align-items: flex-end; justify-content: center; gap: 14px; margin: 3vh 0 10px; min-height: 360px; }
+.step { width: min(28vw, 240px); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.step .who { font: 800 clamp(1.1rem, 2.4vw, 1.6rem) var(--f-display); text-align: center; }
+.step .pts { font: 600 1.1rem var(--f-mono); color: var(--muted); }
+.step .block { width: 100%; border-radius: 12px 12px 0 0; display: grid; place-items: start center; padding-top: 12px; font: 800 3rem var(--f-display); color: #fff; transform-origin: bottom; animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
+.step.p1 .block { height: 240px; background: var(--c); animation-delay: 1.2s; }
+.step.p2 .block { height: 170px; background: var(--b); animation-delay: .6s; }
+.step.p3 .block { height: 120px; background: var(--a); }
+@keyframes rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.review { display: grid; gap: 8px; }
+.review details { border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; background: var(--surface); }
+.review summary { cursor: pointer; font-weight: 600; }
+.review p { margin-top: 6px; }
+
+@media (max-width: 720px) {
+  .answers, .modes { grid-template-columns: 1fr; }
+  .ans { min-height: 70px; }
+  .progress { font-size: .85rem; }
+  .brow { grid-template-columns: 1.8rem 1fr auto; }
+  .brow .track { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="title">
+      <span class="eyebrow">LING 411 · Linguistic Methodology</span>
+      <h1>Midterm Review Quiz</h1>
+    </div>
+    <div class="tools">
+      <button class="icon-btn" id="soundBtn" type="button" aria-pressed="true">Sound: on</button>
+      <button class="icon-btn" id="fsBtn" type="button">Full screen</button>
+    </div>
+  </header>
+  <main id="app"></main>
+</div>
+
+<script>
+const QUESTIONS = [
+  { q: 'A native speaker of English rates <i>The horse raced past the barn fell</i> as 2 on a 1–7 scale. Which statement is most accurate?',
+    a: ['The sentence is ungrammatical in English.',
+        'The rating is a reported perception of acceptability, which can reflect processing difficulty as well as grammar.',
+        'The rating is a direct measure of the speaker’s grammar.',
+        'The rating cannot be used as data because it comes from one speaker.'],
+    c: 1, e: 'Acceptability is a speaker’s response; grammaticality is a theoretical property. This garden-path sentence is grammatical but hard to process.' },
+  { q: 'Participants see two sentences at a time and choose the one that sounds better. What is the main limitation of this task?',
+    a: ['It cannot detect a difference between two conditions.',
+        'Participants may not feel that the steps on the scale are equal.',
+        'It says little about how large the difference is or where the sentences fall on the acceptability scale.',
+        'Participants tend to repeat the same whole numbers.'],
+    c: 2, e: 'Forced choice has good power for two conditions but tells us little about size. Unequal steps is a Likert problem; repeating whole numbers is a magnitude estimation problem.' },
+  { q: '<i>Do Turkish–Kurdish bilingual children and Turkish monolingual children differ in the length of the stories they tell in a picture-book task?</i> This question calls for:',
+    a: ['correlational research', 'causal-comparative (ex post facto) research', 'experimental research', 'quasi-experimental research'],
+    c: 1, e: 'The groups already differ (bilingual vs. monolingual). The researcher does not manipulate the independent variable.' },
+  { q: 'A “Turkish morphological awareness test” has 20 items, and all of them test the plural suffix <i>-lAr</i>. Its weakest property is its:',
+    a: ['external validity', 'test–retest reliability', 'internal validity', 'content validity'],
+    c: 3, e: 'The items do not cover a representative sample of the domain (morphology).' },
+  { q: 'Two annotators mark 40 possible intonational breaks in a recording. They agree on 36 of them. The interrater reliability is:',
+    a: ['36%, so the data should be re-scored', '40%, so the data should be re-scored', '90%, so the data were scored reliably', '111%, so there is a calculation error'],
+    c: 2, e: '36 / 40 × 100 = 90%.' },
+  { q: 'Under the U.S. definition of a “human subject”, which of these is <b>not</b> a human subject?',
+    a: ['a speaker you interview and record', 'an online participant who gives acceptability ratings',
+        'a poet who died in 1900, whose published poems you analyse', 'a living person whose identifiable private messages you collect'],
+    c: 2, e: 'A human subject is a living individual from whom data are obtained through interaction, or about whom identifiable private information is obtained.' },
+  { q: 'Members of a Laz-speaking community help choose the research questions, design the materials, and co-author the papers. This is:',
+    a: ['research <i>with</i> the community (empowering research)', 'research <i>on</i> the community (positivist research)',
+        'research <i>on and for</i> the community (advocacy research)', 'using speakers as informants'],
+    c: 0, e: 'Knowledge is co-created and the research agenda is negotiated with the community.' },
+  { q: 'A study concludes that a new training method improves vowel discrimination. In reality, the method has no effect. The researcher has made:',
+    a: ['a Type I error', 'a Type II error', 'a correct decision', 'a power error'],
+    c: 0, e: 'Rejecting a true H₀ is a Type I error (a false positive).' },
+  { q: 'All else being equal, which change <b>increases</b> the power of a hypothesis test?',
+    a: ['lowering α from .05 to .01', 'increasing the sample size from 20 to 40',
+        'using a two-tailed test instead of a one-tailed test', 'more variability in the scores'],
+    c: 1, e: 'A larger n gives a smaller standard error. The other three changes all reduce power.' },
+  { q: 'Lexical decision times in a population are positively skewed, with μ = 600 ms and σ = 120 ms. For samples of n = 36, the distribution of sample means is:',
+    a: ['positively skewed, with standard error 120', 'positively skewed, with standard error 20',
+        'about normal, with standard error 3.33', 'about normal, with standard error 20'],
+    c: 3, e: 'Central limit theorem: with n ≥ 30 the distribution of M is about normal. σ<sub>M</sub> = 120 / √36 = 20.' }
+];
+
+const SHAPES = [
+  '<svg class="shape" viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,4 37,35 3,35" fill="#fff"/></svg>',
+  '<svg class="shape" viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,2 38,20 20,38 2,20" fill="#fff"/></svg>',
+  '<svg class="shape" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="#fff"/></svg>',
+  '<svg class="shape" viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="4" width="32" height="32" rx="2" fill="#fff"/></svg>'
+];
+const LETTERS = ['A', 'B', 'C', 'D'];
+const SHAPE_NAMES = ['red triangle', 'blue diamond', 'yellow circle', 'green square'];
+const STORE = 'ling411-midterm-quiz-v1';
+
+let S = defaultState();
+let timerId = null, tLeft = 0, tStart = 0;
+
+function defaultState() {
+  return { phase: 'setup', mode: 'class', limit: 30, q: 0,
+           teams: ['Team 1', 'Team 2', 'Team 3', 'Team 4'].map(n => ({ name: n, score: 0, streak: 0, delta: 0 })),
+           marked: [], picked: null, solo: { score: 0, right: 0 }, sound: true };
+}
+function save() { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {} }
+function load() { try { const v = JSON.parse(localStorage.getItem(STORE)); return v && v.phase && v.phase !== 'setup' ? v : null; } catch (e) { return null; } }
+function clearSave() { try { localStorage.removeItem(STORE); } catch (e) {} }
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+const app = document.getElementById('app');
+
+/* ---------- sound ---------- */
+let actx = null;
+function beep(freq, dur, type = 'sine', vol = .08) {
+  if (!S.sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = type; o.frequency.value = freq; g.gain.value = vol;
+    g.gain.exponentialRampToValueAtTime(.0001, actx.currentTime + dur);
+    o.connect(g).connect(actx.destination); o.start(); o.stop(actx.currentTime + dur);
+  } catch (e) {}
+}
+const chime = ok => ok ? [523, 659, 784].forEach((f, i) => setTimeout(() => beep(f, .25, 'triangle', .1), i * 110))
+                       : [330, 262].forEach((f, i) => setTimeout(() => beep(f, .3, 'sawtooth', .05), i * 160));
+
+/* ---------- setup ---------- */
+function renderSetup() {
+  const saved = load();
+  app.innerHTML = `
+  <section class="setup">
+    <div class="card" style="display:grid;gap:18px">
+      <h2>Ready to review?</h2>
+      ${saved ? `<div class="row"><button class="btn primary" id="resume">Resume saved game (question ${saved.q + 1})</button><span class="muted">or set up a new game below</span></div>` : ''}
+      <div class="modes">
+        <button class="mode" data-mode="class" aria-pressed="${S.mode === 'class'}"><strong>Class game</strong><span class="muted">Teams answer by holding up a colour or shape. The host reveals and marks the teams that got it right.</span></button>
+        <button class="mode" data-mode="solo" aria-pressed="${S.mode === 'solo'}"><strong>Solo practice</strong><span class="muted">Click your answer. Faster correct answers earn more points.</span></button>
+      </div>
+      ${S.mode === 'class' ? `
+      <div style="display:grid;gap:8px">
+        <span class="row"><label>Teams</label><button class="icon-btn" id="addTeam" ${S.teams.length >= 10 ? 'disabled' : ''}>+ Add team</button></span>
+        <div class="teams">${S.teams.map((t, i) => `
+          <div class="team-row"><input value="${esc(t.name)}" data-i="${i}" aria-label="Team ${i + 1} name" maxlength="24">
+          <button data-del="${i}" aria-label="Remove ${esc(t.name)}" ${S.teams.length <= 2 ? 'disabled' : ''}>✕</button></div>`).join('')}
+        </div>
+      </div>` : ''}
+      <div class="row"><label>Time per question</label>
+        <span class="seg">${[20, 30, 45, 60].map(s => `<button data-lim="${s}" aria-pressed="${S.limit === s}">${s} s</button>`).join('')}</span>
+      </div>
+      <p class="howto">${S.mode === 'class'
+        ? 'Each team agrees on one answer and holds up its colour or shape (<b>▲ red, ◆ blue, ● yellow, ■ green</b>) when time is up. Correct answers earn 1000 points, plus a streak bonus of 100 for each correct answer in a row.'
+        : 'Keys <b>1–4</b> also choose an answer. <b>Space</b> moves on.'}</p>
+      <div><button class="btn primary" id="start">Start (${QUESTIONS.length} questions)</button></div>
+    </div>
+  </section>`;
+  app.querySelectorAll('.mode').forEach(b => b.onclick = () => { S.mode = b.dataset.mode; renderSetup(); });
+  app.querySelectorAll('[data-lim]').forEach(b => b.onclick = () => { S.limit = +b.dataset.lim; renderSetup(); });
+  app.querySelectorAll('.team-row input').forEach(inp => inp.oninput = () => { S.teams[+inp.dataset.i].name = inp.value; });
+  app.querySelectorAll('[data-del]').forEach(b => b.onclick = () => { S.teams.splice(+b.dataset.del, 1); renderSetup(); });
+  const add = document.getElementById('addTeam');
+  if (add) add.onclick = () => { S.teams.push({ name: 'Team ' + (S.teams.length + 1), score: 0, streak: 0, delta: 0 }); renderSetup(); };
+  if (saved) document.getElementById('resume').onclick = () => { S = saved; route(); };
+  document.getElementById('start').onclick = () => {
+    S.teams.forEach((t, i) => { t.name = t.name.trim() || 'Team ' + (i + 1); t.score = 0; t.streak = 0; t.delta = 0; });
+    S.q = 0; S.solo = { score: 0, right: 0 }; S.phase = 'question'; route();
+  };
+}
+
+/* ---------- question ---------- */
+function renderQuestion() {
+  const Q = QUESTIONS[S.q], revealed = S.phase === 'reveal';
+  app.innerHTML = `
+  <section class="${S.mode === 'solo' ? 'solo' : ''} ${revealed ? 'is-revealed' : ''}" style="display:flex;flex-direction:column;gap:16px;flex:1">
+    <div class="qhead" ${revealed ? 'style="display:none"' : ''}>
+      <span class="progress">Question ${S.q + 1} / ${QUESTIONS.length}</span>
+      ${revealed ? '' : `<div class="timer" id="timer"><svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="44"/><circle class="bar" id="tbar" cx="50" cy="50" r="44" stroke-dasharray="276.5" stroke-dashoffset="0"/></svg><span class="num" id="tnum">${S.limit}</span></div>`}
+      <span class="progress">${S.mode === 'solo' ? `Score ${S.solo.score}` : ''}</span>
+    </div>
+    <div class="card question">${Q.q}</div>
+    <div class="answers ${revealed ? 'revealed' : ''}" id="answers">
+      ${Q.a.map((t, k) => `<button class="ans ${k === Q.c ? 'correct' : ''} ${S.picked === k ? 'picked' : ''}" data-k="${k}" ${S.mode === 'class' || revealed ? 'tabindex="-1"' : ''} aria-label="${LETTERS[k]}, ${SHAPE_NAMES[k]}: ${esc(t.replace(/<[^>]+>/g, ''))}">
+        ${SHAPES[k]}<span class="letter">${LETTERS[k]}</span><span>${t}</span><span class="tick" aria-hidden="true">✓</span></button>`).join('')}
+    </div>
+    ${revealed ? revealPanel(Q) : `
+    <div class="actions"><span class="kbd">${S.mode === 'class' ? 'Space: reveal now' : '1–4: answer'}</span>
+      ${S.mode === 'class' ? '<button class="btn primary" id="revealBtn">Reveal answer</button>' : ''}</div>`}
+  </section>`;
+  if (!revealed) {
+    if (S.mode === 'solo') app.querySelectorAll('.ans').forEach(b => b.onclick = () => pick(+b.dataset.k));
+    else document.getElementById('revealBtn').onclick = reveal;
+    startTimer();
+  } else bindReveal();
+}
+
+function revealPanel(Q) {
+  let top = '';
+  if (S.mode === 'solo') {
+    const ok = S.picked === Q.c;
+    top = `<div class="verdict ${ok ? 'ok' : 'no'}">${S.picked === null ? 'Time is up!' : ok ? `Correct! +${S.lastGain}` : 'Not quite.'}</div>`;
+  } else {
+    top = `<div style="display:grid;gap:8px"><span class="mark-label">Which teams chose ${LETTERS[Q.c]} (${SHAPE_NAMES[Q.c]})? Click to mark them.</span>
+      <div class="chips">${S.teams.map((t, i) => `<button class="chip" data-t="${i}" aria-pressed="${S.marked.includes(i)}">${esc(t.name)}</button>`).join('')}</div></div>`;
+  }
+  return `<div class="card reveal-panel">${top}<p class="explain">${Q.e}</p>
+    <div class="actions"><span class="kbd">Space: continue</span><button class="btn primary" id="nextBtn">${S.mode === 'class' ? 'Show scores' : S.q + 1 < QUESTIONS.length ? 'Next question' : 'See results'}</button></div></div>`;
+}
+function bindReveal() {
+  app.querySelectorAll('.chip').forEach(c => c.onclick = () => {
+    const i = +c.dataset.t;
+    S.marked = S.marked.includes(i) ? S.marked.filter(x => x !== i) : [...S.marked, i];
+    c.setAttribute('aria-pressed', S.marked.includes(i)); save();
+  });
+  document.getElementById('nextBtn').onclick = advance;
+}
+
+function startTimer() {
+  stopTimer(); tStart = performance.now(); tLeft = S.limit;
+  const bar = document.getElementById('tbar'), num = document.getElementById('tnum'), box = document.getElementById('timer');
+  let lastSec = S.limit;
+  const tick = () => {
+    const el = (performance.now() - tStart) / 1000;
+    tLeft = Math.max(0, S.limit - el);
+    const sec = Math.ceil(tLeft);
+    num.textContent = sec;
+    bar.setAttribute('stroke-dashoffset', (276.5 * (1 - tLeft / S.limit)).toFixed(1));
+    box.classList.toggle('low', tLeft <= 5);
+    if (sec !== lastSec && sec <= 5 && sec > 0) beep(880, .08, 'square', .04);
+    lastSec = sec;
+    if (tLeft <= 0) { stopTimer(); S.mode === 'solo' ? pick(null) : reveal(); return; }
+    timerId = requestAnimationFrame(tick);
+  };
+  timerId = requestAnimationFrame(tick);
+}
+function stopTimer() { if (timerId) cancelAnimationFrame(timerId); timerId = null; }
+
+function reveal() { stopTimer(); S.phase = 'reveal'; S.marked = []; chime(true); save(); renderQuestion(); }
+function pick(k) {
+  if (S.phase !== 'question') return;
+  stopTimer();
+  const Q = QUESTIONS[S.q];
+  S.picked = k; S.lastGain = 0;
+  if (k !== null && k === Q.c) {
+    S.lastGain = Math.round(1000 * (1 - (1 - tLeft / S.limit) / 2));
+    S.solo.score += S.lastGain; S.solo.right++;
+  }
+  chime(k === Q.c); S.phase = 'reveal'; save(); renderQuestion();
+}
+
+function advance() {
+  if (S.mode === 'class') {
+    S.teams.forEach((t, i) => {
+      if (S.marked.includes(i)) { t.delta = 1000 + Math.min(t.streak, 5) * 100; t.streak++; t.score += t.delta; }
+      else { t.delta = 0; t.streak = 0; }
+    });
+    S.phase = 'board';
+  } else nextQ();
+  save(); route();
+}
+function nextQ() {
+  S.picked = null; S.marked = [];
+  if (S.q + 1 < QUESTIONS.length) { S.q++; S.phase = 'question'; } else S.phase = 'end';
+}
+
+/* ---------- scoreboard ---------- */
+function renderBoard() {
+  const sorted = S.teams.map((t, i) => ({ ...t, i })).sort((a, b) => b.score - a.score);
+  const max = Math.max(1, sorted[0].score), last = S.q + 1 >= QUESTIONS.length;
+  app.innerHTML = `
+  <section class="board">
+    <h2>Scoreboard</h2>
+    ${sorted.map((t, r) => `<div class="brow">
+      <span class="rank">${r + 1}</span>
+      <span class="name">${esc(t.name)}${t.streak >= 2 ? ` <span class="streak">🔥${t.streak}</span>` : ''}</span>
+      <span class="track"><span class="fill" data-w="${(t.score / max * 100).toFixed(1)}"></span></span>
+      <span class="pts">${t.score}${t.delta ? `<br><span class="delta">+${t.delta}</span>` : ''}</span></div>`).join('')}
+    <div class="actions" style="margin-top:14px"><span class="kbd">Space: continue</span>
+      <button class="btn primary" id="go">${last ? 'Final results' : 'Next question'}</button></div>
+  </section>`;
+  requestAnimationFrame(() => requestAnimationFrame(() => app.querySelectorAll('.fill').forEach(f => f.style.width = f.dataset.w + '%')));
+  document.getElementById('go').onclick = () => { nextQ(); save(); route(); };
+}
+
+/* ---------- end ---------- */
+function renderEnd() {
+  let podium = '';
+  if (S.mode === 'class') {
+    const s = [...S.teams].sort((a, b) => b.score - a.score);
+    const step = (t, p) => t ? `<div class="step p${p}"><span class="who">${esc(t.name)}</span><span class="pts">${t.score}</span><div class="block">${p}</div></div>` : '';
+    podium = `<div class="podium">${step(s[1], 2)}${step(s[0], 1)}${step(s[2], 3)}</div>`;
+    setTimeout(() => chime(true), 2000);
+  } else {
+    podium = `<div class="card" style="text-align:center;display:grid;gap:8px"><h2 style="font-size:2.4rem">${S.solo.score} points</h2>
+      <p class="muted">${S.solo.right} of ${QUESTIONS.length} correct</p></div>`;
+  }
+  app.innerHTML = `
+  <section style="display:grid;gap:18px">
+    ${podium}
+    <div class="review"><h3>All answers</h3>
+      ${QUESTIONS.map((Q, i) => `<details><summary>${i + 1}. ${Q.q.replace(/<[^>]+>/g, '')}</summary>
+        <p><b>${LETTERS[Q.c]}. ${Q.a[Q.c]}</b></p><p class="muted">${Q.e}</p></details>`).join('')}
+    </div>
+    <div class="row"><button class="btn primary" id="again">Play again</button></div>
+  </section>`;
+  document.getElementById('again').onclick = () => { const keep = { mode: S.mode, limit: S.limit, teams: S.teams.map(t => t.name), sound: S.sound };
+    clearSave(); S = defaultState(); Object.assign(S, { mode: keep.mode, limit: keep.limit, sound: keep.sound });
+    S.teams = keep.teams.map(n => ({ name: n, score: 0, streak: 0, delta: 0 })); route(); };
+}
+
+function route() {
+  stopTimer(); updateSoundBtn();
+  if (S.phase === 'setup') renderSetup();
+  else if (S.phase === 'question' || S.phase === 'reveal') renderQuestion();
+  else if (S.phase === 'board') renderBoard();
+  else { clearSave(); renderEnd(); }
+}
+
+/* ---------- global controls ---------- */
+function updateSoundBtn() { const b = document.getElementById('soundBtn'); b.textContent = 'Sound: ' + (S.sound ? 'on' : 'off'); b.setAttribute('aria-pressed', S.sound); }
+document.getElementById('soundBtn').onclick = () => { S.sound = !S.sound; updateSoundBtn(); save(); };
+document.getElementById('fsBtn').onclick = () => {
+  try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); } catch (e) {}
+};
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input')) return;
+  if (S.phase === 'question' && S.mode === 'solo' && /^[1-4]$/.test(e.key)) { pick(+e.key - 1); return; }
+  if (e.key === ' ' || e.key === 'Enter') {
+    if (e.target.matches('button')) return;
+    e.preventDefault();
+    if (S.phase === 'question' && S.mode === 'class') reveal();
+    else if (S.phase === 'reveal') advance();
+    else if (S.phase === 'board') { nextQ(); save(); route(); }
+  }
+  if (e.key === 'f' || e.key === 'F') document.getElementById('fsBtn').click();
+});
+
+route();
+</script>
+</body>
+</html>
