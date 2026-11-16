@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>İşaret Öğrenme Deneyi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/jspsych@8.2.1/dist/index.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jspsych/plugin-browser-check@2.1.0/dist/index.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jspsych/plugin-fullscreen@2.1.0/dist/index.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jspsych/plugin-html-keyboard-response@2.1.0/dist/index.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jspsych/plugin-html-button-response@2.1.0/dist/index.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jspsych/plugin-html-slider-response@2.1.0/dist/index.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jspsych/plugin-survey-html-form@2.1.0/dist/index.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jspsych-contrib/plugin-pipe@0.5.0/dist/index.browser.min.js"></script>
+<link rel="stylesheet" href="jspsych_stock.css">
+<style>
+:root{color-scheme:light}
+html{background:#ffffff}
+body{background:#ffffff;color:#000000;margin:0;font-family:"Open Sans","Arial",sans-serif}
+#jspsych-target{min-height:100vh;box-sizing:border-box;padding:12px 16px 24px}
+[hidden]{display:none !important}
+.instr{max-width:780px;width:100%;margin:0 auto;text-align:left}
+.instr h3{margin-top:0}
+.q{font-size:26px;font-weight:700;line-height:1.3;margin:0 0 10px}
+.msg{display:flex;align-items:center;justify-content:center;gap:14px;font-size:30px;font-style:italic;min-height:200px;margin:0 auto 8px}
+.slot{width:200px;height:200px;display:flex;align-items:center;justify-content:center}
+.slot .empty{width:200px;height:200px;border:2px dashed #c8c8c8;box-sizing:border-box;border-radius:6px}
+canvas.sg{width:200px;height:200px;display:block}
+.stage{width:320px;height:246px;margin:0 auto;display:flex;align-items:center;justify-content:center}
+canvas.an{width:320px;height:246px;display:block}
+.fix{font-size:48px;font-weight:700;min-height:454px;display:flex;align-items:center;justify-content:center}
+.attn{font-size:24px;font-weight:700;min-height:200px;display:flex;align-items:center;justify-content:center;max-width:700px;margin:0 auto 8px;text-align:center}
+.pair{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px 32px;margin-bottom:8px}
+.pair figure{margin:0;display:flex;flex-direction:column;align-items:center}
+.pair figcaption{font-size:20px;font-weight:700;margin-top:4px}
+.jspsych-btn{min-height:44px;box-sizing:border-box;font-size:18px}
+.resp-btn{min-width:150px;font-size:22px;font-weight:700}
+.jspsych-btn-group-flex{flex-wrap:wrap}
+.anim-btn{padding:6px;border-width:5px;border-color:#cccccc}
+.anim-btn canvas{width:150px;height:115px;display:block}
+.anim-btn:disabled{background-color:#ffffff;cursor:default}
+.fbbtn,.fbbtn:disabled{background-color:#ffffff;color:#333;cursor:default}
+.replay-row{flex-basis:100%;text-align:center}
+.fbk{font-size:28px;font-weight:700;line-height:1.3;margin:12px 0}
+.fbk.ok{color:forestgreen}
+.fbk.bad{color:#c00000}
+.wait{font-size:22px;line-height:1.4;margin:120px 0 8px}
+.statement{font-size:22px;font-style:italic;max-width:700px;margin:10px auto 18px;line-height:1.4}
+.form p{margin:14px 0 4px}
+.form textarea,.form input[type=text],.form select{width:100%;font-family:"Open Sans","Arial",sans-serif;font-size:16px;padding:6px;border:1px solid #aaaaaa;box-sizing:border-box}
+.radios label{display:inline-block;margin-right:16px;cursor:pointer}
+.radios.col label{display:block;margin:4px 0}
+.req{color:#c00000}
+.consent p{margin:10px 0}
+.checks label{display:block;margin:6px 0;cursor:pointer}
+.checks input{margin-right:6px}
+.evgrid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:8px 0}
+.evgrid label{display:flex;flex-direction:column;align-items:center;border:4px solid #cccccc;border-radius:6px;padding:4px;cursor:pointer}
+.evgrid label.on{border-color:#2f6fb3}
+.evgrid canvas{width:150px;height:115px;display:block}
+.evgrid input{margin-top:4px;transform:scale(1.3)}
+.err{color:#c00000;font-weight:700;min-height:1.4em}
+.jspsych-html-slider-response-container{margin-top:20px}
+</style>
+</head>
+<body>
+<div id="jspsych-target"></div>
+<script src="draw.js"></script>
+<script src="design.js"></script>
+<script src="experiment.js"></script>
+</body>
+</html>
