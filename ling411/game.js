@@ -9,7 +9,7 @@ const WEEKS=[
 {id:'6',dates:'Oct 28–29',topic:'Oct 28, 12–1 pm: practicum on R. Oct 29: holiday',readings:'',ready:true,meetings:[{iso:'2026-10-28',time:'12:00–13:00',room:'M1200',note:'PS, R practicum'},{iso:'2026-10-29',note:'holiday'}]},
 {id:'7',dates:'Nov 4–5',topic:'Two samples: independent samples t-test, related samples t-test. First exam',readings:'G&W Chs. 10–11. J Ch. 3, §3.1.',ready:false,meetings:[{iso:'2026-11-04',time:'10:00–11:00',note:'PS'},{iso:'2026-11-04',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-05',time:'12:00–14:00',room:'HHZ08'}]},
 {id:'8',dates:'Nov 11–12',topic:'Multiple samples: ANOVA (GLM 1). Optional factorial ANOVA',readings:'G&W Ch. 12 and Ch. 14. J Ch. 4, §§4.1–4.2.',ready:false,meetings:[{iso:'2026-11-11',time:'10:00–11:00',note:'PS'},{iso:'2026-11-11',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-12',time:'12:00–14:00',room:'HHZ08'}]},
-{id:'9',dates:'Nov 18–19',topic:'Repeated measures designs (GLM 4)',readings:'G&W Ch. 13. J Ch. 4, §4.3.',ready:false,meetings:[{iso:'2026-11-18',time:'10:00–11:00',note:'PS'},{iso:'2026-11-18',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-19',time:'12:00–14:00',room:'HHZ08'}]},
+{id:'9',dates:'Nov 18–19',topic:'Repeated measures designs (GLM 4)',readings:'G&W Ch. 13. J Ch. 4, §4.3.',ready:true,meetings:[{iso:'2026-11-18',time:'10:00–11:00',note:'PS'},{iso:'2026-11-18',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-19',time:'12:00–14:00',room:'HHZ08'}]},
 {id:'10',dates:'Nov 25–26',topic:'Correlation',readings:'G&W Ch. 15. J Ch. 2, §2.4.',ready:false,meetings:[{iso:'2026-11-25',time:'10:00–11:00',note:'PS'},{iso:'2026-11-25',time:'12:00–14:00',room:'M1200'},{iso:'2026-11-26',time:'12:00–14:00',room:'HHZ08'}]},
 {id:'11',dates:'Dec 2–3',topic:'Linear regression and multiple regression',readings:'G&W Ch. 16. J Ch. 2 §2.4. J Ch. 3 §3.2.',ready:false,meetings:[{iso:'2026-12-02',time:'10:00–11:00',note:'PS'},{iso:'2026-12-02',time:'12:00–14:00',room:'M1200'},{iso:'2026-12-03',time:'12:00–14:00',room:'HHZ08'}]},
 {id:'12',dates:'Dec 9–10',topic:'Logistic regression. Second exam',readings:'Lecture slides. J Ch. 5 §5.4.',ready:false,extra:'If time: Chi-square; mixed-effects modelling. G&W Ch. 17. J Ch. 7 §7.3.',meetings:[{iso:'2026-12-09',time:'10:00–11:00',note:'PS'},{iso:'2026-12-09',time:'12:00–14:00',room:'M1200'},{iso:'2026-12-10',time:'12:00–14:00',room:'HHZ08'}]}
@@ -34,6 +34,9 @@ const WEEK_ITEMS={
 ],
 '6':[
 {id:'r-descriptives',title:'R Descriptives',kind:'pdf',file:'materials/week6/r-descriptives.pdf'}
+],
+'9':[
+{id:'handout',title:'PS Handout',kind:'pdf',file:'materials/week9/midterm-review.pdf'}
 ]
 };
 const SCREENS=['home','start','material','office'];
