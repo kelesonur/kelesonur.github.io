@@ -67,6 +67,9 @@ function buildDesign(cond, seed) {
   for (let g = 0; g < 50 && learn2[0] === learn1[3]; g++) learn2 = shuffle(EV);
 
   /* ---------- practice: 6 single-sign trials with feedback ---------- */
+  /* the named sign: all four signs, and never the same sign twice in a row */
+  const pracX = shuffle(EV);
+  while (pracX.length < 6) pracX.push(pick(EV.filter(e => e !== pracX[pracX.length - 1])));
   const practice = shuffle([
     {frame: "pos", an: (X, B, C) => aLong(X), correct: D, anim_label: "X alone"},
     {frame: "pos", an: (X, B, C) => aLong(B), correct: Y, anim_label: "other alone"},
@@ -74,7 +77,7 @@ function buildDesign(cond, seed) {
     {frame: "neg", an: (X, B, C) => aLong(X), correct: Y, anim_label: "X alone"},
     {frame: "pos", an: (X, B, C) => a2(X, B, "SEQ"), correct: D, anim_label: "X + other, SEQ"},
     {frame: "neg", an: (X, B, C) => a2(X, B, "DUR"), correct: Y, anim_label: "X + other, DUR"}
-  ]).map(p => { const [X, B, C] = shuffle(EV);
+  ]).map((p, i) => { const X = pracX[i], [B, C] = shuffle(others(X));
     return item({block: "practice", kind: "practice", form: "single", pol: p.frame, frame: p.frame, clip: {type: "single", X}, X,
       anim: p.an(X, B, C), anim_label: p.anim_label, anim_class: "other", correct: p.correct, h1: p.correct}); });
 
@@ -191,6 +194,7 @@ function orderTrials(items, prefix, rand, keys) {
 function fits(seq, t, keys) {
   const n = seq.length;
   if (n && t.pair && seq[n - 1].pair && seq[n - 1].pair === t.pair) return false;
+  if (n && t.X && seq[n - 1].X === t.X) return false;
   if (n >= 3) for (const k of keys) {
     if (t[k] != null && seq[n - 1][k] === t[k] && seq[n - 2][k] === t[k] && seq[n - 3][k] === t[k]) return false;
   }

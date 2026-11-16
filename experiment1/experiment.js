@@ -75,7 +75,8 @@ function timed(html, ms, onload, data) {
 
 /* ---------------- one true/false trial ----------------
  * Ready screen (space bar), fixation (0.5 s), sentence with an empty slot (1.0 s), sentence with the clip (4.0 s),
- * blank (0.3 s), sentence with the animation (4.8 s), then Doğru / Yanlış. One replay of message and animation. */
+ * blank (0.3 s), sentence with the animation (4.8 s), then Doğru / Yanlış. Message and animation can be replayed
+ * as often as the participant wants; every replay is logged. */
 function tvjTrial(t, feedback) {
   let replays = 0, answer = null;
   const order = DESIGN.dogruLeft ? ["D", "Y"] : ["Y", "D"];
@@ -90,7 +91,7 @@ function tvjTrial(t, feedback) {
     stimulus: frameHTML(t.frame) + EMPTY_STAGE,
     choices: () => order.concat(["replay"]), button_layout: "flex",
     button_html: c => c === "replay"
-      ? `<div class="replay-row">${replays < 1 ? '<button class="jspsych-btn">Tekrar izle</button>' : '<button class="jspsych-btn" disabled>Tekrar izlendi</button>'}</div>`
+      ? '<div class="replay-row"><button class="jspsych-btn">Tekrar izle</button></div>'
       : `<button class="jspsych-btn resp-btn">${c === "D" ? "✓ Doğru" : "✗ Yanlış"}</button>`,
     data: Object.assign({task: feedback ? "practice" : "tvj"}, itemData(t)),
     on_load: stopAll,
@@ -163,9 +164,11 @@ function idTrial(getEv, block, k) {
 
 /* ---------------- understanding checks ---------------- */
 function quiz(title, intro, qs, again) {
+  const instrHtml = again.stimulus.replace(/<\/?div[^>]*>/g, "");
   let tries = 0, allOk = false;
   const form = {type: FORM, button_label: "Cevapları gönder",
     html: () => `<div class="instr form"><h3>${title}</h3>${tries > 0 ? '<p class="err">Bazı cevaplar yanlıştı. Lütfen açıklamayı tekrar okuyun ve yeniden cevaplayın.</p>' : ""}<p>${intro}</p>` +
+      `<details class="again"><summary>Açıklamayı tekrar göster</summary><div class="againbox">${instrHtml}</div></details>` +
       qs.map((q, i) => `<p><b>${i + 1}. ${q.q}</b> <span class="req">*</span></p><div class="radios col">${shuffle(q.opts.map((o, j) => [o, j])).map(([o, j]) =>
         `<label><input type="radio" name="q${i}" value="${j}" required> ${o}</label>`).join("")}</div>`).join("") + "</div>",
     data: {task: "quiz", quiz: title},
@@ -176,14 +179,18 @@ function quiz(title, intro, qs, again) {
 /* ---------------- forced choice ---------------- */
 function fcTrial(t) {
   const L = a2(t.P, t.Q, t.dur_left ? "DUR" : "SEQ"), R = a2(t.P, t.Q, t.dur_left ? "SEQ" : "DUR");
-  return {timeline: [readyKey(),
-    timed(frameHTML("pos", SLOT_CV("cvS")), SIGN_DUR * 1000, () => playSign($("cvS"), t.clip)),
-    {type: BTN, stimulus: frameHTML("pos") + '<p class="q">Bu cümle hangi animasyonu daha iyi anlatıyor?</p>' +
+  let replays = 0;
+  const choose = {type: BTN, stimulus: frameHTML("pos") + '<p class="q">Bu cümle hangi animasyonu daha iyi anlatıyor?</p>' +
       `<div class="pair"><figure>${ANIM_CV("fcA")}<figcaption>A</figcaption></figure><figure>${ANIM_CV("fcB")}<figcaption>B</figcaption></figure></div>`,
-      choices: ["A", "B"], button_html: c => `<button class="jspsych-btn resp-btn">${c}</button>`, enable_button_after: TEST ? 300 : ANIM_DUR * 1000,
-      data: Object.assign({task: "forced_choice", dur_left: t.dur_left ? 1 : 0}, itemData(t)),
-      on_load: () => { stopAll(); playAnim($("fcA"), L, LOOP); playAnim($("fcB"), R, LOOP); },
-      on_finish: d => { d.chose_dur = ((d.response === 0) === t.dur_left) ? 1 : 0; }}]};
+    choices: ["A", "B", "replay"], button_layout: "flex", enable_button_after: TEST ? 300 : ANIM_DUR * 1000,
+    button_html: c => c === "replay" ? '<div class="replay-row"><button class="jspsych-btn">Cümleyi tekrar izle</button></div>' : `<button class="jspsych-btn resp-btn">${c}</button>`,
+    data: Object.assign({task: "forced_choice", dur_left: t.dur_left ? 1 : 0}, itemData(t)),
+    on_load: () => { stopAll(); playAnim($("fcA"), L, LOOP); playAnim($("fcB"), R, LOOP); },
+    on_finish: d => {
+      if (d.response === 2) { replays++; d.replay = true; d.task = "replay_request"; return; }
+      d.replay = false; d.replays = replays; d.chose_dur = ((d.response === 0) === t.dur_left) ? 1 : 0; }};
+  return {timeline: [readyKey(), {timeline: [timed(frameHTML("pos", SLOT_CV("cvS")), SIGN_DUR * 1000, () => playSign($("cvS"), t.clip)), choose],
+    loop_function: data => { const last = data.values().slice(-1)[0]; return !!(last && last.replay); }}]};
 }
 
 /* ---------------- inference task ---------------- */
@@ -416,12 +423,12 @@ function build() {
   const taskInstr = instr(`<h3>Cümleler</h3>
     <p>Şimdi Tobi hakkında cümleler göreceksiniz. Cümlelerde bir kelimenin yerinde bir işaret olacak, örneğin: “Tobi [işaret] yaptı.” Ardından Tobi’nin ne yaptığını gösteren kısa bir animasyon gelecek.</p>
     <p>Animasyonda gördüklerinize göre cümle doğruysa <b>✓ Doğru</b> düğmesine, yanlışsa <b>✗ Yanlış</b> düğmesine tıklayın.</p>
-    <p>Cevap vermeden önce cümleyi ve animasyonu bir kez daha izlemek isterseniz <b>Tekrar izle</b> düğmesine tıklayın. Bunu her denemede yalnızca bir kez yapabilirsiniz.</p>
+    <p>Cevap vermeden önce cümleyi ve animasyonu tekrar izlemek isterseniz <b>Tekrar izle</b> düğmesine tıklayın.</p>
     <p>Önce birkaç alıştırma denemesi yapacaksınız. Alıştırmada cevabınızın doğru olup olmadığını göreceksiniz.</p>`);
   T.push(taskInstr);
   T.push(quiz("Kısa kontrol", "Başlamadan önce lütfen aşağıdaki soruları cevaplayın.", [
     {q: "Her denemede ne yapacaksınız?", opts: ["Animasyonu izledikten sonra cümlenin doğru mu yanlış mı olduğuna karar vereceğim.", "İşareti kameraya doğru yapacağım.", "Cümleyi klavyeyle yazacağım."], ok: 0},
-    {q: "Bir denemede cümleyi ve animasyonu kaç kez tekrar izleyebilirsiniz?", opts: ["Hiç", "Bir kez", "İstediğim kadar"], ok: 1},
+    {q: "Cümleyi ve animasyonu tekrar görmek isterseniz ne yaparsınız?", opts: ["“Tekrar izle” düğmesine tıklarım.", "Sayfayı yenilerim.", "Tekrar izleyemem."], ok: 0},
     {q: "Deney sırasında not alabilir misiniz?", opts: ["Evet", "Hayır"], ok: 1}
   ], taskInstr));
   cut(D.practice, 2).forEach(t => T.push(tvjTrial(t, true)));
@@ -443,7 +450,7 @@ function build() {
   /* 6. forced choice */
   T.push(instr(`<h3>İki animasyon</h3>
     <p>Şimdi bir cümle, ardından yan yana iki animasyon göreceksiniz. Cümlenin hangi animasyonu daha iyi anlattığını seçin.</p>
-    <p>Soldaki animasyon için <b>A</b>, sağdaki animasyon için <b>B</b> düğmesine tıklayın. Düğmelere, animasyonlar bir kez oynatıldıktan sonra tıklayabileceksiniz.</p>`));
+    <p>Soldaki animasyon için <b>A</b>, sağdaki animasyon için <b>B</b> düğmesine tıklayın. Düğmelere, animasyonlar bir kez oynatıldıktan sonra tıklayabileceksiniz. Cümleyi tekrar görmek isterseniz <b>Cümleyi tekrar izle</b> düğmesine tıklayın.</p>`));
   cut(D.fc, 2).forEach(t => T.push(fcTrial(t)));
 
   /* 7. break, then the overt-adverb block */

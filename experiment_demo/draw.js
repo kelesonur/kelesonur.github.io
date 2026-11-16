@@ -379,11 +379,12 @@ function makeTracks(clip, MAP) {
     const P = sh(clip.P), Q = sh(clip.Q);
     return {
       non: [],
+      /* first sign, back to rest, then the second sign from rest (same timing as the second sign in HOLD) */
       dom: [{t: 0, pos: "rest"}, {t: 0.25, pos: "rest"}, {t: 0.5, pos: "neutral", shape: P},
         {t: 0.95, pos: "out", shape: P}, {t: 1.4, pos: "neutral", shape: P},
-        {t: 1.74, pos: "neutral", shape: P}, {t: 1.76, pos: "neutral", shape: Q},
+        {t: 1.75, pos: "rest"}, {t: 1.85, pos: "rest"},
         {t: 2.1, pos: "neutral", shape: Q}, {t: 2.55, pos: "out", shape: Q},
-        {t: 3.0, pos: "neutral", shape: Q}, {t: 3.4, pos: "rest"}]
+        {t: 3.0, pos: "neutral", shape: Q}, {t: 3.25, pos: "rest"}]
     };
   }
   const tr = trSingle(sh(clip.X), clip.s == null ? 0.5 : clip.s);
