@@ -32,7 +32,7 @@ const WEEKS=[
 {id:'9–10',topic:'Word formation',meetings:[{iso:'2026-11-16',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-17',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-18',time:'16:00–17:00',room:'NH304'},{iso:'2026-11-23',time:'16:00–17:00',room:'M1170'},{iso:'2026-11-24',time:'15:00–17:00',room:'TB360'},{iso:'2026-11-25',time:'16:00–17:00',room:'NH304'}]},
 {id:'11–12',topic:'Verbal inflection; nominalization',meetings:[{iso:'2026-11-30',time:'16:00–17:00',room:'M1170'},{iso:'2026-12-01',time:'15:00–17:00',room:'TB360'},{iso:'2026-12-02',time:'16:00–17:00',room:'NH304'},{iso:'2026-12-07',time:'16:00–17:00',room:'M1170'},{iso:'2026-12-08',time:'15:00–17:00',room:'TB360'},{iso:'2026-12-09',time:'16:00–17:00',room:'NH304'}]}
 ];
-const SCREENS=['home','start','practice','handout','lab','listen','play','break','results','library','edit','office'];
+const SCREENS=['home','start','practice','handout','lab','listen','suffixlab','play','break','results','library','edit','office'];
 const KEY='ling313-phonology-en-v1';
 const EDIT_KEY='ling313-case-edits-v1';
 const ADMIN_KEY='ling313-admin-code-v1';
@@ -195,6 +195,7 @@ function render(){
  else if(state.screen==='handout')handoutScreen();
  else if(state.screen==='lab')labScreen();
  else if(state.screen==='listen')listenScreen();
+ else if(state.screen==='suffixlab')suffixLabScreen();
  else if(state.screen==='break')breakScreen();
  else if(state.screen==='results')resultsScreen();
  else if(state.screen==='library')libraryScreen();
@@ -216,7 +217,7 @@ function classMeetingsHtml(meetings){
  if(!meetings||!meetings.length)return '';
  return `<ul class="class-meetings">${meetings.map(m=>`<li>${esc(formatClassMeeting(m))}</li>`).join('')}</ul>`;
 }
-function weekReady(id){return id==='1–2'||id==='3–4'||id==='5–6'||id==='7–8';}
+function weekReady(id){return id==='1–2'||id==='3–4'||id==='5–6'||id==='7–8'||id==='9–10';}
 function weekPicker(){
  return `<section class="week-picker" aria-label="Choose weeks"><h2>Weeks</h2><div class="week-options">${WEEKS.map(w=>{const live=weekReady(w.id);const cls=[live?'live':'quiet',state.weeks===w.id?'selected':''].filter(Boolean).join(' ');return `<button type="button" data-weeks="${esc(w.id)}" aria-pressed="${state.weeks===w.id}" class="${cls}">${weekLabel(w.id)}<small>${live?'Ready':'To be added'}</small></button>`;}).join('')}</div></section>`;
 }
@@ -225,7 +226,7 @@ function bindWeekPicker(){
   button.onclick=()=>{
    if($('teamName'))state.team=$('teamName').value;
    state.weeks=button.dataset.weeks;
-   if(state.screen==='library'||state.screen==='edit'||state.screen==='handout'||state.screen==='practice'||state.screen==='lab'||state.screen==='listen')state.screen='start';
+   if(state.screen==='library'||state.screen==='edit'||state.screen==='handout'||state.screen==='practice'||state.screen==='lab'||state.screen==='listen'||state.screen==='suffixlab')state.screen='start';
    save();render();
   };
  });
@@ -246,6 +247,13 @@ function startScreen(){
   bindSectionNav();bindWeekPicker();
   $('openHandout').onclick=()=>{state.screen='handout';save();render();focusMain();};
   $('openLab').onclick=()=>{state.screen='lab';save();render();focusMain();};
+  return;
+ }
+ if(state.weeks==='9–10'){
+  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING313 · PS</span><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p class="muted">${esc(meta.topic)}</p></div><section class="setup material-picker" aria-label="PS activities"><h2>Activities</h2><div class="mode-buttons material-choices"><button type="button" id="openHandout">PS Handout</button><button type="button" id="openSuffixLab">Stress &amp; Suffix Lab</button></div></section></section>`;
+  bindSectionNav();bindWeekPicker();
+  $('openHandout').onclick=()=>{state.screen='handout';save();render();focusMain();};
+  $('openSuffixLab').onclick=()=>{state.screen='suffixlab';save();render();focusMain();};
   return;
  }
  if(state.weeks==='7–8'){
@@ -282,10 +290,10 @@ function practiceScreen(){
 }
 
 function handoutScreen(){
- const files={'1–2':'materials/ps1.pdf','3–4':'materials/ps2.pdf','5–6':'materials/ps4.pdf','7–8':'materials/midterm-review.pdf'};
+ const files={'1–2':'materials/ps1.pdf','3–4':'materials/ps2.pdf','5–6':'materials/ps4.pdf','7–8':'materials/midterm-review.pdf','9–10':'materials/stress-morphology.pdf'};
  const file=files[state.weeks];
  if(!file){state.screen='start';render();return;}
- const keys={'5–6':'materials/ps4-key.pdf','7–8':'materials/midterm-review-key.pdf'};
+ const keys={'5–6':'materials/ps4-key.pdf','7–8':'materials/midterm-review-key.pdf','9–10':'materials/stress-morphology-key.pdf'};
  const key=keys[state.weeks]||'';
  const toolbar=key
   ?`<div class="embed-toolbar"><a class="primary" id="openPdf" href="${file}" target="_blank" rel="noopener noreferrer">Open PDF</a><button type="button" id="keyToggle" class="key-toggle" aria-pressed="false"><span class="key-switch" aria-hidden="true"><span></span></span>Answer key</button></div><div class="pdf-stage" id="pdfStage"><iframe class="material-frame pdf-frame" title="PS Handout" src="${file}#view=FitH"></iframe><iframe class="material-frame pdf-frame key-sheet" title="Answer key" src="${key}#view=FitH"></iframe></div>`
@@ -305,6 +313,13 @@ function handoutScreen(){
 function listenScreen(){
  if(state.weeks!=='5–6'){state.screen='start';render();return;}
  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Weeks 5–6</button><h1>Listening Lab</h1></div><div class="embed-toolbar"><a class="primary" href="games/listening-lab/index.html" target="_blank" rel="noopener noreferrer">Open lab</a></div><iframe class="material-frame game-frame" title="Listening Lab" src="games/listening-lab/index.html"></iframe></section>`;
+ bindSectionNav();bindWeekPicker();
+ $('backPs').onclick=()=>{state.screen='start';save();render();focusMain();};
+}
+
+function suffixLabScreen(){
+ if(state.weeks!=='9–10'){state.screen='start';render();return;}
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Weeks 9–10</button><h1>Stress &amp; Suffix Lab</h1></div><div class="embed-toolbar"><a class="primary" href="games/stress-suffix-lab/index.html" target="_blank" rel="noopener noreferrer">Open lab</a></div><iframe class="material-frame game-frame" title="Stress and Suffix Lab" src="games/stress-suffix-lab/index.html"></iframe></section>`;
  bindSectionNav();bindWeekPicker();
  $('backPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
