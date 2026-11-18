@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LING 203 Movement Trees</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a whiteboard in an aluminium frame, marker colours as in class:
+   black for structure, blue for features and voice, red for movement. */
+:root {
+  --page: #eceee9;
+  --board: #fcfcfa;
+  --frame: #c3c8cc;
+  --ink: #1d2126;
+  --muted: #5d646b;
+  --line: #2a2f35;
+  --blue: #1e4d9b;
+  --red: #c22a22;
+  --panel: #ffffff;
+  --chip: #e6ebf4;
+  --hl-blue: rgba(30, 77, 155, 0.13);
+  --hl-red: rgba(194, 42, 34, 0.12);
+  --font-tree: "STIX Two Text", "Times New Roman", Times, serif;
+  --font-ui: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #14171a; --board: #1c2125; --frame: #39424a; --ink: #e7e8e3; --muted: #a0a8ae;
+    --line: #d3d6d0; --blue: #8ab4ff; --red: #ff7066; --panel: #20262b; --chip: #24324a;
+    --hl-blue: rgba(138, 180, 255, 0.16); --hl-red: rgba(255, 112, 102, 0.15);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #14171a; --board: #1c2125; --frame: #39424a; --ink: #e7e8e3; --muted: #a0a8ae;
+  --line: #d3d6d0; --blue: #8ab4ff; --red: #ff7066; --panel: #20262b; --chip: #24324a;
+  --hl-blue: rgba(138, 180, 255, 0.16); --hl-red: rgba(255, 112, 102, 0.15);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.45;
+}
+header.top {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px;
+  padding: 14px 20px 6px;
+}
+header.top h1 {
+  font-family: var(--font-tree); font-weight: 600; font-size: 24px; margin: 0;
+  text-wrap: balance;
+}
+header.top p { margin: 0; color: var(--muted); font-size: 14px; }
+.legend { margin-left: auto; display: flex; gap: 14px; font-size: 13px; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: 16px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+.legend .k-ink::before { background: var(--line); }
+.legend .k-blue::before { background: var(--blue); }
+.legend .k-red::before { background: var(--red); }
+
+.wrap {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr) 310px;
+  gap: 14px;
+  padding: 8px 20px 20px;
+  align-items: start;
+}
+nav.picker { display: flex; flex-direction: column; gap: 14px; }
+nav.picker h2 {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
+  margin: 0 0 6px; font-weight: 600;
+}
+nav.picker .grp { display: flex; flex-direction: column; gap: 4px; }
+nav.picker button {
+  text-align: left; font: inherit; font-size: 14px; color: var(--ink);
+  background: transparent; border: 1px solid transparent; border-radius: 6px;
+  padding: 6px 9px; cursor: pointer;
+}
+nav.picker button small { display: block; color: var(--muted); font-family: var(--font-tree); font-size: 13.5px; font-style: italic; }
+nav.picker button:hover { background: var(--panel); }
+nav.picker button[aria-current="true"] { background: var(--panel); border-color: var(--frame); box-shadow: inset 3px 0 0 var(--blue); }
+
+.stage { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.sentence {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px;
+}
+.sentence .s {
+  font-family: var(--font-tree); font-size: 26px; font-style: italic;
+}
+.sentence .g { font-family: var(--font-tree); color: var(--muted); font-size: 15px; }
+.strings {
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 12px;
+  font-family: var(--font-tree); font-size: 17px;
+}
+.strings .lab { font-family: var(--font-ui); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); padding-top: 3px; }
+.strings .tr { color: var(--muted); font-style: italic; }
+.strings .tr sub { font-style: normal; }
+.strings .moved { color: var(--red); }
+
+.board {
+  position: relative;
+  background: var(--board);
+  border: 6px solid var(--frame);
+  border-radius: 8px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.05), inset 0 0 0 1px rgba(0,0,0,0.04);
+  height: clamp(440px, calc(100vh - 250px), 1400px);
+  overflow: hidden;
+}
+.board.natural { height: auto; max-height: none; overflow-x: auto; }
+.board svg { display: block; width: 100%; height: 100%; }
+.board.natural svg { height: auto; }
+.phase {
+  position: absolute; top: 10px; left: 12px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 999px; background: var(--chip); color: var(--blue);
+}
+.phase.s { background: var(--hl-red); color: var(--red); }
+
+.controls {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px;
+}
+.controls button {
+  font: inherit; font-size: 14px; font-weight: 500; color: var(--ink);
+  background: var(--panel); border: 1px solid var(--frame); border-radius: 7px;
+  padding: 7px 13px; cursor: pointer; min-width: 44px;
+}
+.controls button:hover { border-color: var(--blue); }
+.controls button.primary { background: var(--blue); color: var(--board); border-color: var(--blue); min-width: 92px; }
+.speed { display: inline-flex; border: 1px solid var(--frame); border-radius: 7px; overflow: hidden; }
+.speed button { border: 0; border-radius: 0; min-width: 0; padding: 7px 10px; font-variant-numeric: tabular-nums; }
+.speed button + button { border-left: 1px solid var(--frame); }
+.speed button[aria-pressed="true"] { background: var(--chip); color: var(--blue); font-weight: 600; }
+.controls label { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); margin-left: auto; }
+.controls .lbl { font-size: 13px; color: var(--muted); }
+.keys { font-size: 12.5px; color: var(--muted); }
+kbd { font-family: var(--font-ui); font-size: 11.5px; border: 1px solid var(--frame); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--panel); }
+
+aside.panel {
+  background: var(--panel); border: 1px solid var(--frame); border-radius: 8px;
+  padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;
+  position: sticky; top: 10px;
+}
+.stepno { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+.caption { font-size: 15.5px; line-height: 1.5; min-height: 6.5em; }
+.caption em, .steps em { font-family: var(--font-tree); font-size: 1.08em; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--chip); color: var(--blue); }
+.tag.red { background: var(--hl-red); color: var(--red); }
+ol.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--frame); padding-top: 10px; }
+ol.steps button {
+  width: 100%; text-align: left; font: inherit; font-size: 13.5px; color: var(--muted);
+  background: transparent; border: 0; border-radius: 5px; padding: 4px 6px; cursor: pointer;
+  display: grid; grid-template-columns: 1.6em 1fr; gap: 4px;
+}
+ol.steps button .n { font-variant-numeric: tabular-nums; }
+ol.steps button.done { color: var(--ink); }
+ol.steps button.now { background: var(--chip); color: var(--blue); font-weight: 600; }
+ol.steps button.mv .t { color: var(--red); }
+ol.steps button:hover { background: var(--chip); }
+
+button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+/* tree */
+svg .edge { stroke: var(--line); stroke-width: 1.4; stroke-linecap: round; fill: none; }
+svg .lab { font-family: var(--font-tree); font-size: 17px; fill: var(--ink); }
+svg .sub { font-style: italic; font-size: 12px; }
+svg .side { font-family: var(--font-tree); font-size: 13.5px; fill: var(--blue); }
+svg .feat { font-family: var(--font-tree); font-size: 12.5px; fill: var(--blue); }
+svg .brk { stroke: var(--blue); stroke-width: 1; fill: none; }
+svg .word { font-family: var(--font-tree); font-size: 16px; fill: var(--ink); }
+svg .word.trace { fill: var(--muted); }
+svg .word.fresh { fill: var(--red); }
+svg .word.ins { fill: var(--blue); }
+svg .note { font-family: var(--font-tree); font-size: 11.5px; font-style: italic; fill: var(--muted); }
+svg .roof { stroke: var(--line); stroke-width: 1.2; fill: none; stroke-linejoin: round; }
+svg .mv { stroke: var(--red); stroke-width: 2; fill: none; stroke-linecap: round; }
+svg .mv.old { opacity: 0.55; }
+svg .ahead { fill: var(--red); }
+svg .mvlab { font-family: var(--font-ui); font-size: 12px; font-weight: 600; fill: var(--red); }
+svg .hl-src { fill: var(--hl-blue); }
+svg .hl-dst { fill: var(--hl-red); }
+svg .token { font-family: var(--font-tree); font-size: 17px; font-weight: 600; fill: var(--red); paint-order: stroke; stroke: var(--board); stroke-width: 4px; }
+
+@media (max-width: 1100px) {
+  .wrap { grid-template-columns: minmax(0, 1fr) 300px; }
+  nav.picker { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; gap: 10px 22px; }
+  nav.picker .grp { flex-direction: row; flex-wrap: wrap; }
+  nav.picker button small { display: none; }
+}
+@media (max-width: 760px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); padding: 6px 12px 16px; }
+  header.top { padding: 12px 12px 4px; }
+  .legend { margin-left: 0; }
+  aside.panel { position: static; }
+  .board { height: 70vh; }
+  .sentence .s { font-size: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>LING 203 Movement Trees</h1>
+  <div class="legend" aria-hidden="true"><span class="k-ink">structure</span><span class="k-blue">features, voice</span><span class="k-red">movement</span></div>
+</header>
+
+<div class="wrap">
+  <nav class="picker" id="picker" aria-label="Choose a structure"></nav>
+
+  <section class="stage">
+    <div class="sentence">
+      <span class="s" id="sent"></span>
+      <span class="g" id="gloss"></span>
+    </div>
+    <div class="strings" aria-live="polite">
+      <span class="lab">D-structure</span><span id="dstr"></span>
+      <span class="lab" id="nowlab">Now</span><span id="nowstr"></span>
+    </div>
+    <div class="board" id="board">
+      <span class="phase" id="phase">D-structure</span>
+      <svg id="tree" role="img" aria-label="Syntax tree"></svg>
+    </div>
+    <div class="controls">
+      <button id="restart" title="Back to an empty board (Home)">Restart</button>
+      <button id="back" title="Previous step (Left arrow)" aria-label="Previous step">&#9664;</button>
+      <button id="play" class="primary" title="Play or pause (Space)">Play</button>
+      <button id="next" title="Next step (Right arrow)" aria-label="Next step">&#9654;</button>
+      <span class="lbl">Speed</span>
+      <div class="speed" id="speed" role="group" aria-label="Animation speed"></div>
+      <label for="fit"><input type="checkbox" id="fit" checked> Fit tree to board</label>
+    </div>
+    <div class="keys"><kbd>Space</kbd> play or pause &nbsp; <kbd>&larr;</kbd> <kbd>&rarr;</kbd> step &nbsp; <kbd>Home</kbd> restart</div>
+  </section>
+
+  <aside class="panel" aria-live="polite">
+    <div class="stepno" id="stepno"></div>
+    <div class="caption" id="caption"></div>
+    <div class="tags" id="tags"></div>
+    <ol class="steps" id="steps"></ol>
+  </aside>
+</div>
+
+<script>
+(function () {
+"use strict";
+
+/* ------------------------------------------------------------------ */
+/* Tree builders                                                       */
+/* ------------------------------------------------------------------ */
+let AUTO = 0;
+function N(label, o, ...kids) {
+  const n = Object.assign({ label: label, kids: kids }, o || {});
+  if (!n.id) n.id = "n" + (AUTO++);
+  return n;
+}
+const spec = (id) => N("", { empty: true, id: id });
+const head = (label, word, o) => N(label, Object.assign({ word: word, head: true }, o || {}));
+const dp = (word, o) => N("DP", Object.assign({ word: word, roof: /\s/.test(word) }, o || {}));
+
+function CP(cword, tp, cap, ids) {
+  ids = ids || {};
+  return N("CP", { cap: cap, short: ids.short || "CP" }, spec(ids.spec || "specCP"),
+    N("C′", {}, head("C", cword, { id: ids.C || "C" }), tp));
+}
+function TP(feats, tword, vp, cap, ids) {
+  ids = ids || {};
+  return N("TP", { cap: cap, short: ids.short || "TP" }, spec(ids.spec || "specTP"),
+    N("T′", {}, head("T", tword, { feats: feats, id: ids.T || "T" }), vp));
+}
+function VoiceP(type, specNode, vhead, vp, cap) {
+  return N("VP", { sub: "voice", side: "= " + type, cap: cap, short: "VP_voice (" + type + ")" },
+    specNode, N("V′", {}, vhead, vp));
+}
+function LexVP(cap, ...vbarKids) {
+  return N("VP", { cap: cap, short: "Lexical VP" }, spec(), N("V′", {}, ...vbarKids));
+}
+const FIN = ["+EPP", "+nom"];
+
+const CAP_CP_DECL = "CP. In a declarative clause C is null (Ø). Spec,CP is drawn but stays empty.";
+const CAP_CP_Q = "CP. C holds the null question complementizer Ø[+Q]. It has no sound, so T will have to move into it (T→C).";
+
+/* ------------------------------------------------------------------ */
+/* The structures                                                      */
+/* ------------------------------------------------------------------ */
+const STRUCTS = [
+{
+  id: "unergative", group: "DP movement", name: "Unergative", sentence: "John runs.",
+  tree: CP("Ø",
+    TP(FIN, "Ø[−past]",
+      VoiceP("active", dp("John", { id: "subj", note: "agent" }), head("V", "Ø"),
+        LexVP("Lexical VP. *Runs* is unergative: it has no internal argument. Its only argument, the agent, comes from the voice head.",
+          head("V", "runs"))),
+      "TP. T has present tense, Ø[−past], and the features [+EPP, +nom]. Spec,TP is empty for now."),
+    CAP_CP_DECL),
+  voiceCap: "VP_voice = active. The active voice head introduces the agent: *John* gets the agent theta role in Spec,VP_voice.",
+  dcap: "D-structure. Spec,TP is empty, so the EPP is not satisfied. *John* is in Spec,VP_voice, where it cannot get nominative Case.",
+  moves: [
+    { type: "move", kind: "dp", from: "subj", to: "specTP", text: "John_i", trace: "t_i", short: "*John* → Spec,TP",
+      tags: ["EPP", "nominative Case"],
+      cap: "DP movement. *John* moves from Spec,VP_voice to Spec,TP. Finite T checks its nominative Case, and the EPP is satisfied. It leaves a trace, t_i." }
+  ],
+  scap: "S-structure: *John runs.* The subject of an unergative starts as an agent in Spec,VP_voice. Compare the unaccusative tree, where the subject starts as an object."
+},
+{
+  id: "unaccusative", group: "DP movement", name: "Unaccusative", sentence: "The ice melted.",
+  tree: CP("Ø",
+    TP(FIN, "Ø[+past]",
+      VoiceP("non-active", spec("specVoice"), head("V", "Ø", { feats: ["−acc"] }),
+        LexVP("Lexical VP. *The ice* is the theme. It is generated as the complement of *melted*, in object position.",
+          head("V", "melted"), dp("the ice", { id: "obj", note: "theme" }))),
+      "TP. T has past tense, Ø[+past], and the features [+EPP, +nom]. Spec,TP is empty for now."),
+    CAP_CP_DECL),
+  voiceCap: "VP_voice = non-active. There is no agent, so Spec,VP_voice stays empty. A voice with no external theta role is [−acc] (Burzio's Generalization).",
+  dcap: "D-structure. *The ice* cannot get accusative Case: the voice head is [−acc]. Spec,TP is empty, so the EPP is not satisfied.",
+  moves: [
+    { type: "move", kind: "dp", from: "obj", to: "specTP", text: "the ice_i", trace: "t_i", short: "*the ice* → Spec,TP",
+      tags: ["EPP", "nominative Case"],
+      cap: "DP movement. *The ice* moves from object position to Spec,TP. There it gets nominative Case and satisfies the EPP." }
+  ],
+  scap: "S-structure: *The ice melted.* Turkish marks the same contrast: *Ahmet buz-u eri-t-ti* (active), *Buz eri-t-il-di* (passive), *Buz eri-di* (non-active)."
+},
+{
+  id: "passive", group: "DP movement", name: "Passive", sentence: "Mary was kissed.",
+  tree: CP("Ø",
+    TP(FIN, "Ø[+past]",
+      VoiceP("passive", spec("specVoice"), head("V", "was", { feats: ["−acc"], id: "Vv" }),
+        LexVP("Lexical VP. *Mary* is the theme, the complement of *kissed*. In the active, *John kissed Mary*, it would get accusative Case here.",
+          head("V", "kissed"), dp("Mary", { id: "obj", note: "theme" }))),
+      "TP. T has past tense, Ø[+past], and the features [+EPP, +nom]. Spec,TP is empty for now."),
+    CAP_CP_DECL),
+  voiceCap: "VP_voice = passive. Passive *was* is the voice head. It introduces no agent and is [−acc]. Spec,VP_voice stays empty.",
+  dcap: "D-structure. *Mary* has no Case in object position, and Spec,TP is empty. An expletive cannot help: {*}*It was kissed Mary* is out because *Mary* still has no Case.",
+  moves: [
+    { type: "move", kind: "head", from: "Vv", to: "T", text: "was_j", trace: "t_j", short: "*was*: V → T", label: "",
+      tags: ["tense"],
+      cap: "V→T. *Was* is a tensed auxiliary. In English, auxiliaries raise to T, so *was* moves from the voice head to T." },
+    { type: "move", kind: "dp", from: "obj", to: "specTP", text: "Mary_i", trace: "t_i", short: "*Mary* → Spec,TP",
+      tags: ["EPP", "nominative Case"],
+      cap: "DP movement. *Mary* moves from the structural object position to the structural subject position, Spec,TP, for nominative Case and the EPP." }
+  ],
+  scap: "S-structure: *Mary was kissed.* The passive voice takes away the agent and accusative Case, so the theme becomes the subject."
+},
+{
+  id: "raising", group: "DP movement", name: "Raising", sentence: "John is likely to dance.", level: 50,
+  tree: CP("Ø",
+    TP(FIN, "Ø[−past]",
+      N("VP", { cap: "VP headed by the auxiliary *is*. Auxiliaries are generated in V.", short: "VP (is)" }, spec(),
+        N("V′", {}, head("V", "is", { id: "Vis" }),
+          N("AP", { cap: "AP. *Likely* takes a CP complement. Its theta grid has one role, the CP (theme). It gives no theta role to the matrix subject.", short: "AP (likely)" }, spec(),
+            N("A′", {}, head("A", "likely"),
+              CP("Ø",
+                TP(["+EPP", "−tense", "−nom"], "to",
+                  VoiceP("active", dp("John", { id: "subj", note: "agent" }), head("V", "Ø"),
+                    LexVP("Lexical VP: *dance*.", head("V", "dance"))),
+                  "Embedded TP. *To* is non-finite: [+EPP, −tense, −nom]. It needs a subject, but it cannot check nominative Case.",
+                  { spec: "specTP2", T: "T2", short: "Embedded TP" }),
+                "Embedded CP. This clause is non-finite. Its C is null.",
+                { spec: "specCP2", C: "C2", short: "Embedded CP" }))))),
+      "Matrix TP. Finite T: Ø[−past] with [+EPP, +nom]. Spec,TP is empty."),
+    "Matrix CP. C is null (Ø)."),
+  voiceCap: "Embedded VP_voice = active. *John* gets the agent theta role here, inside its own clause (Locality Constraint on theta role assignment).",
+  dcap: "D-structure. Both Spec,TP positions are empty. *John* has a theta role but no Case: *to* cannot give it nominative.",
+  moves: [
+    { type: "move", kind: "head", from: "Vis", to: "T", text: "is_j", trace: "t_j", short: "*is*: V → T",
+      tags: ["tense"],
+      cap: "V→T. *Is* is a tensed auxiliary, so it raises from V to the matrix T." },
+    { type: "move", kind: "dp", from: "subj", to: "specTP2", text: "John_i", trace: "t_i", short: "A: *John* → embedded Spec,TP", label: "A",
+      tags: ["EPP"],
+      cap: "Step A. *John* moves to the embedded Spec,TP to satisfy the EPP of *to*. This is not a Case position, because *to* is [−nom]." },
+    { type: "move", kind: "dp", from: "specTP2", to: "specTP", text: "John_i", trace: "t_i", short: "B: raising to matrix Spec,TP", label: "B: raising",
+      tags: ["EPP", "nominative Case"],
+      cap: "Step B: raising. *John* moves on to the matrix Spec,TP. Finite T checks nominative Case and the EPP. This is subject-to-subject raising." }
+  ],
+  scap: "S-structure: *John is likely to dance.* Compare {*}*It is likely John to dance* (*John* gets no Case) with *It is likely that John danced* (finite clause: *John* gets Case downstairs and stays)."
+},
+{
+  id: "yes-no", group: "Head movement", name: "Yes/no question", sentence: "Have you eaten the apples?",
+  tree: CP("Ø[+Q]",
+    TP(FIN, "Ø[−past]",
+      N("VP", { cap: "VP headed by the perfect auxiliary *have*. Auxiliaries are generated in V.", short: "VP (have)" }, spec(),
+        N("V′", {}, head("V", "have", { id: "Vhave" }),
+          VoiceP("active", dp("you", { id: "subj", note: "agent" }), head("V", "Ø"),
+            LexVP("Lexical VP. *The apples* is the theme, the complement of *eaten*.",
+              head("V", "eaten"), dp("the apples"))))),
+      "TP. T is Ø[−past] with [+EPP, +nom]. Spec,TP is empty for now."),
+    CAP_CP_Q),
+  voiceCap: "VP_voice = active. *You* gets the agent theta role in Spec,VP_voice.",
+  dcap: "D-structure. Spec,TP is empty, *you* has no Case yet, and the Ø[+Q] complementizer has no sound.",
+  moves: [
+    { type: "move", kind: "dp", from: "subj", to: "specTP", text: "you_i", trace: "t_i", short: "*you* → Spec,TP",
+      tags: ["EPP", "nominative Case"],
+      cap: "DP movement. *You* moves to Spec,TP for nominative Case and the EPP." },
+    { type: "move", kind: "head", from: "Vhave", to: "T", text: "have_j", trace: "t_j", short: "*have*: V → T", label: "1",
+      tags: ["tense"],
+      cap: "V→T. *Have* is a tensed auxiliary, so it raises to T." },
+    { type: "move", kind: "head", from: "T", to: "C", text: "Ø[+Q]+have_j", trace: "t_j", token: "have", short: "T → C", label: "2",
+      tags: ["Ø[+Q]"],
+      cap: "T→C. Ø[+Q] needs phonological content, so T (now holding *have*) moves to C. This is subject-aux inversion." }
+  ],
+  scap: "S-structure: *Have you eaten the apples?* T→C needs an empty C. With an overt C it is blocked: {*}*I wonder if have you eaten the apples.*"
+},
+{
+  id: "do-support", group: "Head movement", name: "Do-support", sentence: "Do you eat apples?",
+  tree: CP("Ø[+Q]",
+    TP(FIN, "Ø[−past]",
+      VoiceP("active", dp("you", { id: "subj", note: "agent" }), head("V", "Ø"),
+        LexVP("Lexical VP. *Apples* is the theme. *Eat* is a main verb, so in English it stays in V.",
+          head("V", "eat"), dp("apples"))),
+      "TP. T is Ø[−past] with [+EPP, +nom]. Spec,TP is empty for now."),
+    CAP_CP_Q),
+  voiceCap: "VP_voice = active. *You* gets the agent theta role in Spec,VP_voice.",
+  dcap: "D-structure. Spec,TP is empty, *you* has no Case yet, and Ø[+Q] has no sound.",
+  moves: [
+    { type: "move", kind: "dp", from: "subj", to: "specTP", text: "you_i", trace: "t_i", short: "*you* → Spec,TP",
+      tags: ["EPP", "nominative Case"],
+      cap: "DP movement. *You* moves to Spec,TP for nominative Case and the EPP." },
+    { type: "note", short: "Problem: T is empty", hl: ["T", "C"],
+      tags: ["verb movement parameter"],
+      cap: "Problem. Ø[+Q] needs T to move to C, but T holds only Ø[−past]. English main verbs do not raise to T, so *eat* cannot fill it: {*}*Eat you apples?* is out." },
+    { type: "insert", node: "T", word: "do", short: "Insert *do* into T",
+      tags: ["last resort"],
+      cap: "Do-support. As a last resort, the dummy verb *do* is inserted into T (*do* + [−past] = *do*)." },
+    { type: "move", kind: "head", from: "T", to: "C", text: "Ø[+Q]+do_j", trace: "t_j", token: "do", short: "T → C",
+      tags: ["Ø[+Q]"],
+      cap: "T→C. T, now holding *do*, moves to C." }
+  ],
+  scap: "S-structure: *Do you eat apples?* Do-support also rescues negation: *I didn't eat the apple.*"
+},
+{
+  id: "french-v-to-t", group: "Head movement", name: "French V→T", sentence: "Je mange souvent des pommes.",
+  gloss: "I eat often of.the apples · ‘I often eat apples.’",
+  tree: CP("Ø",
+    TP(FIN, "Ø[−past]",
+      VoiceP("active", dp("je", { id: "subj", note: "agent" }), head("V", "Ø", { id: "Vv" }),
+        N("VP", { cap: "Lexical VP. The adverb *souvent* adjoins to V′. So far the order is the English one: *je souvent mange* (I often eat).", short: "Lexical VP" }, spec(),
+          N("V′", {}, N("AdvP", { word: "souvent" }),
+            N("V′", {}, head("V", "mange", { id: "V" }), dp("des pommes"))))),
+      "TP. T is Ø[−past] with [+EPP, +nom]. Spec,TP is empty for now."),
+    CAP_CP_DECL),
+  voiceCap: "VP_voice = active. *Je* gets the agent theta role in Spec,VP_voice.",
+  dcap: "D-structure: *je souvent mange des pommes*. In French all tensed verbs raise to T (verb movement parameter).",
+  moves: [
+    { type: "move", kind: "head", from: "V", to: "T", text: "mange_j", trace: "t_j", short: "*mange*: V → T",
+      tags: ["tense"],
+      cap: "V→T. *Mange* moves to T and combines with tense. Look at the order now: verb, subject, object. This is exactly Irish VSO." },
+    { type: "move", kind: "dp", from: "subj", to: "specTP", text: "je_i", trace: "t_i", short: "*je* → Spec,TP",
+      tags: ["EPP", "nominative Case"],
+      cap: "DP movement. *Je* moves to Spec,TP for nominative Case and the EPP. French goes one step further than Irish." }
+  ],
+  scap: "S-structure: *Je mange souvent des pommes.* The tensed verb now comes before the adverb. English main verbs stay in V: *I often eat apples*."
+},
+{
+  id: "french-question", group: "Head movement", name: "French question", sentence: "Mangez-vous des pommes?",
+  gloss: "eat.2PL you of.the apples · ‘Do you eat apples?’",
+  tree: CP("Ø[+Q]",
+    TP(FIN, "Ø[−past]",
+      VoiceP("active", dp("vous", { id: "subj", note: "agent" }), head("V", "Ø", { id: "Vv" }),
+        LexVP("Lexical VP. *Des pommes* is the theme.",
+          head("V", "mangez", { id: "V" }), dp("des pommes"))),
+      "TP. T is Ø[−past] with [+EPP, +nom]. Spec,TP is empty for now."),
+    CAP_CP_Q),
+  voiceCap: "VP_voice = active. *Vous* gets the agent theta role in Spec,VP_voice.",
+  dcap: "D-structure: *vous mangez des pommes*, with Ø[+Q] in C.",
+  moves: [
+    { type: "move", kind: "head", from: "V", to: "T", text: "mangez_j", trace: "t_j", short: "*mangez*: V → T", label: "1",
+      tags: ["tense"],
+      cap: "V→T, movement 1. French main verbs raise, so *mangez* moves to T." },
+    { type: "move", kind: "dp", from: "subj", to: "specTP", text: "vous_i", trace: "t_i", short: "*vous* → Spec,TP",
+      tags: ["EPP", "nominative Case"],
+      cap: "DP movement. *Vous* moves to Spec,TP for nominative Case and the EPP." },
+    { type: "move", kind: "head", from: "T", to: "C", text: "Ø[+Q]+mangez_j", trace: "t_j", token: "mangez", short: "T → C", label: "2",
+      tags: ["Ø[+Q]"],
+      cap: "T→C, movement 2. T, now holding the verb, moves to Ø[+Q]. The main verb ends up in C." }
+  ],
+  scap: "S-structure: *Mangez-vous des pommes?* French main verbs can reach C because they first reach T. English main verbs never reach T: {*}*Eat you apples?*"
+},
+{
+  id: "irish-vso", group: "Head movement", name: "Irish VSO", sentence: "Phóg Máire an lucharachán.",
+  gloss: "kissed Mary the leprechaun · ‘Mary kissed the leprechaun.’",
+  tree: CP("Ø",
+    TP(["+nom"], "Ø[+past]",
+      VoiceP("active", dp("Máire", { id: "subj", note: "agent" }), head("V", "Ø", { id: "Vv" }),
+        LexVP("Lexical VP. *An lucharachán* is the theme.",
+          head("V", "phóg", { id: "V" }), dp("an lucharachán"))),
+      "TP. T is Ø[+past]. It checks nominative Case."),
+    CAP_CP_DECL),
+  voiceCap: "VP_voice = active. *Máire* gets the agent theta role in Spec,VP_voice.",
+  dcap: "D-structure: *Máire phóg an lucharachán* (SVO). Irish tensed verbs raise to T: the auxiliary *tá* and a tensed verb like *phóg* fill the same first slot.",
+  moves: [
+    { type: "move", kind: "head", from: "V", to: "T", text: "phóg_j", trace: "t_j", short: "*phóg*: V → T",
+      tags: ["tense"],
+      cap: "V→T. *Phóg* moves to T. The subject stays in Spec,VP_voice, so the order is verb, subject, object." }
+  ],
+  scap: "S-structure: *Phóg Máire an lucharachán* (VSO). In Irish, finite T gives nominative Case to the DP it immediately c-commands, so *Máire* can stay in Spec,VP_voice. VSO is not T→C: it also appears after an overt C, *Duirt mé gur phóg Máire an lucharachán*."
+}
+];
+
+/* ------------------------------------------------------------------ */
+/* Compile steps                                                       */
+/* ------------------------------------------------------------------ */
+function preorder(n, out, parent) {
+  n.parent = parent || null;
+  out.push(n);
+  n.kids.forEach(k => preorder(k, out, n));
+  return out;
+}
+function compile(S) {
+  const all = preorder(S.tree, []);
+  S.nodes = {};
+  all.forEach(n => { S.nodes[n.id] = n; });
+  all.forEach(n => { if (n.sub === "voice" && !n.cap) n.cap = S.voiceCap; });
+  const steps = [];
+  let cur = null;
+  all.forEach(n => {
+    if (n.cap) {
+      cur = { type: "build", nodes: [], cap: n.cap, short: "Build " + (n.short || n.label) };
+      steps.push(cur);
+    }
+    cur.nodes.push(n.id);
+  });
+  steps.push({ type: "note", phase: "D", short: "D-structure", cap: S.dcap, tags: ["theta roles assigned"] });
+  S.moves.forEach(m => steps.push(m));
+  steps.push({ type: "note", phase: "S", short: "S-structure", cap: S.scap });
+  S.steps = steps;
+}
+
+/* ------------------------------------------------------------------ */
+/* State                                                               */
+/* ------------------------------------------------------------------ */
+function emptyState() { return { shown: new Set(), over: {}, arrows: [], fresh: {} }; }
+function applyStep(S, st, step) {
+  st.fresh = {};
+  if (step.type === "build") step.nodes.forEach(id => st.shown.add(id));
+  else if (step.type === "move") {
+    const toN = S.nodes[step.to];
+    st.over[step.to] = { label: (st.over[step.to] && st.over[step.to].label) || (toN.empty ? "DP" : toN.label), word: step.text };
+    const fromN = S.nodes[step.from];
+    st.over[step.from] = { label: (st.over[step.from] && st.over[step.from].label) || (fromN.empty ? "DP" : fromN.label), word: step.trace };
+    st.arrows.push({ from: step.from, to: step.to, kind: step.kind, label: step.label || "" });
+    st.fresh[step.to] = "fresh";
+  } else if (step.type === "insert") {
+    st.over[step.node] = { word: step.word };
+    st.fresh[step.node] = "ins";
+  }
+}
+function stateAt(S, k) {
+  const st = emptyState();
+  for (let i = 0; i < k; i++) applyStep(S, st, S.steps[i]);
+  return st;
+}
+function eff(S, st, n) {
+  const o = st.over[n.id];
+  if (!o) return n;
+  return Object.assign({}, n, { label: o.label || n.label, word: o.word !== undefined ? o.word : n.word, empty: false, roof: o.word && /\s/.test(o.word.replace(/^Ø\[[^\]]*\]\+/, "")) && n.label !== "T" && n.label !== "C" && n.label !== "V" });
+}
+
+/* ------------------------------------------------------------------ */
+/* Measuring and layout                                                */
+/* ------------------------------------------------------------------ */
+let LEVEL = 66;
+const GAP = 16, TOP = 34;
+const cv = document.createElement("canvas").getContext("2d");
+function tw(text, size, style) {
+  cv.font = (style || "") + " " + size + "px \"STIX Two Text\", \"Times New Roman\", serif";
+  return cv.measureText(text).width;
+}
+function splitIdx(w) {
+  const m = /^(.*?)_([a-z])$/.exec(w || "");
+  return m ? { base: m[1], idx: m[2] } : { base: w || "", idx: "" };
+}
+function wordW(w) { const s = splitIdx(w); return tw(s.base, 16) + (s.idx ? tw(s.idx, 11) + 1 : 0); }
+function geom(n) {
+  // vertical layout of a node's lines, relative to the label baseline (y = 0)
+  if (n.empty) return { w: 14, below: 0 };
+  let w = tw(n.label, 17) + (n.sub ? tw(n.sub, 12, "italic") + 2 : 0);
+  const g = { featY: [], wordY: null, roofY: null, noteY: null };
+  let y = 0;
+  if (n.feats && n.feats.length) {
+    n.feats.forEach((f, i) => { y += (i === 0 ? 17 : 15); g.featY.push(y); w = Math.max(w, tw(f, 12.5) + 12); });
+  }
+  if (n.word !== undefined && n.word !== null) {
+    if (n.roof) { g.roofY = [y + 7, y + 19]; y += 33; } else { y += 19; }
+    g.wordY = y; w = Math.max(w, wordW(n.word) + (n.roof ? 10 : 0));
+  }
+  if (n.note) { y += 14; g.noteY = y; w = Math.max(w, tw(n.note, 11.5, "italic")); }
+  g.w = w + 6;
+  g.below = y + 5;
+  g.sideW = n.side ? tw(n.side, 13.5) + 8 : 0;
+  return g;
+}
+function variantsOf(S, n) {
+  const v = [n];
+  S.steps.forEach(s => {
+    if (s.type === "move" && (s.to === n.id || s.from === n.id)) {
+      const lab = n.empty ? "DP" : n.label;
+      v.push(Object.assign({}, n, { empty: false, label: lab, word: s.to === n.id ? s.text : s.trace, roof: false }));
+    }
+    if (s.type === "insert" && s.node === n.id) v.push(Object.assign({}, n, { word: s.word }));
+  });
+  return v;
+}
+function layout(S) {
+  LEVEL = S.level || 66;
+  const box = {};
+  Object.values(S.nodes).forEach(n => {
+    const gs = variantsOf(S, n).map(geom);
+    box[n.id] = { w: Math.max(...gs.map(g => g.w)), below: Math.max(...gs.map(g => g.below)), sideW: Math.max(...gs.map(g => g.sideW || 0)) };
+  });
+  function lay(n) {
+    const b = box[n.id];
+    if (!n.kids.length) {
+      const levels = Math.max(1, Math.ceil((b.below + 24) / LEVEL));
+      n._cont = Array.from({ length: levels }, () => ({ l: -b.w / 2, r: b.w / 2 }));
+      return;
+    }
+    n.kids.forEach(lay);
+    const xs = []; let acc = null;
+    n.kids.forEach(k => {
+      if (!acc) { xs.push(0); acc = k._cont.map(c => ({ l: c.l, r: c.r })); return; }
+      let shift = -Infinity;
+      for (let d = 0; d < Math.min(acc.length, k._cont.length); d++) shift = Math.max(shift, acc[d].r - k._cont[d].l + GAP);
+      xs.push(shift);
+      k._cont.forEach((c, d) => {
+        if (d < acc.length) { acc[d].l = Math.min(acc[d].l, c.l + shift); acc[d].r = Math.max(acc[d].r, c.r + shift); }
+        else acc.push({ l: c.l + shift, r: c.r + shift });
+      });
+    });
+    const mid = (xs[0] + xs[xs.length - 1]) / 2;
+    n.kids.forEach((k, i) => { k._dx = xs[i] - mid; });
+    n._cont = [{ l: -b.w / 2, r: b.w / 2 + b.sideW }].concat(acc.map(c => ({ l: c.l - mid, r: c.r - mid })));
+  }
+  lay(S.tree);
+  let minX = Infinity, maxX = -Infinity, maxY = 0;
+  (function place(n, x, d) {
+    n._x = x; n._y = TOP + d * LEVEL;
+    const b = box[n.id];
+    minX = Math.min(minX, x - b.w / 2); maxX = Math.max(maxX, x + b.w / 2 + b.sideW);
+    maxY = Math.max(maxY, n._y + b.below);
+    n.kids.forEach(k => place(k, x + k._dx, d + 1));
+  })(S.tree, 0, 0);
+  S.box = box;
+  S.view = { x: minX - 110, y: 0, w: (maxX - minX) + 150, h: maxY + 70 };
+}
+
+/* ------------------------------------------------------------------ */
+/* Arrows                                                              */
+/* ------------------------------------------------------------------ */
+function arrowGeom(S, a) {
+  const src = S.nodes[a.from], dst = S.nodes[a.to];
+  const sb = S.box[src.id], db = S.box[dst.id];
+  const s = { x: src._x - (a.kind === "head" ? 4 : 0), y: src._y + Math.max(sb.below, 8) + 5 };
+  const e = { x: dst._x - 3, y: dst._y + Math.max(db.below, 8) + 6 };
+  const dx = Math.max(10, s.x - e.x), dy = Math.max(10, s.y - e.y);
+  let c1, c2;
+  if (a.kind === "head") {
+    c1 = { x: s.x - 6 - 0.15 * dx, y: s.y + 26 };
+    c2 = { x: e.x - 18 - 0.25 * dx, y: e.y + 0.55 * dy + 22 };
+  } else {
+    c1 = { x: s.x - 0.12 * dx - 18, y: s.y + 46 + 0.08 * dy };
+    c2 = { x: e.x - 0.3 * dx - 26, y: e.y + 0.8 * dy + 20 };
+  }
+  return { s: s, c1: c1, c2: c2, e: e };
+}
+function bez(g, t) {
+  const u = 1 - t;
+  return {
+    x: u * u * u * g.s.x + 3 * u * u * t * g.c1.x + 3 * u * t * t * g.c2.x + t * t * t * g.e.x,
+    y: u * u * u * g.s.y + 3 * u * u * t * g.c1.y + 3 * u * t * t * g.c2.y + t * t * t * g.e.y
+  };
+}
+function bezLen(g) { let L = 0, p = g.s; for (let i = 1; i <= 40; i++) { const q = bez(g, i / 40); L += Math.hypot(q.x - p.x, q.y - p.y); p = q; } return L; }
+function pathD(g) { return "M" + f(g.s.x) + " " + f(g.s.y) + " C" + f(g.c1.x) + " " + f(g.c1.y) + " " + f(g.c2.x) + " " + f(g.c2.y) + " " + f(g.e.x) + " " + f(g.e.y); }
+function f(v) { return Math.round(v * 10) / 10; }
+
+/* ------------------------------------------------------------------ */
+/* Rendering                                                           */
+/* ------------------------------------------------------------------ */
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function wordSpans(w) {
+  const s = splitIdx(w);
+  const base = s.base === "t" ? "<tspan font-style=\"italic\">t</tspan>" : esc(s.base);
+  return base + (s.idx ? "<tspan dy=\"4\" font-size=\"11\" font-style=\"italic\">" + s.idx + "</tspan>" : "");
+}
+const ease = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+function nodeSVG(n, opacity, cls) {
+  if (n.empty) return "";
+  const g = geom(n);
+  const x = n._x, y = n._y;
+  let out = "<g opacity=\"" + f(opacity) + "\">";
+  out += "<text class=\"lab\" x=\"" + f(x) + "\" y=\"" + f(y) + "\" text-anchor=\"middle\">" + esc(n.label) +
+    (n.sub ? "<tspan class=\"sub\" dy=\"4\">" + esc(n.sub) + "</tspan>" : "") + "</text>";
+  if (n.side) {
+    const lw = tw(n.label, 17) + (n.sub ? tw(n.sub, 12, "italic") + 2 : 0);
+    out += "<text class=\"side\" x=\"" + f(x + lw / 2 + 5) + "\" y=\"" + f(y) + "\">" + esc(n.side) + "</text>";
+  }
+  if (g.featY.length) {
+    const fw = Math.max(...n.feats.map(t => tw(t, 12.5)));
+    const top = y + g.featY[0] - 11, bot = y + g.featY[g.featY.length - 1] + 4;
+    const lx = x - fw / 2 - 5, rx = x + fw / 2 + 5;
+    out += "<path class=\"brk\" d=\"M" + f(lx + 3) + " " + f(top) + " H" + f(lx) + " V" + f(bot) + " H" + f(lx + 3) +
+      " M" + f(rx - 3) + " " + f(top) + " H" + f(rx) + " V" + f(bot) + " H" + f(rx - 3) + "\"/>";
+    n.feats.forEach((t, i) => { out += "<text class=\"feat\" x=\"" + f(lx + 4) + "\" y=\"" + f(y + g.featY[i]) + "\">" + esc(t) + "</text>"; });
+  }
+  if (g.roofY) {
+    const ww = wordW(n.word) / 2 + 4;
+    out += "<path class=\"roof\" d=\"M" + f(x) + " " + f(y + g.roofY[0]) + " L" + f(x - ww) + " " + f(y + g.roofY[1]) + " H" + f(x + ww) + " Z\"/>";
+  }
+  if (g.wordY !== null) {
+    const isTrace = /^t_/.test(n.word);
+    out += "<text class=\"word" + (isTrace ? " trace" : "") + (cls ? " " + cls : "") + "\" x=\"" + f(x) + "\" y=\"" + f(y + g.wordY) + "\" text-anchor=\"middle\">" + wordSpans(n.word) + "</text>";
+  }
+  if (g.noteY !== null) out += "<text class=\"note\" x=\"" + f(x) + "\" y=\"" + f(y + g.noteY) + "\" text-anchor=\"middle\">" + esc(n.note) + "</text>";
+  return out + "</g>";
+}
+function hlRect(S, n, cls, alpha) {
+  const b = S.box[n.id];
+  const w = Math.max(b.w, 26) + 10, h = Math.max(b.below, 8) + 26;
+  return "<rect class=\"" + cls + "\" opacity=\"" + f(alpha) + "\" rx=\"7\" x=\"" + f(n._x - w / 2) + "\" y=\"" + f(n._y - 19) + "\" width=\"" + f(w) + "\" height=\"" + f(h) + "\"/>";
+}
+
+function render(S, st, anim) {
+  // anim: { step, p } for the step being animated (not yet applied to st)
+  let edges = "", nodes = "", arrows = "", under = "", over = "";
+  const step = anim ? anim.step : null, p = anim ? anim.p : 1;
+  const appear = {};
+  if (step && step.type === "build") {
+    const k = step.nodes.length;
+    step.nodes.forEach((id, i) => { appear[id] = clamp((p * (k + 1.2) - i) / 1.6, 0, 1); });
+  }
+  const moveP = step && step.type === "move" ? p : null;
+
+  Object.values(S.nodes).forEach(n0 => {
+    let a = st.shown.has(n0.id) ? 1 : (appear[n0.id] !== undefined ? appear[n0.id] : 0);
+    if (a <= 0) return;
+    const n = eff(S, st, n0);
+    if (n0.parent) {
+      const par = n0.parent;
+      const x1 = par._x, y1 = par._y + 6;
+      const x2 = n0._x, y2 = n0._y - (n.empty ? 2 : 15);
+      const q = st.shown.has(n0.id) ? 1 : clamp(a * 1.6, 0, 1);
+      edges += "<line class=\"edge\" x1=\"" + f(x1) + "\" y1=\"" + f(y1) + "\" x2=\"" + f(x1 + (x2 - x1) * q) + "\" y2=\"" + f(y1 + (y2 - y1) * q) + "\"/>";
+    }
+    const op = st.shown.has(n0.id) ? 1 : clamp((a - 0.45) / 0.55, 0, 1);
+    let cls = st.fresh[n0.id] || "";
+    // during a move: source fades to trace late in the step
+    if (moveP !== null && step.from === n0.id) {
+      if (moveP < 0.62) { nodes += nodeSVG(n, op, ""); }
+      else {
+        const tr = Object.assign({}, n, { label: n.empty ? "DP" : n.label, word: step.trace, empty: false, roof: false });
+        nodes += nodeSVG(n, op * clamp(1 - (moveP - 0.62) / 0.1, 0, 1), "");
+        nodes += nodeSVG(tr, op * clamp((moveP - 0.66) / 0.12, 0, 1), "");
+      }
+      return;
+    }
+    if (moveP !== null && step.to === n0.id) {
+      if (moveP < 0.9) {
+        // landing site keeps its old content; an empty spec stays a bare branch
+        if (!n.empty) nodes += nodeSVG(n, op * (step.kind === "head" && moveP > 0.82 ? clamp(1 - (moveP - 0.82) / 0.08, 0, 1) : 1), cls);
+      } else {
+        const lab = n.empty ? "DP" : n.label;
+        const land = Object.assign({}, n, { empty: false, label: lab, word: step.text, roof: false });
+        nodes += nodeSVG(land, clamp((moveP - 0.88) / 0.1, 0, 1), "fresh");
+      }
+      return;
+    }
+    if (step && step.type === "insert" && step.node === n0.id) {
+      if (p < 0.45) nodes += nodeSVG(n, clamp(1 - p / 0.45, 0, 1), cls);
+      else nodes += nodeSVG(Object.assign({}, n, { word: step.word }), clamp((p - 0.45) / 0.4, 0, 1), "ins");
+      return;
+    }
+    nodes += nodeSVG(n, op, cls);
+  });
+
+  // highlights
+  if (step && step.type === "move") {
+    const src = S.nodes[step.from], dst = S.nodes[step.to];
+    under += hlRect(S, src, "hl-src", clamp(p / 0.12, 0, 1) * clamp((0.9 - p) / 0.1, 0, 1));
+    under += hlRect(S, dst, "hl-dst", clamp((p - 0.82) / 0.1, 0, 1));
+  } else if (step && step.type === "insert") {
+    under += hlRect(S, S.nodes[step.node], "hl-src", Math.sin(Math.PI * clamp(p, 0, 1)));
+  } else if (step && step.type === "note" && step.hl) {
+    step.hl.forEach(id => { under += hlRect(S, S.nodes[id], "hl-src", Math.sin(Math.PI * clamp(p, 0, 1))); });
+  } else if (!anim) {
+    Object.keys(st.fresh).forEach(id => { under += hlRect(S, S.nodes[id], st.fresh[id] === "ins" ? "hl-src" : "hl-dst", 1); });
+  }
+
+  // arrows already applied
+  const nA = st.arrows.length;
+  st.arrows.forEach((a, i) => {
+    const g = arrowGeom(S, a);
+    const old = anim ? true : i < nA - 1;
+    arrows += "<path class=\"mv" + (old ? " old" : "") + "\" d=\"" + pathD(g) + "\" marker-end=\"url(#ah)\"/>";
+    if (a.label) { const m = bez(g, 0.5); arrows += "<text class=\"mvlab\" x=\"" + f(m.x - 8) + "\" y=\"" + f(m.y) + "\" text-anchor=\"end\">" + esc(a.label) + "</text>"; }
+  });
+  // arrow being drawn
+  if (moveP !== null) {
+    const g = arrowGeom(S, step);
+    const L = bezLen(g);
+    const dp = clamp((moveP - 0.12) / 0.38, 0, 1);
+    if (dp > 0) {
+      arrows += "<path class=\"mv\" d=\"" + pathD(g) + "\" stroke-dasharray=\"" + f(L) + "\" stroke-dashoffset=\"" + f(L * (1 - ease(dp))) + "\"" + (dp >= 1 ? " marker-end=\"url(#ah)\"" : "") + "/>";
+      if (step.label && dp >= 1) { const m = bez(g, 0.5); arrows += "<text class=\"mvlab\" x=\"" + f(m.x - 8) + "\" y=\"" + f(m.y) + "\" text-anchor=\"end\">" + esc(step.label) + "</text>"; }
+    }
+    const fp = clamp((moveP - 0.52) / 0.38, 0, 1);
+    if (fp > 0 && fp < 1) {
+      const pt = bez(g, ease(fp));
+      const tok = step.token || splitIdx(step.text).base;
+      over += "<text class=\"token\" x=\"" + f(pt.x) + "\" y=\"" + f(pt.y) + "\" text-anchor=\"middle\">" + esc(tok) + "</text>";
+    }
+  }
+
+  const v = S.view;
+  return "<defs><marker id=\"ah\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path class=\"ahead\" d=\"M0 0 L10 5 L0 10 Z\"/></marker></defs>" +
+    "<g>" + under + "</g><g>" + edges + "</g><g>" + arrows + "</g><g>" + nodes + "</g><g>" + over + "</g>";
+}
+
+/* ------------------------------------------------------------------ */
+/* Sentence strings                                                    */
+/* ------------------------------------------------------------------ */
+function leaves(S, st) {
+  const out = [];
+  (function walk(n) {
+    if (!n.kids.length) { out.push(n); return; }
+    n.kids.forEach(walk);
+  })(S.tree);
+  return out;
+}
+function surfaceHTML(S, st, wantTraces) {
+  const toks = [];
+  leaves(S, st).forEach(n0 => {
+    if (!st.shown.has(n0.id)) return;
+    const n = eff(S, st, n0);
+    if (n.empty || n.word === undefined) return;
+    let w = n.word.replace(/^Ø\[[^\]]*\]\+?/, "").replace(/^Ø$/, "");
+    if (!w) return;
+    const s = splitIdx(w);
+    if (s.base === "t") { if (wantTraces) toks.push("<span class=\"tr\">t<sub>" + s.idx + "</sub></span>"); return; }
+    toks.push((st.fresh[n0.id] === "fresh" ? "<span class=\"moved\">" : "<span>") + esc(s.base) + "</span>");
+  });
+  return toks.join(" ");
+}
+
+/* ------------------------------------------------------------------ */
+/* Controller                                                          */
+/* ------------------------------------------------------------------ */
+const SPEEDS = [0.5, 1, 1.5, 2, 3];
+let speed = 1;
+let S = null, cursor = 0, playing = false, anim = null, timer = null;
+
+const $ = id => document.getElementById(id);
+const svg = $("tree");
+
+function capHTML(t) {
+  return esc(t)
+    .replace(/\{\*\}/g, "∗")
+    .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+    .replace(/∗/g, "*")
+    .replace(/VP_voice/g, "VP<sub>voice</sub>")
+    .replace(/\bt_([a-z])/g, "<i>t</i><sub>$1</sub>");
+}
+function baseDur(step) {
+  if (step.type === "build") return 650 + 300 * step.nodes.length;
+  if (step.type === "move") return 2900;
+  if (step.type === "insert") return 1500;
+  return 900;
+}
+function dwell(step) { return step.type === "note" ? 2600 : 1300; }
+
+function choose(id, keepHash) {
+  stop();
+  S = STRUCTS.find(s => s.id === id) || STRUCTS[0];
+  if (!S.steps) { compile(S); }
+  if (!S.view) layout(S);
+  cursor = S.steps.length; // open complete at rest
+  document.querySelectorAll("#picker button").forEach(b => b.setAttribute("aria-current", b.dataset.id === S.id ? "true" : "false"));
+  $("sent").textContent = S.sentence;
+  $("gloss").textContent = S.gloss || "";
+  const dState = stateAt(S, S.steps.findIndex(s => s.phase === "D"));
+  $("dstr").innerHTML = surfaceHTML(S, dState, false);
+  svg.setAttribute("viewBox", [S.view.x, S.view.y, S.view.w, S.view.h].map(f).join(" "));
+  svg.setAttribute("aria-label", "Syntax tree for " + S.sentence);
+  buildStepList();
+  if (!keepHash && location.hash.slice(1) !== S.id) { try { history.replaceState(null, "", "#" + S.id); } catch (e) { location.hash = S.id; } }
+  draw();
+}
+
+function buildStepList() {
+  const ol = $("steps");
+  ol.innerHTML = "";
+  S.steps.forEach((s, i) => {
+    const li = document.createElement("li");
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = s.type === "move" ? "mv" : "";
+    b.innerHTML = "<span class=\"n\">" + (i + 1) + "</span><span class=\"t\">" + capHTML(s.short) + "</span>";
+    b.addEventListener("click", () => { stop(); cursor = i + 1; draw(); });
+    li.appendChild(b);
+    ol.appendChild(li);
+  });
+}
+
+function draw() {
+  const st = stateAt(S, cursor);
+  svg.innerHTML = render(S, st, anim ? { step: S.steps[cursor], p: anim.p } : null);
+  const total = S.steps.length;
+  const showing = anim ? cursor : cursor - 1;
+  const step = showing >= 0 ? S.steps[showing] : null;
+  $("stepno").textContent = step ? "Step " + (showing + 1) + " of " + total : "Ready";
+  $("caption").innerHTML = step ? capHTML(step.cap) : "The board is empty. Press <strong>Play</strong> to build the tree from CP down, then watch each movement.";
+  $("tags").innerHTML = step && step.tags ? step.tags.map(t => "<span class=\"tag" + (step.type === "move" ? " red" : "") + "\">" + esc(t) + "</span>").join("") : "";
+  document.querySelectorAll("#steps button").forEach((b, i) => {
+    b.classList.toggle("done", i < cursor);
+    b.classList.toggle("now", i === showing);
+  });
+  const nowState = anim ? st : st;
+  $("nowstr").innerHTML = surfaceHTML(S, nowState, true) || "<span class=\"tr\">(nothing yet)</span>";
+  const dIdx = S.steps.findIndex(s => s.phase === "D");
+  const atEnd = cursor === total && !anim;
+  $("nowlab").textContent = atEnd ? "S-structure" : "Now";
+  const ph = $("phase");
+  if (atEnd) { ph.textContent = "S-structure"; ph.className = "phase s"; }
+  else if (cursor > dIdx + (anim ? 0 : 1) || (anim && cursor > dIdx)) { ph.textContent = "Transformations"; ph.className = "phase"; }
+  else { ph.textContent = "Building D-structure"; ph.className = "phase"; }
+  $("play").textContent = playing ? "Pause" : (cursor >= total ? "Replay" : "Play");
+}
+
+function frame(ts) {
+  if (!anim) return;
+  if (anim.t0 === null) anim.t0 = ts - anim.p * anim.dur;
+  anim.p = (ts - anim.t0) / anim.dur;
+  if (anim.p >= 1) { finishStep(); return; }
+  draw();
+  anim.raf = requestAnimationFrame(frame);
+}
+function startStep() {
+  if (cursor >= S.steps.length) { playing = false; draw(); return; }
+  const step = S.steps[cursor];
+  anim = { p: 0, t0: null, dur: baseDur(step) / speed, raf: 0 };
+  draw();
+  anim.raf = requestAnimationFrame(frame);
+}
+function finishStep() {
+  if (anim) cancelAnimationFrame(anim.raf);
+  const step = S.steps[cursor];
+  anim = null;
+  cursor++;
+  draw();
+  if (playing) {
+    if (cursor >= S.steps.length) { playing = false; draw(); return; }
+    timer = setTimeout(() => { timer = null; if (playing) startStep(); }, dwell(step) / speed);
+  }
+}
+function stop() {
+  playing = false;
+  if (timer) { clearTimeout(timer); timer = null; }
+  if (anim) { cancelAnimationFrame(anim.raf); anim = null; }
+}
+function play() {
+  if (playing) { // pause: let the current step finish its frame, then hold
+    playing = false;
+    if (timer) { clearTimeout(timer); timer = null; }
+    draw();
+    return;
+  }
+  if (cursor >= S.steps.length) cursor = 0;
+  playing = true;
+  if (!anim) startStep(); else draw();
+}
+function next() {
+  if (timer) { clearTimeout(timer); timer = null; }
+  if (anim) { finishStep(); return; }
+  if (cursor < S.steps.length) startStep();
+}
+function back() {
+  const wasAnim = !!anim;
+  stop();
+  if (!wasAnim) cursor = Math.max(0, cursor - 1);
+  draw();
+}
+function restart() { stop(); cursor = 0; draw(); }
+function setSpeed(v) {
+  if (anim && anim.t0 !== null) {
+    const now = performance.now();
+    const p = (now - anim.t0) / anim.dur;
+    anim.dur = anim.dur * speed / v;
+    anim.t0 = now - p * anim.dur;
+  }
+  speed = v;
+  document.querySelectorAll("#speed button").forEach(b => b.setAttribute("aria-pressed", Number(b.dataset.v) === v ? "true" : "false"));
+}
+
+/* ------------------------------------------------------------------ */
+/* UI wiring                                                           */
+/* ------------------------------------------------------------------ */
+function buildPicker() {
+  const nav = $("picker");
+  ["DP movement", "Head movement"].forEach(g => {
+    const wrap = document.createElement("div");
+    const h = document.createElement("h2"); h.textContent = g; wrap.appendChild(h);
+    const grp = document.createElement("div"); grp.className = "grp";
+    STRUCTS.filter(s => s.group === g).forEach(s => {
+      const b = document.createElement("button");
+      b.type = "button"; b.dataset.id = s.id;
+      b.innerHTML = esc(s.name) + "<small>" + esc(s.sentence) + "</small>";
+      b.addEventListener("click", () => choose(s.id));
+      grp.appendChild(b);
+    });
+    wrap.appendChild(grp); nav.appendChild(wrap);
+  });
+  const sp = $("speed");
+  SPEEDS.forEach(v => {
+    const b = document.createElement("button");
+    b.type = "button"; b.dataset.v = v; b.textContent = v + "×";
+    b.setAttribute("aria-pressed", v === speed ? "true" : "false");
+    b.addEventListener("click", () => setSpeed(v));
+    sp.appendChild(b);
+  });
+  $("play").addEventListener("click", play);
+  $("next").addEventListener("click", next);
+  $("back").addEventListener("click", back);
+  $("restart").addEventListener("click", restart);
+  $("fit").addEventListener("change", e => { $("board").classList.toggle("natural", !e.target.checked); fitNatural(); });
+  document.addEventListener("keydown", e => {
+    if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "SELECT")) return;
+    if (e.key === " " || e.code === "Space") { e.preventDefault(); play(); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); next(); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); back(); }
+    else if (e.key === "Home") { e.preventDefault(); restart(); }
+  });
+  window.addEventListener("hashchange", () => { const id = location.hash.slice(1); if (S && id && id !== S.id && STRUCTS.some(s => s.id === id)) choose(id, true); });
+}
+function fitNatural() {
+  if ($("board").classList.contains("natural") && S) { svg.style.width = Math.round(S.view.w * 1.15) + "px"; svg.style.height = Math.round(S.view.h * 1.15) + "px"; }
+  else { svg.style.width = ""; svg.style.height = ""; }
+}
+
+function start() {
+  buildPicker();
+  const id = location.hash.slice(1);
+  choose(STRUCTS.some(s => s.id === id) ? id : "passive", true);
+}
+const ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+let started = false;
+const go = () => { if (!started) { started = true; start(); } };
+ready.then(go, go);
+setTimeout(go, 1500);
+})();
+</script>
+</body>
+</html>
