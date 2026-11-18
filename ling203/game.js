@@ -16,6 +16,9 @@ const WEEK_ITEMS={
 ],
 '6–7':[
 {id:'game',title:'Tree Builder',kind:'html',file:'games/tree-builder.html'}
+],
+'8–9':[
+{id:'movement',title:'Movement Trees',kind:'html',label:'Animation',file:'games/movement-trees.html'}
 ]
 };
 const SCREENS=['home','start','material','office'];
@@ -187,7 +190,7 @@ function startScreen(){
   bindSectionNav();bindWeekPicker();
   return;
  }
- $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING203 · PS</span><h1>${weekLabel(state.weeks)}</h1>${weekDetails(meta)}</div><section class="setup material-picker" aria-label="Week ${esc(state.weeks)} materials"><h2>Materials</h2><div class="mode-buttons material-choices">${items.map(item=>`<button type="button" data-material="${esc(item.id)}">${esc(item.title)}<small>${item.kind==='html'?'Game':'PDF'}</small></button>`).join('')}</div>${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section>${extra}</section>`;
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING203 · PS</span><h1>${weekLabel(state.weeks)}</h1>${weekDetails(meta)}</div><section class="setup material-picker" aria-label="Week ${esc(state.weeks)} materials"><h2>Materials</h2><div class="mode-buttons material-choices">${items.map(item=>`<button type="button" data-material="${esc(item.id)}">${esc(item.title)}<small>${esc(item.label||(item.kind==='html'?'Game':'PDF'))}</small></button>`).join('')}</div>${!storageOK?'<p class="storage-warning">Storage unavailable.</p>':''}</section>${extra}</section>`;
  bindSectionNav();bindWeekPicker();
  document.querySelectorAll('[data-material]').forEach(btn=>{
   btn.onclick=()=>{state.material=btn.dataset.material;state.screen='material';render();focusMain();};
@@ -201,7 +204,7 @@ function materialScreen(){
  const html=item.kind==='html';
  const key=item.key||'';
  const body=html
-  ?`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open game</a></div><iframe class="material-frame game-frame" title="${esc(item.title)}" src="${esc(item.file)}"></iframe>`
+  ?`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">${item.label?'Open in new tab':'Open game'}</a></div><iframe class="material-frame game-frame" title="${esc(item.title)}" src="${esc(item.file)}"></iframe>`
   :key
   ?`<div class="embed-toolbar"><a class="primary" id="openPdf" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open PDF</a><button type="button" id="keyToggle" class="key-toggle" aria-pressed="false"><span class="key-switch" aria-hidden="true"><span></span></span>Answer key</button></div><div class="pdf-stage" id="pdfStage"><iframe class="material-frame pdf-frame" title="${esc(item.title)}" src="${esc(item.file)}#view=FitH"></iframe><iframe class="material-frame pdf-frame key-sheet" title="Answer key" src="${esc(key)}#view=FitH"></iframe></div>`
   :`<div class="embed-toolbar"><a class="primary" href="${esc(item.file)}" target="_blank" rel="noopener noreferrer">Open PDF</a></div><iframe class="material-frame pdf-frame" title="${esc(item.title)}" src="${esc(item.file)}#view=FitH"></iframe>`;
