@@ -250,7 +250,7 @@ function startScreen(){
   return;
  }
  if(state.weeks==='9–10'){
-  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING313 · PS</span><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p class="muted">${esc(meta.topic)}</p></div><section class="setup material-picker" aria-label="PS activities"><h2>Activities</h2><div class="mode-buttons material-choices"><button type="button" id="openHandout">PS Handout</button><button type="button" id="openSuffixLab">Stress &amp; Suffix Lab</button></div></section></section>`;
+  $('app').innerHTML=sectionNav()+weekPicker()+`<section class="intro ps-intro"><div><span class="eyebrow">LING313 · PS</span><h1>${weekLabel(state.weeks)}</h1>${classMeetingsHtml(meta.meetings)}<p class="muted">${esc(meta.topic)}</p></div><section class="setup material-picker" aria-label="PS activities"><h2>Activities</h2><div class="mode-buttons material-choices"><button type="button" id="openHandout">PS Handout</button><button type="button" id="openSuffixLab">Stress Lab</button></div></section></section>`;
   bindSectionNav();bindWeekPicker();
   $('openHandout').onclick=()=>{state.screen='handout';save();render();focusMain();};
   $('openSuffixLab').onclick=()=>{state.screen='suffixlab';save();render();focusMain();};
@@ -319,7 +319,7 @@ function listenScreen(){
 
 function suffixLabScreen(){
  if(state.weeks!=='9–10'){state.screen='start';render();return;}
- $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Weeks 9–10</button><h1>Stress &amp; Suffix Lab</h1></div><div class="embed-toolbar"><a class="primary" href="games/stress-suffix-lab/index.html" target="_blank" rel="noopener noreferrer">Open lab</a></div><iframe class="material-frame game-frame" title="Stress and Suffix Lab" src="games/stress-suffix-lab/index.html"></iframe></section>`;
+ $('app').innerHTML=sectionNav()+weekPicker()+`<section class="material-view"><div class="material-head"><button type="button" id="backPs">← Weeks 9–10</button><h1>Stress Lab</h1></div><div class="embed-toolbar"><a class="primary" href="games/stress-lab/index.html?v=2" target="_blank" rel="noopener noreferrer">Open lab</a></div><iframe class="material-frame game-frame" title="Stress Lab" src="games/stress-lab/index.html?v=2"></iframe></section>`;
  bindSectionNav();bindWeekPicker();
  $('backPs').onclick=()=>{state.screen='start';save();render();focusMain();};
 }
