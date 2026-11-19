@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sezer Stress Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: a single working column; two tools behind tabs; each tool = input row, live result, explanation panel. */
+:root{
+  --bg:#f4f6f9; --surface:#ffffff; --ink:#16202b; --muted:#5a6676; --line:#dbe1e8;
+  --accent:#1d5f8c; --accent-soft:#e3eef6; --stress:#b4530a; --stress-soft:#fbeedd;
+  --root:#16202b; --der:#6b3fa0; --der-soft:#f0e9f8; --inf:#0f7069; --inf-soft:#e1f3f1;
+  --deb:#8a6a00; --deb-soft:#f7f0d6; --ok:#137a3a; --bad:#b42318;
+  --display:"Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --body:"Inter", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161d; --surface:#18202a; --ink:#e7ecf2; --muted:#9aa6b5; --line:#2a3542;
+  --accent:#7db4dd; --accent-soft:#1c3040; --stress:#f0a35c; --stress-soft:#3a2716;
+  --root:#e7ecf2; --der:#c4a2ee; --der-soft:#2c2240; --inf:#6fd0c5; --inf-soft:#15302d;
+  --deb:#e5c65a; --deb-soft:#332b10; --ok:#5fcf8a; --bad:#ff8a7a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161d; --surface:#18202a; --ink:#e7ecf2; --muted:#9aa6b5; --line:#2a3542;
+  --accent:#7db4dd; --accent-soft:#1c3040; --stress:#f0a35c; --stress-soft:#3a2716;
+  --root:#e7ecf2; --der:#c4a2ee; --der-soft:#2c2240; --inf:#6fd0c5; --inf-soft:#15302d;
+  --deb:#e5c65a; --deb-soft:#332b10; --ok:#5fcf8a; --bad:#ff8a7a; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+.wrap{max-width:980px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+header h1{font-family:var(--display);font-weight:700;font-size:clamp(1.6rem,3.4vw,2.2rem);margin:0;letter-spacing:-0.01em;text-wrap:balance}
+header p{margin:.35rem 0 0;color:var(--muted);max-width:65ch}
+.course{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.tabs{display:flex;gap:6px;margin:22px 0 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tab{appearance:none;border:0;background:none;font:600 .95rem var(--body);color:var(--muted);padding:10px 14px;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.panel{display:grid;gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+h2{font-family:var(--display);font-weight:500;font-size:1.15rem;margin:0 0 10px}
+h3{font-family:var(--display);font-weight:500;font-size:1rem;margin:0 0 8px}
+.label{font-family:var(--mono);font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+input[type=text]{font:500 1.05rem var(--body);padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);min-width:0;flex:1 1 220px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{appearance:none;border:0;background:var(--surface);color:var(--muted);font:500 .85rem var(--body);padding:8px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink)}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 .88rem var(--body);padding:8px 12px;border-radius:8px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.hint{color:var(--muted);font-size:.86rem;margin:6px 0 0}
+
+/* syllable tiles */
+.sylls{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.syl{display:grid;justify-items:center;gap:6px;min-width:64px;padding:10px 10px 8px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.syl .pos{font-family:var(--mono);font-size:.68rem;color:var(--muted);height:1em}
+.syl .txt{font:500 1.35rem var(--display)}
+.syl.stressed{border-color:var(--stress);background:var(--stress-soft)}
+.syl.stressed .txt::before{content:"ˈ";color:var(--stress)}
+.w{appearance:none;border:1px solid var(--line);border-radius:999px;font:500 .75rem var(--mono);padding:2px 9px;cursor:pointer;background:var(--surface);color:var(--muted)}
+.w.S{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+button.syl{cursor:pointer;font:inherit;color:inherit}
+button.syl:hover{border-color:var(--accent)}
+.syl.right{border-color:var(--ok)} .syl.wrong{border-color:var(--bad)}
+.syl.attested{outline:2px dashed var(--deb);outline-offset:2px}
+.exc{margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--deb-soft);color:var(--ink);font-size:.92rem}
+.exc b{color:var(--deb)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:500 .88rem var(--body)}
+.chip small{color:var(--muted);font-size:.72rem;margin-left:4px}
+.chip:hover{border-color:var(--accent)}
+table.ex{border-collapse:collapse;width:100%;font-size:.9rem}
+table.ex th,table.ex td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.ex th{font:500 .72rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tw{overflow-x:auto}
+.result{margin-top:14px;font-size:1rem}
+.result b{font-weight:600}
+.ipa{font-family:var(--mono)}
+
+/* decision tree */
+.tree{display:grid;gap:10px;margin-top:4px}
+.node{border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--bg);font-size:.92rem}
+.node.on{border-color:var(--stress);background:var(--stress-soft)}
+.node.end.on{font-weight:600}
+.branch{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.branch .col{display:grid;gap:10px;align-content:start}
+.edge{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.cols{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+
+.score{font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.syl,.node,.chip{transition:border-color .15s, background-color .15s}}
+</style>
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="course">LING 313.02 · Phonology and Morphology of Turkish</div>
+  <h1>Sezer Stress Lab</h1>
+  <p>Predict the position of primary stress in non-finally stressed (NFS) words with Sezer's (1981) Weak Penult Rule and Strong Syllable Rule, and compare the prediction with the exceptions Sezer reports.</p>
+</header>
+
+<!-- ============ STRESS ============ -->
+<section class="panel" id="stress" style="margin-top:22px">
+  <div class="cols">
+    <div class="card">
+      <h2>Analyze a word</h2>
+      <div class="row">
+        <input type="text" id="stress-word" value="Kastamonu" aria-label="Word to analyze" autocomplete="off" spellcheck="false">
+        <div class="seg" role="group" aria-label="Word type">
+          <button id="mode-nfs" aria-pressed="true">NFS word</button>
+          <button id="mode-reg" aria-pressed="false">Regular word</button>
+        </div>
+      </div>
+      <p class="hint">Syllable weight is computed from spelling. Long vowels are usually not written, so tap W/S to correct a syllable (e.g. a loanword with a long vowel).</p>
+      <div class="sylls" id="sylls"></div>
+      <div class="result" id="stress-result"></div>
+      <div class="exc" id="stress-exc" hidden></div>
+    </div>
+    <div class="card">
+      <h2>Decision procedure</h2>
+      <div class="tree" id="tree">
+        <div class="node" id="n-q1">Is the NFS word strong? <span class="edge">(antepenult or penult is strong)</span></div>
+        <div class="branch">
+          <div class="col">
+            <span class="edge">yes</span>
+            <div class="node" id="n-q2">Is the penult strong?</div>
+            <div class="branch">
+              <div class="col"><span class="edge">yes</span><div class="node end" id="n-pen-s">Stress the penult</div></div>
+              <div class="col"><span class="edge">no</span><div class="node end" id="n-ante">Stress the antepenult</div></div>
+            </div>
+          </div>
+          <div class="col">
+            <span class="edge">no</span>
+            <div class="node end" id="n-pen-w">Stress the penult</div>
+          </div>
+        </div>
+      </div>
+      <p class="hint" id="tree-note"></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <h2 style="margin:0">Practice: find the stressed syllable</h2>
+      <span class="score" id="q-score">0 / 0</span>
+    </div>
+    <p class="hint">Items are NFS words from Sezer (1981), plus three nonce place names. Tap the syllable that carries primary stress. A few items are exceptions that Sezer reports, so the rule will not always give the right answer.</p>
+    <div class="row" style="margin-top:8px">
+      <span class="label">Item</span><span id="q-gloss" class="hint" style="margin:0"></span>
+    </div>
+    <div class="sylls" id="q-sylls"></div>
+    <div class="result" id="q-feedback"></div>
+    <div class="row" style="margin-top:12px"><button class="btn primary" id="q-next">Next word</button></div>
+  </div>
+
+  <div class="card">
+    <h2>Exceptions reported by Sezer (1981)</h2>
+    <p class="hint" style="margin-top:0">Sezer notes that exceptions to the Weak Penult Rule are extremely rare, while the Strong Syllable Rule has two types of counterexamples. Tap a word to analyze it.</p>
+    <div class="tw"><table class="ex">
+      <thead><tr><th>Type</th><th>Words</th><th>Comment</th></tr></thead>
+      <tbody>
+        <tr><td>Weak Penult Rule</td><td><div class="chips" data-set="weak"></div></td><td>Stress on a weak antepenult (fn. 8). Anadolu may reflect a compound reading, <i>ana</i> + <i>dolu</i>.</td></tr>
+        <tr><td>Strong Syllable Rule, alternate pronunciations</td><td><div class="chips" data-set="alt"></div></td><td>One pronunciation follows the rule, the other does not (ex. 21).</td></tr>
+        <tr><td>Strong Syllable Rule, single pronunciation</td><td><div class="chips" data-set="single"></div></td><td>Stress on the weak penult, not the strong antepenult (ex. 22). The strong syllable ends in a sonorant.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+
+</div>
+
+<script>
+(function(){
+"use strict";
+const $ = s => document.querySelector(s);
+const low = s => s.toLocaleLowerCase('tr');
+const VOW = 'aeıioöuüâîû', LONG = 'âîû';
+const isV = c => VOW.includes(low(c));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------------- syllables & Sezer ---------------- */
+function syllabify(word){
+  const chars = Array.from(word.replace(/[^A-Za-zÇĞİÖŞÜçğıöşüâîûÂÎÛ]/g, ''));
+  const vi = []; chars.forEach((c, i) => { if (isV(c)) vi.push(i); });
+  if (!vi.length) return chars.length ? [chars.join('')] : [];
+  const cuts = [];
+  for (let k = 0; k < vi.length - 1; k++){
+    const a = vi[k], b = vi[k+1], n = b - a - 1;
+    cuts.push(n === 0 ? b : b - 1);   // one consonant goes to the next onset
+  }
+  const out = []; let start = 0;
+  cuts.forEach(c => { out.push(chars.slice(start, c).join('')); start = c; });
+  out.push(chars.slice(start).join(''));
+  return out;
+}
+const weightOf = syl => { const t = low(syl); return (!isV(t[t.length-1]) || Array.from(t).some(c => LONG.includes(c))) ? 'S' : 'W'; };
+function sezer(w){
+  const n = w.length;
+  if (n === 1) return {idx:0, path:'mono'};
+  if (n === 2) return {idx:0, path: w[0]==='S' ? 'pen-s' : 'pen-w'};
+  const ante = n-3, pen = n-2;
+  const strong = w[ante]==='S' || w[pen]==='S';
+  if (!strong) return {idx:pen, path:'pen-w'};
+  return w[pen]==='S' ? {idx:pen, path:'pen-s'} : {idx:ante, path:'ante'};
+}
+const POSN = ['ultima','penult','antepenult'];
+const withStress = (syls, i) => syls.map((s, k) => (k === i ? 'ˈ' : '') + s).join('.');
+// Exceptions reported by Sezer (1981): attested stress = syllable index from the left.
+const EXC = {
+  'kastamonu':{set:'weak', att:[1], src:'fn. 8'},
+  'kınalı':{set:'weak', att:[0], src:'fn. 8'},
+  'anadolu':{set:'weak', att:[1], src:'fn. 8; possibly a compound, ana + dolu'},
+  'bandırma':{set:'alt', att:[1,0], src:'ex. 21'},
+  'erzincan':{set:'alt', att:[1,0], src:'ex. 21'},
+  'çamlıca':{set:'alt', att:[0,1], src:'ex. 21'},
+  'zonguldak':{set:'alt', att:[1,0], src:'ex. 21'},
+  'fırtına':{set:'single', att:[1], src:'ex. 22'},
+  'kampana':{set:'single', att:[1], src:'ex. 22'},
+  'dantela':{set:'single', att:[1], src:'ex. 22'},
+  'tambura':{set:'single', att:[1], src:'ex. 22'},
+  'kalküta':{set:'single', att:[1], src:'ex. 22'}
+};
+const DISPLAY = {'kastamonu':'Kastamonu','kınalı':'Kınalı','anadolu':'Anadolu','bandırma':'Bandırma','erzincan':'Erzincan','çamlıca':'Çamlıca','zonguldak':'Zonguldak','kalküta':'Kalküta'};
+
+let sMode = 'nfs', sWord = '', sW = [];
+function renderStress(){
+  const word = $('#stress-word').value.trim();
+  const syls = syllabify(word);
+  if (word !== sWord){ sWord = word; sW = syls.map(weightOf); }
+  const box = $('#sylls'); box.innerHTML = '';
+  ['n-q1','n-q2','n-pen-s','n-ante','n-pen-w'].forEach(id => $('#'+id).classList.remove('on'));
+  if (!syls.length){ $('#stress-result').textContent = 'Type a word to see its syllables.'; $('#tree-note').textContent=''; return; }
+  const n = syls.length;
+  let r;
+  if (sMode === 'reg') r = {idx:n-1, path:'reg'}; else r = sezer(sW);
+  syls.forEach((s, i) => {
+    const d = document.createElement('div'); d.className = 'syl' + (i === r.idx ? ' stressed' : '');
+    const fromEnd = n - 1 - i;
+    d.innerHTML = `<span class="pos">${fromEnd < 3 ? 'σ'+(fromEnd+1)+' '+POSN[fromEnd] : ''}</span><span class="txt">${esc(s)}</span>`;
+    const b = document.createElement('button'); b.className = 'w ' + sW[i]; b.textContent = sW[i];
+    b.setAttribute('aria-label', `Syllable ${s}: ${sW[i]==='S'?'strong':'weak'}. Tap to change.`);
+    b.onclick = () => { sW[i] = sW[i]==='S' ? 'W' : 'S'; renderStress(); };
+    d.appendChild(b); box.appendChild(d);
+  });
+  let note = '', res = `<b>${esc(withStress(syls, r.idx))}</b>`;
+  if (sMode === 'reg'){
+    note = 'Regular words take final stress; the decision procedure applies only to NFS words.';
+    res += ' · regular final stress';
+  } else if (r.path === 'mono'){
+    note = 'A monosyllable has only one stressable syllable.';
+  } else {
+    if (n === 2) note = 'With two syllables there is no antepenult, so the penult (the first syllable) is stressed. ';
+    const strong = n > 2 ? (sW[n-3]==='S' || sW[n-2]==='S') : sW[0]==='S';
+    $('#n-q1').classList.add('on');
+    if (r.path === 'pen-w'){ $('#n-pen-w').classList.add('on'); res += ' · weak NFS word, so the penult'; }
+    else { $('#n-q2').classList.add('on'); $('#n-'+r.path).classList.add('on');
+      res += r.path==='ante' ? ' · strong NFS word with a weak penult, so the antepenult' : ' · strong NFS word with a strong penult, so the penult'; }
+    if (n > 2) note += `Antepenult “${syls[n-3]}” is ${sW[n-3]==='S'?'strong':'weak'}; penult “${syls[n-2]}” is ${sW[n-2]==='S'?'strong':'weak'}. The final syllable never matters.`;
+    if (n > 3) note += ` Syllables to the left of the antepenult (${syls.slice(0, n-3).map(x => '“'+x+'”').join(', ')}) play no role.`;
+    void strong;
+  }
+  $('#stress-result').innerHTML = res; $('#tree-note').textContent = note;
+  const ex = EXC[low(word)], box2 = $('#stress-exc');
+  if (sMode === 'nfs' && ex && ex.att.every(a => a < n)){
+    const forms = ex.att.map(a => withStress(syls, a));
+    let html;
+    if (ex.set === 'alt'){
+      const odd = ex.att.find(a => a !== r.idx);
+      html = `<b>Attested:</b> two pronunciations, ${esc(forms.join(' and '))}. ${esc(withStress(syls, odd))} does not follow the Strong Syllable Rule (Sezer 1981, ${esc(ex.src)}).`;
+    } else {
+      html = `<b>Attested:</b> ${esc(forms[0])}. This word is an exception to the ${ex.set==='weak'?'Weak Penult Rule':'Strong Syllable Rule'} (Sezer 1981, ${esc(ex.src)}).`;
+    }
+    Array.from($('#sylls').children).forEach((t, k) => { if (ex.att.includes(k) && k !== r.idx) t.classList.add('attested'); });
+    box2.innerHTML = html; box2.hidden = false;
+  } else { box2.hidden = true; }
+}
+$('#stress-word').addEventListener('input', renderStress);
+$('#mode-nfs').onclick = () => { sMode='nfs'; $('#mode-nfs').setAttribute('aria-pressed','true'); $('#mode-reg').setAttribute('aria-pressed','false'); renderStress(); };
+$('#mode-reg').onclick = () => { sMode='reg'; $('#mode-reg').setAttribute('aria-pressed','true'); $('#mode-nfs').setAttribute('aria-pressed','false'); renderStress(); };
+renderStress();
+
+/* practice */
+const QUIZ = [
+  ['Adana','city'],['Anamur','town'],['sinema','loanword'],['makine','loanword'],['çikolata','loanword'],['tornavida','loanword'],
+  ['madalya','loanword'],['tabanca','word'],['atölye','loanword'],['tencere','word'],['kumbara','word'],['manzara','loanword'],
+  ['karyola','loanword'],['Antalya','city'],['Antakya','city'],['jandarma','loanword'],['iskemle','loanword'],['sardalya','loanword'],
+  ['Torbalı','place name'],['Kavaklı','place name'],['Ovacık','place name'],['Boyacı','place name'],
+  ['Kastamonu','city'],['fırtına','word'],['kampana','loanword'],
+  ['Zumbalak','nonce place name'],['Kirtolya','nonce place name'],['Menafira','nonce place name']
+];
+let qOrder = [], qi = -1, qRight = 0, qTotal = 0, qDone = false;
+function shuffle(a){ for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function nextQ(){
+  if (!qOrder.length || qi >= qOrder.length - 1){ qOrder = shuffle(QUIZ.map((_, i) => i)); qi = -1; }
+  qi++; qDone = false;
+  const [word, kind] = QUIZ[qOrder[qi]];
+  const syls = syllabify(word);
+  $('#q-gloss').textContent = kind;
+  $('#q-feedback').textContent = '';
+  const box = $('#q-sylls'); box.innerHTML = '';
+  syls.forEach((s, i) => {
+    const b = document.createElement('button'); b.className = 'syl';
+    b.innerHTML = `<span class="pos"></span><span class="txt">${esc(s)}</span>`;
+    b.onclick = () => answerQ(i, syls);
+    box.appendChild(b);
+  });
+}
+function answerQ(i, syls){
+  if (qDone) return; qDone = true; qTotal++;
+  const w = syls.map(weightOf), r = sezer(w), n = syls.length;
+  const word = syls.join(''), ex = EXC[low(word)];
+  const target = ex ? ex.att[0] : r.idx;
+  const tiles = $('#q-sylls').children;
+  Array.from(tiles).forEach((t, k) => {
+    t.querySelector('.pos').textContent = w[k];
+    if (k === target) t.classList.add('stressed','right');
+    if (k === i && i !== target) t.classList.add('wrong');
+  });
+  if (i === target) qRight++;
+  let why;
+  if (n === 2) why = 'two syllables: the penult (first syllable) is stressed';
+  else if (r.path === 'pen-w') why = 'weak NFS word (antepenult and penult are both weak), so the penult';
+  else if (r.path === 'pen-s') why = 'strong NFS word with a strong penult, so the penult';
+  else why = 'strong NFS word with a weak penult, so the antepenult';
+  if (ex){
+    $('#q-feedback').innerHTML = `<b style="color:var(${i===target?'--ok':'--bad'})">${i===target?'Correct.':'Not quite.'}</b> The attested form is ${esc(withStress(syls, target))}. The rule predicts ${esc(withStress(syls, r.idx))} (${why}), but Sezer (1981) lists this word as an exception.`;
+  } else {
+    $('#q-feedback').innerHTML = `<b style="color:var(${i===target?'--ok':'--bad'})">${i===target?'Correct.':'Not quite.'}</b> ${esc(withStress(syls, target))}: ${why}.`;
+  }
+  $('#q-score').textContent = `${qRight} / ${qTotal}`;
+}
+$('#q-next').onclick = nextQ;
+nextQ();
+
+document.querySelectorAll('[data-set]').forEach(box => {
+  Object.keys(EXC).filter(k => EXC[k].set === box.dataset.set).forEach(k => {
+    const b = document.createElement('button'); b.className = 'chip'; b.textContent = DISPLAY[k] || k;
+    b.onclick = () => {
+      $('#stress-word').value = DISPLAY[k] || k; sMode = 'nfs';
+      $('#mode-nfs').setAttribute('aria-pressed','true'); $('#mode-reg').setAttribute('aria-pressed','false');
+      renderStress(); $('#stress-word').scrollIntoView({behavior:'smooth', block:'center'});
+    };
+    box.appendChild(b);
+  });
+});
+
+})();
+</script>
+</body>
+</html>
