@@ -492,7 +492,11 @@ async function start() {
   let cond = null, condSource = "random";
   if (params.get("cond") != null && /^[0-7]$/.test(params.get("cond"))) { cond = +params.get("cond"); condSource = "url"; }
   else if (UPLOAD) {
-    try { const r = await jsPsychPipe.getCondition(DATAPIPE_ID); if (r && Number.isInteger(r.condition)) { cond = r.condition; condSource = "datapipe"; } } catch (e) { /* random below */ }
+    try {   /* getCondition returns the condition number itself */
+      const r = await jsPsychPipe.getCondition(DATAPIPE_ID);
+      const c = Number.isInteger(r) ? r : (r && Number.isInteger(r.condition) ? r.condition : null);
+      if (c != null) { cond = c % N_CONDITIONS; condSource = "datapipe"; }
+    } catch (e) { /* random below */ }
   }
   if (cond == null) cond = Math.floor(Math.random() * N_CONDITIONS);
   DESIGN = buildDesign(cond, SEED);
