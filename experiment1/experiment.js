@@ -1,6 +1,6 @@
 /* Experiment 1 (online): learning simultaneity, iconicity and negation in an artificial sign language.
- * Session: computer check, consent, sign learning to criterion, practice, bare block (70),
- * forced choice (9), break, overt-adverb block (30), inference task (24), two post-tests, debriefing.
+ * Session: computer check, consent, sign learning to criterion, practice, bare block (46),
+ * forced choice (6), break, overt-adverb block (18), inference task (12), two post-tests (4 + 4), debriefing.
  * Trial lists are built in design.js. Data go to a private Google Drive folder through DataPipe (pipe.jspsych.org).
  *
  * URL options: ?test=1 runs a short version (a few trials per part, no upload, data downloaded at the end).
@@ -181,16 +181,36 @@ function quiz(title, intro, qs, again) {
 }
 
 /* ---------------- forced choice ---------------- */
+/* The two animations play one after the other (A, then B), each framed while it plays.
+ * Then the participant can replay either one with its own button, or replay the sentence.
+ * A and B can be chosen only after both have played once. */
 function fcTrial(t) {
   const L = a2(t.P, t.Q, t.dur_left ? "DUR" : "SEQ"), R = a2(t.P, t.Q, t.dur_left ? "SEQ" : "DUR");
-  let replays = 0;
+  let replays = 0, plays = {A: 0, B: 0};
+  const fig = k => `<figure id="fig${k}">${ANIM_CV("fc" + k)}<figcaption>${k}</figcaption>` +
+    `<button type="button" class="jspsych-btn playbtn" id="play${k}" disabled>▶ ${k} animasyonunu oynat</button></figure>`;
   const choose = {type: BTN, stimulus: frameHTML("pos") + '<p class="q">Bu cümle hangi animasyonu daha iyi anlatıyor?</p>' +
-      `<div class="pair"><figure>${ANIM_CV("fcA")}<figcaption>A</figcaption></figure><figure>${ANIM_CV("fcB")}<figcaption>B</figcaption></figure></div>`,
-    choices: ["A", "B", "replay"], button_layout: "flex", enable_button_after: TEST ? 300 : ANIM_DUR * 1000,
-    button_html: c => c === "replay" ? '<div class="replay-row"><button class="jspsych-btn">Cümleyi tekrar izle</button></div>' : `<button class="jspsych-btn resp-btn">${c}</button>`,
+      `<div class="pair">${fig("A")}${fig("B")}</div>`,
+    choices: ["A", "B", "replay"], button_layout: "flex",
+    button_html: c => c === "replay" ? '<div class="replay-row"><button class="jspsych-btn">Cümleyi tekrar izle</button></div>' : `<button class="jspsych-btn resp-btn" disabled>${c}</button>`,
     data: Object.assign({task: "forced_choice", dur_left: t.dur_left ? 1 : 0}, itemData(t)),
-    on_load: () => { stopAll(); playAnim($("fcA"), L, LOOP); playAnim($("fcB"), R, LOOP); },
+    on_load: () => {
+      stopAll();
+      const ev = {A: L, B: R}, cv = {A: $("fcA"), B: $("fcB")};
+      const blank = k => still(cv[k], (c, w, h) => drawEvents(c, w, h, [], 0));
+      const show = (k, on) => $("fig" + k).classList.toggle("on", on);
+      const once = k => { show(k, true); playAnim(cv[k], ev[k]); jsPsych.pluginAPI.setTimeout(() => show(k, false), ANIM_DUR * 1000); };
+      blank("A"); blank("B");
+      once("A");
+      jsPsych.pluginAPI.setTimeout(() => { blank("A"); once("B"); }, ANIM_DUR * 1000 + 400);
+      jsPsych.pluginAPI.setTimeout(() => {
+        blank("B");
+        document.querySelectorAll(".resp-btn, .playbtn").forEach(b => { b.disabled = false; });
+        ["A", "B"].forEach(k => $("play" + k).addEventListener("click", () => { plays[k]++; once(k); }));
+      }, TEST ? 400 : 2 * ANIM_DUR * 1000 + 600);
+    },
     on_finish: d => {
+      d.plays_A = plays.A; d.plays_B = plays.B;
       if (d.response === 2) { replays++; d.replay = true; d.task = "replay_request"; return; }
       d.replay = false; d.replays = replays; d.chose_dur = ((d.response === 0) === t.dur_left) ? 1 : 0; }};
   return {timeline: [readyKey(), {timeline: [timed(frameHTML("pos", SLOT_CV("cvS")), SIGN_DUR * 1000, () => playSign($("cvS"), t.clip)), choose],
@@ -290,7 +310,7 @@ const TITLE = "Yapay Bir İşaret Dilinin Öğrenilmesi";
 const CONSENT = {type: FORM, button_label: "Katılmayı kabul ediyorum",
   html: `<div class="instr form consent"><h3>Bilgilendirilmiş Onam Formu</h3>
   <p><b>Araştırmanın adı:</b> “${TITLE}”</p>
-  <p>Sayın katılımcı,</p><p>Boğaziçi Üniversitesi Dilbilimi Bölümü doktora öğrencisi Onur Keleş tez çalışması için Doç. Dr. Kadir Gökgöz danışmanlığında “Yapay Bir İşaret Dilinin Öğrenilmesi” adında bir araştırma projesi gerçekleştirmektedir. Bu çalışmanın amacı, insanların yeni bir işaret sistemini nasıl öğrendiğini incelemektir. Bu araştırmada bize yardımcı olmanız için sizi projemize davet ediyoruz. Kararınızdan önce araştırma hakkında sizi bilgilendirmek istiyoruz. Bu bilgileri okuduktan sonra araştırmaya katılmak isterseniz lütfen formun sonundaki ifadeleri işaretleyin ve bilgilerinizi yazın.</p><p>Bu araştırmaya katılmayı kabul ettiğiniz takdirde, kendi bilgisayarınızda, bir internet tarayıcısında çevrimiçi bir deney yapacaksınız. Deney telefon veya tablette yapılamaz. Bu deneye katılmak için en az 18 yaşında olmanız, anadilinizin Türkçe olması ve normal ya da düzeltilmiş (gözlük veya lens ile) görmeye sahip olmanız gerekmektedir. Bu projenin başka bir bölümüne daha önce katıldıysanız lütfen tekrar katılmayınız. İlk aşamada, Tobi adlı yuvarlak bir çizgi karakterin yaptığı dört değişiklik için dört işaret öğreneceksiniz. İşaretler ekranda çizilmiş bir figür tarafından gösterilecektir. Daha sonra, içinde işaret bulunan kısa Türkçe cümleler (örneğin “Tobi [işaret] yapmadı.”) ve Tobi’nin animasyonlarını göreceksiniz ve her animasyondan sonra cümlenin doğru mu yanlış mı olduğuna karar vereceksiniz. Bazı bölümlerde iki animasyon arasından seçim yapmanız veya bir cümlenin bir ifadeyi ne kadar düşündürdüğünü 0 ile 100 arasında değerlendirmeniz istenecektir. Son olarak cevaplarınızı kısaca açıklamanız ve dil geçmişinizle ilgili birkaç soruyu yanıtlamanız istenecektir. Bu deneyde video veya ses kaydı alınmayacaktır. Deneyin tamamlanması, kısa bir ara ile birlikte yaklaşık 60 dakika sürmektedir. Lütfen deneyi sessiz bir yerde ve tek seferde yapın.</p><p>Yapmak istediğimiz araştırmanın size günlük hayatta karşılaşılan risklerin ötesinde bir risk getirmesi beklenmemektedir. Kendinizi yorgun hissederseniz deneydeki ara ekranlarında istediğiniz kadar dinlenebilirsiniz.</p><p>Bu araştırma bilimsel bir amaçla yapılmaktadır ve katılımcı bilgilerinin gizliliği esas tutulmaktadır. Araştırmada toplanan veriler güvenli bir şekilde saklanacaktır. Verilerinizde isminiz kullanılmayacak, size tanımlayıcı bir numara verilecektir. Cevaplarınız, adınız olmadan yalnızca bu numarayla, DataPipe (pipe.jspsych.org) aracılığıyla araştırma ekibine ait, yalnızca araştırma ekibinin erişebildiği bir Google Drive klasörüne kaydedilecektir. Bu formda yazdığınız adınız, öğrenci numaranız ve dersiniz, cevaplarınızdan ayrı bir klasörde saklanacaktır. Veri toplama bittiğinde dosyalar şifreli ve parola korumalı ortamlara taşınacak ve Google Drive’dan silinecektir. Öğrenci numaranız yalnızca ders puanınızın ilgili öğretim üyesine bildirilmesi için kullanılacak ve puan bildirildikten sonra silinecektir. Verileriniz 6698 sayılı Kişisel Verilerin Korunması Kanunu’na uygun olarak işlenecek, şifreli ve parola korumalı ortamlarda saklanacak ve yalnızca araştırma ekibi tarafından görülebilecektir. Anonim hale getirilen veriler bilimsel nitelikteki konferans sunularında ve/veya bilimsel yayınlarda kullanılabilir ve açık bilim platformlarında (örneğin OSF) diğer araştırmacılarla paylaşılabilir. Çalışma bittikten sonra yayınlanması halinde dilerseniz çalışmanın bir kopyası sizlerle paylaşılacaktır.</p><p>Bu araştırmaya katılmak tamamen isteğe bağlıdır. Katıldığınız takdirde çalışmanın herhangi bir aşamasında herhangi bir sebep göstermeden onayınızı çekmek hakkına sahipsiniz. Bu durumda cevaplarınız ve verileriniz silinecek ve çalışmada kullanılmayacaktır. Deneyi tamamlamazsanız herhangi bir ceza olmayacaktır. Deneyi bitirmeden sayfayı kapatırsanız cevaplarınız kaydedilmez. Katılımınızdan sonraki iki hafta içinde araştırmacıya yazarak verilerinizin silinmesini de isteyebilirsiniz. Bu çalışmaya katılacak Boğaziçi Üniversitesi öğrencileri almakta oldukları LING (Linguistics) veya TİD (Türk İşaret Dili) kodlu ders için deneyi tamamlamaları durumunda toplam ders puanına eklenecek artı “iki” puan kazanacaktır (örneğin toplam notunuz 59 ise 59+2=61, 72 ise 72+2=74, 88 ise 88+2=90 şeklinde). Öğrenme aşamasındaki ölçütü karşılayamadığı için deneyi erken bitiren katılımcılar da bu puanı alacaktır. Bu çalışmaya katıldığınız dönemde birden fazla LING veya TİD dersi alıyorsanız, deneye lütfen yalnızca bir kez katılınız.</p><p>Araştırma projesi hakkında ek bilgi almak istediğiniz takdirde lütfen Boğaziçi Üniversitesi Dilbilimi Bölümü Öğretim Üyesi Doç. Dr. Kadir Gökgöz (Telefon: +90 212 359 4902, elektronik posta: kadir.gokgoz@bogazici.edu.tr) veya Dilbilimi Bölümü doktora öğrencisi ve araştırma görevlisi Onur Keleş (Telefon: +90 212 359 4908, elektronik posta: onur.keles1@bogazici.edu.tr) ile temasa geçiniz (Adres: Boğaziçi Üniversitesi, Dilbilimi Bölümü, 34342 Bebek, İstanbul). Araştırmayla ilgili haklarınız konusunda Boğaziçi Üniversitesi Sosyal ve Beşeri Bilimler İnsan Araştırmaları Etik Kurulu’na (sbinarek@bogazici.edu.tr) da danışabilirsiniz.</p>
+  <p>Sayın katılımcı,</p><p>Boğaziçi Üniversitesi Dilbilimi Bölümü doktora öğrencisi Onur Keleş tez çalışması için Doç. Dr. Kadir Gökgöz danışmanlığında “Yapay Bir İşaret Dilinin Öğrenilmesi” adında bir araştırma projesi gerçekleştirmektedir. Bu çalışmanın amacı, insanların yeni bir işaret sistemini nasıl öğrendiğini incelemektir. Bu araştırmada bize yardımcı olmanız için sizi projemize davet ediyoruz. Kararınızdan önce araştırma hakkında sizi bilgilendirmek istiyoruz. Bu bilgileri okuduktan sonra araştırmaya katılmak isterseniz lütfen formun sonundaki ifadeleri işaretleyin ve bilgilerinizi yazın.</p><p>Bu araştırmaya katılmayı kabul ettiğiniz takdirde, kendi bilgisayarınızda, bir internet tarayıcısında çevrimiçi bir deney yapacaksınız. Deney telefon veya tablette yapılamaz. Bu deneye katılmak için en az 18 yaşında olmanız, anadilinizin Türkçe olması ve normal ya da düzeltilmiş (gözlük veya lens ile) görmeye sahip olmanız gerekmektedir. Bu projenin başka bir bölümüne daha önce katıldıysanız lütfen tekrar katılmayınız. İlk aşamada, Tobi adlı yuvarlak bir çizgi karakterin yaptığı dört değişiklik için dört işaret öğreneceksiniz. İşaretler ekranda çizilmiş bir figür tarafından gösterilecektir. Daha sonra, içinde işaret bulunan kısa Türkçe cümleler (örneğin “Tobi [işaret] yapmadı.”) ve Tobi’nin animasyonlarını göreceksiniz ve her animasyondan sonra cümlenin doğru mu yanlış mı olduğuna karar vereceksiniz. Bazı bölümlerde iki animasyon arasından seçim yapmanız veya bir cümlenin bir ifadeyi ne kadar düşündürdüğünü 0 ile 100 arasında değerlendirmeniz istenecektir. Son olarak cevaplarınızı kısaca açıklamanız ve dil geçmişinizle ilgili birkaç soruyu yanıtlamanız istenecektir. Bu deneyde video veya ses kaydı alınmayacaktır. Deneyin tamamlanması, kısa bir ara ile birlikte yaklaşık 40 dakika sürmektedir. Lütfen deneyi sessiz bir yerde ve tek seferde yapın.</p><p>Yapmak istediğimiz araştırmanın size günlük hayatta karşılaşılan risklerin ötesinde bir risk getirmesi beklenmemektedir. Kendinizi yorgun hissederseniz deneydeki ara ekranlarında istediğiniz kadar dinlenebilirsiniz.</p><p>Bu araştırma bilimsel bir amaçla yapılmaktadır ve katılımcı bilgilerinin gizliliği esas tutulmaktadır. Araştırmada toplanan veriler güvenli bir şekilde saklanacaktır. Verilerinizde isminiz kullanılmayacak, size tanımlayıcı bir numara verilecektir. Cevaplarınız, adınız olmadan yalnızca bu numarayla, DataPipe (pipe.jspsych.org) aracılığıyla araştırma ekibine ait, yalnızca araştırma ekibinin erişebildiği bir Google Drive klasörüne kaydedilecektir. Bu formda yazdığınız adınız, öğrenci numaranız ve dersiniz, cevaplarınızdan ayrı bir klasörde saklanacaktır. Veri toplama bittiğinde dosyalar şifreli ve parola korumalı ortamlara taşınacak ve Google Drive’dan silinecektir. Öğrenci numaranız yalnızca ders puanınızın ilgili öğretim üyesine bildirilmesi için kullanılacak ve puan bildirildikten sonra silinecektir. Verileriniz 6698 sayılı Kişisel Verilerin Korunması Kanunu’na uygun olarak işlenecek, şifreli ve parola korumalı ortamlarda saklanacak ve yalnızca araştırma ekibi tarafından görülebilecektir. Anonim hale getirilen veriler bilimsel nitelikteki konferans sunularında ve/veya bilimsel yayınlarda kullanılabilir ve açık bilim platformlarında (örneğin OSF) diğer araştırmacılarla paylaşılabilir. Çalışma bittikten sonra yayınlanması halinde dilerseniz çalışmanın bir kopyası sizlerle paylaşılacaktır.</p><p>Bu araştırmaya katılmak tamamen isteğe bağlıdır. Katıldığınız takdirde çalışmanın herhangi bir aşamasında herhangi bir sebep göstermeden onayınızı çekmek hakkına sahipsiniz. Bu durumda cevaplarınız ve verileriniz silinecek ve çalışmada kullanılmayacaktır. Deneyi tamamlamazsanız herhangi bir ceza olmayacaktır. Deneyi bitirmeden sayfayı kapatırsanız cevaplarınız kaydedilmez. Katılımınızdan sonraki iki hafta içinde araştırmacıya yazarak verilerinizin silinmesini de isteyebilirsiniz. Bu çalışmaya katılacak Boğaziçi Üniversitesi öğrencileri almakta oldukları LING (Linguistics) veya TİD (Türk İşaret Dili) kodlu ders için deneyi tamamlamaları durumunda toplam ders puanına eklenecek artı “iki” puan kazanacaktır (örneğin toplam notunuz 59 ise 59+2=61, 72 ise 72+2=74, 88 ise 88+2=90 şeklinde). Öğrenme aşamasındaki ölçütü karşılayamadığı için deneyi erken bitiren katılımcılar da bu puanı alacaktır. Bu çalışmaya katıldığınız dönemde birden fazla LING veya TİD dersi alıyorsanız, deneye lütfen yalnızca bir kez katılınız.</p><p>Araştırma projesi hakkında ek bilgi almak istediğiniz takdirde lütfen Boğaziçi Üniversitesi Dilbilimi Bölümü Öğretim Üyesi Doç. Dr. Kadir Gökgöz (Telefon: +90 212 359 4902, elektronik posta: kadir.gokgoz@bogazici.edu.tr) veya Dilbilimi Bölümü doktora öğrencisi ve araştırma görevlisi Onur Keleş (Telefon: +90 212 359 4908, elektronik posta: onur.keles1@bogazici.edu.tr) ile temasa geçiniz (Adres: Boğaziçi Üniversitesi, Dilbilimi Bölümü, 34342 Bebek, İstanbul). Araştırmayla ilgili haklarınız konusunda Boğaziçi Üniversitesi Sosyal ve Beşeri Bilimler İnsan Araştırmaları Etik Kurulu’na (sbinarek@bogazici.edu.tr) da danışabilirsiniz.</p>
   <p>Eğer bu araştırma projesine katılmayı kabul ediyorsanız, lütfen aşağıdaki ifadeleri işaretleyin ve adınızı, öğrenci numaranızı ve dersinizi yazın.</p>
   <div class="checks">
     <label><input type="checkbox" name="read" required> Yukarıdaki metni okudum ve katılmam istenen çalışmanın kapsamını ve amacını, gönüllü olarak üzerime düşen sorumlulukları tamamen anladım. Çalışma hakkında sorularımı araştırmacılara e-posta ile sorabileceğimi biliyorum. Bu çalışmayı istediğim zaman ve herhangi bir neden belirtmek zorunda kalmadan bırakabileceğimi ve bıraktığım takdirde herhangi bir olumsuzluk ile karşılaşmayacağımı anladım. <span class="req">*</span></label>
@@ -388,7 +408,7 @@ function build() {
   /* 2. welcome, consent, fullscreen */
   T.push(instr(`<h3>Deneye hoş geldiniz</h3>
     <p>Bu deneyde, Tobi adlı yuvarlak bir karakterin dünyasında kullanılan küçük bir işaret dili öğreneceksiniz. Bu dilde, Tobi’nin yaptığı değişiklikler için işaretler var. Önce işaretleri öğreneceksiniz. Ardından, içinde işaret bulunan Türkçe cümleler ve Tobi’nin animasyonlarını göreceksiniz.</p>
-    <p>Deney, kısa bir ara ile birlikte yaklaşık 60 dakika sürer. <b>Lütfen deney boyunca not almayın ve kimseyle konuşmayın.</b> Lütfen deneyi sessiz bir yerde ve tek seferde yapın.</p>
+    <p>Deney, kısa bir ara ile birlikte yaklaşık 40 dakika sürer. <b>Lütfen deney boyunca not almayın ve kimseyle konuşmayın.</b> Lütfen deneyi sessiz bir yerde ve tek seferde yapın.</p>
     <p>Deney tam ekranda yapılır. Lütfen deney bitene kadar tam ekrandan çıkmayın ve başka bir pencereye geçmeyin.</p>`));
   T.push(CONSENT);
   T.push({type: jsPsychFullscreen, fullscreen_mode: true, button_label: "Tam ekrana geç",
@@ -457,7 +477,7 @@ function build() {
   /* 6. forced choice */
   T.push(instr(`<h3>İki animasyon</h3>
     <p>Şimdi bir cümle, ardından yan yana iki animasyon göreceksiniz. Cümlenin hangi animasyonu daha iyi anlattığını seçin.</p>
-    <p>Soldaki animasyon için <b>A</b>, sağdaki animasyon için <b>B</b> düğmesine tıklayın. Düğmelere, animasyonlar bir kez oynatıldıktan sonra tıklayabileceksiniz. Cümleyi tekrar görmek isterseniz <b>Cümleyi tekrar izle</b> düğmesine tıklayın.</p>`));
+    <p>Önce soldaki animasyon (A), sonra sağdaki animasyon (B) oynatılacak. Sonra her animasyonu kendi düğmesiyle istediğiniz kadar tekrar oynatabilirsiniz. Cümleyi tekrar görmek isterseniz <b>Cümleyi tekrar izle</b> düğmesine tıklayın. Seçiminizi <b>A</b> veya <b>B</b> düğmesine tıklayarak yapın.</p>`));
   cut(D.fc, 2).forEach(t => T.push(fcTrial(t)));
 
   MARK.adverb = T.length;
@@ -524,7 +544,8 @@ async function start() {
   jsPsych.data.addProperties({subject: SUBJ, condition: DESIGN.cond, cond_source: condSource, seed: SEED, list: DESIGN.list,
     p_order: DESIGN.reversed ? "reversed" : "standard", handshape_map: DESIGN.mapName,
     map_rise: MAP.rise, map_turn: MAP.turn, map_swell: MAP.swell, map_pulse: MAP.pulse,
-    dogru_left: DESIGN.dogruLeft ? 1 : 0, test_mode: TEST ? 1 : 0});
+    dogru_left: DESIGN.dogruLeft ? 1 : 0, pair_set: DESIGN.pairSet,
+    pairs_used: DESIGN.pairs.map(p => p.join("-")).join("|"), test_mode: TEST ? 1 : 0});
   T0 = performance.now();
   jsPsych.run(build());
 }
