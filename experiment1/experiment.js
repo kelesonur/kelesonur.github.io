@@ -6,6 +6,7 @@
  * URL options: ?test=1 runs a short version (a few trials per part, no upload, data downloaded at the end).
  *              ?test=1&fail=1 also fails the learning criterion, to check the early end.
  *              ?test=1&upload=1 sends the test data to DataPipe (files start with TEST_).
+ *              ?test=1&from=<phase> starts at a phase: learn, id, practice, bare, fc, adverb, inference, post, debrief.
  *              ?cond=0..7 forces a condition (for checking lists). */
 "use strict";
 
@@ -368,7 +369,7 @@ function endScreen(early) {
 /* ---------------- build the session ---------------- */
 let T0 = performance.now();
 function build() {
-  const D = DESIGN, T = [];
+  const D = DESIGN, T = [], MARK = {};
   const cut = (a, n) => TEST ? a.slice(0, n) : a;
 
   /* 1. computer check */
@@ -393,6 +394,7 @@ function build() {
   T.push({type: jsPsychFullscreen, fullscreen_mode: true, button_label: "Tam ekrana geç",
     message: '<div class="instr"><p>Deney tam ekranda yapılacak. Başlamak için aşağıdaki düğmeye tıklayın.</p></div>', data: {task: "fullscreen"}});
 
+  MARK.learn = T.length;
   /* 3. sign learning */
   T.push(instr(`<h3>İşaretleri öğrenme</h3>
     <p>Tobi dört farklı değişiklik yapabiliyor. Her değişikliğin bir işareti var. Şimdi her işareti, anlattığı değişiklikle birlikte göreceksiniz. Her değişikliği iki kez göreceksiniz. Dört işareti iki tur hâlinde göreceksiniz.</p>
@@ -401,6 +403,7 @@ function build() {
   cut(D.learn, 4).forEach((e, i) => T.push(learnScreen(e, i)));
 
   /* identification blocks: 8 trials each; criterion 7 of 8 in two blocks in a row, at most 4 blocks */
+  MARK.id = T.length;
   T.push(instr(`<h3>İşaretleri tanıma</h3>
     <p>Şimdi bir işaret göreceksiniz. Ardından ekranda dört animasyon belirecek. İşaretin anlattığı değişikliği gösteren animasyona tıklayın.</p>
     <p>Her cevaptan sonra cevabınızın doğru olup olmadığını göreceksiniz. Doğru animasyon yeşil çerçeveyle gösterilecek.</p>
@@ -421,6 +424,7 @@ function build() {
     on_load: () => jsPsych.abortExperiment('<div class="instr"><p>Teşekkür ederiz. Bu sayfayı kapatabilirsiniz.</p></div>')}],
     conditional_function: () => !ID_PASSED});
 
+  MARK.practice = T.length;
   /* 4. task instructions, understanding check, practice */
   const taskInstr = instr(`<h3>Cümleler</h3>
     <p>Şimdi Tobi hakkında cümleler göreceksiniz. Cümlelerde bir kelimenin yerinde bir işaret olacak, örneğin: “Tobi [işaret] yaptı.” Ardından Tobi’nin ne yaptığını gösteren kısa bir animasyon gelecek.</p>
@@ -435,6 +439,7 @@ function build() {
   ], taskInstr));
   cut(D.practice, 2).forEach(t => T.push(tvjTrial(t, true)));
 
+  MARK.bare = T.length;
   /* 5. bare block */
   T.push(instr(`<h3>Asıl bölüm</h3>
     <p>Şimdi deneyin asıl bölümü başlıyor. Bazı cümlelerde iki işaret olacak. Bu tür cümleleri daha önce görmediniz. Öğrendiklerinizi kullanarak doğru olduğunu düşündüğünüz cevabı verin.</p>
@@ -448,12 +453,14 @@ function build() {
       T.push(tvjTrial(t, false));
     }); }
 
+  MARK.fc = T.length;
   /* 6. forced choice */
   T.push(instr(`<h3>İki animasyon</h3>
     <p>Şimdi bir cümle, ardından yan yana iki animasyon göreceksiniz. Cümlenin hangi animasyonu daha iyi anlattığını seçin.</p>
     <p>Soldaki animasyon için <b>A</b>, sağdaki animasyon için <b>B</b> düğmesine tıklayın. Düğmelere, animasyonlar bir kez oynatıldıktan sonra tıklayabileceksiniz. Cümleyi tekrar görmek isterseniz <b>Cümleyi tekrar izle</b> düğmesine tıklayın.</p>`));
   cut(D.fc, 2).forEach(t => T.push(fcTrial(t)));
 
+  MARK.adverb = T.length;
   /* 7. break, then the overt-adverb block */
   T.push(instr(`<h3>Ara</h3>
     <p>İsterseniz biraz dinlenin.</p>
@@ -462,6 +469,7 @@ function build() {
   { const adv = cut(D.adverb, 4), attnAt = 3 + Math.floor(Math.random() * Math.max(1, adv.length - 6));
     adv.forEach((t, i) => { if (i === attnAt) T.push(attentionTrial("D")); T.push(tvjTrial(t, false)); }); }
 
+  MARK.inference = T.length;
   /* 8. inference task */
   const infInstr = instr(`<h3>Değerlendirme</h3>
     <p>Şimdi yalnızca cümleleri göreceksiniz; animasyon olmayacak. Her cümleden sonra bir ifade göreceksiniz.</p>
@@ -472,6 +480,7 @@ function build() {
   ], infInstr));
   cut(D.inference, 3).forEach(t => T.push(infTrial(t)));
 
+  MARK.post = T.length;
   /* 9. post-tests */
   T.push(instr(`<h3>Ne oldu?</h3>
     <p>Şimdi işaret olmadan yalnızca bir animasyon göreceksiniz. Ardından animasyonda hangi değişikliklerin olduğunu ve bunların nasıl olduğunu seçeceksiniz.</p>`));
@@ -480,11 +489,19 @@ function build() {
     <p>Şimdi cümle ve animasyon olmadan, iki işaretten oluşan bir mesaj göreceksiniz. Ardından mesajın hangi iki değişikliği anlattığını seçeceksiniz.</p>`));
   cut(D.recovery, 2).forEach(t => T.push(recoveryTrial(t)));
 
+  MARK.debrief = T.length;
   /* 10. debriefing and background questions */
   T.push(debriefTrial(0), debriefTrial(1), BACKGROUND);
 
   /* 11. save and end */
   T.push(saveScreen("complete"), endScreen(false));
+  /* test version only: ?test=1&from=<phase> starts at that phase (after full screen) */
+  const from = TEST && params.get("from");
+  if (from && MARK[from] != null) {
+    if (MARK[from] > MARK.id) ID_PASSED = true;
+    const fs = T.find(t => t.type === jsPsychFullscreen);
+    return [fs].concat(T.slice(MARK[from]));
+  }
   return T;
 }
 
