@@ -10,7 +10,8 @@
 "use strict";
 
 /* ---------------- settings ---------------- */
-const DATAPIPE_ID = "dgiQ7IilCRxD";          /* DataPipe experiment ID (12 characters). Empty: no upload, data are downloaded at the end. */
+const DATAPIPE_ID = "dgiQ7IilCRxD";
+const DATAPIPE_ID_KIMLIK = "jaF6qB0pCy7V";   /* separate DataPipe experiment for name, student number and course */          /* DataPipe experiment ID (12 characters). Empty: no upload, data are downloaded at the end. */
 const N_CONDITIONS = 8;          /* must match the number of conditions set in DataPipe */
 const CONTACT_EMAIL = "onur.keles1@bogazici.edu.tr";
 const MIN_W = 900, MIN_H = 550;   /* minimum browser window size in pixels */
@@ -340,7 +341,7 @@ function saveScreen(status) {
       const sum = makeSummary(status);
       if (!UPLOAD) { jsPsych.finishTrial(sum); return; }
       const idCsv = csvOf([ID_INFO || {subject: SUBJ}]);
-      Promise.all([jsPsychPipe.saveData(DATAPIPE_ID, `${SUBJ}.csv`, mainCSV(sum)), jsPsychPipe.saveData(DATAPIPE_ID, `kimlik_${SUBJ}.csv`, idCsv)])
+      Promise.all([jsPsychPipe.saveData(DATAPIPE_ID, `${SUBJ}.csv`, mainCSV(sum)), jsPsychPipe.saveData(DATAPIPE_ID_KIMLIK, `kimlik_${SUBJ}.csv`, idCsv)])
         .then(rs => { SAVE_OK = rs.every(r => r && !r.error && !(r instanceof Error)); jsPsych.finishTrial(Object.assign({}, sum, {save_ok: SAVE_OK ? 1 : 0})); })
         .catch(() => { SAVE_OK = false; jsPsych.finishTrial(Object.assign({}, sum, {save_ok: 0})); });
     }};
