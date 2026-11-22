@@ -246,29 +246,35 @@ function gridOn(nExact) {
     const n = boxes.filter(b => b.checked).length; btn.disabled = nExact ? n !== nExact : n < 1; };
   boxes.forEach(b => b.addEventListener("change", upd)); upd();
 }
+/* the animation (or the two-sign clip) plays once at the top of the answer screen and can be replayed as often as wanted */
+function replayRow(n) { return `<p><button type="button" class="jspsych-btn" id="replayT">▶ Tekrar oynat</button></p>`; }
 function whichTrial(t) {
+  let replays = 0;
   return {timeline: [readyKey(),
-    timed(`<div class="stage">${ANIM_CV("cvA")}</div>`, ANIM_DUR * 1000, () => playAnim($("cvA"), t.anim)),
     {type: FORM, button_label: "İleri",
-      html: '<div class="instr form"><p><b>Animasyonda hangi değişiklikler oldu?</b> Olanların hepsini işaretleyin.</p>' + evGrid() +
+      html: `<div class="stage">${ANIM_CV("cvA")}</div>` + replayRow() +
+        '<div class="instr form"><p><b>Animasyonda hangi değişiklikler oldu?</b> Olanların hepsini işaretleyin.</p>' + evGrid() +
         '<p><b>Bu değişiklikler nasıl oldu?</b> <span class="req">*</span></p><div class="radios col">' +
         '<label><input type="radio" name="when" value="overlap" required> Biri sürerken öbürü de oldu.</label>' +
         '<label><input type="radio" name="when" value="after"> Biri bittikten sonra öbürü oldu.</label></div></div>',
       data: Object.assign({task: "which_changes"}, itemData(t)),
-      on_load: () => gridOn(0),
+      on_load: () => { gridOn(0); playAnim($("cvA"), t.anim);
+        $("replayT").addEventListener("click", () => { replays++; playAnim($("cvA"), t.anim); }); },
       on_finish: d => { const r = d.response; const ch = EV.filter(e => r["ev_" + e]);
-        d.chosen = ch.join("+"); d.when = r.when; d.response = null;
+        d.chosen = ch.join("+"); d.when = r.when; d.response = null; d.replays = replays;
         d.events_ok = ch.length === 2 && ch.includes(t.P) && ch.includes(t.Q) ? 1 : 0;
         d.timing_ok = (r.when === "overlap") === (t.anim_label === "DUR") ? 1 : 0; }}]};
 }
 function recoveryTrial(t) {
+  let replays = 0;
   return {timeline: [readyKey(),
-    timed(`<div class="stage" style="height:320px">${SLOT_CV("cvS")}</div>`, SIGN_DUR * 1000, () => playSign($("cvS"), t.clip)),
     {type: FORM, button_label: "İleri",
-      html: '<div class="instr form"><p><b>Bu mesaj hangi iki değişikliği anlatıyor?</b> İkisini işaretleyin.</p>' + evGrid() + "</div>",
+      html: `<div class="stage" style="height:210px">${SLOT_CV("cvS")}</div>` + replayRow() +
+        '<div class="instr form"><p><b>Bu mesaj hangi iki değişikliği anlatıyor?</b> İkisini işaretleyin.</p>' + evGrid() + "</div>",
       data: Object.assign({task: "recovery"}, itemData(t)),
-      on_load: () => gridOn(2),
-      on_finish: d => { const ch = EV.filter(e => d.response["ev_" + e]); d.chosen = ch.join("+"); d.response = null;
+      on_load: () => { gridOn(2); playSign($("cvS"), t.clip);
+        $("replayT").addEventListener("click", () => { replays++; playSign($("cvS"), t.clip); }); },
+      on_finish: d => { const ch = EV.filter(e => d.response["ev_" + e]); d.chosen = ch.join("+"); d.response = null; d.replays = replays;
         d.is_correct = ch.includes(t.P) && ch.includes(t.Q) ? 1 : 0; }}]};
 }
 
@@ -503,10 +509,10 @@ function build() {
   MARK.post = T.length;
   /* 9. post-tests */
   T.push(instr(`<h3>Ne oldu?</h3>
-    <p>Şimdi işaret olmadan yalnızca bir animasyon göreceksiniz. Ardından animasyonda hangi değişikliklerin olduğunu ve bunların nasıl olduğunu seçeceksiniz.</p>`));
+    <p>Şimdi işaret olmadan yalnızca bir animasyon göreceksiniz. Animasyonda hangi değişikliklerin olduğunu ve bunların nasıl olduğunu seçeceksiniz. Animasyonu istediğiniz kadar tekrar oynatabilirsiniz.</p>`));
   cut(D.which, 2).forEach(t => T.push(whichTrial(t)));
   T.push(instr(`<h3>İki işaretli mesajlar</h3>
-    <p>Şimdi cümle ve animasyon olmadan, iki işaretten oluşan bir mesaj göreceksiniz. Ardından mesajın hangi iki değişikliği anlattığını seçeceksiniz.</p>`));
+    <p>Şimdi cümle ve animasyon olmadan, iki işaretten oluşan bir mesaj göreceksiniz. Mesajın hangi iki değişikliği anlattığını seçeceksiniz. Mesajı istediğiniz kadar tekrar oynatabilirsiniz.</p>`));
   cut(D.recovery, 2).forEach(t => T.push(recoveryTrial(t)));
 
   MARK.debrief = T.length;
