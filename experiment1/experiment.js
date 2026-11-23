@@ -394,7 +394,7 @@ function endScreen(early) {
     stimulus: () => `<div class="instr"><h3>Katıldığınız için teşekkür ederiz!</h3>` +
       (early ? "<p>İşaretleri öğrenme bölümü burada sona erdi ve deney sizin için tamamlandı. Ders puanınızı yine alacaksınız.</p>" : "") +
       `<p>Bu deneyde öğrendiğiniz işaret sistemi bu çalışma için oluşturuldu. Çalışmada, öğrenenlerin iki işaretin zamanlamasını (bir işaret elde tutulurken ikinci işaretin yapılmasını) iki olayın zamanlaması olarak okuyup okumadığını ve bu anlamın olumsuz cümlelerde nasıl davrandığını inceliyoruz.</p>
-      <p>Lütfen deneyin içeriğini, bu çalışmaya katılabilecek arkadaşlarınızla <b>11 Aralık’a kadar</b> konuşmayın.</p>` +
+      <p>Lütfen deneyin içeriğini, bu çalışmaya katılabilecek arkadaşlarınızla <b>17 Aralık’a kadar</b> konuşmayın.</p>` +
       (UPLOAD && SAVE_OK ? "<p>Cevaplarınız kaydedildi. Bu sayfayı şimdi kapatabilirsiniz.</p>" : "") +
       (UPLOAD && !SAVE_OK ? `<p class="err">Cevaplarınız gönderilemedi. Lütfen aşağıdaki düğmeyle dosyayı indirip ${CONTACT_EMAIL} adresine e-postayla gönderin.</p>` : "") +
       (!UPLOAD ? "<p class=\"err\">Deneme sürümü: veriler gönderilmedi. Aşağıdaki düğmeyle indirebilirsiniz.</p>" : "") + "</div>",
