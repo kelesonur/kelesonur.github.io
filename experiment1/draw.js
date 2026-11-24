@@ -241,12 +241,16 @@ function drawHand(ctx, x, y, shape, mirror, k, ang, colors) {
     // spread fingers bent at the middle joints: shorter fingers with a fold line
     const ang5 = [-0.4, -0.13, 0.12, 0.36];
     const parts = [wrist, palm].concat(xs.map((bx, i) => G.finger(bx * 0.9, BY, ang5[i], len[i] * 0.62, FW + 0.6)));
-    parts.push(G.finger(11.5, -15, 1.0, 22, 9));
+    /* thumb bent like the fingers: shorter, raised a little, with the same fold line (nail) near its tip */
+    const tA = 0.8, tL = 18, tBx = 11.5, tBy = -15;
+    parts.push(G.finger(tBx, tBy, tA, tL, 9));
     G.union(ctx, parts, C.skin, C.line, lw);
     xs.forEach((bx, i) => {
       const L1 = len[i] * 0.34, a = ang5[i], cx = bx * 0.9 + Math.sin(a) * L1, cy = BY - Math.cos(a) * L1;
       line([cx - 3, cy + 0.5, cx + 3, cy - 0.5]);
     });
+    { const d = tL * 0.62, cx = tBx + Math.sin(tA) * d, cy = tBy - Math.cos(tA) * d, px = Math.cos(tA) * 3.4, py = Math.sin(tA) * 3.4;
+      line([cx - px, cy - py, cx + px, cy + py]); }
   } else if (shape === "index") {
     G.union(ctx, [wrist, palm, G.finger(xs[3], BY, 0, len[3] + 1, FW)], C.skin, C.line, lw);
     [0, 1, 2].forEach(i => G.solid(ctx, curled(i), C.skin, C.line, lw));
