@@ -37,6 +37,9 @@ const WEEK_ITEMS={
 ],
 '9':[
 {id:'handout',title:'PS Handout',kind:'pdf',file:'materials/week9/midterm-review.pdf'}
+],
+'10':[
+{id:'handout',title:'PS Handout: One-Way ANOVA',kind:'pdf',file:'materials/week10/ps-anova.pdf'}
 ]
 };
 const SCREENS=['home','start','material','office'];
