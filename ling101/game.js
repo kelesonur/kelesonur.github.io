@@ -23,6 +23,9 @@ const WEEK_ITEMS={
 '5–6':[
 {id:'handout',title:'PS Handout',blurb:'Word classes and syntax.',kind:'pdf',file:'materials/ps3.pdf'},
 {id:'constituent',title:'Constituent or Impostor?',blurb:'Constituency practice.',kind:'html',file:'games/constituent-or-impostor.html'}
+],
+'9–10':[
+{id:'handout',title:'PS Handout',blurb:'Semantics.',kind:'pdf',file:'materials/ps4.pdf'}
 ]
 };
 const SCREENS=['home','start','material','office'];
