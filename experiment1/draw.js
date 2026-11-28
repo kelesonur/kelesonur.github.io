@@ -35,7 +35,7 @@ function drawEvents(ctx,w,h,evs,t){
     for(let k=0;k<8;k++){const a=k*Math.PI/4;ctx.beginPath();ctx.moveTo(x+Math.cos(a)*(R+6*s),y+Math.sin(a)*(R+6*s));ctx.lineTo(x+Math.cos(a)*(R+15*s),y+Math.sin(a)*(R+15*s));ctx.stroke();}
     ctx.globalAlpha=1;}
   const mix=(a,b)=>Math.round(a+(b-a)*glow);
-  ctx.fillStyle=`rgb(${mix(200,255)},${mix(200,214)},${mix(200,64)})`;ctx.strokeStyle="#222222";ctx.lineWidth=1.8*s;
+  ctx.fillStyle=`rgb(${mix(168,255)},${mix(212,214)},${mix(242,64)})`;ctx.strokeStyle="#222222";ctx.lineWidth=1.8*s;
   ctx.beginPath();ctx.arc(x,y,R,0,2*Math.PI);ctx.fill();ctx.stroke();
   /* face: two fixed dot eyes; they only move with the disk (turn rotates them), never change */
   ctx.fillStyle="#222222";
